@@ -1,0 +1,27 @@
+version: "3.8"
+name: "valdori-crm-frontend"
+
+services:
+  nuxt:
+    image: registry.gitlab.com/valdori/valdori-crm-frontend:${TAG}
+    container_name: valdori-crm-frontend
+    restart: always
+    stdin_open: true
+    tty: true
+    ports:
+      - "8092:3000"
+   # volumes:
+   #    - ~/valdori-crm-frontend/server/db:/usr/src/app/server/db
+    deploy:
+      resources:
+        limits:
+          cpus: '2.5'
+          memory: 2500M
+        reservations:
+          cpus: '2'
+          memory: 2000M
+
+networks:
+  default:
+    name: local-network
+    external: true

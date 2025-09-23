@@ -1,0 +1,41 @@
+version: "3.8"
+name: "valdori-crm-frontend"
+
+services:
+  nuxt:
+    build:
+      context: .
+      dockerfile: docker/local/Dockerfile
+    image: valdori-crm-frontend:latest-local
+    container_name: valdori-crm-frontend
+    restart: always
+    volumes:
+      - ./server/db:/usr/src/app/server/db
+      - ./apollo:/usr/src/app/apollo:rw
+      - ./assets:/usr/src/app/assets:rw
+      - ./components:/usr/src/app/components:rw
+      - ./layouts:/usr/src/app/layouts:rw
+      - ./locales:/usr/src/app/locales:rw
+      - ./middleware:/usr/src/app/middleware:rw
+      - ./pages:/usr/src/app/pages:rw
+      - ./plugins:/usr/src/app/plugins:rw
+      - ./static:/usr/src/app/static:rw
+      - ./store:/usr/src/app/store:rw
+      - ./nuxt.config.js:/usr/src/app/nuxt.config.js:rw
+    stdin_open: true
+    tty: true
+    ports:
+      - "8092:3000"
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1500M
+        reservations:
+          cpus: '1'
+          memory: 1000M
+
+networks:
+  default:
+    name: local-network
+    external: true

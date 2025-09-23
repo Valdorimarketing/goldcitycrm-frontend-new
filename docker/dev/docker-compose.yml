@@ -1,0 +1,27 @@
+version: "3.8"
+name: "ana-sigorta"
+
+services:
+  nuxt:
+    image: registry.gitlab.com/ana-sigorta/ana-sigorta-front:${TAG}
+    container_name: ana-sigorta-front
+    restart: always
+    stdin_open: true
+    tty: true
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./server/db:/usr/src/app/server/db
+    deploy:
+      resources:
+        limits:
+          cpus: '2.5'
+          memory: 2500M
+        reservations:
+          cpus: '2'
+          memory: 2000M
+
+networks:
+  default:
+    name: local-network
+    external: true
