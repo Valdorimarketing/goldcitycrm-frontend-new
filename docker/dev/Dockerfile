@@ -3,7 +3,6 @@ FROM node:20
 WORKDIR /usr/src/app
 
 COPY . ./
-COPY docker/dev/env/.env ./.env
 RUN npm install
 
 EXPOSE 3000
