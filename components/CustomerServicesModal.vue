@@ -11,11 +11,22 @@
                 {{ customer?.name }} - Hizmetler
               </h3>
 
+              <!-- Satış durumu uyarısı -->
+              <div v-if="isSaleStatus" class="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+                <div class="flex items-center">
+                  <ExclamationTriangleIcon class="h-5 w-5 text-yellow-600 dark:text-yellow-400 mr-2" />
+                  <p class="text-sm text-yellow-700 dark:text-yellow-300 font-medium">
+                    Müşterinin durumu satış durumunda olduğundan değiştirilemez
+                  </p>
+                </div>
+              </div>
+
               <!-- Mevcut Hizmetler -->
               <div v-if="existingServices.length > 0" class="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
                 <div class="flex justify-between items-center mb-3">
                   <h4 class="text-md font-medium text-gray-900 dark:text-white">Mevcut Hizmetler</h4>
                   <button
+                    v-if="!isSaleStatus"
                     @click="updateExistingServices"
                     :disabled="updatingExisting"
                     class="btn-primary text-sm"
@@ -41,6 +52,8 @@
                             v-model.number="service.price"
                             type="number"
                             class="form-input text-sm"
+                            :readonly="isSaleStatus"
+                            :disabled="isSaleStatus"
                             @input="calculateExistingOffer(index)"
                           />
                         </div>
@@ -52,6 +65,8 @@
                             v-model.number="service.discount"
                             type="number"
                             class="form-input text-sm"
+                            :readonly="isSaleStatus"
+                            :disabled="isSaleStatus"
                             @input="calculateExistingOffer(index)"
                           />
                         </div>
@@ -72,6 +87,7 @@
                       </div>
                     </div>
                     <button
+                      v-if="!isSaleStatus"
                       @click="deleteExistingService(service.id)"
                       class="ml-3 text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
                     >
@@ -82,7 +98,7 @@
               </div>
 
               <!-- Yeni Hizmet Ekleme -->
-              <div class="mb-6 p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+              <div v-if="!isSaleStatus" class="mb-6 p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <h4 class="text-md font-medium text-gray-900 dark:text-white mb-3">Yeni Hizmet Ekle</h4>
 
                 <!-- Ürün Seçimi -->
@@ -231,6 +247,7 @@
 
         <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
           <button
+            v-if="!isSaleStatus"
             @click="saveServices"
             :disabled="services.length === 0 || saving"
             class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed sm:ml-3 sm:w-auto"
@@ -250,7 +267,8 @@
 </template>
 
 <script setup>
-import { XMarkIcon, TrashIcon } from '@heroicons/vue/24/outline'
+import { XMarkIcon, TrashIcon, ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
+import { useStatuses } from '~/composables/useStatuses'
 
 const props = defineProps({
   show: {
@@ -266,6 +284,7 @@ const props = defineProps({
 const emit = defineEmits(['close', 'saved'])
 
 const api = useApi()
+const { fetchStatus } = useStatuses()
 
 // State
 const products = ref([])
@@ -276,6 +295,8 @@ const services = ref([])
 const saving = ref(false)
 const existingServices = ref([])
 const updatingExisting = ref(false)
+const customerStatus = ref(null)
+const isSaleStatus = ref(false)
 
 const newService = ref({
   price: 0,
@@ -397,11 +418,43 @@ const close = () => {
   emit('close')
 }
 
-const loadExistingServices = async () => {
-  if (!props.customer) return
+const checkCustomerStatus = async () => {
+  // status alanını kontrol et (backend'den status: 3 şeklinde geliyor)
+  const statusId = props.customer?.status || props.customer?.statusId
+
+  if (!props.customer || !statusId) {
+    isSaleStatus.value = false
+    return
+  }
 
   try {
-    const response = await api(`/customer2product?customer=${props.customer.id}`)
+    // Direkt API çağrısı yapalım
+    const status = await api(`/statuses/${statusId}`)
+
+    if (!status) {
+      isSaleStatus.value = false
+      return
+    }
+
+    customerStatus.value = status
+
+    // Backend camelCase olarak isSale döndürüyor
+    isSaleStatus.value = status?.isSale === true
+  } catch (error) {
+    console.error('Error fetching customer status:', error)
+    isSaleStatus.value = false
+  }
+}
+
+const loadExistingServices = async () => {
+  if (!props.customer || !props.customer.id) {
+    existingServices.value = []
+    return
+  }
+
+  try {
+    // Use the correct endpoint format: /customer2product/customer/{customerId}
+    const response = await api(`/customer2product/customer/${props.customer.id}`)
     const customerServices = Array.isArray(response) ? response : response.data || []
 
     // Map services with product names
@@ -513,15 +566,27 @@ onMounted(() => {
 })
 
 // Watch for customer change to load their services
-watch(() => props.customer, async (newCustomer) => {
+watch(() => props.customer, async (newCustomer, oldCustomer) => {
+  // Reset existing services when customer changes
+  if (newCustomer?.id !== oldCustomer?.id) {
+    existingServices.value = []
+    isSaleStatus.value = false
+    customerStatus.value = null
+  }
+
   if (newCustomer && props.show) {
+    await checkCustomerStatus()
     await loadExistingServices()
   }
-})
+}, { deep: true })
 
 // Also load when modal opens
 watch(() => props.show, async (isOpen) => {
   if (isOpen && props.customer) {
+    // Reset services when modal opens
+    services.value = []
+    existingServices.value = []
+    await checkCustomerStatus()
     await loadExistingServices()
   }
 })

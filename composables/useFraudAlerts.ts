@@ -4,6 +4,12 @@ import { ref } from 'vue'
 interface FraudAlert {
   id: number
   message: string
+  userId: number
+  user?: {
+    id: number
+    name: string
+    email?: string
+  }
   isRead: boolean
   isChecked: boolean
   createdAt: string
@@ -25,7 +31,10 @@ export const useFraudAlerts = () => {
     try {
       const response = await $fetch<FraudAlert[]>('/fraud-alerts', {
         baseURL: apiBase,
-        params: { unread: true }
+        params: {
+          unread: true,
+          include: 'user'
+        }
       })
       return response
     } catch (error) {
@@ -53,7 +62,10 @@ export const useFraudAlerts = () => {
     try {
       const response = await $fetch<FraudAlert[]>('/fraud-alerts', {
         baseURL: apiBase,
-        params: { limit }
+        params: {
+          limit,
+          include: 'user'
+        }
       })
       alerts.value = response
       return response

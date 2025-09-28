@@ -106,12 +106,6 @@
         <div class="space-y-2">
           <div class="flex space-x-2">
             <button
-              @click="viewProduct(product)"
-              class="flex-1 text-center bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 py-2 px-3 rounded-md text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-600"
-            >
-              Görüntüle
-            </button>
-            <button
               @click="editProduct(product)"
               class="flex-1 text-center bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 py-2 px-3 rounded-md text-sm font-medium hover:bg-indigo-200 dark:hover:bg-indigo-800"
             >
@@ -119,7 +113,7 @@
             </button>
             <button
               @click="confirmDelete(product)"
-              class="bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 py-2 px-3 rounded-md text-sm font-medium hover:bg-red-200 dark:hover:bg-red-800"
+              class="flex-1 text-center bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 py-2 px-3 rounded-md text-sm font-medium hover:bg-red-200 dark:hover:bg-red-800"
             >
               Sil
             </button>
@@ -211,13 +205,6 @@
       @created="handleProductCreated"
     />
 
-    <!-- Product View Modal -->
-    <ProductViewModal
-      :show="showViewModal"
-      :product="selectedProduct"
-      @close="closeViewModal"
-      @edit="handleViewEdit"
-    />
 
     <!-- Product Edit Modal -->
     <ProductEditModal
@@ -266,7 +253,6 @@ const categoryFilter = ref('')
 const showDeleteModal = ref(false)
 const productToDelete = ref(null)
 const showCreateModal = ref(false)
-const showViewModal = ref(false)
 const showEditModal = ref(false)
 const selectedProduct = ref(null)
 const showActionCreateModal = ref(false)
@@ -387,21 +373,8 @@ const handleProductCreated = (product) => {
   })
 }
 
-// Handle product view
-const viewProduct = (product) => {
-  selectedProduct.value = product
-  showViewModal.value = true
-}
-
 // Handle product edit
 const editProduct = (product) => {
-  selectedProduct.value = product
-  showEditModal.value = true
-}
-
-// Handle edit from view modal
-const handleViewEdit = (product) => {
-  showViewModal.value = false
   selectedProduct.value = product
   showEditModal.value = true
 }
@@ -417,11 +390,6 @@ const handleProductUpdated = (updatedProduct) => {
 }
 
 // Close modal functions
-const closeViewModal = () => {
-  showViewModal.value = false
-  selectedProduct.value = null
-}
-
 const closeEditModal = () => {
   showEditModal.value = false
   selectedProduct.value = null

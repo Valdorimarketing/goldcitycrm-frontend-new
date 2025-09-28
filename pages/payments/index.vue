@@ -132,10 +132,11 @@
             class="form-input"
           >
             <option value="">Tüm Yöntemler</option>
-            <option value="credit_card">Kredi Kartı</option>
-            <option value="bank_transfer">Banka Havalesi</option>
-            <option value="cash">Nakit</option>
-            <option value="check">Çek</option>
+            <option value="1">Nakit</option>
+            <option value="2">Kredi Kartı</option>
+            <option value="3">Banka Havalesi</option>
+            <option value="4">Çek</option>
+            <option value="5">Diğer</option>
           </select>
         </div>
         <div class="flex items-end">
@@ -195,25 +196,24 @@
               <td class="table-cell">
                 <div class="flex items-center space-x-2">
                   <component
-                    :is="getPaymentMethodIcon(payment.method)"
+                    :is="getPaymentMethodIcon(payment.payType)"
                     class="h-5 w-5 text-gray-400 dark:text-gray-500"
                   />
                   <span class="text-sm text-gray-900 dark:text-gray-100">
-                    {{ getPaymentMethodText(payment.method) }}
+                    {{ getPaymentMethodText(payment.payType) }}
                   </span>
                 </div>
               </td>
               <td class="table-cell">
                 <div class="text-sm text-gray-900 dark:text-gray-100">
-                  {{ formatDate(payment.date) }}
+                  {{ formatDate(payment.createdAt) }}
                 </div>
               </td>
               <td class="table-cell">
                 <span
-                  class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
-                  :class="getStatusClass(payment.status)"
+                  class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800"
                 >
-                  {{ getStatusText(payment.status) }}
+                  Tamamlandı
                 </span>
               </td>
               <td class="table-cell">
@@ -224,13 +224,7 @@
                   >
                     Görüntüle
                   </NuxtLink>
-                  <button
-                    v-if="payment.status === 'completed'"
-                    @click="refundPayment(payment)"
-                    class="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300 text-sm"
-                  >
-                    İade
-                  </button>
+                  <!-- Refund button removed until backend supports it -->
                   <button
                     @click="confirmDelete(payment)"
                     class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 text-sm"
@@ -320,113 +314,71 @@ import {
   DocumentIcon,
   ExclamationTriangleIcon
 } from '@heroicons/vue/24/outline'
+import { usePayments } from '~/composables/usePayments'
 
 // definePageMeta({
 //   middleware: 'auth'
 // })
 
+// API integration
+const { payments, loading, error, fetchPayments, deletePayment: deletePaymentApi } = usePayments()
+
 // Search and filters
 const searchTerm = ref('')
 const statusFilter = ref('')
 const methodFilter = ref('')
-const loading = ref(false)
 
 // Delete modal
 const showDeleteModal = ref(false)
 const paymentToDelete = ref(null)
 
-// Sample payments data
-const samplePayments = ref([
-  {
-    id: 1,
-    amount: 15000,
-    date: '2024-01-15',
-    status: 'completed',
-    method: 'credit_card',
-    customer: { name: 'Ahmet Yılmaz', company: 'ABC Şirketi' },
-    sale: { id: 1, description: 'Web sitesi geliştirme' }
-  },
-  {
-    id: 2,
-    amount: 8500,
-    date: '2024-01-10',
-    status: 'pending',
-    method: 'bank_transfer',
-    customer: { name: 'Fatma Kaya', company: 'XYZ Ltd.' },
-    sale: { id: 2, description: 'Mobil uygulama' }
-  },
-  {
-    id: 3,
-    amount: 25000,
-    date: '2024-01-05',
-    status: 'completed',
-    method: 'bank_transfer',
-    customer: { name: 'Mehmet Demir', company: 'DEF Corp.' },
-    sale: { id: 3, description: 'E-ticaret platformu' }
-  },
-  {
-    id: 4,
-    amount: 3500,
-    date: '2024-01-20',
-    status: 'failed',
-    method: 'credit_card',
-    customer: { name: 'Ayşe Öztürk', company: 'GHI İnc.' },
-    sale: { id: 4, description: 'Logo tasarım' }
-  },
-  {
-    id: 5,
-    amount: 12000,
-    date: '2024-01-18',
-    status: 'refunded',
-    method: 'cash',
-    customer: { name: 'Ali Veli', company: 'JKL Group' },
-    sale: { id: 5, description: 'Danışmanlık hizmeti' }
-  }
-])
+// Fetch data on mount
+onMounted(async () => {
+  await fetchPayments()
+})
 
 // Computed properties
 const filteredPayments = computed(() => {
-  let filtered = samplePayments.value
+  let filtered = payments.value
 
   if (searchTerm.value) {
     const search = searchTerm.value.toLowerCase()
     filtered = filtered.filter(payment =>
       payment.customer?.name?.toLowerCase().includes(search) ||
-      payment.customer?.company?.toLowerCase().includes(search)
+      payment.customer?.company?.toLowerCase().includes(search) ||
+      payment.description?.toLowerCase().includes(search)
     )
   }
 
   if (statusFilter.value) {
-    filtered = filtered.filter(payment => payment.status === statusFilter.value)
+    // Since backend doesn't have status, we can remove this filter
+    // or implement it based on business logic
   }
 
   if (methodFilter.value) {
-    filtered = filtered.filter(payment => payment.method === methodFilter.value)
+    filtered = filtered.filter(payment => payment.payType === parseInt(methodFilter.value))
   }
 
-  return filtered.sort((a, b) => new Date(b.date) - new Date(a.date))
+  return filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
 })
 
 const totalPayments = computed(() => {
-  return samplePayments.value.reduce((sum, payment) => sum + payment.amount, 0)
+  return payments.value.reduce((sum, payment) => sum + payment.amount, 0)
 })
 
 const completedPayments = computed(() => {
-  return samplePayments.value
-    .filter(payment => payment.status === 'completed')
-    .reduce((sum, payment) => sum + payment.amount, 0)
+  // All payments in the system are considered completed for now
+  return payments.value.reduce((sum, payment) => sum + payment.amount, 0)
 })
 
 const pendingPayments = computed(() => {
-  return samplePayments.value
-    .filter(payment => payment.status === 'pending')
-    .reduce((sum, payment) => sum + payment.amount, 0)
+  // No pending payments in current system
+  return 0
 })
 
 const failedPayments = computed(() => {
-  return samplePayments.value
-    .filter(payment => payment.status === 'failed')
-    .reduce((sum, payment) => sum + payment.amount, 0)
+  // No failed payments in current system
+  return 0
 })
 
 // Methods
@@ -444,10 +396,7 @@ const confirmDelete = (payment) => {
 const handleDelete = async () => {
   if (paymentToDelete.value) {
     try {
-      // For demo, just remove from sample data
-      samplePayments.value = samplePayments.value.filter(
-        p => p.id !== paymentToDelete.value.id
-      )
+      await deletePaymentApi(paymentToDelete.value.id)
     } catch (error) {
       console.error('Error deleting payment:', error)
     }
@@ -456,17 +405,14 @@ const handleDelete = async () => {
   paymentToDelete.value = null
 }
 
-const refundPayment = async (payment) => {
-  try {
-    // For demo, just update status
-    const index = samplePayments.value.findIndex(p => p.id === payment.id)
-    if (index !== -1) {
-      samplePayments.value[index].status = 'refunded'
-    }
-  } catch (error) {
-    console.error('Error refunding payment:', error)
-  }
-}
+// Refund functionality can be implemented when backend supports it
+// const refundPayment = async (payment) => {
+//   try {
+//     await refundPaymentApi(payment.id)
+//   } catch (error) {
+//     console.error('Error refunding payment:', error)
+//   }
+// }
 
 const formatDate = (dateString) => {
   if (!dateString) return '-'
@@ -477,63 +423,28 @@ const formatCurrency = (amount) => {
   return new Intl.NumberFormat('tr-TR').format(amount)
 }
 
-const getStatusClass = (status) => {
-  switch (status) {
-    case 'completed':
-      return 'bg-green-100 text-green-800'
-    case 'pending':
-      return 'bg-yellow-100 text-yellow-800'
-    case 'failed':
-      return 'bg-red-100 text-red-800'
-    case 'refunded':
-      return 'bg-gray-100 text-gray-800'
-    default:
-      return 'bg-gray-100 text-gray-800'
+// Status functions removed as backend doesn't have status field
+// All payments are considered completed
+
+const getPaymentMethodIcon = (payType) => {
+  switch (payType) {
+    case 1: return BanknotesIcon // Nakit
+    case 2: return CreditCardIcon // Kredi Kartı
+    case 3: return BanknotesIcon // Banka Havalesi
+    case 4: return DocumentIcon // Çek
+    case 5: return DocumentIcon // Diğer
+    default: return CreditCardIcon
   }
 }
 
-const getStatusText = (status) => {
-  switch (status) {
-    case 'completed':
-      return 'Tamamlandı'
-    case 'pending':
-      return 'Bekliyor'
-    case 'failed':
-      return 'Başarısız'
-    case 'refunded':
-      return 'İade'
-    default:
-      return 'Bilinmiyor'
-  }
-}
-
-const getPaymentMethodIcon = (method) => {
-  switch (method) {
-    case 'credit_card':
-      return CreditCardIcon
-    case 'bank_transfer':
-      return BanknotesIcon
-    case 'cash':
-      return BanknotesIcon
-    case 'check':
-      return DocumentIcon
-    default:
-      return CreditCardIcon
-  }
-}
-
-const getPaymentMethodText = (method) => {
-  switch (method) {
-    case 'credit_card':
-      return 'Kredi Kartı'
-    case 'bank_transfer':
-      return 'Banka Havalesi'
-    case 'cash':
-      return 'Nakit'
-    case 'check':
-      return 'Çek'
-    default:
-      return 'Bilinmiyor'
+const getPaymentMethodText = (payType) => {
+  switch (payType) {
+    case 1: return 'Nakit'
+    case 2: return 'Kredi Kartı'
+    case 3: return 'Banka Havalesi'
+    case 4: return 'Çek'
+    case 5: return 'Diğer'
+    default: return 'Bilinmiyor'
   }
 }
 

@@ -247,11 +247,11 @@ watch(() => props.status, (newStatus) => {
       name: newStatus.name || '',
       description: newStatus.description || '',
       color: newStatus.color || '#3b82f6',
-      order: newStatus.order || 0,
-      is_remindable: newStatus.is_remindable || false,
-      is_first: newStatus.is_first || false,
-      is_closed: newStatus.is_closed || false,
-      is_sale: newStatus.is_sale || false
+      order: newStatus.order ?? 0,
+      is_remindable: newStatus.is_remindable === true || (newStatus as any).isRemindable === true,
+      is_first: newStatus.is_first === true || (newStatus as any).isFirst === true,
+      is_closed: newStatus.is_closed === true || (newStatus as any).isClosed === true,
+      is_sale: newStatus.is_sale === true || (newStatus as any).isSale === true
     }
   } else {
     formData.value = defaultFormData()
@@ -268,7 +268,7 @@ const close = () => {
 const handleSubmit = async () => {
   loading.value = true
   try {
-    await emit('save', formData.value)
+    emit('save', formData.value)
     close()
   } finally {
     loading.value = false

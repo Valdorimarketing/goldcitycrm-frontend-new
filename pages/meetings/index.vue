@@ -157,12 +157,6 @@
           <!-- Actions -->
           <div class="flex space-x-2 ml-4">
             <NuxtLink
-              :to="`/meetings/${meeting.id}`"
-              class="text-indigo-600 hover:text-indigo-900 text-sm font-medium"
-            >
-              Görüntüle
-            </NuxtLink>
-            <NuxtLink
               :to="`/meetings/${meeting.id}/edit`"
               class="text-yellow-600 hover:text-yellow-900 text-sm font-medium"
             >

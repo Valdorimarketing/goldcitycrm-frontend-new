@@ -8,15 +8,6 @@
           Tüm satış işlemlerinizi buradan yönetebilirsiniz.
         </p>
       </div>
-      <div class="mt-4 sm:mt-0">
-        <NuxtLink
-          to="/sales/new"
-          class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
-        >
-          <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
-          Yeni Satış
-        </NuxtLink>
-      </div>
     </div>
 
     <!-- Search and Filters -->
@@ -191,25 +182,8 @@
                 </span>
               </td>
               <td class="table-cell">
-                <div class="flex space-x-2">
-                  <NuxtLink
-                    :to="`/sales/${sale.id}`"
-                    class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm"
-                  >
-                    Görüntüle
-                  </NuxtLink>
-                  <NuxtLink
-                    :to="`/sales/${sale.id}/edit`"
-                    class="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300 text-sm"
-                  >
-                    Düzenle
-                  </NuxtLink>
-                  <button
-                    @click="confirmDelete(sale)"
-                    class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 text-sm"
-                  >
-                    Sil
-                  </button>
+                <div class="text-sm text-gray-500 dark:text-gray-400">
+                  -
                 </div>
               </td>
             </tr>
@@ -222,15 +196,6 @@
                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
                   {{ searchTerm ? 'Arama kriterlerinize uygun satış bulunamadı.' : 'Henüz satış kaydı eklenmemiş.' }}
                 </p>
-                <div class="mt-6">
-                  <NuxtLink
-                    to="/sales/new"
-                    class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
-                  >
-                    <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
-                    İlk satışı ekle
-                  </NuxtLink>
-                </div>
               </td>
             </tr>
           </tbody>
@@ -290,10 +255,13 @@ import {
   ArrowTrendingUpIcon,
   ExclamationTriangleIcon
 } from '@heroicons/vue/24/outline'
+import { useApi } from '~/composables/useApi'
 
 // definePageMeta({
 //   middleware: 'auth'
 // })
+
+const api = useApi()
 
 // Search and filters
 const searchTerm = ref('')
@@ -303,58 +271,109 @@ const dateFilter = ref('')
 // Delete modal
 const showDeleteModal = ref(false)
 const saleToDelete = ref(null)
-const loading = ref(false)
+const loading = ref(true)
 
-// Sample sales data
-const sampleSales = ref([
-  {
-    id: 1,
-    customerId: 1,
-    amount: 15000,
-    date: '2024-01-15',
-    status: 'completed',
-    description: 'Web sitesi geliştirme projesi',
-    customer: { name: 'Ahmet Yılmaz', company: 'ABC Şirketi' }
-  },
-  {
-    id: 2,
-    customerId: 2,
-    amount: 8500,
-    date: '2024-01-10',
-    status: 'pending',
-    description: 'Mobil uygulama geliştirme',
-    customer: { name: 'Fatma Kaya', company: 'XYZ Ltd.' }
-  },
-  {
-    id: 3,
-    customerId: 3,
-    amount: 25000,
-    date: '2024-01-05',
-    status: 'completed',
-    description: 'E-ticaret platformu',
-    customer: { name: 'Mehmet Demir', company: 'DEF Corp.' }
-  },
-  {
-    id: 4,
-    customerId: 4,
-    amount: 3500,
-    date: '2024-01-20',
-    status: 'cancelled',
-    description: 'Logo tasarım projesi',
-    customer: { name: 'Ayşe Öztürk', company: 'GHI İnc.' }
+// Sales data from API
+const salesData = ref([])
+const statuses = ref([])
+const customers = ref([])
+
+// Load data on mount
+onMounted(async () => {
+  await loadSalesData()
+})
+
+// Fetch all required data
+const loadSalesData = async () => {
+  loading.value = true
+  try {
+    // Fetch all statuses to find sales statuses
+    const statusResponse = await api('/statuses')
+    statuses.value = Array.isArray(statusResponse) ? statusResponse : statusResponse.data || []
+
+    // Find statuses with is_sale = true
+    const saleStatuses = statuses.value.filter(status =>
+      status.is_sale || status.isSale
+    )
+    const saleStatusIds = saleStatuses.map(s => s.id)
+
+    // Fetch all customers
+    const customerResponse = await api('/customers')
+    const allCustomers = Array.isArray(customerResponse) ? customerResponse : customerResponse.data || []
+
+    // Filter customers with sale status
+    const saleCustomers = allCustomers.filter(customer =>
+      saleStatusIds.includes(customer.status) || saleStatusIds.includes(customer.statusId)
+    )
+    const saleCustomerIds = saleCustomers.map(c => c.id)
+
+    // Store customers for reference
+    customers.value = saleCustomers
+
+    // Fetch Customer2Product data
+    const c2pResponse = await api('/customer2product')
+    const allC2P = Array.isArray(c2pResponse) ? c2pResponse : c2pResponse.data || []
+
+    // Filter Customer2Product entries for sale customers
+    const salesC2P = allC2P.filter(item => {
+      const customerId = item.customer?.id || item.customerId || item.customer
+      return saleCustomerIds.includes(customerId)
+    })
+
+    // Map the data to sales format
+    salesData.value = await Promise.all(salesC2P.map(async (item) => {
+      const customerId = item.customer?.id || item.customerId || item.customer
+      const customer = saleCustomers.find(c => c.id === customerId)
+
+      // Get product info if needed
+      let productName = 'Ürün'
+      if (item.product && typeof item.product === 'object') {
+        productName = item.product.name || 'Ürün'
+      } else if (item.product || item.productId) {
+        try {
+          const productResponse = await api(`/products/${item.product || item.productId}`)
+          productName = productResponse.name || 'Ürün'
+        } catch (error) {
+          console.error('Error fetching product:', error)
+        }
+      }
+
+      return {
+        id: item.id,
+        customerId: customerId,
+        customer: {
+          name: customer?.name || 'Bilinmeyen Müşteri',
+          company: customer?.company || customer?.companyName || ''
+        },
+        amount: item.offer || item.price || 0,
+        price: item.price || 0,
+        discount: item.discount || 0,
+        offer: item.offer || 0,
+        description: item.note || productName,
+        productName: productName,
+        date: item.created_at || item.createdAt || new Date().toISOString(),
+        status: 'completed' // Default status since these are sales
+      }
+    }))
+  } catch (error) {
+    console.error('Error loading sales data:', error)
+    salesData.value = []
+  } finally {
+    loading.value = false
   }
-])
+}
 
 // Computed properties
 const filteredSales = computed(() => {
-  let filtered = sampleSales.value
+  let filtered = salesData.value
 
   if (searchTerm.value) {
     const search = searchTerm.value.toLowerCase()
     filtered = filtered.filter(sale =>
       sale.customer?.name?.toLowerCase().includes(search) ||
       sale.description?.toLowerCase().includes(search) ||
-      sale.customer?.company?.toLowerCase().includes(search)
+      sale.customer?.company?.toLowerCase().includes(search) ||
+      sale.productName?.toLowerCase().includes(search)
     )
   }
 
@@ -386,12 +405,12 @@ const filteredSales = computed(() => {
 })
 
 const totalSales = computed(() => {
-  return sampleSales.value.reduce((sum, sale) => sum + sale.amount, 0)
+  return salesData.value.reduce((sum, sale) => sum + sale.amount, 0)
 })
 
 const monthSales = computed(() => {
   const now = new Date()
-  return sampleSales.value
+  return salesData.value
     .filter(sale => {
       const saleDate = new Date(sale.date)
       return saleDate.getMonth() === now.getMonth() && saleDate.getFullYear() === now.getFullYear()
@@ -400,7 +419,7 @@ const monthSales = computed(() => {
 })
 
 const averageSale = computed(() => {
-  return sampleSales.value.length > 0 ? totalSales.value / sampleSales.value.length : 0
+  return salesData.value.length > 0 ? totalSales.value / salesData.value.length : 0
 })
 
 // Methods
@@ -418,12 +437,16 @@ const confirmDelete = (sale) => {
 const handleDelete = async () => {
   if (saleToDelete.value) {
     try {
-      // For demo, just remove from sample data
-      sampleSales.value = sampleSales.value.filter(
-        s => s.id !== saleToDelete.value.id
-      )
+      // Delete the Customer2Product entry
+      await api(`/customer2product/${saleToDelete.value.id}`, {
+        method: 'DELETE'
+      })
+
+      // Reload the sales data
+      await loadSalesData()
     } catch (error) {
       console.error('Error deleting sale:', error)
+      alert('Satış silinirken bir hata oluştu.')
     }
   }
   showDeleteModal.value = false

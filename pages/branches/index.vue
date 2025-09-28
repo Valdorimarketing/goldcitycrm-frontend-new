@@ -98,12 +98,6 @@
               </td>
               <td class="table-cell">
                 <div class="flex flex-wrap gap-2">
-                  <NuxtLink
-                    :to="`/branches/${branch.id}`"
-                    class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm"
-                  >
-                    Görüntüle
-                  </NuxtLink>
                   <button
                     @click="editBranch(branch)"
                     class="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300 text-sm"

@@ -132,7 +132,7 @@
                 <div class="ml-4">
                   <div class="flex items-center">
                     <p class="text-sm font-medium text-gray-900 dark:text-white">
-                      Alert #{{ alert.id }}
+                      {{ alert.user?.name || `Kullanıcı ${alert.userId}` || 'Bilinmeyen Kullanıcı' }}
                     </p>
                     <span
                       v-if="!alert.isRead"
@@ -219,7 +219,11 @@ const refreshAlerts = async () => {
 const loadAllAlerts = async () => {
   try {
     const api = useApi()
-    const response = await api('/fraud-alerts')
+    const response = await api('/fraud-alerts', {
+      params: {
+        include: 'user'
+      }
+    })
     alerts.value = response
   } catch (error) {
     console.error('Error loading alerts:', error)

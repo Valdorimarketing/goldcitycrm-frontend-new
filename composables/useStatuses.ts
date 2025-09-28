@@ -48,15 +48,29 @@ export const useStatuses = () => {
     error.value = null
     try {
       const response: any = await $api(`/statuses?page=${page}`)
-      
+
+      // Helper function to map camelCase to snake_case
+      const convertBooleans = (status: any) => {
+        return {
+          ...status,
+          // Map camelCase fields from API to snake_case
+          is_remindable: status.isRemindable ?? status.is_remindable ?? false,
+          is_first: status.isFirst ?? status.is_first ?? false,
+          is_closed: status.isClosed ?? status.is_closed ?? false,
+          is_sale: status.isSale ?? status.is_sale ?? false,
+          order: status.order ?? 0
+        }
+      }
+
       // Response doğrudan array olarak geliyor
       if (Array.isArray(response)) {
-        statuses.value = response
+        statuses.value = response.map(convertBooleans)
         totalPages.value = 1
         totalItems.value = response.length
         currentPage.value = 1
       } else if (response && typeof response === 'object') {
-        statuses.value = response.data || response.statuses || []
+        const rawStatuses = response.data || response.statuses || []
+        statuses.value = rawStatuses.map(convertBooleans)
         if (response.meta) {
           currentPage.value = response.meta.current_page
           totalPages.value = response.meta.last_page
@@ -65,7 +79,7 @@ export const useStatuses = () => {
       } else {
         statuses.value = []
       }
-      
+
       return response
     } catch (err: any) {
       error.value = err.message || 'Failed to fetch statuses'
@@ -80,8 +94,19 @@ export const useStatuses = () => {
     loading.value = true
     error.value = null
     try {
-      const response = await $api<{ data: Status }>(`/statuses/${id}`)
-      return response.data
+      const response: any = await $api(`/statuses/${id}`)
+      // API returns the status directly, not wrapped in data
+      const status = response
+
+      return {
+        ...status,
+        // Map camelCase fields from API to snake_case
+        is_remindable: status.isRemindable ?? status.is_remindable ?? false,
+        is_first: status.isFirst ?? status.is_first ?? false,
+        is_closed: status.isClosed ?? status.is_closed ?? false,
+        is_sale: status.isSale ?? status.is_sale ?? false,
+        order: status.order ?? 0
+      }
     } catch (err: any) {
       error.value = err.message || 'Failed to fetch status'
       throw err
