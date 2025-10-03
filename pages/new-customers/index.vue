@@ -3,9 +3,9 @@
     <!-- Header -->
     <div class="sm:flex sm:items-center sm:justify-between mb-6">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Müşteriler</h1>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Yeni Kişiler</h1>
         <p class="mt-2 text-sm text-gray-700">
-          Tüm müşterilerinizi buradan yönetebilirsiniz.
+          Yeni durumundaki kişileri buradan görebilirsiniz.
         </p>
       </div>
       <div class="mt-4 sm:mt-0">
@@ -44,7 +44,6 @@
             class="form-input"
           >
             <option value="">Tüm Durumlar</option>
-            <option value="assigned-pending">Atandı - Beklemede</option>
             <option v-for="status in statusOptions" :key="status.value" :value="status.value">
               {{ status.label }}
             </option>
@@ -61,6 +60,45 @@
       </div>
     </div>
 
+    <!-- User Assignment -->
+    <div class="card mb-6">
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div class="sm:col-span-2 relative">
+          <label for="user-select" class="block text-sm font-medium text-gray-700 mb-2">
+            Kullanıcı Seç
+          </label>
+          <input
+            id="user-select"
+            v-model="userSearch"
+            type="text"
+            class="form-input"
+            placeholder="Kullanıcı ara..."
+            @focus="showUserDropdown = true"
+            @blur="hideUserDropdown"
+          />
+          <div v-if="showUserDropdown && filteredUsers.length > 0" class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 shadow-lg rounded-md border border-gray-200 dark:border-gray-700 max-h-60 overflow-auto">
+            <button
+              v-for="user in filteredUsers"
+              :key="user.id"
+              @mousedown.prevent="selectUser(user)"
+              class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-gray-100"
+            >
+              {{ user.name }} ({{ user.email }})
+            </button>
+          </div>
+        </div>
+        <div class="flex items-end">
+          <button
+            @click="assignSelectedCustomers"
+            :disabled="!selectedUser || selectedCustomers.length === 0"
+            class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Seçili Olanları Ata ({{ selectedCustomers.length }})
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Loading State -->
     <div v-if="loading" class="flex justify-center py-12">
       <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
@@ -72,11 +110,19 @@
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead class="bg-gray-50 dark:bg-gray-800">
             <tr>
+              <th class="table-header text-gray-700 dark:text-gray-300 w-12">
+                <input
+                  type="checkbox"
+                  :checked="isAllSelected"
+                  @change="toggleSelectAll"
+                  class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                />
+              </th>
               <th class="table-header text-gray-700 dark:text-gray-300">İsim</th>
+              <th class="table-header text-gray-700 dark:text-gray-300">E-posta</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Telefon</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Durum</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Kaynak</th>
-              <th class="table-header text-gray-700 dark:text-gray-300">İlgilenilen Konu</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Oluşturan</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Atanan</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Aktif</th>
@@ -86,6 +132,14 @@
           </thead>
           <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
             <tr v-for="customer in filteredCustomers" :key="customer.id">
+              <td class="table-cell w-12">
+                <input
+                  type="checkbox"
+                  :checked="isCustomerSelected(customer.id)"
+                  @change="toggleCustomerSelection(customer.id)"
+                  class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                />
+              </td>
               <td class="table-cell">
                 <div class="flex items-center">
                   <div class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
@@ -104,6 +158,9 @@
                 </div>
               </td>
               <td class="table-cell">
+                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.email || '-' }}</div>
+              </td>
+              <td class="table-cell">
                 <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.phone || '-' }}</div>
               </td>
               <td class="table-cell">
@@ -116,9 +173,6 @@
               </td>
               <td class="table-cell">
                 <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.source || '-' }}</div>
-              </td>
-              <td class="table-cell">
-                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.relatedTransaction || '-' }}</div>
               </td>
               <td class="table-cell">
                 <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.user?.name || '-' }}</div>
@@ -224,24 +278,15 @@
                 </div>
               </td>
             </tr>
-            
+
             <!-- Empty State -->
             <tr v-if="filteredCustomers.length === 0">
-              <td colspan="10" class="text-center py-12">
+              <td colspan="11" class="text-center py-12">
                 <UsersIcon class="mx-auto h-12 w-12 text-gray-400" />
-                <h3 class="mt-2 text-sm font-medium text-gray-900">Müşteri bulunamadı</h3>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">Yeni kişi bulunamadı</h3>
                 <p class="mt-1 text-sm text-gray-500">
-                  {{ searchTerm ? 'Arama kriterlerinize uygun müşteri bulunamadı.' : 'Henüz müşteri eklenmemiş.' }}
+                  {{ searchTerm ? 'Arama kriterlerinize uygun yeni kişi bulunamadı.' : 'Henüz yeni durumunda kişi bulunmuyor.' }}
                 </p>
-                <div class="mt-6">
-                  <NuxtLink
-                    to="/customers/new"
-                    class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
-                  >
-                    <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
-                    İlk müşteriyi ekle
-                  </NuxtLink>
-                </div>
               </td>
             </tr>
           </tbody>
@@ -286,7 +331,7 @@
               >
                 <ChevronLeftIcon class="h-5 w-5" />
               </button>
-              
+
               <button
                 v-for="page in visiblePages"
                 :key="page"
@@ -300,7 +345,7 @@
               >
                 {{ page }}
               </button>
-              
+
               <button
                 :disabled="pagination.page === pagination.totalPages"
                 @click="changePage(pagination.page + 1)"
@@ -318,7 +363,7 @@
     <div v-if="showDeleteModal" class="fixed inset-0 z-50 overflow-y-auto">
       <div class="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
         <div class="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-80 transition-opacity"></div>
-        
+
         <div class="inline-block transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
           <div class="bg-white dark:bg-gray-800 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
             <div class="sm:flex sm:items-start">
@@ -327,11 +372,11 @@
               </div>
               <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                 <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-white">
-                  Müşteriyi Sil
+                  Kişiyi Sil
                 </h3>
                 <div class="mt-2">
                   <p class="text-sm text-gray-500 dark:text-gray-400">
-                    <strong class="text-gray-700 dark:text-gray-300">{{ customerToDelete?.name }}</strong> adlı müşteriyi silmek istediğinizden emin misiniz? 
+                    <strong class="text-gray-700 dark:text-gray-300">{{ customerToDelete?.name }}</strong> adlı kişiyi silmek istediğinizden emin misiniz?
                     Bu işlem geri alınamaz.
                   </p>
                 </div>
@@ -424,13 +469,7 @@ definePageMeta({
   // middleware: 'auth' // Temporarily disabled
 })
 
-// Permissions
-const { getCustomerFilters, canAccessCustomer, userId } = usePermissions()
-
-// Store (temporarily disabled)
-// const customersStore = useCustomersStore()
-// const { customers, loading, pagination } = storeToRefs(customersStore)
-const loading = ref(true) // Start with loading true
+const loading = ref(true)
 const pagination = ref({
   total: 0,
   page: 1,
@@ -438,17 +477,21 @@ const pagination = ref({
   totalPages: 0
 })
 
-// Sample customers data for demo - will be replaced by API data
 const customersData = ref([])
-
-// Load data - moved to onMounted to avoid blocking page render
 
 // Search and filters
 const searchTerm = ref('')
 const statusFilter = ref('')
 const statusOptions = ref([])
-const statusMap = ref({}) // Status ID to status object mapping
+const statusMap = ref({})
 const usersMap = ref({}) // User ID to user object mapping
+
+// User assignment
+const users = ref([])
+const selectedUser = ref(null)
+const userSearch = ref('')
+const showUserDropdown = ref(false)
+const selectedCustomers = ref([])
 
 // Modals
 const showDeleteModal = ref(false)
@@ -476,20 +519,7 @@ const filteredCustomers = computed(() => {
   }
 
   if (statusFilter.value) {
-    if (statusFilter.value === 'assigned-pending') {
-      // Özel filtre: status is_first olan ve relevantUser'ı dolu olanlar
-      filtered = filtered.filter(customer => {
-        const customerStatus = statusMap.value[customer.status] || customer.status_info || customer.statusInfo
-        const hasFirstStatus = customerStatus?.isFirst || customerStatus?.is_first
-        const hasRelevantUser = customer.relevantUser ||
-                                customer.relevent_user ||
-                                customer.relevantUserId ||
-                                customer.relevant_user_id
-        return hasFirstStatus && hasRelevantUser
-      })
-    } else {
-      filtered = filtered.filter(customer => customer.status === statusFilter.value)
-    }
+    filtered = filtered.filter(customer => customer.status === statusFilter.value)
   }
 
   return filtered
@@ -499,7 +529,7 @@ const visiblePages = computed(() => {
   const pages = []
   const total = pagination.value.totalPages
   const current = pagination.value.page
-  
+
   if (total <= 7) {
     for (let i = 1; i <= total; i++) {
       pages.push(i)
@@ -513,11 +543,97 @@ const visiblePages = computed(() => {
       pages.push(1, '...', current - 1, current, current + 1, '...', total)
     }
   }
-  
+
   return pages.filter(page => page !== '...')
 })
 
+const filteredUsers = computed(() => {
+  if (!userSearch.value) {
+    return users.value
+  }
+  const search = userSearch.value.toLowerCase()
+  return users.value.filter(user =>
+    user.name?.toLowerCase().includes(search) ||
+    user.email?.toLowerCase().includes(search)
+  )
+})
+
+const isAllSelected = computed(() => {
+  return filteredCustomers.value.length > 0 &&
+    filteredCustomers.value.every(customer => selectedCustomers.value.includes(customer.id))
+})
+
+const isCustomerSelected = (customerId) => {
+  return selectedCustomers.value.includes(customerId)
+}
+
 // Methods
+const selectUser = (user) => {
+  selectedUser.value = user
+  userSearch.value = `${user.name} (${user.email})`
+  showUserDropdown.value = false
+}
+
+const hideUserDropdown = () => {
+  setTimeout(() => {
+    showUserDropdown.value = false
+  }, 200)
+}
+
+const toggleCustomerSelection = (customerId) => {
+  const index = selectedCustomers.value.indexOf(customerId)
+  if (index > -1) {
+    selectedCustomers.value.splice(index, 1)
+  } else {
+    selectedCustomers.value.push(customerId)
+  }
+}
+
+const toggleSelectAll = () => {
+  if (isAllSelected.value) {
+    selectedCustomers.value = []
+  } else {
+    selectedCustomers.value = filteredCustomers.value.map(customer => customer.id)
+  }
+}
+
+const assignSelectedCustomers = async () => {
+  if (!selectedUser.value || selectedCustomers.value.length === 0) {
+    return
+  }
+
+  try {
+    const api = useApi()
+
+    // Update each selected customer
+    const updatePromises = selectedCustomers.value.map(customerId =>
+      api(`/customers/${customerId}`, {
+        method: 'PATCH',
+        body: {
+          relevantUser: selectedUser.value.id
+        }
+      })
+    )
+
+    await Promise.all(updatePromises)
+
+    // Update local state - remove assigned customers from the list
+    // since they now have a relevantUser and no longer match the filter criteria
+    customersData.value = customersData.value.filter(customer =>
+      !selectedCustomers.value.includes(customer.id)
+    )
+
+    // Reset selections
+    selectedCustomers.value = []
+    selectedUser.value = null
+    userSearch.value = ''
+
+    console.log('Customers assigned successfully')
+  } catch (error) {
+    console.error('Error assigning customers:', error)
+  }
+}
+
 const resetFilters = () => {
   searchTerm.value = ''
   statusFilter.value = ''
@@ -573,18 +689,18 @@ const handleDelete = async () => {
   if (customerToDelete.value) {
     try {
       const api = useApi()
-      
+
       // First remove from local state for immediate feedback
       const customerId = customerToDelete.value.id
       customersData.value = customersData.value.filter(
         c => c.id !== customerId
       )
-      
+
       // Then sync with API in background
       await api(`/customers/${customerId}`, {
         method: 'DELETE'
       })
-      
+
       console.log('Customer deleted successfully')
     } catch (error) {
       console.error('Error deleting customer (using demo mode):', error)
@@ -618,12 +734,12 @@ const getStatusClass = (statusId) => {
   if (!status) {
     return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
   }
-  
+
   // Use color from status if available
   if (status.color) {
     return `bg-[${status.color}20] text-[${status.color}] dark:bg-[${status.color}30] dark:text-[${status.color}]`
   }
-  
+
   // Default colors based on status flags
   if (status.isSale) {
     return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
@@ -634,7 +750,7 @@ const getStatusClass = (statusId) => {
   if (status.isFirst) {
     return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
   }
-  
+
   return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
 }
 
@@ -647,13 +763,16 @@ const getStatusText = (statusId) => {
 onMounted(async () => {
   try {
     const api = useApi()
+    const { getCustomerFilters, canAccessCustomer } = usePermissions()
     console.log('Loading statuses, users and customers...')
 
-    // Load users first
+    // Load users
     try {
       const usersResponse = await api('/users')
       console.log('Users loaded:', usersResponse)
       if (Array.isArray(usersResponse)) {
+        users.value = usersResponse
+        // Create users map
         usersResponse.forEach(user => {
           usersMap.value[user.id] = user
         })
@@ -662,30 +781,20 @@ onMounted(async () => {
       console.error('Failed to load users:', usersError)
     }
 
-    // Load statuses
+    // Load statuses first
     try {
       const statusResponse = await api('/statuses')
       console.log('Statuses loaded:', statusResponse)
 
       if (Array.isArray(statusResponse)) {
-        // Create status map for quick lookup with field mapping
+        // Create status map for quick lookup
         statusResponse.forEach(status => {
-          // Map snake_case to camelCase for consistency
-          statusMap.value[status.id] = {
-            ...status,
-            isDoctor: status.isDoctor ?? status.is_doctor ?? false,
-            isPricing: status.isPricing ?? status.is_pricing ?? false,
-            isRemindable: status.isRemindable ?? status.is_remindable ?? false,
-            isFirst: status.isFirst ?? status.is_first ?? false,
-            isClosed: status.isClosed ?? status.is_closed ?? false,
-            isSale: status.isSale ?? status.is_sale ?? false
-          }
-          console.log('Status mapped:', statusMap.value[status.id].name, 'isDoctor:', statusMap.value[status.id].isDoctor, 'isPricing:', statusMap.value[status.id].isPricing)
+          statusMap.value[status.id] = status
         })
 
-        // Create status options for filter dropdown
+        // Filter to show only statuses with is_first flag
         statusOptions.value = statusResponse
-          .filter(status => status.isActive !== false) // Only show active statuses
+          .filter(status => status.isActive !== false && status.isFirst === true)
           .map(status => ({
             value: status.id,
             label: status.name
@@ -697,62 +806,37 @@ onMounted(async () => {
 
     // Load customers with role-based filters
     const filters = getCustomerFilters()
-    console.log('=== CUSTOMER FILTERS ===')
     console.log('Applying role-based filters:', filters)
-    console.log('API URL will be: /customers with query:', filters)
+    const response = await api('/customers', { query: filters })
 
-    const response = await api('/customers', {
-      query: filters
-    })
-
-    console.log('=== API RESPONSE ===')
-    console.log('Total customers received:', Array.isArray(response) ? response.length : response.data?.length)
     console.log('Customers loaded:', response)
-
     if (Array.isArray(response)) {
-      // Direct array response from backend
-      const mappedCustomers = response.map(customer => {
-        console.log('=== FULL CUSTOMER OBJECT ===')
-        console.log('Customer ID:', customer.id)
-        console.log('Customer Name:', customer.name, customer.surname)
-        console.log('ALL FIELDS:', JSON.stringify(customer, null, 2))
-        console.log('customer.user:', customer.user)
-        console.log('customer.relevent_user:', customer.relevent_user)
-        console.log('customer.relevantUser:', customer.relevantUser)
-        console.log('Current userId:', userId.value)
-
-        // Status bilgisini statusMap'ten al ve customer'a ekle
-        const customerStatusId = customer.statusId || customer.status
-        const statusInfo = statusMap.value[customerStatusId]
-        console.log('Customer status ID:', customerStatusId, 'Status info:', statusInfo)
-
+      // Filter customers to only show those with is_new status
+      const allCustomers = response.map(customer => {
         // Map user IDs to user objects
-        const userIdValue = customer.userId || customer.user_id || (typeof customer.user === 'object' ? customer.user?.id : customer.user)
-        const relevantUserIdValue = customer.relevantUserId || customer.relevant_user_id || customer.relevent_user || (typeof customer.relevantUser === 'object' ? customer.relevantUser?.id : customer.relevantUser)
+        const userId = customer.userId || customer.user_id || customer.user
+        const relevantUserId = customer.relevantUserId || customer.relevant_user_id || customer.relevent_user || customer.relevantUser
 
         return {
           ...customer,
           name: `${customer.name || ''} ${customer.surname || ''}`.trim() || 'İsimsiz',
-          status: customerStatusId, // Use statusId if available
-          status_info: statusInfo, // Status bilgisini ekle
-          statusInfo: statusInfo, // Alternatif field name için
+          status: customer.statusId || customer.status,
           source: customer.source || '-',
           isActive: customer.isActive !== undefined ? customer.isActive : true,
-          user: usersMap.value[userIdValue] || (typeof customer.user === 'object' ? customer.user : null),
-          relevantUser: usersMap.value[relevantUserIdValue] || (typeof customer.relevantUser === 'object' ? customer.relevantUser : null)
+          user: usersMap.value[userId] || customer.user,
+          relevantUser: usersMap.value[relevantUserId] || customer.relevantUser
         }
       })
 
-      console.log('Before filtering - Total customers:', mappedCustomers.length)
-      // Client-side filter as fallback (in case backend doesn't support filters yet)
-      customersData.value = mappedCustomers.filter(customer => {
+      // Filter to only include customers with status that has is_first flag, has relevantUser, and access permission
+      customersData.value = allCustomers.filter(customer => {
+        const status = statusMap.value[customer.status]
+        const isNew = status?.isFirst === true && customer.relevantUser
         const hasAccess = canAccessCustomer(customer)
-        console.log('Customer:', customer.name, 'Has access:', hasAccess)
-        return hasAccess
+        return isNew && hasAccess
       })
-      console.log('After filtering - Total customers:', customersData.value.length)
     } else {
-      customersData.value = (response.data || []).filter(customer => canAccessCustomer(customer))
+      customersData.value = response.data || []
     }
   } catch (error) {
     console.error('Failed to load data:', error)
@@ -763,6 +847,6 @@ onMounted(async () => {
 
 // Page head
 useHead({
-  title: 'Müşteriler - Valdori CRM'
+  title: 'Yeni Kişiler - Valdori CRM'
 })
-</script> 
+</script>

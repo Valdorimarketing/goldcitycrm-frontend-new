@@ -323,6 +323,9 @@ import { usePayments } from '~/composables/usePayments'
 // API integration
 const { payments, loading, error, fetchPayments, deletePayment: deletePaymentApi } = usePayments()
 
+// Permissions
+const { getRelatedDataFilters } = usePermissions()
+
 // Search and filters
 const searchTerm = ref('')
 const statusFilter = ref('')
@@ -334,7 +337,8 @@ const paymentToDelete = ref(null)
 
 // Fetch data on mount
 onMounted(async () => {
-  await fetchPayments()
+  const filters = getRelatedDataFilters() || {}
+  await fetchPayments(undefined, filters)
 })
 
 // Computed properties

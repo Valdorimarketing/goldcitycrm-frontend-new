@@ -123,8 +123,22 @@
                           class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                         />
                         <label for="is_remindable" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
-                          Hatırlatma yapılabilir
+                          Zorunlu Arama
                         </label>
+                      </div>
+
+                      <div v-if="formData.is_remindable" class="ml-6">
+                        <label for="remindingDay" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                          Zorunlu Arama Günü
+                        </label>
+                        <input
+                          id="remindingDay"
+                          v-model.number="formData.remindingDay"
+                          type="number"
+                          min="0"
+                          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                          placeholder="Örn: 7"
+                        />
                       </div>
 
                       <div class="flex items-center">
@@ -160,6 +174,30 @@
                         />
                         <label for="is_sale" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                           Satış durumu
+                        </label>
+                      </div>
+
+                      <div class="flex items-center">
+                        <input
+                          id="isDoctor"
+                          v-model="formData.isDoctor"
+                          type="checkbox"
+                          class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                        />
+                        <label for="isDoctor" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                          Doktor Kontrolü Gerekli
+                        </label>
+                      </div>
+
+                      <div class="flex items-center">
+                        <input
+                          id="isPricing"
+                          v-model="formData.isPricing"
+                          type="checkbox"
+                          class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                        />
+                        <label for="isPricing" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                          Fiyatlandırma Gerekli
                         </label>
                       </div>
                     </div>
@@ -236,7 +274,10 @@ const defaultFormData = () => ({
   is_remindable: false,
   is_first: false,
   is_closed: false,
-  is_sale: false
+  is_sale: false,
+  remindingDay: null as number | null,
+  isDoctor: false,
+  isPricing: false
 })
 
 const formData = ref(defaultFormData())
@@ -251,7 +292,10 @@ watch(() => props.status, (newStatus) => {
       is_remindable: newStatus.is_remindable === true || (newStatus as any).isRemindable === true,
       is_first: newStatus.is_first === true || (newStatus as any).isFirst === true,
       is_closed: newStatus.is_closed === true || (newStatus as any).isClosed === true,
-      is_sale: newStatus.is_sale === true || (newStatus as any).isSale === true
+      is_sale: newStatus.is_sale === true || (newStatus as any).isSale === true,
+      remindingDay: newStatus.remindingDay ?? (newStatus as any).reminding_day ?? null,
+      isDoctor: newStatus.isDoctor === true || (newStatus as any).is_doctor === true,
+      isPricing: newStatus.isPricing === true || (newStatus as any).is_pricing === true
     }
   } else {
     formData.value = defaultFormData()

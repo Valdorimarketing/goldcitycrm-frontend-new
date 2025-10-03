@@ -13,28 +13,73 @@ export const useCustomersStore = defineStore('customers', () => {
   })
 
   // Get all customers
-  const fetchCustomers = async (page = 1, limit = 10) => {
+  const fetchCustomers = async (page = 1, limit = 10, filters: any = {}) => {
+    console.log('[Store] fetchCustomers called with:', { page, limit, filters })
     loading.value = true
     try {
+      console.log('[Store] Getting config...')
       const config = useRuntimeConfig()
-      const response = await $fetch<PaginatedResponse<Customer>>('/customers', {
+      console.log('[Store] Config apiBase:', config.public.apiBase)
+
+      const queryParams: any = { page, limit, ...filters }
+      console.log('[Store] Query params:', queryParams)
+
+      const token = useCookie('auth-token').value
+      console.log('[Store] Token exists:', !!token)
+
+      console.log('[Store] Calling API...')
+      const response = await $fetch<any>('/customers', {
         baseURL: config.public.apiBase,
-        query: { page, limit },
+        query: queryParams,
         headers: {
-          Authorization: `Bearer ${useCookie('auth-token').value}`
+          Authorization: `Bearer ${token}`
         }
       })
-      
-      customers.value = response.data
-      pagination.value = {
-        total: response.total,
-        page: response.page,
-        limit: response.limit,
-        totalPages: response.totalPages
+
+      console.log('[Store] Customers API Response:', response)
+
+      // Handle different response formats
+      if (Array.isArray(response)) {
+        // Response is directly an array
+        customers.value = response
+        pagination.value = {
+          total: response.length,
+          page: page,
+          limit: limit,
+          totalPages: 1
+        }
+      } else if (response.data && Array.isArray(response.data)) {
+        // Response has data property
+        customers.value = response.data
+        pagination.value = {
+          total: response.total || response.data.length,
+          page: response.page || page,
+          limit: response.limit || limit,
+          totalPages: response.totalPages || Math.ceil((response.total || response.data.length) / limit)
+        }
+      } else {
+        // Unknown format
+        customers.value = []
+        pagination.value = {
+          total: 0,
+          page: page,
+          limit: limit,
+          totalPages: 0
+        }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching customers:', error)
-      throw error
+      console.error('Error details:', error?.data, error?.statusCode, error?.message)
+
+      // Set empty values on error
+      customers.value = []
+      pagination.value = {
+        total: 0,
+        page: page,
+        limit: limit,
+        totalPages: 0
+      }
+      // Don't throw, just log the error
     } finally {
       loading.value = false
     }

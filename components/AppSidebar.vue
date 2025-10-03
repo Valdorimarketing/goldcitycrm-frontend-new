@@ -22,28 +22,93 @@
 
     <!-- Navigation -->
     <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-      <button
-        v-for="item in navigationItems"
-        :key="item.name"
-        @click="navigateTo(item.href)"
-        :class="[
-          'group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 cursor-pointer w-full text-left',
-          route.path === item.href
-            ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300'
-            : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
-        ]"
-      >
-        <component
-          :is="item.icon"
+      <template v-for="item in navigationItems" :key="item.name">
+        <!-- Collapsible Group -->
+        <div v-if="item.type === 'group'">
+          <!-- Group Header Button -->
+          <button
+            @click="toggleGroup(item.name)"
+            :class="[
+              'group flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 cursor-pointer w-full text-left',
+              'text-gray-700 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
+            ]"
+          >
+            <div class="flex items-center">
+              <component
+                :is="item.icon"
+                :class="[
+                  'flex-shrink-0 w-5 h-5',
+                  sidebarOpen ? 'mr-3' : 'mx-auto'
+                ]"
+              />
+              <transition name="fade">
+                <span v-if="sidebarOpen">{{ item.name }}</span>
+              </transition>
+            </div>
+            <transition name="fade">
+              <svg
+                v-if="sidebarOpen"
+                :class="[
+                  'w-4 h-4 transition-transform duration-200',
+                  openGroups[item.name] ? 'rotate-90' : ''
+                ]"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </transition>
+          </button>
+
+          <!-- Group Items -->
+          <div
+            v-show="openGroups[item.name] && sidebarOpen"
+            class="mt-1 space-y-1"
+          >
+            <button
+              v-for="subItem in item.items"
+              :key="subItem.name"
+              @click="navigateTo(subItem.href)"
+              :class="[
+                'group flex items-center pl-11 pr-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 cursor-pointer w-full text-left',
+                route.path === subItem.href
+                  ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300'
+                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
+              ]"
+            >
+              <component
+                :is="subItem.icon"
+                class="flex-shrink-0 w-4 h-4 mr-3"
+              />
+              <span>{{ subItem.name }}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Regular Item -->
+        <button
+          v-else
+          @click="navigateTo(item.href)"
           :class="[
-            'flex-shrink-0 w-5 h-5',
-            sidebarOpen ? 'mr-3' : 'mx-auto'
+            'group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 cursor-pointer w-full text-left',
+            route.path === item.href
+              ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300'
+              : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
           ]"
-        />
-        <transition name="fade">
-          <span v-if="sidebarOpen">{{ item.name }}</span>
-        </transition>
-      </button>
+        >
+          <component
+            :is="item.icon"
+            :class="[
+              'flex-shrink-0 w-5 h-5',
+              sidebarOpen ? 'mr-3' : 'mx-auto'
+            ]"
+          />
+          <transition name="fade">
+            <span v-if="sidebarOpen">{{ item.name }}</span>
+          </transition>
+        </button>
+      </template>
     </nav>
 
     <!-- User Profile -->
@@ -70,7 +135,7 @@
 </template>
 
 <script setup>
-import { inject } from 'vue'
+import { inject, ref, computed } from 'vue'
 import { useAuthStore } from '~/stores/auth'
 import {
   HomeIcon,
@@ -85,31 +150,89 @@ import {
   TagIcon,
   BuildingOffice2Icon,
   BuildingOfficeIcon,
-  UserGroupIcon
+  UserGroupIcon,
+  UserPlusIcon,
+  MagnifyingGlassIcon,
+  CircleStackIcon
 } from '@heroicons/vue/24/outline'
 
 const authStore = useAuthStore()
+// Nuxt 3 auto-imports composables from ~/composables
+const { canViewMenu } = usePermissions()
 const sidebar = inject('sidebar')
 const { sidebarOpen, mobileSidebarOpen } = sidebar
 const router = useRouter()
 const route = useRoute()
 
-const navigationItems = [
+const openGroups = ref({
+  'Müşteriler': false,
+  'Tanımlamalar': false
+})
+
+const toggleGroup = (groupName) => {
+  openGroups.value[groupName] = !openGroups.value[groupName]
+}
+
+const allNavigationItems = [
   { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
-  { name: 'Müşteriler', href: '/customers', icon: UsersIcon },
-  { name: 'Hatırlatmalar', href: '/reminders', icon: BellIcon },
+  { name: 'Havuz Verileri', href: '/pool-data', icon: CircleStackIcon },
+  {
+    name: 'Müşteriler',
+    type: 'group',
+    icon: UsersIcon,
+    items: [
+      { name: 'Kişiler', href: '/customers', icon: UsersIcon },
+      { name: 'Yeni Kişiler', href: '/new-customers', icon: UserPlusIcon },
+      { name: 'Dinamik Arama', href: '/dinamik-arama', icon: MagnifyingGlassIcon },
+      { name: 'Hatırlatmalar', href: '/reminders', icon: BellIcon },
+    ]
+  },
   { name: 'Satışlar', href: '/sales', icon: ShoppingBagIcon },
-  { name: 'Toplantılar', href: '/meetings', icon: CalendarIcon },
+  { name: 'Randevular', href: '/meetings', icon: CalendarIcon },
   { name: 'Ödemeler', href: '/payments', icon: CurrencyDollarIcon },
-  { name: 'Kullanıcılar', href: '/users', icon: UserIcon },
-  { name: 'Ürünler', href: '/products', icon: ShoppingBagIcon },
-  { name: 'Durumlar', href: '/statuses', icon: TagIcon },
-  { name: 'Hastaneler', href: '/hospitals', icon: BuildingOffice2Icon },
-  { name: 'Branşlar', href: '/branches', icon: BuildingOfficeIcon },
-  { name: 'Doktorlar', href: '/doctors', icon: UserGroupIcon },
-  { name: 'Dinamik Alanlar', href: '/dynamic-fields', icon: WrenchScrewdriverIcon },
+  {
+    name: 'Tanımlamalar',
+    type: 'group',
+    icon: WrenchScrewdriverIcon,
+    items: [
+      { name: 'Kullanıcılar', href: '/users', icon: UserIcon },
+      { name: 'Kullanıcı Grupları', href: '/user-groups', icon: UserGroupIcon },
+      { name: 'Ürünler', href: '/products', icon: ShoppingBagIcon },
+      { name: 'Durumlar', href: '/statuses', icon: TagIcon },
+      { name: 'Hastaneler', href: '/hospitals', icon: BuildingOffice2Icon },
+      { name: 'Branşlar', href: '/branches', icon: BuildingOfficeIcon },
+      { name: 'Doktorlar', href: '/doctors', icon: UserGroupIcon },
+      { name: 'Dinamik Alanlar', href: '/dynamic-fields', icon: WrenchScrewdriverIcon },
+    ]
+  },
   { name: 'Fraud Alerts', href: '/fraud-alerts', icon: ExclamationTriangleIcon },
 ]
+
+// Yetkilere göre filtrelenmiş menü
+const navigationItems = computed(() => {
+  return allNavigationItems.filter(item => {
+    // Menü ana başlığı görülebilir mi kontrol et
+    if (!canViewMenu(item.name)) return false
+
+    // Eğer grup ise, alt itemları da filtrele
+    if (item.type === 'group' && item.items) {
+      const filteredItems = item.items.filter(subItem => canViewMenu(subItem.name))
+      // Eğer hiç alt item kalmadıysa grubu gösterme
+      if (filteredItems.length === 0) return false
+    }
+
+    return true
+  }).map(item => {
+    // Grup itemlarını filtrele
+    if (item.type === 'group' && item.items) {
+      return {
+        ...item,
+        items: item.items.filter(subItem => canViewMenu(subItem.name))
+      }
+    }
+    return item
+  })
+})
 
 const navigateTo = (path) => {
   router.push(path)

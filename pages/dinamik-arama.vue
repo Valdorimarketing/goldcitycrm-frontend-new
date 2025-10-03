@@ -3,19 +3,10 @@
     <!-- Header -->
     <div class="sm:flex sm:items-center sm:justify-between mb-6">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Müşteriler</h1>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Dinamik Arama</h1>
         <p class="mt-2 text-sm text-gray-700">
-          Tüm müşterilerinizi buradan yönetebilirsiniz.
+          Hatırlatma gerektiren müşterilerinizi buradan yönetebilirsiniz.
         </p>
-      </div>
-      <div class="mt-4 sm:mt-0">
-        <button
-          @click="showCreateModal = true"
-          class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
-        >
-          <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
-          Yeni Müşteri
-        </button>
       </div>
     </div>
 
@@ -44,7 +35,6 @@
             class="form-input"
           >
             <option value="">Tüm Durumlar</option>
-            <option value="assigned-pending">Atandı - Beklemede</option>
             <option v-for="status in statusOptions" :key="status.value" :value="status.value">
               {{ status.label }}
             </option>
@@ -73,14 +63,14 @@
           <thead class="bg-gray-50 dark:bg-gray-800">
             <tr>
               <th class="table-header text-gray-700 dark:text-gray-300">İsim</th>
+              <th class="table-header text-gray-700 dark:text-gray-300">E-posta</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Telefon</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Durum</th>
+              <th class="table-header text-gray-700 dark:text-gray-300">Hatırlatma Tarihi</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Kaynak</th>
-              <th class="table-header text-gray-700 dark:text-gray-300">İlgilenilen Konu</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Oluşturan</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Atanan</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Aktif</th>
-              <th class="table-header text-gray-700 dark:text-gray-300">Eklenme Tarihi</th>
               <th class="table-header text-gray-700 dark:text-gray-300">İşlemler</th>
             </tr>
           </thead>
@@ -104,6 +94,9 @@
                 </div>
               </td>
               <td class="table-cell">
+                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.email || '-' }}</div>
+              </td>
+              <td class="table-cell">
                 <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.phone || '-' }}</div>
               </td>
               <td class="table-cell">
@@ -115,10 +108,12 @@
                 </span>
               </td>
               <td class="table-cell">
-                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.source || '-' }}</div>
+                <div class="text-sm text-gray-900 dark:text-gray-100">
+                  {{ formatDateTime(customer.remindingDate) }}
+                </div>
               </td>
               <td class="table-cell">
-                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.relatedTransaction || '-' }}</div>
+                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.source || '-' }}</div>
               </td>
               <td class="table-cell">
                 <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.user?.name || '-' }}</div>
@@ -133,11 +128,6 @@
                 >
                   {{ customer.isActive ? 'Aktif' : 'Pasif' }}
                 </span>
-              </td>
-              <td class="table-cell">
-                <div class="text-sm text-gray-900 dark:text-gray-100">
-                  {{ formatDate(customer.createdAt) }}
-                </div>
               </td>
               <td class="table-cell">
                 <div class="flex gap-1">
@@ -211,157 +201,24 @@
                       Düzenle
                     </span>
                   </NuxtLink>
-                  <button
-                    @click="confirmDelete(customer)"
-                    class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    title="Sil"
-                  >
-                    <TrashIcon class="h-4 w-4 text-red-600 dark:text-red-400" />
-                    <span class="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 dark:bg-gray-700 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                      Sil
-                    </span>
-                  </button>
                 </div>
               </td>
             </tr>
-            
+
             <!-- Empty State -->
             <tr v-if="filteredCustomers.length === 0">
               <td colspan="10" class="text-center py-12">
                 <UsersIcon class="mx-auto h-12 w-12 text-gray-400" />
-                <h3 class="mt-2 text-sm font-medium text-gray-900">Müşteri bulunamadı</h3>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">Hatırlatma gerektiren müşteri bulunamadı</h3>
                 <p class="mt-1 text-sm text-gray-500">
-                  {{ searchTerm ? 'Arama kriterlerinize uygun müşteri bulunamadı.' : 'Henüz müşteri eklenmemiş.' }}
+                  {{ searchTerm ? 'Arama kriterlerinize uygun müşteri bulunamadı.' : 'Henüz hatırlatma gerektiren müşteri bulunmuyor.' }}
                 </p>
-                <div class="mt-6">
-                  <NuxtLink
-                    to="/customers/new"
-                    class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
-                  >
-                    <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
-                    İlk müşteriyi ekle
-                  </NuxtLink>
-                </div>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
-
-      <!-- Pagination -->
-      <div v-if="pagination.totalPages > 1" class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-        <div class="flex flex-1 justify-between sm:hidden">
-          <button
-            :disabled="pagination.page === 1"
-            @click="changePage(pagination.page - 1)"
-            class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
-          >
-            Önceki
-          </button>
-          <button
-            :disabled="pagination.page === pagination.totalPages"
-            @click="changePage(pagination.page + 1)"
-            class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
-          >
-            Sonraki
-          </button>
-        </div>
-        <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-          <div>
-            <p class="text-sm text-gray-700">
-              <span class="font-medium">{{ ((pagination.page - 1) * pagination.limit) + 1 }}</span>
-              -
-              <span class="font-medium">{{ Math.min(pagination.page * pagination.limit, pagination.total) }}</span>
-              arası, toplam
-              <span class="font-medium">{{ pagination.total }}</span>
-              sonuç
-            </p>
-          </div>
-          <div>
-            <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm">
-              <button
-                :disabled="pagination.page === 1"
-                @click="changePage(pagination.page - 1)"
-                class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:opacity-50"
-              >
-                <ChevronLeftIcon class="h-5 w-5" />
-              </button>
-              
-              <button
-                v-for="page in visiblePages"
-                :key="page"
-                @click="changePage(page)"
-                :class="[
-                  page === pagination.page
-                    ? 'bg-indigo-600 text-white'
-                    : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50',
-                  'relative inline-flex items-center px-4 py-2 text-sm font-semibold'
-                ]"
-              >
-                {{ page }}
-              </button>
-              
-              <button
-                :disabled="pagination.page === pagination.totalPages"
-                @click="changePage(pagination.page + 1)"
-                class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:opacity-50"
-              >
-                <ChevronRightIcon class="h-5 w-5" />
-              </button>
-            </nav>
-          </div>
-        </div>
-      </div>
     </div>
-
-    <!-- Delete Confirmation Modal -->
-    <div v-if="showDeleteModal" class="fixed inset-0 z-50 overflow-y-auto">
-      <div class="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
-        <div class="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-80 transition-opacity"></div>
-        
-        <div class="inline-block transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
-          <div class="bg-white dark:bg-gray-800 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-            <div class="sm:flex sm:items-start">
-              <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30 sm:mx-0 sm:h-10 sm:w-10">
-                <ExclamationTriangleIcon class="h-6 w-6 text-red-600 dark:text-red-400" />
-              </div>
-              <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-white">
-                  Müşteriyi Sil
-                </h3>
-                <div class="mt-2">
-                  <p class="text-sm text-gray-500 dark:text-gray-400">
-                    <strong class="text-gray-700 dark:text-gray-300">{{ customerToDelete?.name }}</strong> adlı müşteriyi silmek istediğinizden emin misiniz? 
-                    Bu işlem geri alınamaz.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-            <button
-              @click="handleDelete"
-              class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 dark:bg-red-600 dark:hover:bg-red-700 sm:ml-3 sm:w-auto"
-            >
-              Sil
-            </button>
-            <button
-              @click="showDeleteModal = false"
-              class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-600 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 sm:mt-0 sm:w-auto"
-            >
-              İptal
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Customer Create Modal -->
-    <CustomerCreateModal
-      :show="showCreateModal"
-      @close="showCreateModal = false"
-      @created="handleCustomerCreated"
-    />
 
     <!-- Customer History Modal -->
     <CustomerHistoryModal
@@ -405,18 +262,13 @@
 
 <script setup>
 import {
-  PlusIcon,
   UsersIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ExclamationTriangleIcon,
   EyeIcon,
   ClockIcon,
   DocumentTextIcon,
   UserIcon,
   ShoppingBagIcon,
   PencilIcon,
-  TrashIcon,
   FolderIcon
 } from '@heroicons/vue/24/outline'
 
@@ -424,36 +276,20 @@ definePageMeta({
   // middleware: 'auth' // Temporarily disabled
 })
 
-// Permissions
-const { getCustomerFilters, canAccessCustomer, userId } = usePermissions()
-
-// Store (temporarily disabled)
-// const customersStore = useCustomersStore()
-// const { customers, loading, pagination } = storeToRefs(customersStore)
-const loading = ref(true) // Start with loading true
-const pagination = ref({
-  total: 0,
-  page: 1,
-  limit: 10,
-  totalPages: 0
-})
+const loading = ref(true)
 
 // Sample customers data for demo - will be replaced by API data
 const customersData = ref([])
-
-// Load data - moved to onMounted to avoid blocking page render
 
 // Search and filters
 const searchTerm = ref('')
 const statusFilter = ref('')
 const statusOptions = ref([])
 const statusMap = ref({}) // Status ID to status object mapping
+const remindableStatusIds = ref([]) // Store remindable status IDs
 const usersMap = ref({}) // User ID to user object mapping
 
 // Modals
-const showDeleteModal = ref(false)
-const customerToDelete = ref(null)
-const showCreateModal = ref(false)
 const showHistoryModal = ref(false)
 const showNotesModal = ref(false)
 const showDoctorModal = ref(false)
@@ -476,62 +312,23 @@ const filteredCustomers = computed(() => {
   }
 
   if (statusFilter.value) {
-    if (statusFilter.value === 'assigned-pending') {
-      // Özel filtre: status is_first olan ve relevantUser'ı dolu olanlar
-      filtered = filtered.filter(customer => {
-        const customerStatus = statusMap.value[customer.status] || customer.status_info || customer.statusInfo
-        const hasFirstStatus = customerStatus?.isFirst || customerStatus?.is_first
-        const hasRelevantUser = customer.relevantUser ||
-                                customer.relevent_user ||
-                                customer.relevantUserId ||
-                                customer.relevant_user_id
-        return hasFirstStatus && hasRelevantUser
-      })
-    } else {
-      filtered = filtered.filter(customer => customer.status === statusFilter.value)
-    }
+    filtered = filtered.filter(customer => customer.status === statusFilter.value)
   }
+
+  // Sort by reminding date (ascending - earliest first)
+  filtered.sort((a, b) => {
+    const dateA = a.remindingDate ? new Date(a.remindingDate).getTime() : Infinity
+    const dateB = b.remindingDate ? new Date(b.remindingDate).getTime() : Infinity
+    return dateA - dateB
+  })
 
   return filtered
-})
-
-const visiblePages = computed(() => {
-  const pages = []
-  const total = pagination.value.totalPages
-  const current = pagination.value.page
-  
-  if (total <= 7) {
-    for (let i = 1; i <= total; i++) {
-      pages.push(i)
-    }
-  } else {
-    if (current <= 4) {
-      pages.push(1, 2, 3, 4, 5, '...', total)
-    } else if (current >= total - 3) {
-      pages.push(1, '...', total - 4, total - 3, total - 2, total - 1, total)
-    } else {
-      pages.push(1, '...', current - 1, current, current + 1, '...', total)
-    }
-  }
-  
-  return pages.filter(page => page !== '...')
 })
 
 // Methods
 const resetFilters = () => {
   searchTerm.value = ''
   statusFilter.value = ''
-}
-
-const changePage = (page) => {
-  if (page >= 1 && page <= pagination.value.totalPages) {
-    customersStore.fetchCustomers(page)
-  }
-}
-
-const confirmDelete = (customer) => {
-  customerToDelete.value = customer
-  showDeleteModal.value = true
 }
 
 const showHistory = (customer) => {
@@ -569,48 +366,16 @@ const showFiles = (customer) => {
   showFilesModal.value = true
 }
 
-const handleDelete = async () => {
-  if (customerToDelete.value) {
-    try {
-      const api = useApi()
-      
-      // First remove from local state for immediate feedback
-      const customerId = customerToDelete.value.id
-      customersData.value = customersData.value.filter(
-        c => c.id !== customerId
-      )
-      
-      // Then sync with API in background
-      await api(`/customers/${customerId}`, {
-        method: 'DELETE'
-      })
-      
-      console.log('Customer deleted successfully')
-    } catch (error) {
-      console.error('Error deleting customer (using demo mode):', error)
-      // Customer is already removed from local state, so no need to revert
-    }
-  }
-  showDeleteModal.value = false
-  customerToDelete.value = null
-}
-
-// Handle customer creation
-const handleCustomerCreated = (customer) => {
-  console.log('New customer created:', customer)
-  // Add to beginning of customers list for immediate visibility
-  customersData.value.unshift({
-    ...customer,
-    name: `${customer.name || ''} ${customer.surname || ''}`.trim() || 'İsimsiz',
-    status: customer.status || 'new',
-    source: customer.source || '-',
-    isActive: customer.isActive !== undefined ? customer.isActive : true
-  })
-}
-
-const formatDate = (dateString) => {
+const formatDateTime = (dateString) => {
   if (!dateString) return '-'
-  return new Date(dateString).toLocaleDateString('tr-TR')
+  const date = new Date(dateString)
+  return date.toLocaleString('tr-TR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
 }
 
 const getStatusClass = (statusId) => {
@@ -618,12 +383,12 @@ const getStatusClass = (statusId) => {
   if (!status) {
     return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
   }
-  
+
   // Use color from status if available
   if (status.color) {
     return `bg-[${status.color}20] text-[${status.color}] dark:bg-[${status.color}30] dark:text-[${status.color}]`
   }
-  
+
   // Default colors based on status flags
   if (status.isSale) {
     return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
@@ -634,7 +399,7 @@ const getStatusClass = (statusId) => {
   if (status.isFirst) {
     return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
   }
-  
+
   return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
 }
 
@@ -647,6 +412,7 @@ const getStatusText = (statusId) => {
 onMounted(async () => {
   try {
     const api = useApi()
+    const { getCustomerFilters, canAccessCustomer } = usePermissions()
     console.log('Loading statuses, users and customers...')
 
     // Load users first
@@ -668,24 +434,19 @@ onMounted(async () => {
       console.log('Statuses loaded:', statusResponse)
 
       if (Array.isArray(statusResponse)) {
-        // Create status map for quick lookup with field mapping
+        // Create status map for quick lookup
         statusResponse.forEach(status => {
-          // Map snake_case to camelCase for consistency
-          statusMap.value[status.id] = {
-            ...status,
-            isDoctor: status.isDoctor ?? status.is_doctor ?? false,
-            isPricing: status.isPricing ?? status.is_pricing ?? false,
-            isRemindable: status.isRemindable ?? status.is_remindable ?? false,
-            isFirst: status.isFirst ?? status.is_first ?? false,
-            isClosed: status.isClosed ?? status.is_closed ?? false,
-            isSale: status.isSale ?? status.is_sale ?? false
+          statusMap.value[status.id] = status
+
+          // Track remindable status IDs
+          if (status.is_remindable || status.isRemindable) {
+            remindableStatusIds.value.push(status.id)
           }
-          console.log('Status mapped:', statusMap.value[status.id].name, 'isDoctor:', statusMap.value[status.id].isDoctor, 'isPricing:', statusMap.value[status.id].isPricing)
         })
 
-        // Create status options for filter dropdown
+        // Create status options for filter dropdown (only remindable statuses)
         statusOptions.value = statusResponse
-          .filter(status => status.isActive !== false) // Only show active statuses
+          .filter(status => (status.is_remindable || status.isRemindable) && status.isActive !== false)
           .map(status => ({
             value: status.id,
             label: status.name
@@ -697,62 +458,78 @@ onMounted(async () => {
 
     // Load customers with role-based filters
     const filters = getCustomerFilters()
-    console.log('=== CUSTOMER FILTERS ===')
-    console.log('Applying role-based filters:', filters)
-    console.log('API URL will be: /customers with query:', filters)
+    console.log('[Dinamik Arama] Applying role-based filters:', filters)
+    const response = await api('/customers', { query: filters })
 
-    const response = await api('/customers', {
-      query: filters
-    })
-
-    console.log('=== API RESPONSE ===')
-    console.log('Total customers received:', Array.isArray(response) ? response.length : response.data?.length)
-    console.log('Customers loaded:', response)
-
+    console.log('[Dinamik Arama] Customers loaded:', response.length, 'customers')
     if (Array.isArray(response)) {
       // Direct array response from backend
-      const mappedCustomers = response.map(customer => {
-        console.log('=== FULL CUSTOMER OBJECT ===')
-        console.log('Customer ID:', customer.id)
-        console.log('Customer Name:', customer.name, customer.surname)
-        console.log('ALL FIELDS:', JSON.stringify(customer, null, 2))
-        console.log('customer.user:', customer.user)
-        console.log('customer.relevent_user:', customer.relevent_user)
-        console.log('customer.relevantUser:', customer.relevantUser)
-        console.log('Current userId:', userId.value)
-
-        // Status bilgisini statusMap'ten al ve customer'a ekle
-        const customerStatusId = customer.statusId || customer.status
-        const statusInfo = statusMap.value[customerStatusId]
-        console.log('Customer status ID:', customerStatusId, 'Status info:', statusInfo)
-
+      const allCustomers = response.map(customer => {
         // Map user IDs to user objects
-        const userIdValue = customer.userId || customer.user_id || (typeof customer.user === 'object' ? customer.user?.id : customer.user)
-        const relevantUserIdValue = customer.relevantUserId || customer.relevant_user_id || customer.relevent_user || (typeof customer.relevantUser === 'object' ? customer.relevantUser?.id : customer.relevantUser)
+        const userId = customer.userId || customer.user_id || customer.user
+        const relevantUserId = customer.relevantUserId || customer.relevant_user_id || customer.relevent_user || customer.relevantUser
 
         return {
           ...customer,
           name: `${customer.name || ''} ${customer.surname || ''}`.trim() || 'İsimsiz',
-          status: customerStatusId, // Use statusId if available
-          status_info: statusInfo, // Status bilgisini ekle
-          statusInfo: statusInfo, // Alternatif field name için
+          status: customer.statusId || customer.status,
           source: customer.source || '-',
           isActive: customer.isActive !== undefined ? customer.isActive : true,
-          user: usersMap.value[userIdValue] || (typeof customer.user === 'object' ? customer.user : null),
-          relevantUser: usersMap.value[relevantUserIdValue] || (typeof customer.relevantUser === 'object' ? customer.relevantUser : null)
+          remindingDate: customer.remindingDate || customer.reminding_date || null,
+          user: usersMap.value[userId] || customer.user,
+          relevantUser: usersMap.value[relevantUserId] || customer.relevantUser
         }
       })
 
-      console.log('Before filtering - Total customers:', mappedCustomers.length)
-      // Client-side filter as fallback (in case backend doesn't support filters yet)
-      customersData.value = mappedCustomers.filter(customer => {
+      console.log('[Dinamik Arama] Before status filter:', allCustomers.length)
+      const afterStatusFilter = allCustomers.filter(customer => {
+        const hasRemindableStatus = remindableStatusIds.value.includes(customer.status)
+        console.log('[Dinamik Arama] Customer', customer.id, 'status:', customer.status, 'is remindable:', hasRemindableStatus)
+        return hasRemindableStatus
+      })
+      console.log('[Dinamik Arama] After status filter:', afterStatusFilter.length)
+
+      const afterAccessFilter = afterStatusFilter.filter(customer => {
         const hasAccess = canAccessCustomer(customer)
-        console.log('Customer:', customer.name, 'Has access:', hasAccess)
+        console.log('[Dinamik Arama] Customer', customer.id, 'relevantUser:', customer.relevantUser, 'hasAccess:', hasAccess)
         return hasAccess
       })
-      console.log('After filtering - Total customers:', customersData.value.length)
+      console.log('[Dinamik Arama] After access filter:', afterAccessFilter.length)
+
+      customersData.value = afterAccessFilter
+      console.log('[Dinamik Arama] Final filtered remindable customers:', customersData.value.length)
     } else {
-      customersData.value = (response.data || []).filter(customer => canAccessCustomer(customer))
+      const allCustomers = (response.data || []).map(customer => {
+        // Map user IDs to user objects
+        const userId = customer.userId || customer.user_id || customer.user
+        const relevantUserId = customer.relevantUserId || customer.relevant_user_id || customer.relevent_user || customer.relevantUser
+
+        return {
+          ...customer,
+          name: `${customer.name || ''} ${customer.surname || ''}`.trim() || 'İsimsiz',
+          status: customer.statusId || customer.status,
+          source: customer.source || '-',
+          isActive: customer.isActive !== undefined ? customer.isActive : true,
+          remindingDate: customer.remindingDate || customer.reminding_date || null,
+          user: usersMap.value[userId] || customer.user,
+          relevantUser: usersMap.value[relevantUserId] || customer.relevantUser
+        }
+      })
+
+      console.log('[Dinamik Arama] Before status filter:', allCustomers.length)
+      const afterStatusFilter = allCustomers.filter(customer => {
+        const hasRemindableStatus = remindableStatusIds.value.includes(customer.status)
+        return hasRemindableStatus
+      })
+      console.log('[Dinamik Arama] After status filter:', afterStatusFilter.length)
+
+      const afterAccessFilter = afterStatusFilter.filter(customer => {
+        const hasAccess = canAccessCustomer(customer)
+        return hasAccess
+      })
+      console.log('[Dinamik Arama] After access filter:', afterAccessFilter.length)
+
+      customersData.value = afterAccessFilter
     }
   } catch (error) {
     console.error('Failed to load data:', error)
@@ -763,6 +540,6 @@ onMounted(async () => {
 
 // Page head
 useHead({
-  title: 'Müşteriler - Valdori CRM'
+  title: 'Dinamik Arama - Valdori CRM'
 })
-</script> 
+</script>

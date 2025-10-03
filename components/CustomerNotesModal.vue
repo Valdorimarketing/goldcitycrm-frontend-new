@@ -51,6 +51,39 @@
               <div class="border-b dark:border-gray-700 p-4">
                 <div class="flex items-start space-x-3">
                   <div class="flex-1">
+                    <!-- Customer Status -->
+                    <div class="mb-4">
+                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Müşteri Durumu
+                      </label>
+                      <select
+                        v-model="selectedStatus"
+                        @change="handleStatusChange"
+                        class="block w-full rounded-lg border-0 px-4 py-2.5 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-amber-600 dark:bg-gray-700 transition-all"
+                      >
+                        <option :value="null" disabled>Durum seçiniz...</option>
+                        <option
+                          v-for="status in availableStatuses"
+                          :key="status.id"
+                          :value="status.id"
+                        >
+                          {{ status.name }}
+                        </option>
+                      </select>
+                      <div v-if="customer?.status_info" class="mt-2 inline-flex items-center">
+                        <span class="text-xs text-gray-500 dark:text-gray-400 mr-2">Mevcut durum:</span>
+                        <span
+                          class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
+                          :style="{
+                            backgroundColor: customer.status_info.color + '20',
+                            color: customer.status_info.color
+                          }"
+                        >
+                          {{ customer.status_info.name }}
+                        </span>
+                      </div>
+                    </div>
+
                     <textarea
                       v-model="newNote.note"
                       rows="3"
@@ -251,17 +284,21 @@ const props = defineProps({
   customer: Object
 })
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'customer-updated'])
 
 // Stores
 const customerNotesStore = useCustomerNotesStore()
 const authStore = useAuthStore()
+const customersStore = useCustomersStore()
+const { statuses: availableStatuses, fetchStatuses } = useStatuses()
 
 // State
 const loading = ref(false)
 const notes = ref([])
 const addingNote = ref(false)
 const editingNote = ref(null)
+const selectedStatus = ref(null)
+const updatingStatus = ref(false)
 
 // New note form
 const newNote = reactive({
@@ -374,6 +411,30 @@ const isOverdue = (dateString) => {
   return new Date(dateString) < new Date()
 }
 
+// Handle status change
+const handleStatusChange = async () => {
+  if (!selectedStatus.value || !props.customer?.id || updatingStatus.value) return
+
+  updatingStatus.value = true
+  try {
+    await customersStore.updateCustomer(props.customer.id, {
+      status: selectedStatus.value
+    })
+
+    // Refresh customer data
+    await customersStore.fetchCustomer(props.customer.id)
+
+    // Update local customer reference if needed
+    emit('customer-updated')
+  } catch (error) {
+    console.error('Error updating customer status:', error)
+    // Revert selection on error
+    selectedStatus.value = props.customer?.status || null
+  } finally {
+    updatingStatus.value = false
+  }
+}
+
 // Format date
 const formatDate = (dateString) => {
   if (!dateString) return ''
@@ -426,15 +487,25 @@ watch(() => newNote.isReminding, (value) => {
 })
 
 // Watch for modal open
-watch(() => props.show, (newValue) => {
+watch(() => props.show, async (newValue) => {
   if (newValue) {
+    // Fetch notes
     fetchNotes()
+
+    // Fetch available statuses
+    if (availableStatuses.value.length === 0) {
+      await fetchStatuses()
+    }
+
+    // Set current customer status
+    selectedStatus.value = props.customer?.status || null
   } else {
     notes.value = []
     newNote.note = ''
     newNote.isReminding = false
     newNote.remindingAt = ''
     editingNote.value = null
+    selectedStatus.value = null
   }
 })
 </script>
