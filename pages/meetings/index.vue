@@ -276,10 +276,14 @@ const meetingToDelete = ref<Meeting | null>(null)
 // Store
 const meetingsStore = useMeetingsStore()
 
+// Permissions
+const { getRelatedDataFilters } = usePermissions()
+
 // Load meetings from API
 onMounted(async () => {
   try {
-    await meetingsStore.fetchMeetings(1, 100)
+    const filters = getRelatedDataFilters() || {}
+    await meetingsStore.fetchMeetings(1, 100, filters)
   } catch (error) {
     console.error('Failed to load meetings:', error)
   }

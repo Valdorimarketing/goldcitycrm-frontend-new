@@ -13,18 +13,20 @@ export const useSalesStore = defineStore('sales', () => {
   })
 
   // Get all sales
-  const fetchSales = async (page = 1, limit = 10) => {
+  const fetchSales = async (page = 1, limit = 10, filters: any = {}) => {
     loading.value = true
     try {
       const config = useRuntimeConfig()
+      const queryParams: any = { page, limit, ...filters }
+
       const response = await $fetch<PaginatedResponse<Sale>>('/sales', {
         baseURL: config.public.apiBase,
-        query: { page, limit },
+        query: queryParams,
         headers: {
           Authorization: `Bearer ${useCookie('auth-token').value}`
         }
       })
-      
+
       sales.value = response.data
       pagination.value = {
         total: response.total,

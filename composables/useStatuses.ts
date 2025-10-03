@@ -11,6 +11,9 @@ export interface Status {
   is_first: boolean
   is_closed: boolean
   is_sale: boolean
+  remindingDay?: number | null
+  isDoctor?: boolean
+  isPricing?: boolean
   created_at?: string
   updated_at?: string
 }
@@ -58,6 +61,9 @@ export const useStatuses = () => {
           is_first: status.isFirst ?? status.is_first ?? false,
           is_closed: status.isClosed ?? status.is_closed ?? false,
           is_sale: status.isSale ?? status.is_sale ?? false,
+          remindingDay: status.remindingDay ?? status.reminding_day ?? null,
+          isDoctor: status.isDoctor ?? status.is_doctor ?? false,
+          isPricing: status.isPricing ?? status.is_pricing ?? false,
           order: status.order ?? 0
         }
       }
@@ -105,6 +111,9 @@ export const useStatuses = () => {
         is_first: status.isFirst ?? status.is_first ?? false,
         is_closed: status.isClosed ?? status.is_closed ?? false,
         is_sale: status.isSale ?? status.is_sale ?? false,
+        remindingDay: status.remindingDay ?? status.reminding_day ?? null,
+        isDoctor: status.isDoctor ?? status.is_doctor ?? false,
+        isPricing: status.isPricing ?? status.is_pricing ?? false,
         order: status.order ?? 0
       }
     } catch (err: any) {

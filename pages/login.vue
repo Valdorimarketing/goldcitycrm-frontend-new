@@ -39,15 +39,26 @@
             <label for="password" class="form-label">
               Şifre
             </label>
-            <input
-              id="password"
-              v-model="form.password"
-              type="password"
-              required
-              class="form-input"
-              placeholder="Şifrenizi girin"
-              :disabled="loading"
-            />
+            <div class="relative">
+              <input
+                id="password"
+                v-model="form.password"
+                :type="showPassword ? 'text' : 'password'"
+                required
+                class="form-input pr-10"
+                placeholder="Şifrenizi girin"
+                :disabled="loading"
+              />
+              <button
+                type="button"
+                @click="showPassword = !showPassword"
+                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                :disabled="loading"
+              >
+                <EyeIcon v-if="!showPassword" class="h-5 w-5" />
+                <EyeSlashIcon v-else class="h-5 w-5" />
+              </button>
+            </div>
             <p v-if="errors.password" class="mt-2 text-sm text-red-600 dark:text-red-400">
               {{ errors.password }}
             </p>
@@ -131,6 +142,7 @@ const authStore = useAuthStore()
 // Loading state and error message
 const loading = ref(false)
 const errorMessage = ref('')
+const showPassword = ref(false)
 
 // Validate form
 const validateForm = () => {
@@ -174,7 +186,12 @@ const handleLogin = async () => {
     })
     
     if (success) {
-      await navigateTo('/dashboard')
+      // Doctor ve pricing rolündeki kullanıcıları Kişiler sayfasına yönlendir
+      if (authStore.user?.role === 'doctor' || authStore.user?.role === 'pricing') {
+        await navigateTo('/customers')
+      } else {
+        await navigateTo('/dashboard')
+      }
     } else {
       errorMessage.value = 'Giriş başarısız. E-posta ve şifrenizi kontrol edin.'
     }
@@ -189,7 +206,12 @@ const handleLogin = async () => {
 // Check if already logged in
 onMounted(() => {
   if (authStore.isLoggedIn) {
-    navigateTo('/dashboard')
+    // Doctor ve pricing rolündeki kullanıcıları Kişiler sayfasına yönlendir
+    if (authStore.user?.role === 'doctor' || authStore.user?.role === 'pricing') {
+      navigateTo('/customers')
+    } else {
+      navigateTo('/dashboard')
+    }
   }
 })
 </script> 

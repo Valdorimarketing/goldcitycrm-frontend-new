@@ -105,6 +105,42 @@
                     leave-to-class="opacity-0 -translate-x-4"
                   >
                     <div v-if="currentStep === 1" class="space-y-6">
+                      <!-- Image Upload -->
+                      <div class="flex justify-center">
+                        <div class="w-full max-w-md">
+                          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 text-center">
+                            Profil Fotoğrafı
+                          </label>
+                          <div class="flex flex-col items-center">
+                            <!-- Image Preview -->
+                            <div v-if="imagePreview" class="mb-4">
+                              <img :src="imagePreview" alt="Preview" class="h-32 w-32 rounded-full object-cover border-4 border-indigo-200 dark:border-indigo-700" />
+                            </div>
+                            <div v-else class="mb-4">
+                              <div class="h-32 w-32 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                                <UserIcon class="h-16 w-16 text-gray-400" />
+                              </div>
+                            </div>
+                            <!-- File Input -->
+                            <input
+                              id="image"
+                              type="file"
+                              accept="image/*"
+                              @change="handleImageUpload"
+                              class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-indigo-900 dark:file:text-indigo-200"
+                            />
+                            <button
+                              v-if="imagePreview"
+                              type="button"
+                              @click="removeImage"
+                              class="mt-2 text-sm text-red-600 hover:text-red-800 dark:text-red-400"
+                            >
+                              Fotoğrafı Kaldır
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
                       <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                         <!-- Name -->
                         <div>
@@ -493,6 +529,21 @@
                           placeholder="Müşteri hakkında özel notlar..."
                         ></textarea>
                       </div>
+
+                      <!-- Related Transaction -->
+                      <div>
+                        <label for="relatedTransaction" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          <DocumentTextIcon class="inline h-4 w-4 mr-1" />
+                          İlgili İşlem
+                        </label>
+                        <textarea
+                          id="relatedTransaction"
+                          v-model="form.relatedTransaction"
+                          rows="3"
+                          class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all"
+                          placeholder="İlgili işlem bilgisi..."
+                        ></textarea>
+                      </div>
                     </div>
                   </Transition>
 
@@ -780,8 +831,13 @@ const form = reactive({
   postal_code: '',
   address: '',
   description: '',
+  relatedTransaction: '',
   isActive: true
 })
+
+// Image upload
+const selectedImage = ref(null)
+const imagePreview = ref(null)
 
 // Dynamic fields data
 const dynamicFields = ref([])
@@ -889,6 +945,31 @@ const loadDynamicFields = async () => {
   }
 }
 
+// Handle image upload
+const handleImageUpload = (event) => {
+  const file = event.target.files[0]
+  if (file) {
+    selectedImage.value = file
+    // Create preview
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      imagePreview.value = e.target.result
+    }
+    reader.readAsDataURL(file)
+  }
+}
+
+// Remove image
+const removeImage = () => {
+  selectedImage.value = null
+  imagePreview.value = null
+  // Reset file input
+  const fileInput = document.getElementById('image')
+  if (fileInput) {
+    fileInput.value = ''
+  }
+}
+
 // Handle file upload for dynamic fields
 const handleFileUpload = (event, fieldId) => {
   const file = event.target.files[0]
@@ -992,11 +1073,11 @@ const handleSubmit = async () => {
     currentStep.value = 1 // Go back to first step if validation fails
     return
   }
-  
+
   loading.value = true
   errorMessage.value = ''
   successMessage.value = ''
-  
+
   const customerData = {
     name: form.name.trim(),
     surname: form.surname.trim(),
@@ -1004,7 +1085,7 @@ const handleSubmit = async () => {
     phone: form.phone.trim(),
     isActive: form.isActive
   }
-  
+
   // Add optional fields
   if (form.gender) customerData.gender = form.gender
   if (form.birth_date) customerData.birth_date = form.birth_date
@@ -1021,13 +1102,34 @@ const handleSubmit = async () => {
   if (form.postal_code?.trim()) customerData.postal_code = form.postal_code.trim()
   if (form.address?.trim()) customerData.address = form.address.trim()
   if (form.description?.trim()) customerData.description = form.description.trim()
-  
+  if (form.relatedTransaction?.trim()) customerData.relatedTransaction = form.relatedTransaction.trim()
+
   try {
     const api = useApi()
-    const response = await api('/customers', {
-      method: 'POST',
-      body: customerData
-    })
+    let response
+
+    // Use FormData if image is selected
+    if (selectedImage.value) {
+      const formData = new FormData()
+      formData.append('image', selectedImage.value)
+
+      // Append all customer data to FormData
+      Object.keys(customerData).forEach(key => {
+        if (customerData[key] !== null && customerData[key] !== undefined) {
+          formData.append(key, customerData[key])
+        }
+      })
+
+      response = await api('/customers', {
+        method: 'POST',
+        body: formData
+      })
+    } else {
+      response = await api('/customers', {
+        method: 'POST',
+        body: customerData
+      })
+    }
     
     // Save dynamic field values if any
     const dynamicFieldsData = []
@@ -1071,7 +1173,7 @@ const handleSubmit = async () => {
 const resetForm = () => {
   // Status'u sakla
   const savedStatus = form.status
-  
+
   Object.keys(form).forEach(key => {
     if (key === 'isActive') {
       form[key] = true
@@ -1087,6 +1189,14 @@ const resetForm = () => {
   errorMessage.value = ''
   successMessage.value = ''
   currentStep.value = 1
+
+  // Reset image
+  selectedImage.value = null
+  imagePreview.value = null
+  const fileInput = document.getElementById('image')
+  if (fileInput) {
+    fileInput.value = ''
+  }
 }
 
 // Watch for modal open/close
