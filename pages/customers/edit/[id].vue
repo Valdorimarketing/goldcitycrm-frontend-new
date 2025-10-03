@@ -4,8 +4,64 @@
       
       <!-- Başlık -->
       <div class="mb-6">
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Müşteri Düzenle</h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-2">Müşteri bilgilerini güncelleyin</p>
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Müşteri Düzenle</h1>
+            <p class="text-gray-600 dark:text-gray-400 mt-2">Müşteri bilgilerini güncelleyin</p>
+          </div>
+
+          <!-- İşlemler Butonları -->
+          <div class="flex space-x-2">
+            <button
+              @click="showHistory"
+              class="relative group inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500"
+              title="Geçmiş"
+            >
+              <ClockIcon class="h-5 w-5" />
+              <span class="ml-1 hidden sm:inline">Geçmiş</span>
+            </button>
+            <button
+              @click="showNotes"
+              class="relative group inline-flex items-center rounded-md bg-amber-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-amber-500"
+              title="Notlar"
+            >
+              <DocumentTextIcon class="h-5 w-5" />
+              <span class="ml-1 hidden sm:inline">Notlar</span>
+            </button>
+            <button
+              @click="showDoctorAssignment"
+              class="relative group inline-flex items-center rounded-md bg-purple-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-500"
+              title="Doktor Görüşüne Gönder"
+            >
+              <UserIcon class="h-5 w-5" />
+              <span class="ml-1 hidden sm:inline">Doktor</span>
+            </button>
+            <button
+              @click="showServices"
+              class="relative group inline-flex items-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500"
+              title="Hizmetler"
+            >
+              <ShoppingBagIcon class="h-5 w-5" />
+              <span class="ml-1 hidden sm:inline">Hizmetler</span>
+            </button>
+            <button
+              @click="showFiles"
+              class="relative group inline-flex items-center rounded-md bg-cyan-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-cyan-500"
+              title="Müşteri Dosyaları"
+            >
+              <FolderIcon class="h-5 w-5" />
+              <span class="ml-1 hidden sm:inline">Dosyalar</span>
+            </button>
+            <NuxtLink
+              :to="`/customers/show/${$route.params.id}`"
+              class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+              title="Görüntüle"
+            >
+              <EyeIcon class="h-5 w-5 mr-1" />
+              Görüntüle
+            </NuxtLink>
+          </div>
+        </div>
       </div>
 
       <!-- Yükleniyor mesajı -->
@@ -26,7 +82,43 @@
           <!-- Temel Bilgiler -->
           <div class="border-b border-gray-200 dark:border-gray-700 pb-6">
             <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Temel Bilgiler</h3>
-            
+
+            <!-- Image Upload -->
+            <div class="flex justify-center mb-6">
+              <div class="w-full max-w-md">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 text-center">
+                  Profil Fotoğrafı
+                </label>
+                <div class="flex flex-col items-center">
+                  <!-- Image Preview -->
+                  <div v-if="imagePreview || form.imageUrl" class="mb-4">
+                    <img :src="imagePreview || form.imageUrl" alt="Profile" class="h-32 w-32 rounded-full object-cover border-4 border-blue-200 dark:border-blue-700" />
+                  </div>
+                  <div v-else class="mb-4">
+                    <div class="h-32 w-32 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                      <UserIcon class="h-16 w-16 text-gray-400" />
+                    </div>
+                  </div>
+                  <!-- File Input -->
+                  <input
+                    id="image"
+                    type="file"
+                    accept="image/*"
+                    @change="handleImageUpload"
+                    class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900 dark:file:text-blue-200"
+                  />
+                  <button
+                    v-if="imagePreview || form.imageUrl"
+                    type="button"
+                    @click="removeImage"
+                    class="mt-2 text-sm text-red-600 hover:text-red-800 dark:text-red-400"
+                  >
+                    Fotoğrafı Kaldır
+                  </button>
+                </div>
+              </div>
+            </div>
+
             <!-- Ad Soyad -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div>
@@ -484,55 +576,90 @@
 
             <!-- Hatırlatma Alanları -->
             <div v-if="showReminderFields" class="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg mb-6">
-              <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-3">Hatırlatma Ayarları</h4>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-3">Hatırlatma Bilgisi</h4>
+
+              <!-- Reminding Day Info -->
+              <div class="mb-4">
+                <p class="text-sm text-gray-700 dark:text-gray-300">
+                  <span class="font-semibold">{{ selectedReminderDays }} gün sonra aranacak</span>
+                </p>
+              </div>
+
+              <!-- Add Reminder Button -->
+              <div v-if="!showReminderInputs" class="mb-4">
+                <button
+                  type="button"
+                  @click="showReminderInputs = true"
+                  class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  Hatırlatma da ekle
+                </button>
+              </div>
+
+              <!-- Reminder Input Fields -->
+              <div v-if="showReminderInputs">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Hatırlatma Tarihi ve Saati *
+                    </label>
+                    <input
+                      v-model="reminderDateTime"
+                      type="datetime-local"
+                      required
+                      class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Not Tipi
+                    </label>
+                    <input
+                      v-model="selectedStatusName"
+                      type="text"
+                      readonly
+                      class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-600 text-gray-900 dark:text-white rounded-md"
+                    />
+                  </div>
+                </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Hatırlatma Tarihi ve Saati *
+                    Hatırlatma Notu *
                   </label>
-                  <input
-                    v-model="reminderDateTime"
-                    type="datetime-local"
+                  <textarea
+                    v-model="reminderNote"
+                    rows="3"
                     required
                     class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
+                    placeholder="Hatırlatma için not giriniz..."
+                  ></textarea>
                 </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Not Tipi
-                  </label>
-                  <input
-                    v-model="selectedStatusName"
-                    type="text"
-                    readonly
-                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-600 text-gray-900 dark:text-white rounded-md"
-                  />
-                </div>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Hatırlatma Notu *
-                </label>
-                <textarea
-                  v-model="reminderNote"
-                  rows="3"
-                  required
-                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Hatırlatma için not giriniz..."
-                ></textarea>
               </div>
             </div>
 
             <!-- Açıklama -->
             <div class="mb-6">
-              <label class="block text-sm font-medium text-gray-700 mb-2">
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Açıklama
               </label>
               <textarea
                 v-model="form.description"
                 rows="4"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Müşteri hakkında notlar..."
+              ></textarea>
+            </div>
+
+            <!-- İlgili İşlem -->
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                İlgili İşlem
+              </label>
+              <textarea
+                v-model="form.relatedTransaction"
+                rows="4"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="İlgili işlem bilgisi..."
               ></textarea>
             </div>
           </div>
@@ -566,11 +693,61 @@
         </form>
       </div>
     </div>
+
+    <!-- Customer History Modal -->
+    <CustomerHistoryModal
+      :show="showHistoryModal"
+      :customer="customerData"
+      @close="showHistoryModal = false"
+    />
+
+    <!-- Customer Notes Modal -->
+    <CustomerNotesModal
+      :show="showNotesModal"
+      :customer="customerData"
+      @close="showNotesModal = false"
+      @customer-updated="loadCustomer"
+    />
+
+    <!-- Doctor Assignment Modal -->
+    <DoctorAssignmentModal
+      :show="showDoctorModal"
+      :customer="customerData"
+      @close="showDoctorModal = false"
+      @assigned="handleDoctorAssigned"
+    />
+
+    <!-- Customer Services Modal -->
+    <CustomerServicesModal
+      :show="showServicesModal"
+      :customer="customerData"
+      @close="showServicesModal = false"
+      @saved="handleServicesSaved"
+    />
+
+    <!-- Customer Files Modal -->
+    <CustomerFilesModal
+      :show="showFilesModal"
+      :customer="customerData"
+      @close="showFilesModal = false"
+    />
   </div>
 </template>
 
 <script setup>
+import {
+  ClockIcon,
+  DocumentTextIcon,
+  UserIcon,
+  ShoppingBagIcon,
+  FolderIcon,
+  EyeIcon
+} from '@heroicons/vue/24/outline'
+
 const route = useRoute()
+
+// Permissions
+const { canAccessCustomer } = usePermissions()
 
 // Use dynamic fields composable
 const { getDynamicFields, parseOptionsData } = useCustomerDynamicFields()
@@ -590,6 +767,16 @@ const sources = ref([])
 const statuses = ref([])
 const users = ref([])
 const customers = ref([])
+
+// Customer data for modals
+const customerData = ref(null)
+
+// Modal states
+const showHistoryModal = ref(false)
+const showNotesModal = ref(false)
+const showDoctorModal = ref(false)
+const showServicesModal = ref(false)
+const showFilesModal = ref(false)
 
 // Dynamic fields data
 const dynamicFields = ref([])
@@ -619,11 +806,19 @@ const form = reactive({
   postal_code: '',
   address: '',
   relevant_user: '',
-  description: ''
+  description: '',
+  relatedTransaction: '',
+  imageUrl: ''
 })
+
+// Image upload
+const selectedImage = ref(null)
+const imagePreview = ref(null)
 
 // Reminder fields
 const showReminderFields = ref(false)
+const showReminderInputs = ref(false)
+const selectedReminderDays = ref(0)
 const reminderDateTime = ref('')
 const reminderNote = ref('')
 const selectedStatusName = ref('')
@@ -661,26 +856,38 @@ const onCityChange = () => {
 const onStatusChange = () => {
   console.log('Status changed to:', form.status)
   console.log('All statuses:', statuses.value)
-  
+
   const selectedStatus = statuses.value.find(s => s.id === parseInt(form.status))
   console.log('Selected status:', selectedStatus)
-  
+
   if (selectedStatus) {
     // Check both is_remindable and isRemindable (different API response formats)
     const isRemindable = selectedStatus.is_remindable || selectedStatus.isRemindable || false
     console.log('Is remindable:', isRemindable)
-    
+
     showReminderFields.value = isRemindable
     selectedStatusName.value = selectedStatus.name
-    
-    if (!isRemindable) {
-      // Reset reminder fields if not remindable
+
+    if (isRemindable) {
+      // Get reminding day from status
+      const remindingDay = selectedStatus.remindingDay || selectedStatus.reminding_day || 0
+      selectedReminderDays.value = remindingDay
+      // Reset input fields when status changes
+      showReminderInputs.value = false
+      reminderDateTime.value = ''
+      reminderNote.value = ''
+    } else {
+      // Reset all reminder fields if not remindable
+      showReminderInputs.value = false
+      selectedReminderDays.value = 0
       reminderDateTime.value = ''
       reminderNote.value = ''
       selectedStatusName.value = ''
     }
   } else {
     showReminderFields.value = false
+    showReminderInputs.value = false
+    selectedReminderDays.value = 0
     reminderDateTime.value = ''
     reminderNote.value = ''
     selectedStatusName.value = ''
@@ -691,11 +898,21 @@ const loadCustomer = async () => {
   try {
     loading.value = true
     error.value = ''
-    
+
     const customerId = route.params.id
     const api = useApi()
     const response = await api(`/customers/${customerId}`)
-    
+
+    // Check if user has permission to access this customer
+    if (!canAccessCustomer(response)) {
+      error.value = 'Bu müşteriye erişim yetkiniz bulunmamaktadır.'
+      loading.value = false
+      return
+    }
+
+    // Store customer data for modals
+    customerData.value = response
+
     // Form verilerini set et
     Object.assign(form, {
       name: response.name || '',
@@ -720,30 +937,35 @@ const loadCustomer = async () => {
       postal_code: response.postalCode || response.postal_code || '',
       address: response.address || '',
       relevant_user: response.relevantUser || response.relevant_user || '',
-      description: response.description || ''
+      description: response.description || '',
+      relatedTransaction: response.relatedTransaction || '',
+      imageUrl: response.image || response.imageUrl || ''
     })
-    
-    // Check if loaded status is remindable  
+
+    // Check if loaded status is remindable
     // Note: loadDropdownData is already called in onMounted, no need to call again
     if (form.status && statuses.value.length > 0) {
       const selectedStatus = statuses.value.find(s => s.id === parseInt(form.status))
       console.log('Customer current status:', selectedStatus)
-      
+
       if (selectedStatus) {
         // Check both is_remindable and isRemindable (different API response formats)
         const isRemindable = selectedStatus.is_remindable || selectedStatus.isRemindable || false
         if (isRemindable) {
           showReminderFields.value = true
           selectedStatusName.value = selectedStatus.name
+          // Get reminding day from status
+          const remindingDay = selectedStatus.remindingDay || selectedStatus.reminding_day || 0
+          selectedReminderDays.value = remindingDay
         }
       }
     }
-    
+
     // Load customer dynamic fields from response
     if (response.dynamicFieldValues && response.dynamicFieldValues.length > 0) {
       // Reset dynamic field values
       dynamicFieldValues.value = {}
-      
+
       // Set values from customer's dynamic fields
       response.dynamicFieldValues.forEach(field => {
         if (field.customer_dynamic_field) {
@@ -751,13 +973,44 @@ const loadCustomer = async () => {
         }
       })
     }
-    
+
   } catch (err) {
     console.error('Müşteri yükleme hatası:', err)
     error.value = 'Müşteri bilgileri yüklenemedi.'
   } finally {
     loading.value = false
   }
+}
+
+// Modal functions
+const showHistory = () => {
+  showHistoryModal.value = true
+}
+
+const showNotes = () => {
+  showNotesModal.value = true
+}
+
+const showDoctorAssignment = () => {
+  showDoctorModal.value = true
+}
+
+const handleDoctorAssigned = (assignment) => {
+  console.log('Doctor assigned:', assignment)
+  // Optionally refresh customer data or show success message
+}
+
+const showServices = () => {
+  showServicesModal.value = true
+}
+
+const handleServicesSaved = () => {
+  console.log('Services saved successfully')
+  showServicesModal.value = false
+}
+
+const showFiles = () => {
+  showFilesModal.value = true
 }
 
 // Load dynamic fields
@@ -778,6 +1031,32 @@ const loadDynamicFields = async () => {
 const sortedDynamicFields = computed(() => {
   return dynamicFields.value.sort((a, b) => a.order - b.order)
 })
+
+// Handle image upload
+const handleImageUpload = (event) => {
+  const file = event.target.files[0]
+  if (file) {
+    selectedImage.value = file
+    // Create preview
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      imagePreview.value = e.target.result
+    }
+    reader.readAsDataURL(file)
+  }
+}
+
+// Remove image
+const removeImage = () => {
+  selectedImage.value = null
+  imagePreview.value = null
+  form.imageUrl = ''
+  // Reset file input
+  const fileInput = document.getElementById('image')
+  if (fileInput) {
+    fileInput.value = ''
+  }
+}
 
 // Handle file upload
 const handleFileUpload = (event, fieldId) => {
@@ -841,14 +1120,14 @@ const loadDropdownData = async () => {
 
 const saveCustomer = async () => {
   try {
-    // Validate reminder fields if status is remindable
-    if (showReminderFields.value) {
+    // Validate reminder fields if status is remindable and user wants to add reminder
+    if (showReminderInputs.value) {
       if (!reminderDateTime.value || !reminderNote.value) {
-        submitError.value = 'Hatırlatma durumu seçildiğinde tarih ve not alanları zorunludur.'
+        submitError.value = 'Hatırlatma eklemek için tarih ve not alanları zorunludur.'
         return
       }
     }
-    
+
     saving.value = true
     submitError.value = ''
     successMessage.value = ''
@@ -893,26 +1172,51 @@ const saveCustomer = async () => {
       postalCode: form.postal_code ? parseInt(form.postal_code) : null,
       address: form.address?.trim() || null,
       relevantUser: form.relevant_user ? parseInt(form.relevant_user) : null,
-      description: form.description?.trim() || null
+      description: form.description?.trim() || null,
+      relatedTransaction: form.relatedTransaction?.trim() || null
     }
 
     // Add dynamic fields to update data
     if (dynamicFieldsData.length > 0) {
       updateData.dynamicFields = dynamicFieldsData
     }
-    
+
     const api = useApi()
-    await api(`/customers/${customerId}`, {
-      method: 'PATCH',
-      body: updateData
-    })
+
+    // Use FormData if image is selected
+    if (selectedImage.value) {
+      const formData = new FormData()
+      formData.append('image', selectedImage.value)
+
+      // Append all update data to FormData
+      Object.keys(updateData).forEach(key => {
+        if (updateData[key] !== null && updateData[key] !== undefined) {
+          // For arrays and objects, stringify them
+          if (typeof updateData[key] === 'object') {
+            formData.append(key, JSON.stringify(updateData[key]))
+          } else {
+            formData.append(key, updateData[key])
+          }
+        }
+      })
+
+      await api(`/customers/${customerId}`, {
+        method: 'PATCH',
+        body: formData
+      })
+    } else {
+      await api(`/customers/${customerId}`, {
+        method: 'PATCH',
+        body: updateData
+      })
+    }
     
-    // Create customer note if reminder fields are filled
-    if (showReminderFields.value && reminderDateTime.value && reminderNote.value) {
+    // Create customer note only if user clicked "Add Reminder" button and filled the fields
+    if (showReminderInputs.value && reminderDateTime.value && reminderNote.value) {
       try {
         // Format the datetime to ISO string format
         const formattedDateTime = new Date(reminderDateTime.value).toISOString()
-        
+
         const noteData = {
           customer: parseInt(customerId),
           note: reminderNote.value.trim(),
@@ -920,24 +1224,24 @@ const saveCustomer = async () => {
           remindingAt: formattedDateTime,
           noteType: selectedStatusName.value
         }
-        
+
         console.log('Sending customer note data:', noteData)
-        
+
         await api('/customer-notes', {
           method: 'POST',
           body: noteData
         })
-        
+
         console.log('Customer note created successfully')
       } catch (noteError) {
         console.error('Customer note creation error:', noteError)
         console.error('Error response data:', noteError.data)
         console.error('Error response status:', noteError.status)
         console.error('Full error object:', noteError)
-        
+
         // Check if there's a specific error message from the API
         const errorMessage = noteError.data?.message || noteError.data?.error || 'Bilinmeyen hata'
-        
+
         // Don't block the main save operation if note creation fails
         // But show a warning to the user with specific error
         submitError.value = `Müşteri bilgileri güncellendi ancak hatırlatma notu kaydedilemedi: ${errorMessage}`

@@ -5,7 +5,9 @@
       "Bash(lsof:*)",
       "Bash(kill:*)",
       "Bash(curl:*)",
-      "Bash(PORT=3000 npm run dev)"
+      "Bash(PORT=3000 npm run dev)",
+      "Bash(mkdir:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []

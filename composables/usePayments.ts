@@ -6,17 +6,19 @@ export const usePayments = () => {
   const loading = ref(false)
   const error = ref(null)
 
-  const fetchPayments = async (customerId?: number) => {
+  const fetchPayments = async (customerId?: number, filters?: any) => {
     loading.value = true
     error.value = null
 
     try {
-      const url = customerId
-        ? `${baseURL}/payments?customerId=${customerId}`
-        : `${baseURL}/payments`
+      const query: any = { ...filters }
+      if (customerId) {
+        query.customerId = customerId
+      }
 
-      const data = await $fetch(url, {
+      const data = await $fetch(`${baseURL}/payments`, {
         method: 'GET',
+        query,
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
         }

@@ -262,6 +262,7 @@ import { useApi } from '~/composables/useApi'
 // })
 
 const api = useApi()
+const { getRelatedDataFilters } = usePermissions()
 
 // Search and filters
 const searchTerm = ref('')
@@ -297,8 +298,9 @@ const loadSalesData = async () => {
     )
     const saleStatusIds = saleStatuses.map(s => s.id)
 
-    // Fetch all customers
-    const customerResponse = await api('/customers')
+    // Fetch customers with role-based filters
+    const filters = getRelatedDataFilters() || {}
+    const customerResponse = await api('/customers', { query: filters })
     const allCustomers = Array.isArray(customerResponse) ? customerResponse : customerResponse.data || []
 
     // Filter customers with sale status

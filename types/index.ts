@@ -111,6 +111,16 @@ export interface Source {
 export interface Status {
   id: number
   name: string
+  color?: string
+  description?: string
+  order?: number
+  is_remindable?: boolean
+  is_first?: boolean
+  is_closed?: boolean
+  is_sale?: boolean
+  remindingDay?: number | null
+  isDoctor?: boolean
+  isPricing?: boolean
   createdAt?: string
   updatedAt?: string
 }
@@ -201,6 +211,7 @@ export interface Customer {
   relevent_user?: number
   user?: User
   description?: string
+  relatedTransaction?: string
   createdAt?: string
   updatedAt?: string
   dynamicFields?: CustomerDynamicFieldValue[]
@@ -230,6 +241,7 @@ export interface CreateCustomerDto {
   address?: string
   relevent_user?: number
   description?: string
+  relatedTransaction?: string
   dynamicFields?: CreateCustomerDynamicFieldValueDto[]
 }
 
@@ -257,6 +269,7 @@ export interface UpdateCustomerDto {
   address?: string
   relevent_user?: number
   description?: string
+  relatedTransaction?: string
   dynamicFields?: CreateCustomerDynamicFieldValueDto[]
 }
 
@@ -344,6 +357,22 @@ export interface UpdateCustomerNoteDto {
   note?: string
   isReminding?: boolean
   remindingAt?: string
+}
+
+// User Group types
+export interface UserGroup {
+  id: number
+  name: string
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface CreateUserGroupDto {
+  name: string
+}
+
+export interface UpdateUserGroupDto {
+  name?: string
 }
 
 // Meeting types
