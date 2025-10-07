@@ -11,11 +11,20 @@ export const useAuthStore = defineStore('auth', () => {
   if (process.client) {
     const savedToken = localStorage.getItem('auth-token')
     const savedUser = localStorage.getItem('auth-user')
-    
+
     if (savedToken && savedUser) {
       token.value = savedToken
       try {
         user.value = JSON.parse(savedUser)
+
+        // Sync token to cookie for API calls
+        const tokenCookie = useCookie('auth-token', {
+          httpOnly: false,
+          secure: true,
+          sameSite: 'lax',
+          maxAge: 60 * 60 * 24 // 24 hours
+        })
+        tokenCookie.value = savedToken
       } catch (e) {
         localStorage.removeItem('auth-token')
         localStorage.removeItem('auth-user')
@@ -153,11 +162,15 @@ export const useAuthStore = defineStore('auth', () => {
   const logout = () => {
     token.value = null
     user.value = null
-    
-    // Clear localStorage
+
+    // Clear localStorage and cookie
     if (process.client) {
       localStorage.removeItem('auth-token')
       localStorage.removeItem('auth-user')
+
+      // Clear cookie
+      const tokenCookie = useCookie('auth-token')
+      tokenCookie.value = null
     }
   }
 
