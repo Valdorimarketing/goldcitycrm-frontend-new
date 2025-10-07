@@ -3,9 +3,9 @@
     <!-- Header -->
     <div class="sm:flex sm:items-center sm:justify-between mb-6">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Yeni Kişiler</h1>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Randevusuz Satışlar</h1>
         <p class="mt-2 text-sm text-gray-700">
-          Yeni durumundaki kişileri buradan görebilirsiniz.
+          Randevusuz satış müşterilerini buradan yönetebilirsiniz.
         </p>
       </div>
       <div class="mt-4 sm:mt-0">
@@ -31,7 +31,7 @@
             v-model="searchTerm"
             type="text"
             class="form-input"
-            placeholder="İsim, email veya telefon ile ara..."
+            placeholder="Satış başlığı, müşteri adı, telefon veya açıklama ile ara..."
           />
         </div>
         <div>
@@ -44,6 +44,7 @@
             class="form-input"
           >
             <option value="">Tüm Durumlar</option>
+            <option value="assigned-pending">Atandı - Beklemede</option>
             <option v-for="status in statusOptions" :key="status.value" :value="status.value">
               {{ status.label }}
             </option>
@@ -60,45 +61,6 @@
       </div>
     </div>
 
-    <!-- User Assignment -->
-    <div class="card mb-6">
-      <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div class="sm:col-span-2 relative">
-          <label for="user-select" class="block text-sm font-medium text-gray-700 mb-2">
-            Kullanıcı Seç
-          </label>
-          <input
-            id="user-select"
-            v-model="userSearch"
-            type="text"
-            class="form-input"
-            placeholder="Kullanıcı ara..."
-            @focus="showUserDropdown = true"
-            @blur="hideUserDropdown"
-          />
-          <div v-if="showUserDropdown && filteredUsers.length > 0" class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 shadow-lg rounded-md border border-gray-200 dark:border-gray-700 max-h-60 overflow-auto">
-            <button
-              v-for="user in filteredUsers"
-              :key="user.id"
-              @mousedown.prevent="selectUser(user)"
-              class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-gray-100"
-            >
-              {{ user.name }} ({{ user.email }})
-            </button>
-          </div>
-        </div>
-        <div class="flex items-end">
-          <button
-            @click="assignSelectedCustomers"
-            :disabled="!selectedUser || selectedCustomers.length === 0"
-            class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Seçili Olanları Ata ({{ selectedCustomers.length }})
-          </button>
-        </div>
-      </div>
-    </div>
-
     <!-- Loading State -->
     <div v-if="loading" class="flex justify-center py-12">
       <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
@@ -110,35 +72,23 @@
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead class="bg-gray-50 dark:bg-gray-800">
             <tr>
-              <th class="table-header text-gray-700 dark:text-gray-300 w-12">
-                <input
-                  type="checkbox"
-                  :checked="isAllSelected"
-                  @change="toggleSelectAll"
-                  class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                />
-              </th>
-              <th class="table-header text-gray-700 dark:text-gray-300">İsim</th>
-              <th class="table-header text-gray-700 dark:text-gray-300">E-posta</th>
+              <th class="table-header text-gray-700 dark:text-gray-300">Satış Başlığı</th>
+              <th class="table-header text-gray-700 dark:text-gray-300">Müşteri Adı</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Telefon</th>
-              <th class="table-header text-gray-700 dark:text-gray-300">Durum</th>
-              <th class="table-header text-gray-700 dark:text-gray-300">Kaynak</th>
-              <th class="table-header text-gray-700 dark:text-gray-300">Oluşturan</th>
-              <th class="table-header text-gray-700 dark:text-gray-300">Atanan</th>
-              <th class="table-header text-gray-700 dark:text-gray-300">Aktif</th>
-              <th class="table-header text-gray-700 dark:text-gray-300">Eklenme Tarihi</th>
+              <th class="table-header text-gray-700 dark:text-gray-300">Satış Tarihi</th>
+              <th class="table-header text-gray-700 dark:text-gray-300">Sorumlu Kullanıcı</th>
+              <th class="table-header text-gray-700 dark:text-gray-300">Takipçi Kullanıcı</th>
+              <th class="table-header text-gray-700 dark:text-gray-300">Vade Tarihi</th>
+              <th class="table-header text-gray-700 dark:text-gray-300">Açıklama</th>
               <th class="table-header text-gray-700 dark:text-gray-300">İşlemler</th>
             </tr>
           </thead>
           <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
             <tr v-for="customer in filteredCustomers" :key="customer.id">
-              <td class="table-cell w-12">
-                <input
-                  type="checkbox"
-                  :checked="isCustomerSelected(customer.id)"
-                  @change="toggleCustomerSelection(customer.id)"
-                  class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                />
+              <td class="table-cell">
+                <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                  {{ customer.title }}
+                </div>
               </td>
               <td class="table-cell">
                 <div class="flex items-center">
@@ -149,7 +99,7 @@
                   </div>
                   <div class="ml-4">
                     <NuxtLink
-                      :to="`/customers/show/${customer.id}`"
+                      :to="`/customers/show/${customer.customerId}`"
                       class="text-sm font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
                     >
                       {{ customer.name }}
@@ -158,35 +108,7 @@
                 </div>
               </td>
               <td class="table-cell">
-                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.email || '-' }}</div>
-              </td>
-              <td class="table-cell">
-                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.phone || '-' }}</div>
-              </td>
-              <td class="table-cell">
-                <span
-                  class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
-                  :class="getStatusClass(customer.status)"
-                >
-                  {{ getStatusText(customer.status) }}
-                </span>
-              </td>
-              <td class="table-cell">
-                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.source || '-' }}</div>
-              </td>
-              <td class="table-cell">
-                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.user?.name || '-' }}</div>
-              </td>
-              <td class="table-cell">
-                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.relevantUser?.name || '-' }}</div>
-              </td>
-              <td class="table-cell">
-                <span
-                  class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
-                  :class="customer.isActive ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'"
-                >
-                  {{ customer.isActive ? 'Aktif' : 'Pasif' }}
-                </span>
+                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.phone }}</div>
               </td>
               <td class="table-cell">
                 <div class="text-sm text-gray-900 dark:text-gray-100">
@@ -194,9 +116,25 @@
                 </div>
               </td>
               <td class="table-cell">
+                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.responsibleUser?.name || '-' }}</div>
+              </td>
+              <td class="table-cell">
+                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.followerUser?.name || '-' }}</div>
+              </td>
+              <td class="table-cell">
+                <div class="text-sm text-gray-900 dark:text-gray-100">
+                  {{ customer.maturityDate ? formatDate(customer.maturityDate) : '-' }}
+                </div>
+              </td>
+              <td class="table-cell">
+                <div class="text-sm text-gray-900 dark:text-gray-100 max-w-xs truncate" :title="customer.description">
+                  {{ customer.description }}
+                </div>
+              </td>
+              <td class="table-cell">
                 <div class="flex gap-1">
                   <NuxtLink
-                    :to="`/customers/show/${customer.id}`"
+                    :to="`/customers/show/${customer.customerId}`"
                     class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     title="Görüntüle"
                   >
@@ -206,7 +144,7 @@
                     </span>
                   </NuxtLink>
                   <button
-                    @click="showHistory(customer)"
+                    @click="showHistory(customer.customerData)"
                     class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     title="Geçmiş"
                   >
@@ -216,7 +154,7 @@
                     </span>
                   </button>
                   <button
-                    @click="showNotes(customer)"
+                    @click="showNotes(customer.customerData)"
                     class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     title="Notlar"
                   >
@@ -226,7 +164,7 @@
                     </span>
                   </button>
                   <button
-                    @click="showDoctorAssignment(customer)"
+                    @click="showDoctorAssignment(customer.customerData)"
                     class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     title="Doktor Görüşüne Gönder"
                   >
@@ -236,7 +174,7 @@
                     </span>
                   </button>
                   <button
-                    @click="showServices(customer)"
+                    @click="showServices(customer.customerData)"
                     class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     title="Hizmetler"
                   >
@@ -246,7 +184,7 @@
                     </span>
                   </button>
                   <button
-                    @click="showFiles(customer)"
+                    @click="showFiles(customer.customerData)"
                     class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     title="Müşteri Dosyaları"
                   >
@@ -256,7 +194,7 @@
                     </span>
                   </button>
                   <NuxtLink
-                    :to="`/customers/edit/${customer.id}`"
+                    :to="`/customers/edit/${customer.customerId}`"
                     class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     title="Düzenle"
                   >
@@ -266,7 +204,7 @@
                     </span>
                   </NuxtLink>
                   <button
-                    @click="confirmDelete(customer)"
+                    @click="confirmDelete(customer.customerData)"
                     class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     title="Sil"
                   >
@@ -281,11 +219,11 @@
 
             <!-- Empty State -->
             <tr v-if="filteredCustomers.length === 0">
-              <td colspan="11" class="text-center py-12">
-                <UsersIcon class="mx-auto h-12 w-12 text-gray-400" />
-                <h3 class="mt-2 text-sm font-medium text-gray-900">Yeni kişi bulunamadı</h3>
+              <td colspan="9" class="text-center py-12">
+                <ShoppingBagIcon class="mx-auto h-12 w-12 text-gray-400" />
+                <h3 class="mt-2 text-sm font-medium text-gray-900">Randevusuz satış bulunamadı</h3>
                 <p class="mt-1 text-sm text-gray-500">
-                  {{ searchTerm ? 'Arama kriterlerinize uygun yeni kişi bulunamadı.' : 'Henüz yeni durumunda kişi bulunmuyor.' }}
+                  {{ searchTerm ? 'Arama kriterlerinize uygun satış bulunamadı.' : 'Henüz randevusuz satış eklenmemiş.' }}
                 </p>
               </td>
             </tr>
@@ -372,11 +310,11 @@
               </div>
               <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                 <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-white">
-                  Kişiyi Sil
+                  Müşteriyi Sil
                 </h3>
                 <div class="mt-2">
                   <p class="text-sm text-gray-500 dark:text-gray-400">
-                    <strong class="text-gray-700 dark:text-gray-300">{{ customerToDelete?.name }}</strong> adlı kişiyi silmek istediğinizden emin misiniz?
+                    <strong class="text-gray-700 dark:text-gray-300">{{ customerToDelete?.name }}</strong> adlı müşteriyi silmek istediğinizden emin misiniz?
                     Bu işlem geri alınamaz.
                   </p>
                 </div>
@@ -469,7 +407,13 @@ definePageMeta({
   // middleware: 'auth' // Temporarily disabled
 })
 
-const loading = ref(true)
+// Permissions
+const { getCustomerFilters, canAccessCustomer, userId } = usePermissions()
+
+// Store (temporarily disabled)
+// const customersStore = useCustomersStore()
+// const { customers, loading, pagination } = storeToRefs(customersStore)
+const loading = ref(true) // Start with loading true
 const pagination = ref({
   total: 0,
   page: 1,
@@ -477,21 +421,17 @@ const pagination = ref({
   totalPages: 0
 })
 
+// Sample customers data for demo - will be replaced by API data
 const customersData = ref([])
+
+// Load data - moved to onMounted to avoid blocking page render
 
 // Search and filters
 const searchTerm = ref('')
 const statusFilter = ref('')
 const statusOptions = ref([])
-const statusMap = ref({})
+const statusMap = ref({}) // Status ID to status object mapping
 const usersMap = ref({}) // User ID to user object mapping
-
-// User assignment
-const users = ref([])
-const selectedUser = ref(null)
-const userSearch = ref('')
-const showUserDropdown = ref(false)
-const selectedCustomers = ref([])
 
 // Modals
 const showDeleteModal = ref(false)
@@ -514,12 +454,28 @@ const filteredCustomers = computed(() => {
       customer.name?.toLowerCase().includes(search) ||
       customer.email?.toLowerCase().includes(search) ||
       customer.phone?.toLowerCase().includes(search) ||
-      customer.source?.toLowerCase().includes(search)
+      customer.title?.toLowerCase().includes(search) ||
+      customer.description?.toLowerCase().includes(search) ||
+      customer.responsibleUser?.name?.toLowerCase().includes(search) ||
+      customer.followerUser?.name?.toLowerCase().includes(search)
     )
   }
 
   if (statusFilter.value) {
-    filtered = filtered.filter(customer => customer.status === statusFilter.value)
+    if (statusFilter.value === 'assigned-pending') {
+      // Özel filtre: status is_first olan ve relevantUser'ı dolu olanlar
+      filtered = filtered.filter(customer => {
+        const customerStatus = statusMap.value[customer.status] || customer.status_info || customer.statusInfo
+        const hasFirstStatus = customerStatus?.isFirst || customerStatus?.is_first
+        const hasRelevantUser = customer.relevantUser ||
+                                customer.relevent_user ||
+                                customer.relevantUserId ||
+                                customer.relevant_user_id
+        return hasFirstStatus && hasRelevantUser
+      })
+    } else {
+      filtered = filtered.filter(customer => customer.status === statusFilter.value)
+    }
   }
 
   return filtered
@@ -547,91 +503,7 @@ const visiblePages = computed(() => {
   return pages.filter(page => page !== '...')
 })
 
-const filteredUsers = computed(() => {
-  if (!userSearch.value) {
-    return users.value
-  }
-  const search = userSearch.value.toLowerCase()
-  return users.value.filter(user =>
-    user.name?.toLowerCase().includes(search) ||
-    user.email?.toLowerCase().includes(search)
-  )
-})
-
-const isAllSelected = computed(() => {
-  return filteredCustomers.value.length > 0 &&
-    filteredCustomers.value.every(customer => selectedCustomers.value.includes(customer.id))
-})
-
-const isCustomerSelected = (customerId) => {
-  return selectedCustomers.value.includes(customerId)
-}
-
 // Methods
-const selectUser = (user) => {
-  selectedUser.value = user
-  userSearch.value = `${user.name} (${user.email})`
-  showUserDropdown.value = false
-}
-
-const hideUserDropdown = () => {
-  setTimeout(() => {
-    showUserDropdown.value = false
-  }, 200)
-}
-
-const toggleCustomerSelection = (customerId) => {
-  const index = selectedCustomers.value.indexOf(customerId)
-  if (index > -1) {
-    selectedCustomers.value.splice(index, 1)
-  } else {
-    selectedCustomers.value.push(customerId)
-  }
-}
-
-const toggleSelectAll = () => {
-  if (isAllSelected.value) {
-    selectedCustomers.value = []
-  } else {
-    selectedCustomers.value = filteredCustomers.value.map(customer => customer.id)
-  }
-}
-
-const assignSelectedCustomers = async () => {
-  if (!selectedUser.value || selectedCustomers.value.length === 0) {
-    return
-  }
-
-  try {
-    const api = useApi()
-
-    // Update each selected customer
-    const updatePromises = selectedCustomers.value.map(customerId =>
-      api(`/customers/${customerId}`, {
-        method: 'PATCH',
-        body: {
-          relevantUser: selectedUser.value.id
-        }
-      })
-    )
-
-    await Promise.all(updatePromises)
-
-    // Update local state - remove assigned customers from the list
-    // since they now have a relevantUser and no longer match the filter criteria
-    customersData.value = customersData.value.filter(customer =>
-      !selectedCustomers.value.includes(customer.id)
-    )
-
-    // Reset selections
-    selectedCustomers.value = []
-    selectedUser.value = null
-    userSearch.value = ''
-  } catch (error) {
-    console.error('Error assigning customers:', error)
-  }
-}
-
 const resetFilters = () => {
   searchTerm.value = ''
   statusFilter.value = ''
@@ -756,14 +628,11 @@ const getStatusText = (statusId) => {
 onMounted(async () => {
   try {
     const api = useApi()
-    const { getCustomerFilters, canAccessCustomer } = usePermissions()
 
-    // Load users
+    // Load users first
     try {
       const usersResponse = await api('/users')
       if (Array.isArray(usersResponse)) {
-        users.value = usersResponse
-        // Create users map
         usersResponse.forEach(user => {
           usersMap.value[user.id] = user
         })
@@ -772,19 +641,28 @@ onMounted(async () => {
       console.error('Failed to load users:', usersError)
     }
 
-    // Load statuses first
+    // Load statuses
     try {
       const statusResponse = await api('/statuses')
 
       if (Array.isArray(statusResponse)) {
-        // Create status map for quick lookup
+        // Create status map for quick lookup with field mapping
         statusResponse.forEach(status => {
-          statusMap.value[status.id] = status
+          // Map snake_case to camelCase for consistency
+          statusMap.value[status.id] = {
+            ...status,
+            isDoctor: status.isDoctor ?? status.is_doctor ?? false,
+            isPricing: status.isPricing ?? status.is_pricing ?? false,
+            isRemindable: status.isRemindable ?? status.is_remindable ?? false,
+            isFirst: status.isFirst ?? status.is_first ?? false,
+            isClosed: status.isClosed ?? status.is_closed ?? false,
+            isSale: status.isSale ?? status.is_sale ?? false
+          }
         })
 
-        // Filter to show only statuses with is_first flag
+        // Create status options for filter dropdown
         statusOptions.value = statusResponse
-          .filter(status => status.isActive !== false && status.isFirst === true)
+          .filter(status => status.isActive !== false) // Only show active statuses
           .map(status => ({
             value: status.id,
             label: status.name
@@ -794,36 +672,66 @@ onMounted(async () => {
       console.error('Failed to load statuses:', statusError)
     }
 
-    // Load customers with role-based filters
-    const filters = getCustomerFilters()
-    const response = await api('/customers', { query: filters })
+    // Load sales without appointment
+    const response = await api('/sales/without-appointment')
+
     if (Array.isArray(response)) {
-      // Filter customers to only show those with is_new status
-      const allCustomers = response.map(customer => {
+      // Get unique customer IDs from sales
+      const customerIds = [...new Set(response.map(sale => sale.customer).filter(Boolean))]
+
+      // Fetch customer details for all customers
+      const customerDetailsMap = {}
+      await Promise.all(
+        customerIds.map(async (customerId) => {
+          try {
+            const customer = await api(`/customers/${customerId}`)
+            customerDetailsMap[customerId] = customer
+          } catch (error) {
+            console.error(`Failed to load customer ${customerId}:`, error)
+          }
+        })
+      )
+
+      // Map sales with customer details
+      const mappedSales = response.map(sale => {
+        const customer = customerDetailsMap[sale.customer] || {}
+        const customerStatusId = customer.statusId || customer.status
+        const statusInfo = statusMap.value[customerStatusId]
+
         // Map user IDs to user objects
-        const userId = customer.userId || customer.user_id || customer.user
-        const relevantUserId = customer.relevantUserId || customer.relevant_user_id || customer.relevent_user || customer.relevantUser
+        const saleUserId = sale.user
+        const responsibleUserId = sale.responsibleUser
+        const followerUserId = sale.followerUser
+        const customerUserId = customer.userId || customer.user_id || (typeof customer.user === 'object' ? customer.user?.id : customer.user)
 
         return {
-          ...customer,
+          id: sale.id,
+          saleId: sale.id,
+          customerId: sale.customer,
+          title: sale.title || '-',
+          description: sale.description || '-',
+          maturityDate: sale.maturityDate,
+          createdAt: sale.createdAt,
+          updatesAt: sale.updatesAt,
           name: `${customer.name || ''} ${customer.surname || ''}`.trim() || 'İsimsiz',
-          status: customer.statusId || customer.status,
+          phone: customer.phone || '-',
+          email: customer.email || '-',
           source: customer.source || '-',
+          relatedTransaction: customer.relatedTransaction || '-',
+          status: customerStatusId,
+          statusInfo: statusInfo,
           isActive: customer.isActive !== undefined ? customer.isActive : true,
-          user: usersMap.value[userId] || customer.user,
-          relevantUser: usersMap.value[relevantUserId] || customer.relevantUser
+          user: usersMap.value[customerUserId] || (typeof customer.user === 'object' ? customer.user : null),
+          saleUser: usersMap.value[saleUserId] || null,
+          responsibleUser: usersMap.value[responsibleUserId] || null,
+          followerUser: usersMap.value[followerUserId] || null,
+          customerData: { ...customer, id: sale.customer }
         }
       })
 
-      // Filter to only include customers with status that has is_first flag, has relevantUser, and access permission
-      customersData.value = allCustomers.filter(customer => {
-        const status = statusMap.value[customer.status]
-        const isNew = status?.isFirst === true && customer.relevantUser
-        const hasAccess = canAccessCustomer(customer)
-        return isNew && hasAccess
-      })
+      customersData.value = mappedSales
     } else {
-      customersData.value = response.data || []
+      customersData.value = []
     }
   } catch (error) {
     console.error('Failed to load data:', error)
@@ -834,6 +742,6 @@ onMounted(async () => {
 
 // Page head
 useHead({
-  title: 'Yeni Kişiler - Valdori CRM'
+  title: 'Randevusuz Satışlar - Valdori CRM'
 })
 </script>

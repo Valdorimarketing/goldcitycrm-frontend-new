@@ -188,6 +188,7 @@ const allNavigationItems = [
     ]
   },
   { name: 'Satışlar', href: '/sales', icon: ShoppingBagIcon },
+  { name: 'Randevusuz Satışlar', href: '/randevusuz-satislar', icon: ShoppingBagIcon },
   { name: 'Randevular', href: '/meetings', icon: CalendarIcon },
   { name: 'Ödemeler', href: '/payments', icon: CurrencyDollarIcon },
   {

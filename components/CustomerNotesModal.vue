@@ -265,6 +265,15 @@
         </div>
       </div>
     </Transition>
+
+    <!-- Convert To Sale Modal -->
+    <ConvertToSaleModal
+      :show="showConvertToSaleModal"
+      :customer="customer"
+      :target-status="pendingStatusId"
+      @close="showConvertToSaleModal = false"
+      @converted="handleSaleConverted"
+    />
   </Teleport>
 </template>
 
@@ -291,6 +300,7 @@ const customerNotesStore = useCustomerNotesStore()
 const authStore = useAuthStore()
 const customersStore = useCustomersStore()
 const { statuses: availableStatuses, fetchStatuses } = useStatuses()
+const { showSuccess, showError } = useToast()
 
 // State
 const loading = ref(false)
@@ -299,6 +309,8 @@ const addingNote = ref(false)
 const editingNote = ref(null)
 const selectedStatus = ref(null)
 const updatingStatus = ref(false)
+const showConvertToSaleModal = ref(false)
+const pendingStatusId = ref(null)
 
 // New note form
 const newNote = reactive({
@@ -415,24 +427,53 @@ const isOverdue = (dateString) => {
 const handleStatusChange = async () => {
   if (!selectedStatus.value || !props.customer?.id || updatingStatus.value) return
 
+  // Check if the selected status is a sale status
+  const selectedStatusObj = availableStatuses.value.find(s => s.id === selectedStatus.value)
+  const isSaleStatus = selectedStatusObj?.is_sale || selectedStatusObj?.isSale
+
   updatingStatus.value = true
   try {
+    // Attempt to update customer status
     await customersStore.updateCustomer(props.customer.id, {
       status: selectedStatus.value
     })
 
-    // Refresh customer data
-    await customersStore.fetchCustomer(props.customer.id)
-
-    // Update local customer reference if needed
-    emit('customer-updated')
+    // If it's a sale status and update was successful, open convert to sale modal
+    if (isSaleStatus) {
+      pendingStatusId.value = selectedStatus.value
+      showConvertToSaleModal.value = true
+    } else {
+      // For non-sale status, just refresh and notify
+      await customersStore.fetchCustomer(props.customer.id)
+      emit('customer-updated')
+      showSuccess('Müşteri durumu güncellendi')
+    }
   } catch (error) {
     console.error('Error updating customer status:', error)
+
+    // Show error message from backend
+    const errorMessage = error?.data?.message || 'Durum güncellenirken hata oluştu'
+    showError(errorMessage)
+
     // Revert selection on error
     selectedStatus.value = props.customer?.status || null
   } finally {
     updatingStatus.value = false
   }
+}
+
+// Handle successful sale conversion
+const handleSaleConverted = async (saleResult) => {
+  showConvertToSaleModal.value = false
+
+  // Refresh customer data
+  await customersStore.fetchCustomer(props.customer.id)
+
+  // Update local customer reference
+  emit('customer-updated')
+
+  // Refresh notes
+  await fetchNotes()
 }
 
 // Format date

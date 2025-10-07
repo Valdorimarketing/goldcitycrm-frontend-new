@@ -34,8 +34,8 @@
                     </p>
                   </div>
 
-                  <!-- Doktor yorumu -->
-                  <div class="mt-4">
+                  <!-- Doktor yorumu - sadece doctor rolü görebilir -->
+                  <div v-if="isDoctor" class="mt-4">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Doktor Yorumu
                     </label>
@@ -170,6 +170,7 @@ const props = defineProps({
 const emit = defineEmits(['close', 'assigned'])
 
 const api = useApi()
+const { isDoctor } = usePermissions()
 
 // State
 const loading = ref(false)

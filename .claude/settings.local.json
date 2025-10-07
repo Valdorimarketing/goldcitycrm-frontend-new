@@ -7,7 +7,10 @@
       "Bash(curl:*)",
       "Bash(PORT=3000 npm run dev)",
       "Bash(mkdir:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nAdd permission system, user groups, and enhanced customer management features\n\n- Implement permission-based menu system with role-based access control\n- Add user groups management functionality\n- Enhance customer creation with profile image upload and related transaction field\n- Add customer status update capability in notes modal\n- Improve status configuration with reminding day, doctor check, and pricing options\n- Add new pages: dynamic search, new customers, pool data, user groups\n- Reorganize sidebar navigation with collapsible groups\n- Add CustomerFilesModal and DashboardCalendar components\n- Create middleware for route protection\n- Extend payment and status composables with filtering\n- Remove deprecated .gitlab-ci-dev.yml file\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []

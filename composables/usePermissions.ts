@@ -61,7 +61,6 @@ export const usePermissions = () => {
 
     // User sadece kendine ait customerları görür (relevantUser field'ına göre)
     if (isUser.value) {
-      console.log('[getCustomerFilters] Filtering by relevantUser:', userId.value)
       return {
         relevantUser: userId.value  // Backend'de field ismi camelCase: relevantUser
       }
@@ -93,13 +92,13 @@ export const usePermissions = () => {
 
     // User sadece relevantUser field'ı kendine ait customerları görebilir
     if (isUser.value) {
-      const customerUserId = customer.relevantUser  // Backend'de field ismi: relevantUser (camelCase)
-      const hasAccess = customerUserId === userId.value || customerUserId === String(userId.value)
+      // relevantUser field'ı obje veya ID olabilir, tüm varyasyonları kontrol et
+      const relevantUserValue = customer.relevantUser || customer.relevent_user || customer.relevantUserId || customer.relevant_user_id
 
-      console.log('[canAccessCustomer] Customer:', customer.id,
-        '- relevantUser:', customerUserId,
-        '- currentUserId:', userId.value,
-        '- hasAccess:', hasAccess)
+      // Eğer obje ise id'sini al, değilse direkt kullan
+      const customerUserId = typeof relevantUserValue === 'object' ? relevantUserValue?.id : relevantUserValue
+
+      const hasAccess = customerUserId === userId.value || customerUserId === String(userId.value) || String(customerUserId) === String(userId.value)
 
       return hasAccess
     }

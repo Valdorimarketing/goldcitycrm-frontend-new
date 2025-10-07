@@ -550,7 +550,6 @@ const showDoctorAssignment = (customer) => {
 }
 
 const handleDoctorAssigned = (assignment) => {
-  console.log('Doctor assigned:', assignment)
   // Optionally refresh customer data or show success message
 }
 
@@ -560,7 +559,6 @@ const showServices = (customer) => {
 }
 
 const handleServicesSaved = () => {
-  console.log('Services saved successfully')
   showServicesModal.value = false
 }
 
@@ -584,10 +582,8 @@ const handleDelete = async () => {
       await api(`/customers/${customerId}`, {
         method: 'DELETE'
       })
-      
-      console.log('Customer deleted successfully')
     } catch (error) {
-      console.error('Error deleting customer (using demo mode):', error)
+      console.error('Error deleting customer:', error)
       // Customer is already removed from local state, so no need to revert
     }
   }
@@ -597,7 +593,6 @@ const handleDelete = async () => {
 
 // Handle customer creation
 const handleCustomerCreated = (customer) => {
-  console.log('New customer created:', customer)
   // Add to beginning of customers list for immediate visibility
   customersData.value.unshift({
     ...customer,
@@ -647,12 +642,10 @@ const getStatusText = (statusId) => {
 onMounted(async () => {
   try {
     const api = useApi()
-    console.log('Loading statuses, users and customers...')
 
     // Load users first
     try {
       const usersResponse = await api('/users')
-      console.log('Users loaded:', usersResponse)
       if (Array.isArray(usersResponse)) {
         usersResponse.forEach(user => {
           usersMap.value[user.id] = user
@@ -665,7 +658,6 @@ onMounted(async () => {
     // Load statuses
     try {
       const statusResponse = await api('/statuses')
-      console.log('Statuses loaded:', statusResponse)
 
       if (Array.isArray(statusResponse)) {
         // Create status map for quick lookup with field mapping
@@ -680,7 +672,6 @@ onMounted(async () => {
             isClosed: status.isClosed ?? status.is_closed ?? false,
             isSale: status.isSale ?? status.is_sale ?? false
           }
-          console.log('Status mapped:', statusMap.value[status.id].name, 'isDoctor:', statusMap.value[status.id].isDoctor, 'isPricing:', statusMap.value[status.id].isPricing)
         })
 
         // Create status options for filter dropdown
@@ -697,34 +688,17 @@ onMounted(async () => {
 
     // Load customers with role-based filters
     const filters = getCustomerFilters()
-    console.log('=== CUSTOMER FILTERS ===')
-    console.log('Applying role-based filters:', filters)
-    console.log('API URL will be: /customers with query:', filters)
 
     const response = await api('/customers', {
       query: filters
     })
 
-    console.log('=== API RESPONSE ===')
-    console.log('Total customers received:', Array.isArray(response) ? response.length : response.data?.length)
-    console.log('Customers loaded:', response)
-
     if (Array.isArray(response)) {
       // Direct array response from backend
       const mappedCustomers = response.map(customer => {
-        console.log('=== FULL CUSTOMER OBJECT ===')
-        console.log('Customer ID:', customer.id)
-        console.log('Customer Name:', customer.name, customer.surname)
-        console.log('ALL FIELDS:', JSON.stringify(customer, null, 2))
-        console.log('customer.user:', customer.user)
-        console.log('customer.relevent_user:', customer.relevent_user)
-        console.log('customer.relevantUser:', customer.relevantUser)
-        console.log('Current userId:', userId.value)
-
         // Status bilgisini statusMap'ten al ve customer'a ekle
         const customerStatusId = customer.statusId || customer.status
         const statusInfo = statusMap.value[customerStatusId]
-        console.log('Customer status ID:', customerStatusId, 'Status info:', statusInfo)
 
         // Map user IDs to user objects
         const userIdValue = customer.userId || customer.user_id || (typeof customer.user === 'object' ? customer.user?.id : customer.user)
@@ -743,14 +717,10 @@ onMounted(async () => {
         }
       })
 
-      console.log('Before filtering - Total customers:', mappedCustomers.length)
       // Client-side filter as fallback (in case backend doesn't support filters yet)
       customersData.value = mappedCustomers.filter(customer => {
-        const hasAccess = canAccessCustomer(customer)
-        console.log('Customer:', customer.name, 'Has access:', hasAccess)
-        return hasAccess
+        return canAccessCustomer(customer)
       })
-      console.log('After filtering - Total customers:', customersData.value.length)
     } else {
       customersData.value = (response.data || []).filter(customer => canAccessCustomer(customer))
     }

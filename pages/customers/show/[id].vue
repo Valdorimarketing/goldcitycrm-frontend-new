@@ -648,15 +648,25 @@ const fetchLocations = async () => {
       api('/districts').catch(() => []),
       api('/statuses').catch(() => [])
     ])
-    
+
     locations.value = {
       countries: countriesRes,
       states: statesRes,
       cities: citiesRes,
       districts: districtsRes
     }
-    
-    statuses.value = statusesRes.data || statusesRes || []
+
+    // Map statuses with snake_case to camelCase conversion
+    const rawStatuses = statusesRes.data || statusesRes || []
+    statuses.value = rawStatuses.map(status => ({
+      ...status,
+      isDoctor: status.isDoctor ?? status.is_doctor ?? false,
+      isPricing: status.isPricing ?? status.is_pricing ?? false,
+      isRemindable: status.isRemindable ?? status.is_remindable ?? false,
+      isFirst: status.isFirst ?? status.is_first ?? false,
+      isClosed: status.isClosed ?? status.is_closed ?? false,
+      isSale: status.isSale ?? status.is_sale ?? false
+    }))
   } catch (err) {
     console.error('Error fetching locations:', err)
   }
@@ -671,6 +681,15 @@ const fetchCustomer = async () => {
     const response = await api(`/customers/${route.params.id}`)
 
     console.log('Customer data received:', response)
+
+    // Enrich customer with status info
+    if (response.status && statuses.value.length > 0) {
+      const statusInfo = statuses.value.find(s => s.id === response.status)
+      if (statusInfo) {
+        response.status_info = statusInfo
+        response.statusInfo = statusInfo
+      }
+    }
 
     // Check if user has permission to access this customer
     if (!canAccessCustomer(response)) {
