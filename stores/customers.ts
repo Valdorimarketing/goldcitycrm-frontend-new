@@ -23,23 +23,29 @@ export const useCustomersStore = defineStore('customers', () => {
   }, limitParam?: number, filtersParam?: any) => {
     loading.value = true
 
+    // Define page and limit at function scope so they're available in catch block
+    let page = 1
+    let limit = 20
+
     try {
-      const config = useRuntimeConfig()
+      const api = useApi()
 
       // Build query parameters - support both old and new API
       let queryParams: any
 
       if (typeof pageOrParams === 'number') {
         // Old API: fetchCustomers(page, limit, filters)
+        page = pageOrParams || 1
+        limit = limitParam || 20
         queryParams = {
-          page: pageOrParams || 1,
-          limit: limitParam || 20,
+          page,
+          limit,
           ...(filtersParam || {})
         }
       } else if (typeof pageOrParams === 'object' && pageOrParams !== null) {
         // New API: fetchCustomers({ page, limit, search, ... })
-        const page = pageOrParams.page || 1
-        const limit = pageOrParams.limit || 20
+        page = pageOrParams.page || 1
+        limit = pageOrParams.limit || 20
 
         queryParams = { page, limit }
         if (pageOrParams.search) {
@@ -59,14 +65,8 @@ export const useCustomersStore = defineStore('customers', () => {
         queryParams = { page: 1, limit: 20 }
       }
 
-      const token = useCookie('auth-token').value
-
-      const response = await $fetch<any>('/customers', {
-        baseURL: config.public.apiBase,
-        query: queryParams,
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+      const response = await api<any>('/customers', {
+        query: queryParams
       })
 
       // Handle different response formats
@@ -129,14 +129,9 @@ export const useCustomersStore = defineStore('customers', () => {
   const fetchCustomer = async (id: number) => {
     loading.value = true
     try {
-      const config = useRuntimeConfig()
-      const response = await $fetch<Customer>(`/customers/${id}`, {
-        baseURL: config.public.apiBase,
-        headers: {
-          Authorization: `Bearer ${useCookie('auth-token').value}`
-        }
-      })
-      
+      const api = useApi()
+      const response = await api<Customer>(`/customers/${id}`)
+
       currentCustomer.value = response
       return response
     } catch (error) {
@@ -151,16 +146,12 @@ export const useCustomersStore = defineStore('customers', () => {
   const createCustomer = async (customerData: Omit<Customer, 'id' | 'createdAt' | 'updatedAt'>) => {
     loading.value = true
     try {
-      const config = useRuntimeConfig()
-      const response = await $fetch<Customer>('/customers', {
+      const api = useApi()
+      const response = await api<Customer>('/customers', {
         method: 'POST',
-        baseURL: config.public.apiBase,
-        body: customerData,
-        headers: {
-          Authorization: `Bearer ${useCookie('auth-token').value}`
-        }
+        body: customerData
       })
-      
+
       customers.value.unshift(response)
       return response
     } catch (error) {
@@ -175,25 +166,21 @@ export const useCustomersStore = defineStore('customers', () => {
   const updateCustomer = async (id: number, customerData: Partial<Customer>) => {
     loading.value = true
     try {
-      const config = useRuntimeConfig()
-      const response = await $fetch<Customer>(`/customers/${id}`, {
+      const api = useApi()
+      const response = await api<Customer>(`/customers/${id}`, {
         method: 'PATCH',
-        baseURL: config.public.apiBase,
-        body: customerData,
-        headers: {
-          Authorization: `Bearer ${useCookie('auth-token').value}`
-        }
+        body: customerData
       })
-      
+
       const index = customers.value.findIndex(c => c.id === id)
       if (index !== -1) {
         customers.value[index] = response
       }
-      
+
       if (currentCustomer.value?.id === id) {
         currentCustomer.value = response
       }
-      
+
       return response
     } catch (error) {
       console.error('Error updating customer:', error)
@@ -207,17 +194,13 @@ export const useCustomersStore = defineStore('customers', () => {
   const deleteCustomer = async (id: number) => {
     loading.value = true
     try {
-      const config = useRuntimeConfig()
-      await $fetch(`/customers/${id}`, {
-        method: 'DELETE',
-        baseURL: config.public.apiBase,
-        headers: {
-          Authorization: `Bearer ${useCookie('auth-token').value}`
-        }
+      const api = useApi()
+      await api(`/customers/${id}`, {
+        method: 'DELETE'
       })
-      
+
       customers.value = customers.value.filter(c => c.id !== id)
-      
+
       if (currentCustomer.value?.id === id) {
         currentCustomer.value = null
       }
