@@ -3,101 +3,75 @@
     <!-- Header -->
     <div class="sm:flex sm:items-center sm:justify-between mb-6">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900">Randevular</h1>
-        <p class="mt-2 text-sm text-gray-700">
-          Tüm randevularınızı buradan yönetebilirsiniz.
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">📅 Görüşmeler / Randevular</h1>
+        <p class="mt-2 text-sm text-gray-700 dark:text-gray-400">
+          Müşteri görüşmelerini ve randevularını yönetin.
         </p>
       </div>
-      <div class="mt-4 sm:mt-0">
+      <div class="mt-4 sm:mt-0 flex gap-3">
+        <button
+          @click="resetFilters"
+          class="inline-flex items-center justify-center rounded-md bg-gray-100 dark:bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-700 dark:text-gray-200 shadow-sm hover:bg-gray-200 dark:hover:bg-gray-600"
+        >
+          Filtreleri Temizle
+        </button>
         <NuxtLink
-          to="/meetings/new"
+          to="/meetings/create"
           class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
         >
           <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
-          Yeni Randevu
+          Yeni Görüşme
         </NuxtLink>
       </div>
     </div>
 
-    <!-- Search and Filters -->
+    <!-- Filters -->
     <div class="card mb-6">
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-4">
         <div>
-          <label for="search" class="block text-sm font-medium text-gray-700 mb-2">
-            Ara
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            🔍 Müşteri Ara
           </label>
           <input
-            id="search"
-            v-model="searchTerm"
+            v-model="filters.customerSearch"
             type="text"
             class="form-input"
-            placeholder="Başlık veya müşteri adı..."
+            placeholder="Müşteri adı..."
           />
         </div>
         <div>
-          <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
-            Durum
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            📊 Durum
           </label>
-          <select
-            id="status"
-            v-model="statusFilter"
-            class="form-input"
-          >
-            <option value="">Tüm Durumlar</option>
-            <option value="scheduled">Planlandı</option>
-            <option value="confirmed">Onaylandı</option>
-            <option value="completed">Tamamlandı</option>
-            <option value="cancelled">İptal</option>
+          <select v-model="filters.status" class="form-input">
+            <option value="">Tümü</option>
+            <option v-for="status in meetingStatuses" :key="status.id" :value="status.id">
+              {{ status.name }}
+            </option>
           </select>
         </div>
         <div>
-          <label for="dateRange" class="block text-sm font-medium text-gray-700 mb-2">
-            Tarih
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            🏥 Hastane
           </label>
-          <select
-            id="dateRange"
-            v-model="dateFilter"
+          <input
+            v-model="filters.hospitalSearch"
+            type="text"
             class="form-input"
-          >
-            <option value="">Tüm Tarihler</option>
-            <option value="today">Bugün</option>
-            <option value="tomorrow">Yarın</option>
-            <option value="week">Bu Hafta</option>
-            <option value="month">Bu Ay</option>
-          </select>
+            placeholder="Hastane adı..."
+          />
         </div>
-        <div class="flex items-end">
-          <button
-            @click="resetFilters"
-            class="btn-secondary"
-          >
-            Filtreleri Temizle
-          </button>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            👨‍⚕️ Doktor
+          </label>
+          <input
+            v-model="filters.doctorSearch"
+            type="text"
+            class="form-input"
+            placeholder="Doktor adı..."
+          />
         </div>
-      </div>
-    </div>
-
-    <!-- Meetings Calendar View Toggle -->
-    <div class="flex justify-end mb-4">
-      <div class="bg-gray-100 p-1 rounded-lg">
-        <button
-          @click="viewMode = 'list'"
-          :class="[
-            viewMode === 'list' ? 'bg-white shadow-sm' : '',
-            'px-3 py-1 text-sm font-medium rounded-md'
-          ]"
-        >
-          Liste
-        </button>
-        <button
-          @click="viewMode = 'calendar'"
-          :class="[
-            viewMode === 'calendar' ? 'bg-white shadow-sm' : '',
-            'px-3 py-1 text-sm font-medium rounded-md'
-          ]"
-        >
-          Takvim
-        </button>
       </div>
     </div>
 
@@ -106,127 +80,190 @@
       <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
     </div>
 
-    <!-- List View -->
-    <div v-else-if="viewMode === 'list'" class="space-y-4">
-      <div
-        v-for="meeting in filteredMeetings"
-        :key="meeting.id"
-        class="card hover:shadow-md transition-shadow duration-200"
-      >
-        <div class="flex items-start justify-between">
-          <!-- Meeting Info -->
-          <div class="flex-1">
-            <div class="flex items-center space-x-3 mb-2">
-              <CalendarIcon class="h-5 w-5 text-indigo-600" />
-              <h3 class="text-lg font-medium text-gray-900">
-                Randevu #{{ meeting.id }}
-              </h3>
-              <span
-                v-if="meeting.meetingStatusInfo"
-                class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
-                :class="getStatusClass(meeting.meetingStatusInfo.name)"
-              >
-                {{ meeting.meetingStatusInfo.name }}
-              </span>
-            </div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-gray-600">
-              <div class="flex items-center space-x-2">
-                <ClockIcon class="h-4 w-4" />
-                <span>{{ formatDateTime(meeting.startTime) }}</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <UserIcon class="h-4 w-4" />
-                <span>{{ meeting.customerInfo ? `${meeting.customerInfo.name} ${meeting.customerInfo.surname}` : 'Müşteri belirtilmemiş' }}</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <MapPinIcon class="h-4 w-4" />
-                <span>{{ meeting.meetingLocationInfo?.name || 'Konum belirtilmemiş' }}</span>
-              </div>
-              <div v-if="meeting.salesProduct" class="flex items-center space-x-2">
-                <CubeIcon class="h-4 w-4" />
-                <span class="text-indigo-600 font-medium">{{ meeting.salesProduct.name }}</span>
-              </div>
-            </div>
-            
-            <p v-if="meeting.description" class="mt-2 text-sm text-gray-600">
-              {{ meeting.description }}
+    <!-- Meetings Table -->
+    <div v-else class="card">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead class="bg-gray-50 dark:bg-gray-800">
+            <tr>
+              <th class="table-header text-gray-700 dark:text-gray-300">ID</th>
+              <th class="table-header text-gray-700 dark:text-gray-300">Müşteri</th>
+              <th class="table-header text-gray-700 dark:text-gray-300">Hastane</th>
+              <th class="table-header text-gray-700 dark:text-gray-300">Doktor</th>
+              <th class="table-header text-gray-700 dark:text-gray-300">⏰ Başlangıç</th>
+              <th class="table-header text-gray-700 dark:text-gray-300">⏰ Bitiş</th>
+              <th class="table-header text-gray-700 dark:text-gray-300">Durum</th>
+              <th class="table-header text-gray-700 dark:text-gray-300">İşlemler</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+            <tr v-for="meeting in filteredMeetings" :key="meeting.id" :class="isPastMeeting(meeting.startTime) ? 'bg-gray-50 dark:bg-gray-800/50' : ''">
+              <td class="table-cell">
+                <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                  #{{ meeting.id }}
+                </span>
+              </td>
+              <td class="table-cell">
+                <div class="text-sm text-gray-900 dark:text-gray-100">
+                  {{ getCustomerName(meeting.customer) }}
+                </div>
+              </td>
+              <td class="table-cell">
+                <div class="text-sm text-gray-900 dark:text-gray-100">
+                  {{ meeting.hospital?.name || '-' }}
+                </div>
+              </td>
+              <td class="table-cell">
+                <div class="text-sm text-gray-900 dark:text-gray-100">
+                  {{ meeting.doctor?.name || '-' }}
+                </div>
+              </td>
+              <td class="table-cell">
+                <div class="text-sm text-gray-900 dark:text-gray-100">
+                  {{ formatDateTime(meeting.startTime) }}
+                </div>
+              </td>
+              <td class="table-cell">
+                <div class="text-sm text-gray-900 dark:text-gray-100">
+                  {{ formatDateTime(meeting.endTime) }}
+                </div>
+              </td>
+              <td class="table-cell">
+                <span :class="getStatusBadgeClass(meeting.meetingStatus)">
+                  {{ getStatusName(meeting.meetingStatus) }}
+                </span>
+              </td>
+              <td class="table-cell">
+                <div class="flex gap-1">
+                  <button
+                    @click="viewMeeting(meeting)"
+                    class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    title="Görüntüle"
+                  >
+                    <EyeIcon class="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                  </button>
+                  <NuxtLink
+                    :to="`/meetings/edit/${meeting.id}`"
+                    class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    title="Düzenle"
+                  >
+                    <PencilIcon class="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
+                  </NuxtLink>
+                  <button
+                    @click="confirmDelete(meeting)"
+                    class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    title="Sil"
+                  >
+                    <TrashIcon class="h-4 w-4 text-red-600 dark:text-red-400" />
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Empty State -->
+            <tr v-if="filteredMeetings.length === 0">
+              <td colspan="8" class="text-center py-12">
+                <CalendarIcon class="mx-auto h-12 w-12 text-gray-400" />
+                <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">Görüşme bulunamadı</h3>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                  Henüz görüşme eklenmemiş veya filtrelerinize uygun sonuç bulunamadı.
+                </p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div v-if="meta.total > meta.limit" class="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 sm:px-6">
+        <div class="flex flex-1 justify-between sm:hidden">
+          <button
+            :disabled="meta.page === 1"
+            @click="changePage(meta.page - 1)"
+            class="relative inline-flex items-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
+          >
+            Önceki
+          </button>
+          <button
+            :disabled="meta.page * meta.limit >= meta.total"
+            @click="changePage(meta.page + 1)"
+            class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
+          >
+            Sonraki
+          </button>
+        </div>
+        <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+          <div>
+            <p class="text-sm text-gray-700 dark:text-gray-400">
+              <span class="font-medium">{{ ((meta.page - 1) * meta.limit) + 1 }}</span>
+              -
+              <span class="font-medium">{{ Math.min(meta.page * meta.limit, meta.total) }}</span>
+              arası, toplam
+              <span class="font-medium">{{ meta.total }}</span>
+              sonuç
             </p>
           </div>
+          <div>
+            <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm">
+              <button
+                :disabled="meta.page === 1"
+                @click="changePage(meta.page - 1)"
+                class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
+              >
+                <ChevronLeftIcon class="h-5 w-5" />
+              </button>
 
-          <!-- Actions -->
-          <div class="flex space-x-2 ml-4">
-            <NuxtLink
-              :to="`/meetings/${meeting.id}/edit`"
-              class="text-yellow-600 hover:text-yellow-900 text-sm font-medium"
-            >
-              Düzenle
-            </NuxtLink>
-            <button
-              @click="confirmDelete(meeting)"
-              class="text-red-600 hover:text-red-900 text-sm font-medium"
-            >
-              Sil
-            </button>
+              <button
+                v-for="page in visiblePages"
+                :key="page"
+                @click="changePage(page)"
+                :class="[
+                  page === meta.page
+                    ? 'bg-indigo-600 text-white'
+                    : 'text-gray-900 dark:text-gray-300 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700',
+                  'relative inline-flex items-center px-4 py-2 text-sm font-semibold'
+                ]"
+              >
+                {{ page }}
+              </button>
+
+              <button
+                :disabled="meta.page * meta.limit >= meta.total"
+                @click="changePage(meta.page + 1)"
+                class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
+              >
+                <ChevronRightIcon class="h-5 w-5" />
+              </button>
+            </nav>
           </div>
         </div>
-      </div>
-
-      <!-- Empty State -->
-      <div v-if="filteredMeetings.length === 0" class="text-center py-12 card">
-        <CalendarIcon class="mx-auto h-12 w-12 text-gray-400" />
-        <h3 class="mt-2 text-sm font-medium text-gray-900">Randevu bulunamadı</h3>
-        <p class="mt-1 text-sm text-gray-500">
-          {{ searchTerm ? 'Arama kriterlerinize uygun randevu bulunamadı.' : 'Henüz randevu planlanmamış.' }}
-        </p>
-        <div class="mt-6">
-          <NuxtLink
-            to="/meetings/new"
-            class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
-          >
-            <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
-            İlk randevuyu planla
-          </NuxtLink>
-        </div>
-      </div>
-    </div>
-
-    <!-- Calendar View -->
-    <div v-else class="card">
-      <div class="text-center py-12">
-        <CalendarIcon class="mx-auto h-12 w-12 text-gray-400" />
-        <h3 class="mt-2 text-sm font-medium text-gray-900">Takvim Görünümü</h3>
-        <p class="mt-1 text-sm text-gray-500">
-          Takvim görünümü yakında eklenecek.
-        </p>
       </div>
     </div>
 
     <!-- Delete Confirmation Modal -->
     <div v-if="showDeleteModal" class="fixed inset-0 z-50 overflow-y-auto">
       <div class="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
-        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
-        
-        <div class="inline-block transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
-          <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+        <div class="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-80 transition-opacity"></div>
+
+        <div class="inline-block transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
+          <div class="bg-white dark:bg-gray-800 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
             <div class="sm:flex sm:items-start">
-              <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                <ExclamationTriangleIcon class="h-6 w-6 text-red-600" />
+              <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30 sm:mx-0 sm:h-10 sm:w-10">
+                <ExclamationTriangleIcon class="h-6 w-6 text-red-600 dark:text-red-400" />
               </div>
               <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                <h3 class="text-lg font-semibold leading-6 text-gray-900">
-                  Randevuyu Sil
+                <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-white">
+                  Görüşmeyi Sil
                 </h3>
                 <div class="mt-2">
-                  <p class="text-sm text-gray-500">
-                    <strong>Randevu #{{ meetingToDelete?.id }}</strong> silmek istediğinizden emin misiniz?
-                    Bu işlem geri alınamaz.
+                  <p class="text-sm text-gray-500 dark:text-gray-400">
+                    Bu görüşmeyi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.
                   </p>
                 </div>
               </div>
             </div>
           </div>
-          <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+          <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
             <button
               @click="handleDelete"
               class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
@@ -235,9 +272,86 @@
             </button>
             <button
               @click="showDeleteModal = false"
-              class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+              class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-600 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 sm:mt-0 sm:w-auto"
             >
               İptal
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Meeting Modal -->
+    <div v-if="showViewModal && selectedMeeting" class="fixed inset-0 z-50 overflow-y-auto">
+      <div class="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-80 transition-opacity" @click="showViewModal = false"></div>
+
+        <div class="inline-block transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:align-middle">
+          <div class="bg-white dark:bg-gray-800 px-4 pb-4 pt-5 sm:p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                📅 Görüşme Detayları
+              </h3>
+              <button @click="showViewModal = false" class="text-gray-400 hover:text-gray-500">
+                <span class="sr-only">Kapat</span>
+                <XMarkIcon class="h-6 w-6" />
+              </button>
+            </div>
+
+            <div class="space-y-4">
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Müşteri</label>
+                  <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ getCustomerName(selectedMeeting.customer) }}</p>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Durum</label>
+                  <p class="mt-1">
+                    <span :class="getStatusBadgeClass(selectedMeeting.meetingStatus)">
+                      {{ getStatusName(selectedMeeting.meetingStatus) }}
+                    </span>
+                  </p>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">🏥 Hastane</label>
+                  <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ selectedMeeting.hospital?.name || '-' }}</p>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">👨‍⚕️ Doktor</label>
+                  <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ selectedMeeting.doctor?.name || '-' }}</p>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">⏰ Başlangıç Zamanı</label>
+                  <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ formatDateTime(selectedMeeting.startTime) }}</p>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">⏰ Bitiş Zamanı</label>
+                  <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ formatDateTime(selectedMeeting.endTime) }}</p>
+                </div>
+                <div v-if="selectedMeeting.remindingAt">
+                  <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">🔔 Hatırlatma Zamanı</label>
+                  <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ formatDateTime(selectedMeeting.remindingAt) }}</p>
+                </div>
+              </div>
+
+              <div v-if="selectedMeeting.description">
+                <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Açıklama</label>
+                <p class="mt-1 text-sm text-gray-900 dark:text-gray-100 whitespace-pre-wrap">{{ selectedMeeting.description }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+            <NuxtLink
+              :to="`/meetings/edit/${selectedMeeting.id}`"
+              class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto"
+            >
+              Düzenle
+            </NuxtLink>
+            <button
+              @click="showViewModal = false"
+              class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-600 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 sm:mt-0 sm:w-auto"
+            >
+              Kapat
             </button>
           </div>
         </div>
@@ -246,93 +360,69 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import {
   PlusIcon,
   CalendarIcon,
-  ClockIcon,
-  UserIcon,
-  MapPinIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
   ExclamationTriangleIcon,
-  CubeIcon
+  EyeIcon,
+  PencilIcon,
+  TrashIcon,
+  XMarkIcon
 } from '@heroicons/vue/24/outline'
-import type { Meeting } from '~/types'
 
-// definePageMeta({
-//   middleware: 'auth'
-// })
-
-// View mode and filters
-const viewMode = ref('list')
-const searchTerm = ref('')
-const statusFilter = ref('')
-const dateFilter = ref('')
-const loading = ref(false)
-
-// Delete modal
-const showDeleteModal = ref(false)
-const meetingToDelete = ref<Meeting | null>(null)
-
-// Store
-const meetingsStore = useMeetingsStore()
-
-// Permissions
-const { getRelatedDataFilters } = usePermissions()
-
-// Load meetings from API
-onMounted(async () => {
-  try {
-    const filters = getRelatedDataFilters() || {}
-    await meetingsStore.fetchMeetings(1, 100, filters)
-  } catch (error) {
-    console.error('Failed to load meetings:', error)
-  }
+definePageMeta({
+  middleware: ['auth']
 })
 
-// Computed properties
-const filteredMeetings = computed(() => {
-  let filtered = meetingsStore.meetings || []
+const { meetings, loading, error, meta, fetchMeetings, deleteMeeting } = useMeetings()
+const { statuses: meetingStatuses, fetchMeetingStatuses } = useMeetingStatuses()
 
-  if (searchTerm.value) {
-    const search = searchTerm.value.toLowerCase()
-    filtered = filtered.filter(meeting =>
-      meeting.description?.toLowerCase().includes(search) ||
-      meeting.customerInfo?.name?.toLowerCase().includes(search) ||
-      meeting.customerInfo?.surname?.toLowerCase().includes(search) ||
-      meeting.salesProduct?.name?.toLowerCase().includes(search)
+// Filters
+const filters = ref({
+  customerSearch: '',
+  status: '',
+  hospitalSearch: '',
+  doctorSearch: ''
+})
+
+// Modals
+const showDeleteModal = ref(false)
+const showViewModal = ref(false)
+const meetingToDelete = ref(null)
+const selectedMeeting = ref(null)
+
+// Customer names cache
+const customerNames = ref({})
+
+// Computed
+const filteredMeetings = computed(() => {
+  let filtered = meetings.value
+
+  if (filters.value.customerSearch) {
+    const search = filters.value.customerSearch.toLowerCase()
+    filtered = filtered.filter(m =>
+      getCustomerName(m.customer).toLowerCase().includes(search)
     )
   }
 
-  if (statusFilter.value) {
-    // Convert status filter string to ID if needed
-    // This would need mapping based on actual status IDs from API
+  if (filters.value.hospitalSearch) {
+    const search = filters.value.hospitalSearch.toLowerCase()
+    filtered = filtered.filter(m =>
+      m.hospital?.name?.toLowerCase().includes(search)
+    )
   }
 
-  if (dateFilter.value && filtered.length > 0) {
-    const now = new Date()
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-    const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000)
-    
-    filtered = filtered.filter(meeting => {
-      if (!meeting.startTime) return false
-      const meetingDate = new Date(meeting.startTime)
-      switch (dateFilter.value) {
-        case 'today':
-          return meetingDate.toDateString() === today.toDateString()
-        case 'tomorrow':
-          return meetingDate.toDateString() === tomorrow.toDateString()
-        case 'week':
-          const weekFromNow = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000)
-          return meetingDate >= today && meetingDate <= weekFromNow
-        case 'month':
-          return meetingDate.getMonth() === now.getMonth() && meetingDate.getFullYear() === now.getFullYear()
-        default:
-          return true
-      }
-    })
+  if (filters.value.doctorSearch) {
+    const search = filters.value.doctorSearch.toLowerCase()
+    filtered = filtered.filter(m =>
+      m.doctor?.name?.toLowerCase().includes(search)
+    )
   }
 
-  // Sort by date
+  // Sort by start time (upcoming first)
   return filtered.sort((a, b) => {
     const dateA = a.startTime ? new Date(a.startTime).getTime() : 0
     const dateB = b.startTime ? new Date(b.startTime).getTime() : 0
@@ -340,11 +430,111 @@ const filteredMeetings = computed(() => {
   })
 })
 
+const visiblePages = computed(() => {
+  const pages = []
+  const totalPages = Math.ceil(meta.value.total / meta.value.limit)
+  const current = meta.value.page
+
+  if (totalPages <= 7) {
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(i)
+    }
+  } else {
+    if (current <= 4) {
+      pages.push(1, 2, 3, 4, 5, '...', totalPages)
+    } else if (current >= totalPages - 3) {
+      pages.push(1, '...', totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages)
+    } else {
+      pages.push(1, '...', current - 1, current, current + 1, '...', totalPages)
+    }
+  }
+
+  return pages.filter(page => page !== '...')
+})
+
 // Methods
+const getCustomerName = (customerId) => {
+  if (customerNames.value[customerId]) {
+    return customerNames.value[customerId]
+  }
+  return `Müşteri #${customerId}`
+}
+
+const fetchCustomerNames = async () => {
+  try {
+    const api = useApi()
+    const response = await api('/customers')
+    const customers = Array.isArray(response) ? response : (response.data || [])
+
+    customers.forEach(customer => {
+      const fullName = `${customer.name || ''} ${customer.surname || ''}`.trim() || 'İsimsiz'
+      customerNames.value[customer.id] = fullName
+    })
+  } catch (err) {
+    console.error('Failed to fetch customer names:', err)
+  }
+}
+
+const getStatusName = (statusId) => {
+  const status = meetingStatuses.value.find(s => s.id === statusId)
+  return status?.name || 'Bilinmiyor'
+}
+
+const getStatusBadgeClass = (statusId) => {
+  const status = meetingStatuses.value.find(s => s.id === statusId)
+
+  if (!status) {
+    return 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+  }
+
+  // Durum tipine göre renk
+  if (status.is_sale) {
+    return 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+  }
+  if (status.is_closed) {
+    return 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
+  }
+
+  return 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+}
+
+const formatDateTime = (dateString) => {
+  if (!dateString) return '-'
+  const date = new Date(dateString)
+  return date.toLocaleString('tr-TR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+}
+
+const isPastMeeting = (startTime) => {
+  if (!startTime) return false
+  return new Date(startTime) < new Date()
+}
+
 const resetFilters = () => {
-  searchTerm.value = ''
-  statusFilter.value = ''
-  dateFilter.value = ''
+  filters.value = {
+    customerSearch: '',
+    status: '',
+    hospitalSearch: '',
+    doctorSearch: ''
+  }
+}
+
+const changePage = (page) => {
+  fetchMeetings({
+    page,
+    limit: meta.value.limit,
+    status: filters.value.status || undefined
+  })
+}
+
+const viewMeeting = (meeting) => {
+  selectedMeeting.value = meeting
+  showViewModal.value = true
 }
 
 const confirmDelete = (meeting) => {
@@ -353,47 +543,49 @@ const confirmDelete = (meeting) => {
 }
 
 const handleDelete = async () => {
-  if (meetingToDelete.value) {
-    try {
-      await meetingsStore.deleteMeeting(meetingToDelete.value.id)
-    } catch (error) {
-      console.error('Error deleting meeting:', error)
-    }
+  if (!meetingToDelete.value) return
+
+  try {
+    await deleteMeeting(meetingToDelete.value.id)
+
+    // Refresh list
+    await fetchMeetings({
+      page: meta.value.page,
+      limit: meta.value.limit,
+      status: filters.value.status || undefined
+    })
+
+    showDeleteModal.value = false
+    meetingToDelete.value = null
+  } catch (err) {
+    console.error('Failed to delete meeting:', err)
   }
-  showDeleteModal.value = false
-  meetingToDelete.value = null
 }
 
-const formatDateTime = (dateString: string | undefined) => {
-  if (!dateString) return '-'
-  return new Date(dateString).toLocaleString('tr-TR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
+// Watch filters
+watch(() => filters.value.status, (newStatus) => {
+  fetchMeetings({
+    page: 1,
+    limit: meta.value.limit,
+    status: newStatus || undefined
   })
-}
+})
 
-const formatDate = (dateString: string | undefined) => {
-  if (!dateString) return '-'
-  return new Date(dateString).toLocaleDateString('tr-TR')
-}
-
-const getStatusClass = (status: string | undefined) => {
-  if (!status) return 'bg-gray-100 text-gray-800'
-  
-  const statusLower = status.toLowerCase()
-  if (statusLower.includes('planla')) return 'bg-blue-100 text-blue-800'
-  if (statusLower.includes('onay')) return 'bg-green-100 text-green-800'
-  if (statusLower.includes('tamamla')) return 'bg-gray-100 text-gray-800'
-  if (statusLower.includes('iptal')) return 'bg-red-100 text-red-800'
-  
-  return 'bg-gray-100 text-gray-800'
-}
+// Initialize
+onMounted(async () => {
+  try {
+    await Promise.all([
+      fetchMeetings({ page: 1, limit: 20 }),
+      fetchMeetingStatuses(),
+      fetchCustomerNames()
+    ])
+  } catch (err) {
+    console.error('Failed to initialize meetings page:', err)
+  }
+})
 
 // Page head
 useHead({
-  title: 'Randevular - Valdori CRM'
+  title: 'Görüşmeler - Valdori CRM'
 })
-</script> 
+</script>

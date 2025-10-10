@@ -13,7 +13,9 @@
       "Bash(git commit:*)",
       "Bash(git restore:*)",
       "Bash(make:*)",
-      "Bash(docker logs:*)"
+      "Bash(docker logs:*)",
+      "Bash(docker:*)",
+      "Bash(cp:*)"
     ],
     "deny": [],
     "ask": []

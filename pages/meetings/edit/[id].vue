@@ -1,0 +1,556 @@
+<template>
+  <div>
+    <!-- Header -->
+    <div class="mb-6">
+      <div class="flex items-center gap-2 mb-2">
+        <NuxtLink
+          to="/meetings"
+          class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+        >
+          <ChevronLeftIcon class="h-5 w-5" />
+        </NuxtLink>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Gorusmeyi Duzenle</h1>
+      </div>
+      <p class="text-sm text-gray-700 dark:text-gray-400 ml-7">
+        Gorusme bilgilerini guncelleyin.
+      </p>
+    </div>
+
+    <!-- Loading State -->
+    <div v-if="initialLoading" class="flex justify-center py-12">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+    </div>
+
+    <!-- Form -->
+    <form v-else @submit.prevent="handleSubmit" class="space-y-6">
+      <!-- Musteri (Zorunlu) -->
+      <div class="card">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Musteri Bilgileri</h2>
+        <div class="grid grid-cols-1 gap-6">
+          <div class="relative">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Musteri <span class="text-red-500">*</span>
+            </label>
+            <input
+              v-model="customerSearch"
+              type="text"
+              placeholder="Musteri ara..."
+              required
+              class="form-input"
+              :class="{ 'border-red-500': errors.customer }"
+              @focus="showCustomerDropdown = true"
+              @blur="hideCustomerDropdown"
+            />
+            <div
+              v-if="showCustomerDropdown && filteredCustomers.length > 0"
+              class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
+            >
+              <button
+                v-for="customer in filteredCustomers"
+                :key="customer.id"
+                type="button"
+                class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
+                @mousedown.prevent="selectCustomer(customer)"
+              >
+                {{ customer.name }} {{ customer.surname }}
+              </button>
+            </div>
+            <p v-if="errors.customer" class="mt-1 text-sm text-red-600">{{ errors.customer }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lokasyon Bilgileri -->
+      <div class="card">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Lokasyon Bilgileri</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div class="relative">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Hastane
+            </label>
+            <input
+              v-model="hospitalSearch"
+              type="text"
+              placeholder="Hastane ara..."
+              class="form-input"
+              @focus="showHospitalDropdown = true"
+              @blur="hideHospitalDropdown"
+            />
+            <div
+              v-if="showHospitalDropdown && filteredHospitals.length > 0"
+              class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
+            >
+              <button
+                v-for="hospital in filteredHospitals"
+                :key="hospital.id"
+                type="button"
+                class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
+                @mousedown.prevent="selectHospital(hospital)"
+              >
+                {{ hospital.name }}
+              </button>
+            </div>
+          </div>
+
+          <div class="relative">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Doktor
+            </label>
+            <input
+              v-model="doctorSearch"
+              type="text"
+              placeholder="Doktor ara..."
+              class="form-input"
+              :disabled="!form.hospitalId"
+              @focus="showDoctorDropdown = true"
+              @blur="hideDoctorDropdown"
+            />
+            <div
+              v-if="showDoctorDropdown && filteredDoctorsForSearch.length > 0"
+              class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
+            >
+              <button
+                v-for="doctor in filteredDoctorsForSearch"
+                :key="doctor.id"
+                type="button"
+                class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
+                @mousedown.prevent="selectDoctor(doctor)"
+              >
+                {{ doctor.name }}
+              </button>
+            </div>
+            <p v-if="form.hospitalId" class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              {{ filteredDoctors.length }} doktor listeleniyor
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarih ve Saat Bilgileri -->
+      <div class="card">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Tarih ve Saat</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Baslangic Zamani
+            </label>
+            <input
+              v-model="form.startTime"
+              type="datetime-local"
+              class="form-input"
+              :class="{ 'border-red-500': errors.startTime }"
+            />
+            <p v-if="errors.startTime" class="mt-1 text-sm text-red-600">{{ errors.startTime }}</p>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Bitis Zamani
+            </label>
+            <input
+              v-model="form.endTime"
+              type="datetime-local"
+              class="form-input"
+              :class="{ 'border-red-500': errors.endTime }"
+            />
+            <p v-if="errors.endTime" class="mt-1 text-sm text-red-600">{{ errors.endTime }}</p>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Hatirlatma Zamani
+            </label>
+            <input
+              v-model="form.remindingAt"
+              type="datetime-local"
+              class="form-input"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Durum <span class="text-red-500">*</span>
+            </label>
+            <select
+              v-model="form.meetingStatus"
+              required
+              class="form-input"
+              :class="{ 'border-red-500': errors.meetingStatus }"
+            >
+              <option value="">Durum secin...</option>
+              <option v-for="status in meetingStatuses" :key="status.id" :value="status.id">
+                {{ status.name }}
+              </option>
+            </select>
+            <p v-if="errors.meetingStatus" class="mt-1 text-sm text-red-600">{{ errors.meetingStatus }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Satis Urunu (Opsiyonel) -->
+      <div class="card">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Satis Bilgileri (Opsiyonel)</h2>
+        <div class="grid grid-cols-1 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Satis Urunu
+            </label>
+            <select
+              v-model="form.salesProductId"
+              class="form-input"
+            >
+              <option value="">Satis urunu secin...</option>
+              <option v-for="product in salesProducts" :key="product.id" :value="product.id">
+                {{ product.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aciklama -->
+      <div class="card">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Aciklama</h2>
+        <div class="grid grid-cols-1 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Gorusme Notlari
+            </label>
+            <textarea
+              v-model="form.description"
+              rows="4"
+              maxlength="1000"
+              class="form-input"
+              placeholder="Gorusme ile ilgili notlarinizi buraya yazin..."
+            ></textarea>
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              {{ form.description?.length || 0 }} / 1000 karakter
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="flex justify-end gap-3">
+        <NuxtLink
+          to="/meetings"
+          class="inline-flex items-center justify-center rounded-md bg-gray-100 dark:bg-gray-700 px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-200 shadow-sm hover:bg-gray-200 dark:hover:bg-gray-600"
+        >
+          Iptal
+        </NuxtLink>
+        <button
+          type="submit"
+          :disabled="loading"
+          class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <span v-if="loading" class="mr-2">
+            <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          </span>
+          {{ loading ? 'Guncelleniyor...' : 'Gorusmeyi Guncelle' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</template>
+
+<script setup>
+import { ChevronLeftIcon } from '@heroicons/vue/24/outline'
+
+definePageMeta({
+  middleware: ['auth']
+})
+
+const route = useRoute()
+const router = useRouter()
+const authStore = useAuthStore()
+
+// Composables
+const { fetchMeeting, updateMeeting } = useMeetings()
+const { hospitals, fetchHospitals } = useHospitals()
+const { doctors, fetchDoctors } = useDoctors()
+const { statuses: meetingStatuses, fetchMeetingStatuses } = useMeetingStatuses()
+const { products: salesProducts, fetchProducts } = useProducts()
+
+// State
+const initialLoading = ref(true)
+const loading = ref(false)
+const errors = ref({})
+const customers = ref([])
+const hospitalDoctors = ref([]) // Doctors from selected hospital
+
+// Search states
+const customerSearch = ref('')
+const hospitalSearch = ref('')
+const doctorSearch = ref('')
+const showCustomerDropdown = ref(false)
+const showHospitalDropdown = ref(false)
+const showDoctorDropdown = ref(false)
+
+// Form state
+const form = ref({
+  customer: '',
+  hospitalId: '',
+  doctorId: '',
+  startTime: '',
+  endTime: '',
+  remindingAt: '',
+  meetingStatus: '',
+  salesProductId: '',
+  description: ''
+})
+
+// Computed - Filter customers by search
+const filteredCustomers = computed(() => {
+  if (!customerSearch.value) {
+    return customers.value
+  }
+  const search = customerSearch.value.toLowerCase()
+  return customers.value.filter(customer => {
+    const fullName = `${customer.name} ${customer.surname}`.toLowerCase()
+    return fullName.includes(search)
+  })
+})
+
+// Computed - Filter hospitals by search
+const filteredHospitals = computed(() => {
+  if (!hospitalSearch.value) {
+    return hospitals.value
+  }
+  const search = hospitalSearch.value.toLowerCase()
+  return hospitals.value.filter(hospital =>
+    hospital.name.toLowerCase().includes(search)
+  )
+})
+
+// Computed - Doctors from selected hospital (fetched from API)
+const filteredDoctors = computed(() => {
+  return hospitalDoctors.value
+})
+
+// Computed - Filter doctors by search term
+const filteredDoctorsForSearch = computed(() => {
+  const baseDoctors = filteredDoctors.value
+
+  if (!doctorSearch.value) {
+    return baseDoctors
+  }
+
+  const search = doctorSearch.value.toLowerCase()
+  return baseDoctors.filter(doctor =>
+    doctor.name.toLowerCase().includes(search)
+  )
+})
+
+// Select methods
+const selectCustomer = (customer) => {
+  form.value.customer = customer.id
+  customerSearch.value = `${customer.name} ${customer.surname}`
+  showCustomerDropdown.value = false
+}
+
+const selectHospital = async (hospital) => {
+  form.value.hospitalId = hospital.id
+  hospitalSearch.value = hospital.name
+  showHospitalDropdown.value = false
+  // Reset doctor when hospital changes
+  form.value.doctorId = ''
+  doctorSearch.value = ''
+  hospitalDoctors.value = []
+
+  // Fetch doctors for the selected hospital
+  try {
+    const $api = useApi()
+    const response = await $api(`/hospitals/${hospital.id}/doctors`)
+    hospitalDoctors.value = Array.isArray(response) ? response : (response.data || [])
+    console.log(`Loaded ${hospitalDoctors.value.length} doctors for hospital ${hospital.name}`)
+  } catch (err) {
+    console.error('Failed to fetch hospital doctors:', err)
+    hospitalDoctors.value = []
+  }
+}
+
+const selectDoctor = (doctor) => {
+  form.value.doctorId = doctor.id
+  doctorSearch.value = doctor.name
+  showDoctorDropdown.value = false
+}
+
+// Hide dropdown methods
+const hideCustomerDropdown = () => {
+  setTimeout(() => {
+    showCustomerDropdown.value = false
+  }, 200)
+}
+
+const hideHospitalDropdown = () => {
+  setTimeout(() => {
+    showHospitalDropdown.value = false
+  }, 200)
+}
+
+const hideDoctorDropdown = () => {
+  setTimeout(() => {
+    showDoctorDropdown.value = false
+  }, 200)
+}
+
+// Helper to format date for datetime-local input
+const formatDateTimeLocal = (dateString) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  return `${year}-${month}-${day}T${hours}:${minutes}`
+}
+
+// Fetch all required data
+const fetchCustomers = async () => {
+  try {
+    const api = useApi()
+    const response = await api('/customers')
+    customers.value = Array.isArray(response) ? response : (response.data || [])
+  } catch (err) {
+    console.error('Failed to fetch customers:', err)
+  }
+}
+
+// Load meeting data
+const loadMeetingData = async () => {
+  try {
+    const meetingId = parseInt(route.params.id)
+    const meeting = await fetchMeeting(meetingId)
+
+    // Populate form with meeting data
+    form.value = {
+      customer: meeting.customer,
+      hospitalId: meeting.hospitalId || '',
+      doctorId: meeting.doctorId || '',
+      startTime: formatDateTimeLocal(meeting.startTime),
+      endTime: formatDateTimeLocal(meeting.endTime),
+      remindingAt: formatDateTimeLocal(meeting.remindingAt),
+      meetingStatus: meeting.meetingStatus,
+      salesProductId: meeting.salesProductId || '',
+      description: meeting.description || ''
+    }
+
+    // Set search values
+    const customer = customers.value.find(c => c.id === meeting.customer)
+    if (customer) {
+      customerSearch.value = `${customer.name} ${customer.surname}`
+    }
+
+    if (meeting.hospital) {
+      hospitalSearch.value = meeting.hospital.name
+
+      // Fetch doctors for the selected hospital
+      try {
+        const $api = useApi()
+        const response = await $api(`/hospitals/${meeting.hospitalId}/doctors`)
+        hospitalDoctors.value = Array.isArray(response) ? response : (response.data || [])
+      } catch (err) {
+        console.error('Failed to fetch hospital doctors:', err)
+      }
+    }
+
+    if (meeting.doctor) {
+      doctorSearch.value = meeting.doctor.name
+    }
+  } catch (err) {
+    console.error('Failed to load meeting:', err)
+    router.push('/meetings')
+  }
+}
+
+// Validate form
+const validateForm = () => {
+  errors.value = {}
+
+  if (!form.value.customer) {
+    errors.value.customer = 'Musteri secimi zorunludur'
+  }
+
+  if (!form.value.meetingStatus) {
+    errors.value.meetingStatus = 'Durum secimi zorunludur'
+  }
+
+  if (form.value.startTime && form.value.endTime) {
+    const start = new Date(form.value.startTime)
+    const end = new Date(form.value.endTime)
+
+    if (end <= start) {
+      errors.value.endTime = 'Bitis zamani baslangic zamanindan sonra olmalidir'
+    }
+  }
+
+  return Object.keys(errors.value).length === 0
+}
+
+// Handle form submission
+const handleSubmit = async () => {
+  if (!validateForm()) {
+    return
+  }
+
+  loading.value = true
+
+  try {
+    const meetingId = parseInt(route.params.id)
+
+    // Prepare data for API
+    const data = {
+      customer: parseInt(form.value.customer),
+      user: authStore.user?.id || 1, // Current logged in user
+      meetingStatus: parseInt(form.value.meetingStatus),
+      ...(form.value.hospitalId && { hospitalId: parseInt(form.value.hospitalId) }),
+      ...(form.value.doctorId && { doctorId: parseInt(form.value.doctorId) }),
+      ...(form.value.startTime && { startTime: new Date(form.value.startTime).toISOString() }),
+      ...(form.value.endTime && { endTime: new Date(form.value.endTime).toISOString() }),
+      ...(form.value.remindingAt && { remindingAt: new Date(form.value.remindingAt).toISOString() }),
+      ...(form.value.salesProductId && { salesProductId: parseInt(form.value.salesProductId) }),
+      description: form.value.description || ''
+    }
+
+    await updateMeeting(meetingId, data)
+
+    // Redirect to meetings list
+    router.push('/meetings')
+  } catch (err) {
+    console.error('Failed to update meeting:', err)
+    errors.value.submit = 'Gorusme guncellenirken bir hata olustu'
+  } finally {
+    loading.value = false
+  }
+}
+
+// Initialize
+onMounted(async () => {
+  try {
+    // Load all required data
+    await Promise.all([
+      fetchCustomers(),
+      fetchHospitals({ limit: 1000 }),
+      fetchDoctors({ limit: 1000 }),
+      fetchMeetingStatuses(),
+      fetchProducts({ limit: 1000 })
+    ])
+
+    // Load meeting data
+    await loadMeetingData()
+  } catch (err) {
+    console.error('Failed to initialize form:', err)
+  } finally {
+    initialLoading.value = false
+  }
+})
+
+// Page head
+useHead({
+  title: 'Gorusmeyi Duzenle - Valdori CRM'
+})
+</script>

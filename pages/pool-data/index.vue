@@ -530,7 +530,7 @@ import {
 } from '@heroicons/vue/24/outline'
 
 definePageMeta({
-  // middleware: 'auth' // Temporarily disabled
+  middleware: ['auth', 'admin'] // Only admin can access pool data
 })
 
 const loading = ref(true)
@@ -591,17 +591,30 @@ const filteredCustomers = computed(() => {
   let filtered = customersData.value
 
   // Tab filter - filter based on active tab
+  // Note: customersData already contains only is_first=true customers
   if (activeTab.value === 'unassigned') {
-    // Show customers with is_first status and no relevantUser
+    // Show customers with no relevantUser (null, undefined, empty string, or empty object)
     filtered = filtered.filter(customer => {
-      const status = statusMap.value[customer.status]
-      return status?.isFirst === true && !customer.relevantUser
+      const ru = customer.relevantUser
+      // Check if relevantUser is truly empty
+      const isEmpty = ru === null ||
+                     ru === undefined ||
+                     ru === '' ||
+                     (typeof ru === 'object' && Object.keys(ru).length === 0)
+
+      return isEmpty
     })
   } else if (activeTab.value === 'assigned') {
-    // Show customers with is_first status and relevantUser exists
+    // Show customers with relevantUser exists and has data
     filtered = filtered.filter(customer => {
-      const status = statusMap.value[customer.status]
-      return status?.isFirst === true && customer.relevantUser
+      const ru = customer.relevantUser
+      // Check if relevantUser has actual data
+      const hasData = ru !== null &&
+                     ru !== undefined &&
+                     ru !== '' &&
+                     !(typeof ru === 'object' && Object.keys(ru).length === 0)
+
+      return hasData
     })
   }
 
@@ -783,7 +796,6 @@ const onGroupChange = async (customerId) => {
     try {
       const api = useApi()
       const response = await api(`/user-group/${groupId}/users`)
-      console.log('Group users loaded for group', groupId, ':', response)
       groupUsersMap.value[groupId] = Array.isArray(response) ? response : (response?.data || [])
     } catch (error) {
       console.error('Error loading group users:', error)
@@ -995,13 +1007,11 @@ const getStatusText = (statusId) => {
 onMounted(async () => {
   try {
     const api = useApi()
-    const { getCustomerFilters, canAccessCustomer } = usePermissions()
     console.log('Loading statuses, users and customers...')
 
     // Load users
     try {
       const usersResponse = await api('/users')
-      console.log('Users loaded:', usersResponse)
       if (Array.isArray(usersResponse)) {
         users.value = usersResponse
         // Create users map
@@ -1016,7 +1026,6 @@ onMounted(async () => {
     // Load user groups
     try {
       const groupsResponse = await api('/user-group')
-      console.log('User groups loaded:', groupsResponse)
       if (Array.isArray(groupsResponse)) {
         userGroups.value = groupsResponse
       } else if (groupsResponse?.data && Array.isArray(groupsResponse.data)) {
@@ -1025,7 +1034,6 @@ onMounted(async () => {
         // If it's an object with a groups property or similar
         userGroups.value = groupsResponse.groups || groupsResponse.userGroups || []
       }
-      console.log('User groups after processing:', userGroups.value)
     } catch (groupsError) {
       console.error('Failed to load user groups:', groupsError)
     }
@@ -1033,7 +1041,6 @@ onMounted(async () => {
     // Load statuses first
     try {
       const statusResponse = await api('/statuses')
-      console.log('Statuses loaded:', statusResponse)
 
       if (Array.isArray(statusResponse)) {
         // Create status map for quick lookup
@@ -1053,45 +1060,63 @@ onMounted(async () => {
       console.error('Failed to load statuses:', statusError)
     }
 
-    // Load customers with role-based filters
-    const filters = getCustomerFilters()
-    console.log('Applying role-based filters:', filters)
-    const response = await api('/customers', { query: filters })
+    // Load customers with isFirst status (admin only page)
+    // Get all statuses with isFirst=true and fetch customers for those statuses
+    const firstStatusIds = Object.values(statusMap.value)
+      .filter(s => s.isFirst === true)
+      .map(s => s.id)
 
-    console.log('Customers loaded:', response)
-    if (Array.isArray(response)) {
+    // Fetch ALL customers with isFirst status (status=1)
+    const response = await api('/customers', {
+      query: {
+        status: firstStatusIds[0],  // Filter by status (usually 1 for "Yeni")
+        limit: 10000  // High limit to get all pool data customers
+      }
+    })
+
+    // Handle both array and {data, meta} response formats
+    const customersArray = Array.isArray(response) ? response : (response.data || [])
+
+    if (customersArray.length > 0) {
       // Filter customers to only show those with is_new status
-      const allCustomers = response.map(customer => {
+      const allCustomers = customersArray.map(customer => {
         // Map user IDs to user objects
         const userId = customer.userId || customer.user_id || customer.user
         const relevantUserId = customer.relevantUserId || customer.relevant_user_id || customer.relevent_user || customer.relevantUser
 
+        // Parse relevantUser correctly - handle both ID and object cases
+        let relevantUserObj = null
+        if (relevantUserId !== null && relevantUserId !== undefined) {
+          if (typeof relevantUserId === 'object') {
+            // Already an object
+            relevantUserObj = relevantUserId
+          } else {
+            // It's an ID, look it up in usersMap
+            relevantUserObj = usersMap.value[relevantUserId]
+          }
+        }
+
+        // Determine status ID from various possible fields
+        const statusId = customer.statusId || customer.status_id || customer.status
+
         return {
           ...customer,
           name: `${customer.name || ''} ${customer.surname || ''}`.trim() || 'İsimsiz',
-          status: customer.statusId || customer.status,
+          status: statusId,
           source: customer.source || '-',
           isActive: customer.isActive !== undefined ? customer.isActive : true,
           user: usersMap.value[userId] || customer.user,
-          relevantUser: usersMap.value[relevantUserId] || customer.relevantUser
+          relevantUser: relevantUserObj
         }
       })
 
-      // Filter to only include customers with status that has is_first flag and access permission
-      // Tab filtering will handle whether relevantUser exists or not
+      // Filter to only include customers with status that has is_first flag
+      // Admin-only page: show all customers with isFirst=true status
       customersData.value = allCustomers.filter(customer => {
         const status = statusMap.value[customer.status]
-        const isFirstStatus = status?.isFirst === true
-        const hasAccess = canAccessCustomer(customer)
-        return isFirstStatus && hasAccess
+        return status?.isFirst === true
       })
 
-      // Initialize row assignments for each customer
-      customersData.value.forEach(customer => {
-        initializeRowAssignment(customer.id)
-      })
-    } else {
-      customersData.value = response.data || []
       // Initialize row assignments for each customer
       customersData.value.forEach(customer => {
         initializeRowAssignment(customer.id)

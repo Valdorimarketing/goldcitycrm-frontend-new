@@ -346,7 +346,7 @@
                           </label>
                           <select
                             id="source"
-                            v-model="form.source_id"
+                            v-model="form.sourceId"
                             class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all"
                           >
                             <option value="">Kaynak seçin</option>
@@ -495,7 +495,7 @@
                           </label>
                           <input
                             id="postal_code"
-                            v-model="form.postal_code"
+                            v-model="form.postalCode"
                             type="text"
                             class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all"
                             placeholder="34000"
@@ -825,13 +825,13 @@ const form = reactive({
   job: '',
   company: '',
   website: '',
-  source_id: null,
+  sourceId: null,
   status: null,
   country: null,
   state: null,
   city: null,
   district: null,
-  postal_code: '',
+  postalCode: '',
   address: '',
   description: '',
   relatedTransaction: '',
@@ -1108,13 +1108,13 @@ const handleSubmit = async () => {
   if (form.job?.trim()) customerData.job = form.job.trim()
   if (form.company?.trim()) customerData.company = form.company.trim()
   if (form.website?.trim()) customerData.website = form.website.trim()
-  if (form.source_id) customerData.source_id = form.source_id
+  if (form.sourceId) customerData.sourceId = form.sourceId
   if (form.status) customerData.status = form.status
   if (form.country) customerData.country = form.country
   if (form.state) customerData.state = form.state
   if (form.city) customerData.city = form.city
   if (form.district) customerData.district = form.district
-  if (form.postal_code?.trim()) customerData.postal_code = form.postal_code.trim()
+  if (form.postalCode?.trim()) customerData.postalCode = form.postalCode.trim()
   if (form.address?.trim()) customerData.address = form.address.trim()
   if (form.description?.trim()) customerData.description = form.description.trim()
   if (form.relatedTransaction?.trim()) customerData.relatedTransaction = form.relatedTransaction.trim()

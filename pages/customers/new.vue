@@ -209,7 +209,7 @@
                   Kaynak
                 </label>
                 <select
-                  v-model="form.source_id"
+                  v-model="form.sourceId"
                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Kaynak seçiniz</option>
@@ -330,7 +330,7 @@
                   Posta Kodu
                 </label>
                 <input
-                  v-model="form.postal_code"
+                  v-model="form.postalCode"
                   type="text"
                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="12345"
@@ -454,7 +454,7 @@ const form = reactive({
   gender: '',
   birth_date: '',
   phone: '',
-  source_id: '',
+  sourceId: '',
   job: '',
   identity_number: '',
   referance_customer: '',
@@ -466,7 +466,7 @@ const form = reactive({
   state: '',
   city: '',
   district: '',
-  postal_code: '',
+  postalCode: '',
   address: '',
   relevant_user: '',
   description: ''
@@ -611,7 +611,7 @@ const handleSubmit = async () => {
       gender: form.gender || null,
       birth_date: form.birth_date || null,
       phone: form.phone?.trim() || null,
-      source_id: form.source_id || null,
+      sourceId: form.sourceId || null,
       job: form.job?.trim() || null,
       identity_number: form.identity_number?.trim() || null,
       referance_customer: form.referance_customer || null,
@@ -623,7 +623,7 @@ const handleSubmit = async () => {
       state: form.state || null,
       city: form.city || null,
       district: form.district || null,
-      postal_code: form.postal_code?.trim() || null,
+      postalCode: form.postalCode?.trim() || null,
       address: form.address?.trim() || null,
       relevant_user: form.relevant_user || null,
       description: form.description?.trim() || null
