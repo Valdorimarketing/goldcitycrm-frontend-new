@@ -757,7 +757,12 @@ onMounted(async () => {
 
     // Load customers with role-based filters
     const filters = getCustomerFilters()
-    const response = await api('/customers', { query: filters })
+    const response = await api('/customers', {
+      query: {
+        ...filters,
+        isFirst: true  // Sadece ilk statüdeki müşterileri getir
+      }
+    })
 
     // Get customers array from response
     const customersArray = Array.isArray(response) ? response : (response.data || [])
@@ -779,12 +784,9 @@ onMounted(async () => {
       }
     })
 
-    // Filter to only include customers with status that has is_first flag and access permission
+    // Backend zaten isFirst=true filtresi uyguladı, sadece access kontrolü yap
     customersData.value = allCustomers.filter(customer => {
-      const status = statusMap.value[customer.status]
-      const isNew = status?.isFirst === true
-      const hasAccess = canAccessCustomer(customer)
-      return isNew && hasAccess
+      return canAccessCustomer(customer)
     })
   } catch (error) {
     console.error('Failed to load data:', error)
