@@ -20,6 +20,9 @@ export const useCustomersStore = defineStore('customers', () => {
     status?: number
     isActive?: boolean
     order?: 'ASC' | 'DESC'
+    relevantUser?: number
+    statusType?: string
+    [key: string]: any
   }, limitParam?: number, filtersParam?: any) => {
     loading.value = true
 
@@ -60,6 +63,18 @@ export const useCustomersStore = defineStore('customers', () => {
         if (pageOrParams.order) {
           queryParams.order = pageOrParams.order
         }
+        if (pageOrParams.relevantUser !== undefined) {
+          queryParams.relevantUser = pageOrParams.relevantUser
+        }
+        if (pageOrParams.statusType) {
+          queryParams.statusType = pageOrParams.statusType
+        }
+        // Add any other custom filter parameters
+        Object.keys(pageOrParams).forEach(key => {
+          if (!['page', 'limit', 'search', 'status', 'isActive', 'order', 'relevantUser', 'statusType'].includes(key)) {
+            queryParams[key] = pageOrParams[key]
+          }
+        })
       } else {
         // No params, use defaults
         queryParams = { page: 1, limit: 20 }

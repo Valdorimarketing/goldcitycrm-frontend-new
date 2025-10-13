@@ -60,45 +60,6 @@
       </div>
     </div>
 
-    <!-- User Assignment -->
-    <div class="card mb-6">
-      <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div class="sm:col-span-2 relative">
-          <label for="user-select" class="block text-sm font-medium text-gray-700 mb-2">
-            Kullanıcı Seç
-          </label>
-          <input
-            id="user-select"
-            v-model="userSearch"
-            type="text"
-            class="form-input"
-            placeholder="Kullanıcı ara..."
-            @focus="showUserDropdown = true"
-            @blur="hideUserDropdown"
-          />
-          <div v-if="showUserDropdown && filteredUsers.length > 0" class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 shadow-lg rounded-md border border-gray-200 dark:border-gray-700 max-h-60 overflow-auto">
-            <button
-              v-for="user in filteredUsers"
-              :key="user.id"
-              @mousedown.prevent="selectUser(user)"
-              class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-gray-100"
-            >
-              {{ user.name }} ({{ user.email }})
-            </button>
-          </div>
-        </div>
-        <div class="flex items-end">
-          <button
-            @click="assignSelectedCustomers"
-            :disabled="!selectedUser || selectedCustomers.length === 0"
-            class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Seçili Olanları Ata ({{ selectedCustomers.length }})
-          </button>
-        </div>
-      </div>
-    </div>
-
     <!-- Loading State -->
     <div v-if="loading" class="flex justify-center py-12">
       <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
@@ -797,34 +758,34 @@ onMounted(async () => {
     // Load customers with role-based filters
     const filters = getCustomerFilters()
     const response = await api('/customers', { query: filters })
-    if (Array.isArray(response)) {
-      // Filter customers to only show those with is_new status
-      const allCustomers = response.map(customer => {
-        // Map user IDs to user objects
-        const userId = customer.userId || customer.user_id || customer.user
-        const relevantUserId = customer.relevantUserId || customer.relevant_user_id || customer.relevent_user || customer.relevantUser
 
-        return {
-          ...customer,
-          name: `${customer.name || ''} ${customer.surname || ''}`.trim() || 'İsimsiz',
-          status: customer.statusId || customer.status,
-          source: customer.source || '-',
-          isActive: customer.isActive !== undefined ? customer.isActive : true,
-          user: usersMap.value[userId] || customer.user,
-          relevantUser: usersMap.value[relevantUserId] || customer.relevantUser
-        }
-      })
+    // Get customers array from response
+    const customersArray = Array.isArray(response) ? response : (response.data || [])
 
-      // Filter to only include customers with status that has is_first flag, has relevantUser, and access permission
-      customersData.value = allCustomers.filter(customer => {
-        const status = statusMap.value[customer.status]
-        const isNew = status?.isFirst === true && customer.relevantUser
-        const hasAccess = canAccessCustomer(customer)
-        return isNew && hasAccess
-      })
-    } else {
-      customersData.value = response.data || []
-    }
+    // Filter customers to only show those with is_new status
+    const allCustomers = customersArray.map(customer => {
+      // Map user IDs to user objects
+      const userId = customer.userId || customer.user_id || customer.user
+      const relevantUserId = customer.relevantUserId || customer.relevant_user_id || customer.relevent_user || customer.relevantUser
+
+      return {
+        ...customer,
+        name: `${customer.name || ''} ${customer.surname || ''}`.trim() || 'İsimsiz',
+        status: customer.statusId || customer.status,
+        source: customer.source || '-',
+        isActive: customer.isActive !== undefined ? customer.isActive : true,
+        user: usersMap.value[userId] || customer.user,
+        relevantUser: usersMap.value[relevantUserId] || customer.relevantUser
+      }
+    })
+
+    // Filter to only include customers with status that has is_first flag and access permission
+    customersData.value = allCustomers.filter(customer => {
+      const status = statusMap.value[customer.status]
+      const isNew = status?.isFirst === true
+      const hasAccess = canAccessCustomer(customer)
+      return isNew && hasAccess
+    })
   } catch (error) {
     console.error('Failed to load data:', error)
   } finally {
