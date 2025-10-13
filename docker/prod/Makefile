@@ -8,7 +8,8 @@ build:
 	docker-compose stop nuxt
 	docker system prune -a -f --all
 	docker system prune -a -f --volumes
-	docker login -u "$(PROD_DEPLOY_USERNAME)" -p "$(PROD_DEPLOY_PASSWORD)" "registry.gitlab.com"
+	# Registry login gerekmiyor, --build ile local build yapıyoruz
+	# docker login -u "$(PROD_DEPLOY_USERNAME)" -p "$(PROD_DEPLOY_PASSWORD)" "registry.gitlab.com"
 	docker-compose --env-file ./.env.prod up -d --build nuxt
 
 
