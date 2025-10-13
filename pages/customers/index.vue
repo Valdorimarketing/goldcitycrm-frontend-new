@@ -430,7 +430,12 @@ const { getCustomerFilters, canAccessCustomer, userId } = usePermissions()
 
 // Store
 const customersStore = useCustomersStore()
-const { customers, loading, pagination } = storeToRefs(customersStore)
+const { customers: allCustomers, loading, pagination } = storeToRefs(customersStore)
+
+// Filtered customers based on access permissions
+const customers = computed(() => {
+  return allCustomers.value.filter(customer => canAccessCustomer(customer))
+})
 
 // Search and filters
 const searchTerm = ref('')
@@ -474,10 +479,12 @@ const visiblePages = computed(() => {
 
 // Methods
 const loadCustomers = async (page = 1) => {
+  const filters = getCustomerFilters()
   await customersStore.fetchCustomers({
     page,
     search: searchTerm.value || undefined,
-    status: statusFilter.value
+    status: statusFilter.value,
+    ...filters
   })
 }
 
