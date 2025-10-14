@@ -430,15 +430,14 @@ definePageMeta({
 const authStore = useAuthStore()
 
 // Permissions
-const { getCustomerFilters, canAccessCustomer, userId } = usePermissions()
+const { getCustomerFilters } = usePermissions()
 
 // Store
 const customersStore = useCustomersStore()
 const { customers: allCustomers, loading, pagination } = storeToRefs(customersStore)
 
-// Filtered customers based on access permissions
+// Add statusInfo and relevantUser to each customer
 const customers = computed(() => {
-  // Add statusInfo and relevantUser to each customer
   return allCustomers.value.map(customer => {
     // Parse relevantUser ID from various possible field names
     const relevantUserId = customer.relevantUserId || customer.relevant_user_id || customer.relevent_user || customer.relevantUser
@@ -460,7 +459,7 @@ const customers = computed(() => {
       statusInfo: statusMap.value[customer.status],
       relevantUser: relevantUserObj
     }
-  }).filter(customer => canAccessCustomer(customer))
+  })
 })
 
 // Search and filters
@@ -506,6 +505,8 @@ const visiblePages = computed(() => {
 // Methods
 const loadCustomers = async (page = 1) => {
   const filters = getCustomerFilters()
+  console.log('[loadCustomers] User role:', authStore.user?.role)
+  console.log('[loadCustomers] Filters:', filters)
   await customersStore.fetchCustomers({
     page,
     search: searchTerm.value || undefined,

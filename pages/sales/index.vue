@@ -201,45 +201,68 @@
           </tbody>
         </table>
       </div>
-    </div>
 
-    <!-- Delete Confirmation Modal -->
-    <div v-if="showDeleteModal" class="fixed inset-0 z-50 overflow-y-auto">
-      <div class="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
-        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
-        
-        <div class="inline-block transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
-          <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-            <div class="sm:flex sm:items-start">
-              <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                <ExclamationTriangleIcon class="h-6 w-6 text-red-600" />
-              </div>
-              <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                <h3 class="text-lg font-semibold leading-6 text-gray-900">
-                  Satışı Sil
-                </h3>
-                <div class="mt-2">
-                  <p class="text-sm text-gray-500">
-                    Bu satış kaydını silmek istediğinizden emin misiniz? 
-                    Bu işlem geri alınamaz.
-                  </p>
-                </div>
-              </div>
-            </div>
+      <!-- Pagination -->
+      <div v-if="pagination.totalPages > 1" class="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 sm:px-6">
+        <div class="flex flex-1 justify-between sm:hidden">
+          <button
+            :disabled="pagination.page === 1"
+            @click="changePage(pagination.page - 1)"
+            class="relative inline-flex items-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
+          >
+            Önceki
+          </button>
+          <button
+            :disabled="pagination.page === pagination.totalPages"
+            @click="changePage(pagination.page + 1)"
+            class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
+          >
+            Sonraki
+          </button>
+        </div>
+        <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+          <div>
+            <p class="text-sm text-gray-700 dark:text-gray-300">
+              <span class="font-medium">{{ ((pagination.page - 1) * pagination.limit) + 1 }}</span>
+              -
+              <span class="font-medium">{{ Math.min(pagination.page * pagination.limit, pagination.total) }}</span>
+              arası, toplam
+              <span class="font-medium">{{ pagination.total }}</span>
+              sonuç
+            </p>
           </div>
-          <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-            <button
-              @click="handleDelete"
-              class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-            >
-              Sil
-            </button>
-            <button
-              @click="showDeleteModal = false"
-              class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-            >
-              İptal
-            </button>
+          <div>
+            <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm">
+              <button
+                :disabled="pagination.page === 1"
+                @click="changePage(pagination.page - 1)"
+                class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 dark:text-gray-500 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
+              >
+                <ChevronLeftIcon class="h-5 w-5" />
+              </button>
+
+              <button
+                v-for="page in visiblePages"
+                :key="page"
+                @click="changePage(page)"
+                :class="[
+                  page === pagination.page
+                    ? 'bg-indigo-600 text-white'
+                    : 'text-gray-900 dark:text-gray-300 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700',
+                  'relative inline-flex items-center px-4 py-2 text-sm font-semibold'
+                ]"
+              >
+                {{ page }}
+              </button>
+
+              <button
+                :disabled="pagination.page === pagination.totalPages"
+                @click="changePage(pagination.page + 1)"
+                class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 dark:text-gray-500 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
+              >
+                <ChevronRightIcon class="h-5 w-5" />
+              </button>
+            </nav>
           </div>
         </div>
       </div>
@@ -249,11 +272,11 @@
 
 <script setup>
 import {
-  PlusIcon,
   ShoppingBagIcon,
   CurrencyDollarIcon,
   ArrowTrendingUpIcon,
-  ExclamationTriangleIcon
+  ChevronLeftIcon,
+  ChevronRightIcon
 } from '@heroicons/vue/24/outline'
 import { useApi } from '~/composables/useApi'
 
@@ -262,107 +285,93 @@ import { useApi } from '~/composables/useApi'
 // })
 
 const api = useApi()
-const { getRelatedDataFilters } = usePermissions()
+const { userId, isAdmin } = usePermissions()
 
 // Search and filters
 const searchTerm = ref('')
 const statusFilter = ref('')
 const dateFilter = ref('')
 
-// Delete modal
-const showDeleteModal = ref(false)
-const saleToDelete = ref(null)
 const loading = ref(true)
 
 // Sales data from API
 const salesData = ref([])
-const statuses = ref([])
-const customers = ref([])
+
+// Pagination
+const pagination = ref({
+  total: 0,
+  page: 1,
+  limit: 10,
+  totalPages: 0
+})
 
 // Load data on mount
 onMounted(async () => {
   await loadSalesData()
 })
 
-// Fetch all required data
+// Fetch sales data using optimized endpoint
 const loadSalesData = async () => {
   loading.value = true
   try {
-    // Fetch all statuses to find sales statuses
-    const statusResponse = await api('/statuses')
-    statuses.value = Array.isArray(statusResponse) ? statusResponse : statusResponse.data || []
+    const query = {
+      page: pagination.value.page,
+      limit: pagination.value.limit
+    }
 
-    // Find statuses with is_sale = true
-    const saleStatuses = statuses.value.filter(status =>
-      status.is_sale || status.isSale
-    )
-    const saleStatusIds = saleStatuses.map(s => s.id)
+    // If not admin, add user filter
+    if (!isAdmin.value && userId.value) {
+      query.user = userId.value
+    }
 
-    // Fetch customers with role-based filters
-    const filters = getRelatedDataFilters() || {}
-    const customerResponse = await api('/customers', { query: filters })
-    const allCustomers = Array.isArray(customerResponse) ? customerResponse : customerResponse.data || []
+    // Fetch sales from optimized endpoint
+    const response = await api('/sales/user/details', { query })
 
-    // Filter customers with sale status
-    const saleCustomers = allCustomers.filter(customer =>
-      saleStatusIds.includes(customer.status) || saleStatusIds.includes(customer.statusId)
-    )
-    const saleCustomerIds = saleCustomers.map(c => c.id)
+    if (response?.data) {
+      // Map response to expected format
+      salesData.value = response.data.map(sale => ({
+        id: sale.id,
+        customerId: sale.customer,
+        customer: {
+          name: sale.customerDetails?.name || 'Bilinmeyen Müşteri',
+          company: sale.customerDetails?.company || sale.customerDetails?.companyName || ''
+        },
+        amount: calculateSaleAmount(sale.salesProducts),
+        description: sale.title || '-',
+        date: sale.createdAt || new Date().toISOString(),
+        status: 'completed', // Default status since these are sales
+        user: sale.userDetails,
+        responsibleUser: sale.responsibleUserDetails,
+        followerUser: sale.followerUserDetails,
+        products: sale.salesProducts || []
+      }))
 
-    // Store customers for reference
-    customers.value = saleCustomers
-
-    // Fetch Customer2Product data
-    const c2pResponse = await api('/customer2product')
-    const allC2P = Array.isArray(c2pResponse) ? c2pResponse : c2pResponse.data || []
-
-    // Filter Customer2Product entries for sale customers
-    const salesC2P = allC2P.filter(item => {
-      const customerId = item.customer?.id || item.customerId || item.customer
-      return saleCustomerIds.includes(customerId)
-    })
-
-    // Map the data to sales format
-    salesData.value = await Promise.all(salesC2P.map(async (item) => {
-      const customerId = item.customer?.id || item.customerId || item.customer
-      const customer = saleCustomers.find(c => c.id === customerId)
-
-      // Get product info if needed
-      let productName = 'Ürün'
-      if (item.product && typeof item.product === 'object') {
-        productName = item.product.name || 'Ürün'
-      } else if (item.product || item.productId) {
-        try {
-          const productResponse = await api(`/products/${item.product || item.productId}`)
-          productName = productResponse.name || 'Ürün'
-        } catch (error) {
-          console.error('Error fetching product:', error)
+      // Update pagination
+      if (response.meta) {
+        pagination.value = {
+          total: response.meta.total || 0,
+          page: response.meta.page || 1,
+          limit: response.meta.limit || 10,
+          totalPages: Math.ceil((response.meta.total || 0) / (response.meta.limit || 10))
         }
       }
-
-      return {
-        id: item.id,
-        customerId: customerId,
-        customer: {
-          name: customer?.name || 'Bilinmeyen Müşteri',
-          company: customer?.company || customer?.companyName || ''
-        },
-        amount: item.offer || item.price || 0,
-        price: item.price || 0,
-        discount: item.discount || 0,
-        offer: item.offer || 0,
-        description: item.note || productName,
-        productName: productName,
-        date: item.created_at || item.createdAt || new Date().toISOString(),
-        status: 'completed' // Default status since these are sales
-      }
-    }))
+    } else {
+      salesData.value = []
+    }
   } catch (error) {
     console.error('Error loading sales data:', error)
     salesData.value = []
   } finally {
     loading.value = false
   }
+}
+
+// Calculate total sale amount from products
+const calculateSaleAmount = (products) => {
+  if (!products || !Array.isArray(products)) return 0
+  return products.reduce((sum, item) => {
+    return sum + (item.offer || item.price || 0)
+  }, 0)
 }
 
 // Computed properties
@@ -424,6 +433,28 @@ const averageSale = computed(() => {
   return salesData.value.length > 0 ? totalSales.value / salesData.value.length : 0
 })
 
+const visiblePages = computed(() => {
+  const pages = []
+  const total = pagination.value.totalPages
+  const current = pagination.value.page
+
+  if (total <= 7) {
+    for (let i = 1; i <= total; i++) {
+      pages.push(i)
+    }
+  } else {
+    if (current <= 4) {
+      pages.push(1, 2, 3, 4, 5, '...', total)
+    } else if (current >= total - 3) {
+      pages.push(1, '...', total - 4, total - 3, total - 2, total - 1, total)
+    } else {
+      pages.push(1, '...', current - 1, current, current + 1, '...', total)
+    }
+  }
+
+  return pages.filter(page => page !== '...')
+})
+
 // Methods
 const resetFilters = () => {
   searchTerm.value = ''
@@ -431,28 +462,11 @@ const resetFilters = () => {
   dateFilter.value = ''
 }
 
-const confirmDelete = (sale) => {
-  saleToDelete.value = sale
-  showDeleteModal.value = true
-}
-
-const handleDelete = async () => {
-  if (saleToDelete.value) {
-    try {
-      // Delete the Customer2Product entry
-      await api(`/customer2product/${saleToDelete.value.id}`, {
-        method: 'DELETE'
-      })
-
-      // Reload the sales data
-      await loadSalesData()
-    } catch (error) {
-      console.error('Error deleting sale:', error)
-      alert('Satış silinirken bir hata oluştu.')
-    }
+const changePage = (page) => {
+  if (page >= 1 && page <= pagination.value.totalPages) {
+    pagination.value.page = page
+    loadSalesData()
   }
-  showDeleteModal.value = false
-  saleToDelete.value = null
 }
 
 const formatDate = (dateString) => {

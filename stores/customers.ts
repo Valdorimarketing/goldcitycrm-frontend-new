@@ -23,6 +23,8 @@ export const useCustomersStore = defineStore('customers', () => {
     relevantUser?: number
     statusType?: string
     isFirst?: boolean
+    isDoctor?: boolean
+    isPricing?: boolean
     [key: string]: any
   }, limitParam?: number, filtersParam?: any) => {
     loading.value = true
@@ -73,9 +75,15 @@ export const useCustomersStore = defineStore('customers', () => {
         if (pageOrParams.isFirst !== undefined) {
           queryParams.isFirst = pageOrParams.isFirst
         }
+        if (pageOrParams.isDoctor !== undefined) {
+          queryParams.isDoctor = pageOrParams.isDoctor
+        }
+        if (pageOrParams.isPricing !== undefined) {
+          queryParams.isPricing = pageOrParams.isPricing
+        }
         // Add any other custom filter parameters
         Object.keys(pageOrParams).forEach(key => {
-          if (!['page', 'limit', 'search', 'status', 'isActive', 'order', 'relevantUser', 'statusType', 'isFirst'].includes(key)) {
+          if (!['page', 'limit', 'search', 'status', 'isActive', 'order', 'relevantUser', 'statusType', 'isFirst', 'isDoctor', 'isPricing'].includes(key)) {
             queryParams[key] = pageOrParams[key]
           }
         })
@@ -84,6 +92,7 @@ export const useCustomersStore = defineStore('customers', () => {
         queryParams = { page: 1, limit: 20 }
       }
 
+      console.log('[fetchCustomers] Query params:', queryParams)
       const response = await api<any>('/customers', {
         query: queryParams
       })
