@@ -69,14 +69,14 @@ export const usePermissions = () => {
     // Doctor sadece is_doctor statuslu customerları görür
     if (isDoctor.value) {
       return {
-        statusType: 'doctor' // Backend'de isDoctor=true olan statusları filtrele
+        isDoctor: true // Backend'de isDoctor=true query parametresi
       }
     }
 
     // Pricing sadece is_pricing statuslu customerları görür
     if (isPricing.value) {
       return {
-        statusType: 'pricing' // Backend'de isPricing=true olan statusları filtrele
+        isPricing: true // Backend'de isPricing=true query parametresi
       }
     }
 
