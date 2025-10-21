@@ -14,7 +14,7 @@
     <div class="card mb-6">
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div>
-          <label for="search" class="block text-sm font-medium text-gray-700 mb-2">
+          <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Ara
           </label>
           <input
@@ -26,7 +26,7 @@
           />
         </div>
         <div>
-          <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
+          <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Durum
           </label>
           <select
@@ -40,15 +40,77 @@
             </option>
           </select>
         </div>
-        <div class="flex items-end">
-          <button
-            @click="resetFilters"
-            class="btn-secondary"
+        <div>
+          <label for="dateFilter" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Tarih Filtresi
+          </label>
+          <select
+            id="dateFilter"
+            v-model="dateFilter"
+            @change="handleDateFilterChange"
+            class="form-input"
           >
-            Filtreleri Temizle
-          </button>
+            <option value="today">Bugün ve Öncesi</option>
+            <option value="today-only">Sadece Bugün</option>
+            <option value="tomorrow">Yarın</option>
+            <option value="week">Bu Hafta</option>
+            <option value="month">Bu Ay</option>
+            <option value="overdue">Gecikmiş</option>
+            <option value="all">Tümü</option>
+            <option value="custom">Özel Tarih Aralığı</option>
+          </select>
         </div>
       </div>
+
+      <!-- Custom Date Range -->
+      <template v-if="dateFilter === 'custom'">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 mt-4">
+          <div>
+            <label for="startDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Başlangıç Tarihi
+            </label>
+            <input
+              id="startDate"
+              v-model="customStartDate"
+              type="date"
+              class="form-input"
+            />
+          </div>
+          <div>
+            <label for="endDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Bitiş Tarihi
+            </label>
+            <input
+              id="endDate"
+              v-model="customEndDate"
+              type="date"
+              class="form-input"
+            />
+          </div>
+          <div class="flex items-end">
+            <button
+              @click="resetFilters"
+              class="btn-secondary"
+            >
+              Filtreleri Temizle
+            </button>
+          </div>
+        </div>
+      </template>
+      <template v-else>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 mt-4">
+          <div></div>
+          <div></div>
+          <div class="flex items-end">
+            <button
+              @click="resetFilters"
+              class="btn-secondary"
+            >
+              Filtreleri Temizle
+            </button>
+          </div>
+        </div>
+      </template>
     </div>
 
     <!-- Loading State -->
@@ -284,6 +346,9 @@ const customersData = ref([])
 // Search and filters
 const searchTerm = ref('')
 const statusFilter = ref('')
+const dateFilter = ref('all')
+const customStartDate = ref('')
+const customEndDate = ref('')
 const statusOptions = ref([])
 const statusMap = ref({}) // Status ID to status object mapping
 const remindableStatusIds = ref([]) // Store remindable status IDs
@@ -296,6 +361,98 @@ const showDoctorModal = ref(false)
 const showServicesModal = ref(false)
 const showFilesModal = ref(false)
 const selectedCustomer = ref(null)
+
+// Helper functions for date filtering
+const getTodayDateString = () => {
+  const today = new Date()
+  const year = today.getFullYear()
+  const month = String(today.getMonth() + 1).padStart(2, '0')
+  const day = String(today.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+const getTomorrowDateString = () => {
+  const tomorrow = new Date()
+  tomorrow.setDate(tomorrow.getDate() + 1)
+  return tomorrow.toISOString().split('T')[0]
+}
+
+const getWeekEndDateString = () => {
+  const weekEnd = new Date()
+  weekEnd.setDate(weekEnd.getDate() + 7)
+  return weekEnd.toISOString().split('T')[0]
+}
+
+const getMonthEndDateString = () => {
+  const monthEnd = new Date()
+  monthEnd.setMonth(monthEnd.getMonth() + 1)
+  return monthEnd.toISOString().split('T')[0]
+}
+
+// Check if a date is within the selected date range
+const isDateInRange = (dateString) => {
+  if (!dateString) return false
+
+  const reminderDate = new Date(dateString)
+  reminderDate.setHours(0, 0, 0, 0)
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  switch (dateFilter.value) {
+    case 'today':
+      // Bugün ve öncesi
+      return reminderDate <= today
+    case 'today-only':
+      // Sadece bugün
+      return reminderDate.getTime() === today.getTime()
+    case 'overdue':
+      // Gecikmiş (bugünden öncekiler)
+      return reminderDate < today
+    case 'tomorrow': {
+      // Yarın
+      const tomorrow = new Date(today)
+      tomorrow.setDate(tomorrow.getDate() + 1)
+      return reminderDate.getTime() === tomorrow.getTime()
+    }
+    case 'week': {
+      // Bu hafta (bugünden hafta sonuna)
+      const weekEnd = new Date(today)
+      weekEnd.setDate(weekEnd.getDate() + 7)
+      return reminderDate >= today && reminderDate <= weekEnd
+    }
+    case 'month': {
+      // Bu ay (bugünden ay sonuna)
+      const monthEnd = new Date(today)
+      monthEnd.setMonth(monthEnd.getMonth() + 1)
+      return reminderDate >= today && reminderDate <= monthEnd
+    }
+    case 'all':
+      // Tümü
+      return true
+    case 'custom': {
+      // Özel tarih aralığı
+      if (!customStartDate.value && !customEndDate.value) return true
+
+      const start = customStartDate.value ? new Date(customStartDate.value) : null
+      const end = customEndDate.value ? new Date(customEndDate.value) : null
+
+      if (start && end) {
+        start.setHours(0, 0, 0, 0)
+        end.setHours(23, 59, 59, 999)
+        return reminderDate >= start && reminderDate <= end
+      } else if (start) {
+        start.setHours(0, 0, 0, 0)
+        return reminderDate >= start
+      } else if (end) {
+        end.setHours(23, 59, 59, 999)
+        return reminderDate <= end
+      }
+      return true
+    }
+    default:
+      return true
+  }
+}
 
 // Computed properties
 const filteredCustomers = computed(() => {
@@ -315,6 +472,9 @@ const filteredCustomers = computed(() => {
     filtered = filtered.filter(customer => customer.status === statusFilter.value)
   }
 
+  // Apply date filter
+  filtered = filtered.filter(customer => isDateInRange(customer.remindingDate))
+
   // Sort by reminding date (ascending - earliest first)
   filtered.sort((a, b) => {
     const dateA = a.remindingDate ? new Date(a.remindingDate).getTime() : Infinity
@@ -329,6 +489,16 @@ const filteredCustomers = computed(() => {
 const resetFilters = () => {
   searchTerm.value = ''
   statusFilter.value = ''
+  dateFilter.value = 'all'
+  customStartDate.value = ''
+  customEndDate.value = ''
+}
+
+const handleDateFilterChange = () => {
+  if (dateFilter.value !== 'custom') {
+    customStartDate.value = ''
+    customEndDate.value = ''
+  }
 }
 
 const showHistory = (customer) => {

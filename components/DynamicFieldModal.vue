@@ -73,6 +73,19 @@
                     <p v-if="errors.order" class="mt-1 text-sm text-red-600">{{ errors.order }}</p>
                   </div>
 
+                  <!-- Is Required Checkbox -->
+                  <div class="flex items-center col-span-2">
+                    <input
+                      id="is_required"
+                      v-model="form.is_required"
+                      type="checkbox"
+                      class="h-4 w-4 text-indigo-600 focus:ring-indigo-600 border-gray-300 rounded"
+                    />
+                    <label for="is_required" class="ml-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Zorunlu Alan
+                    </label>
+                  </div>
+
                   <!-- Options for Select Type -->
                   <div v-if="form.type === 'select'">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -180,6 +193,7 @@ const form = reactive({
   name: '',
   type: '',
   order: 1,
+  is_required: false,
   options_data: ''
 })
 
@@ -197,6 +211,7 @@ const resetForm = () => {
   form.name = ''
   form.type = ''
   form.order = 1
+  form.is_required = false
   form.options_data = ''
   selectOptions.value = ['']
   errors.value = {}
@@ -210,8 +225,9 @@ watch(() => props.field, (newField) => {
     form.name = newField.name
     form.type = newField.type
     form.order = newField.order
+    form.is_required = newField.is_required || false
     form.options_data = newField.options_data || ''
-    
+
     if (newField.type === 'select' && newField.options_data) {
       selectOptions.value = parseOptionsData(newField.options_data)
     } else {
@@ -273,9 +289,10 @@ const handleSubmit = async () => {
     const fieldData = {
       name: form.name.trim(),
       type: form.type,
-      order: form.order
+      order: form.order,
+      is_required: form.is_required
     }
-    
+
     // Add options data for select type
     if (form.type === 'select') {
       const validOptions = selectOptions.value.filter(opt => opt.trim())

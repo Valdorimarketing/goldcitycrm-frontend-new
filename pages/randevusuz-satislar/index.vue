@@ -76,6 +76,7 @@
               <th class="table-header text-gray-700 dark:text-gray-300">Müşteri Adı</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Telefon</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Satış Tarihi</th>
+              <th class="table-header text-gray-700 dark:text-gray-300">Atanan</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Sorumlu Kullanıcı</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Takipçi Kullanıcı</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Vade Tarihi</th>
@@ -114,6 +115,9 @@
                 <div class="text-sm text-gray-900 dark:text-gray-100">
                   {{ formatDate(customer.createdAt) }}
                 </div>
+              </td>
+              <td class="table-cell">
+                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.relevantUser?.name || '-' }}</div>
               </td>
               <td class="table-cell">
                 <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.responsibleUser?.name || '-' }}</div>
@@ -219,7 +223,7 @@
 
             <!-- Empty State -->
             <tr v-if="filteredCustomers.length === 0">
-              <td colspan="9" class="text-center py-12">
+              <td colspan="10" class="text-center py-12">
                 <ShoppingBagIcon class="mx-auto h-12 w-12 text-gray-400" />
                 <h3 class="mt-2 text-sm font-medium text-gray-900">Randevusuz satış bulunamadı</h3>
                 <p class="mt-1 text-sm text-gray-500">
@@ -702,6 +706,7 @@ onMounted(async () => {
         const saleUserId = sale.user
         const responsibleUserId = sale.responsibleUser
         const followerUserId = sale.followerUser
+        const relevantUserId = customer.relevent_user || customer.relevantUser
         const customerUserId = customer.userId || customer.user_id || (typeof customer.user === 'object' ? customer.user?.id : customer.user)
 
         return {
@@ -725,6 +730,7 @@ onMounted(async () => {
           saleUser: usersMap.value[saleUserId] || null,
           responsibleUser: usersMap.value[responsibleUserId] || null,
           followerUser: usersMap.value[followerUserId] || null,
+          relevantUser: usersMap.value[relevantUserId] || null,
           customerData: { ...customer, id: sale.customer }
         }
       })

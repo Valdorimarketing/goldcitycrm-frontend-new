@@ -9,24 +9,51 @@
         </p>
       </div>
       <div class="mt-4 sm:mt-0 flex gap-3">
+        <div class="inline-flex rounded-md shadow-sm">
+          <button
+            @click="viewMode = 'calendar'"
+            :class="[
+              viewMode === 'calendar'
+                ? 'bg-indigo-600 text-white'
+                : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600',
+              'inline-flex items-center justify-center rounded-l-md px-3 py-2 text-sm font-semibold border border-gray-300 dark:border-gray-600'
+            ]"
+          >
+            <CalendarIcon class="h-5 w-5 mr-1.5" />
+            Takvim
+          </button>
+          <button
+            @click="viewMode = 'table'"
+            :class="[
+              viewMode === 'table'
+                ? 'bg-indigo-600 text-white'
+                : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600',
+              'inline-flex items-center justify-center rounded-r-md px-3 py-2 text-sm font-semibold border border-l-0 border-gray-300 dark:border-gray-600'
+            ]"
+          >
+            <TableCellsIcon class="h-5 w-5 mr-1.5" />
+            Liste
+          </button>
+        </div>
         <button
+          v-if="viewMode === 'table'"
           @click="resetFilters"
           class="inline-flex items-center justify-center rounded-md bg-gray-100 dark:bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-700 dark:text-gray-200 shadow-sm hover:bg-gray-200 dark:hover:bg-gray-600"
         >
           Filtreleri Temizle
         </button>
-        <NuxtLink
-          to="/meetings/create"
+        <button
+          @click="openCreateModal"
           class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
         >
           <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
           Yeni Görüşme
-        </NuxtLink>
+        </button>
       </div>
     </div>
 
-    <!-- Filters -->
-    <div class="card mb-6">
+    <!-- Filters (only show in table view) -->
+    <div v-if="viewMode === 'table'" class="card mb-6">
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-4">
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -80,8 +107,18 @@
       <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
     </div>
 
+    <!-- Calendar View -->
+    <MeetingCalendar
+      v-else-if="viewMode === 'calendar'"
+      :meetings="meetings"
+      :customer-names="customerNames"
+      :loading="loading"
+      @event-click="handleEventClick"
+      @date-select="handleDateSelect"
+    />
+
     <!-- Meetings Table -->
-    <div v-else class="card">
+    <div v-else-if="viewMode === 'table'" class="card">
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead class="bg-gray-50 dark:bg-gray-800">
@@ -357,6 +394,14 @@
         </div>
       </div>
     </div>
+
+    <!-- Create Meeting Modal -->
+    <MeetingCreateModal
+      v-model="showCreateModal"
+      :initial-start-time="selectedStartTime"
+      :initial-end-time="selectedEndTime"
+      @created="handleMeetingCreated"
+    />
   </div>
 </template>
 
@@ -370,7 +415,8 @@ import {
   EyeIcon,
   PencilIcon,
   TrashIcon,
-  XMarkIcon
+  XMarkIcon,
+  TableCellsIcon
 } from '@heroicons/vue/24/outline'
 
 definePageMeta({
@@ -388,11 +434,17 @@ const filters = ref({
   doctorSearch: ''
 })
 
+// View mode
+const viewMode = ref('calendar') // 'calendar' or 'table'
+
 // Modals
 const showDeleteModal = ref(false)
 const showViewModal = ref(false)
+const showCreateModal = ref(false)
 const meetingToDelete = ref(null)
 const selectedMeeting = ref(null)
+const selectedStartTime = ref(null)
+const selectedEndTime = ref(null)
 
 // Customer names cache
 const customerNames = ref({})
@@ -560,6 +612,32 @@ const handleDelete = async () => {
   } catch (err) {
     console.error('Failed to delete meeting:', err)
   }
+}
+
+const openCreateModal = () => {
+  selectedStartTime.value = null
+  selectedEndTime.value = null
+  showCreateModal.value = true
+}
+
+const handleEventClick = (meeting) => {
+  // Navigate to edit page
+  navigateTo(`/meetings/edit/${meeting.id}`)
+}
+
+const handleDateSelect = (dateInfo) => {
+  selectedStartTime.value = dateInfo.start
+  selectedEndTime.value = dateInfo.end
+  showCreateModal.value = true
+}
+
+const handleMeetingCreated = async () => {
+  // Refresh meetings list
+  await fetchMeetings({
+    page: meta.value.page,
+    limit: meta.value.limit,
+    status: filters.value.status || undefined
+  })
 }
 
 // Watch filters

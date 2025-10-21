@@ -24,11 +24,27 @@
                       <span class="font-medium">Doktor:</span> {{ existingAssignment.doctor?.name || '-' }}
                     </p>
                     <p class="text-gray-700 dark:text-gray-300">
-                      <span class="font-medium">Hastane:</span> {{ existingAssignment.doctor?.hospital?.name || '-' }}
-                    </p>
-                    <p class="text-gray-700 dark:text-gray-300">
                       <span class="font-medium">Branş:</span> {{ existingAssignment.doctor?.branch?.name || '-' }}
                     </p>
+                    <div v-if="existingAssignment.doctor?.doctor2Hospitals?.length" class="text-gray-700 dark:text-gray-300">
+                      <span class="font-medium">Hastane{{ existingAssignment.doctor.doctor2Hospitals.length > 1 ? 'ler' : '' }}:</span>
+                      <ul class="ml-4 mt-1 space-y-1">
+                        <li v-for="d2h in existingAssignment.doctor.doctor2Hospitals" :key="d2h.id">
+                          • {{ d2h.hospital?.name || '-' }}
+                        </li>
+                      </ul>
+                    </div>
+                    <p v-else class="text-gray-700 dark:text-gray-300">
+                      <span class="font-medium">Hastane:</span> -
+                    </p>
+                    <div v-if="existingAssignment.doctor?.doctor2Branches?.length > 1" class="text-gray-700 dark:text-gray-300">
+                      <span class="font-medium">Ek Branşlar:</span>
+                      <ul class="ml-4 mt-1 space-y-1">
+                        <li v-for="d2b in existingAssignment.doctor.doctor2Branches" :key="d2b.id">
+                          • {{ d2b.branch?.name || '-' }}
+                        </li>
+                      </ul>
+                    </div>
                     <p class="text-gray-700 dark:text-gray-300">
                       <span class="font-medium">Not:</span> {{ existingAssignment.note || '-' }}
                     </p>
@@ -211,11 +227,12 @@ const loadExistingAssignment = async () => {
       existingAssignment.value = assignment
       doctorComment.value = assignment.doctorComment || ''
 
-      // Try to load doctor details if not included
-      if (assignment.doctorId && !assignment.doctor) {
+      // Try to load doctor details if not included or if hospital/branch relations are missing
+      if (assignment.doctorId && (!assignment.doctor || !assignment.doctor.branch || !assignment.doctor.doctor2Hospitals)) {
         try {
           const doctorDetails = await api(`/doctors/${assignment.doctorId}`)
           existingAssignment.value.doctor = doctorDetails
+          console.log('Loaded doctor details from /doctors endpoint:', doctorDetails)
         } catch (err) {
           console.error('Error loading doctor details:', err)
         }
