@@ -132,6 +132,7 @@ export interface CustomerDynamicField {
   type: string // 'text', 'number', 'select', 'file', 'textarea', 'date', 'email', 'phone', 'url'
   options_data?: string // JSON string for select options
   order: number
+  is_required: boolean
   created_at: string
   updated_at: string
 }
@@ -155,6 +156,7 @@ export interface CreateCustomerDynamicFieldDto {
   type: string
   options_data?: string
   order: number
+  is_required?: boolean
 }
 
 export interface UpdateCustomerDynamicFieldDto {
@@ -162,6 +164,7 @@ export interface UpdateCustomerDynamicFieldDto {
   type?: string
   options_data?: string
   order?: number
+  is_required?: boolean
 }
 
 export interface CreateCustomerDynamicFieldValueDto {

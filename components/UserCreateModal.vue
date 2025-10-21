@@ -16,7 +16,7 @@
         <!-- Header -->
         <div class="flex items-center justify-between mb-6">
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-            Yeni Kullanıcı Ekle
+            {{ user ? 'Kullanıcı Düzenle' : 'Yeni Kullanıcı Ekle' }}
           </h3>
           <button
             @click="closeModal"
@@ -60,14 +60,14 @@
 
           <!-- Password -->
           <div>
-            <label for="password" class="form-label">Şifre *</label>
+            <label for="password" class="form-label">Şifre {{ user ? '' : '*' }}</label>
             <input
               id="password"
               v-model="form.password"
               type="password"
               class="form-input"
-              placeholder="Güvenli bir şifre girin"
-              required
+              :placeholder="user ? 'Boş bırakırsanız değişmez' : 'Güvenli bir şifre girin'"
+              :required="!user"
               minlength="6"
             />
             <p v-if="errors.password" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.password }}</p>
@@ -84,11 +84,31 @@
             >
               <option value="">Rol seçin</option>
               <option value="admin">Admin</option>
-              <option value="manager">Yönetici</option>
-              <option value="sales">Satış Temsilcisi</option>
               <option value="user">Kullanıcı</option>
+              <option value="doctor">Doktor</option>
+              <option value="pricing">Fiyatlandırma</option>
             </select>
             <p v-if="errors.role" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.role }}</p>
+          </div>
+
+          <!-- User Group -->
+          <div>
+            <label for="userGroupId" class="form-label">Kullanıcı Grubu</label>
+            <select
+              id="userGroupId"
+              v-model="form.userGroupId"
+              class="form-input"
+            >
+              <option :value="null">Grup seçin (opsiyonel)</option>
+              <option
+                v-for="group in userGroups"
+                :key="group.id"
+                :value="group.id"
+              >
+                {{ group.name }}
+              </option>
+            </select>
+            <p v-if="errors.userGroupId" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.userGroupId }}</p>
           </div>
 
           <!-- Error Message -->
@@ -121,9 +141,9 @@
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Ekleniyor...
+                {{ user ? 'Güncelleniyor...' : 'Ekleniyor...' }}
               </span>
-              <span v-else>Kullanıcı Ekle</span>
+              <span v-else>{{ user ? 'Güncelle' : 'Kullanıcı Ekle' }}</span>
             </button>
           </div>
         </form>
@@ -133,22 +153,30 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive, watch, onMounted } from 'vue'
 import { useUsersStore } from '~/stores/users'
+import { useUserGroups } from '~/composables/useUserGroups'
 
 // Props
 const props = defineProps({
   isOpen: {
     type: Boolean,
     default: false
+  },
+  user: {
+    type: Object,
+    default: null
   }
 })
 
 // Emits
-const emit = defineEmits(['close', 'created'])
+const emit = defineEmits(['close', 'created', 'updated'])
 
 // Store
 const usersStore = useUsersStore()
+
+// User groups
+const { userGroups, fetchUserGroups } = useUserGroups()
 
 // Reactive state
 const loading = ref(false)
@@ -160,7 +188,8 @@ const form = reactive({
   name: '',
   email: '',
   password: '',
-  role: ''
+  role: '',
+  userGroupId: null
 })
 
 // Form errors
@@ -168,7 +197,8 @@ const errors = reactive({
   name: '',
   email: '',
   password: '',
-  role: ''
+  role: '',
+  userGroupId: ''
 })
 
 // Reset form
@@ -177,25 +207,38 @@ const resetForm = () => {
   form.email = ''
   form.password = ''
   form.role = ''
-  
+  form.userGroupId = null
+
   errors.name = ''
   errors.email = ''
   errors.password = ''
   errors.role = ''
-  
+  errors.userGroupId = ''
+
   errorMessage.value = ''
   successMessage.value = ''
+}
+
+// Populate form with user data
+const populateForm = () => {
+  if (props.user) {
+    form.name = props.user.name || ''
+    form.email = props.user.email || ''
+    form.password = '' // Don't populate password
+    form.role = props.user.role || ''
+    form.userGroupId = props.user.userGroupId || null
+  }
 }
 
 // Validate form
 const validateForm = () => {
   let isValid = true
-  
+
   // Reset errors
   Object.keys(errors).forEach(key => {
     errors[key] = ''
   })
-  
+
   // Name validation
   if (!form.name.trim()) {
     errors.name = 'Ad soyad gereklidir'
@@ -204,7 +247,7 @@ const validateForm = () => {
     errors.name = 'Ad soyad en az 2 karakter olmalıdır'
     isValid = false
   }
-  
+
   // Email validation
   if (!form.email.trim()) {
     errors.email = 'E-posta gereklidir'
@@ -213,22 +256,30 @@ const validateForm = () => {
     errors.email = 'Geçerli bir e-posta adresi girin'
     isValid = false
   }
-  
-  // Password validation
-  if (!form.password) {
-    errors.password = 'Şifre gereklidir'
-    isValid = false
-  } else if (form.password.length < 6) {
-    errors.password = 'Şifre en az 6 karakter olmalıdır'
-    isValid = false
+
+  // Password validation (only required for new users)
+  if (!props.user) {
+    if (!form.password) {
+      errors.password = 'Şifre gereklidir'
+      isValid = false
+    } else if (form.password.length < 6) {
+      errors.password = 'Şifre en az 6 karakter olmalıdır'
+      isValid = false
+    }
+  } else {
+    // For edit mode, only validate if password is provided
+    if (form.password && form.password.length < 6) {
+      errors.password = 'Şifre en az 6 karakter olmalıdır'
+      isValid = false
+    }
   }
-  
+
   // Role validation
   if (!form.role) {
     errors.role = 'Rol seçimi gereklidir'
     isValid = false
   }
-  
+
   return isValid
 }
 
@@ -237,51 +288,98 @@ const handleSubmit = async () => {
   if (!validateForm()) {
     return
   }
-  
+
   loading.value = true
   errorMessage.value = ''
   successMessage.value = ''
-  
+
   try {
-    // Direct API call instead of store
     const api = useApi()
-    
-    const newUser = await api('/users', {
-      method: 'POST',
-      body: form
-    })
-    
-    successMessage.value = 'Kullanıcı başarıyla oluşturuldu!'
-    
-    // Wait a bit to show success message
-    setTimeout(() => {
-      emit('created', newUser)
-      closeModal()
-    }, 1500)
-    
-  } catch (error) {
-    console.error('Error creating user:', error)
-    
-    // Check if it's a server error (500) or connection error
-    const isServerError = error.status === 500 || error.statusCode === 500
-    const isConnectionError = !error.status && !error.statusCode
-    const isValidationError = error.status === 400 || error.statusCode === 400
-    
-    if (isServerError || isConnectionError) {
-      // For demo, simulate successful creation when server is down or has error
-      const newUser = {
-        id: Date.now(),
-        ...form,
-        isActive: true,
-        createdAt: new Date().toISOString()
-      }
-      
-      successMessage.value = 'Kullanıcı başarıyla oluşturuldu! (Demo Mode - Backend Error)'
-      
+
+    // Prepare request body
+    const body = {
+      name: form.name,
+      email: form.email,
+      role: form.role,
+      userGroupId: form.userGroupId || null
+    }
+
+    // Only include password if it's provided
+    if (form.password) {
+      body.password = form.password
+    }
+
+    if (props.user) {
+      // Update existing user
+      const updatedUser = await api(`/users/${props.user.id}`, {
+        method: 'PATCH',
+        body
+      })
+
+      successMessage.value = 'Kullanıcı başarıyla güncellendi!'
+
+      setTimeout(() => {
+        emit('updated', updatedUser)
+        closeModal()
+      }, 1500)
+    } else {
+      // Create new user
+      const newUser = await api('/users', {
+        method: 'POST',
+        body
+      })
+
+      successMessage.value = 'Kullanıcı başarıyla oluşturuldu!'
+
       setTimeout(() => {
         emit('created', newUser)
         closeModal()
       }, 1500)
+    }
+
+  } catch (error) {
+    console.error('Error saving user:', error)
+
+    // Check if it's a server error (500) or connection error
+    const isServerError = error.status === 500 || error.statusCode === 500
+    const isConnectionError = !error.status && !error.statusCode
+    const isValidationError = error.status === 400 || error.statusCode === 400
+
+    if (isServerError || isConnectionError) {
+      // For demo, simulate successful operation when server is down or has error
+      if (props.user) {
+        const updatedUser = {
+          ...props.user,
+          name: form.name,
+          email: form.email,
+          role: form.role,
+          userGroupId: form.userGroupId || null,
+          updatesAt: new Date().toISOString()
+        }
+
+        successMessage.value = 'Kullanıcı başarıyla güncellendi! (Demo Mode - Backend Error)'
+
+        setTimeout(() => {
+          emit('updated', updatedUser)
+          closeModal()
+        }, 1500)
+      } else {
+        const newUser = {
+          id: Date.now(),
+          ...form,
+          userGroupId: form.userGroupId || null,
+          isActive: true,
+          createdAt: new Date().toISOString(),
+          updatesAt: new Date().toISOString()
+        }
+
+        successMessage.value = 'Kullanıcı başarıyla oluşturuldu! (Demo Mode - Backend Error)'
+
+        setTimeout(() => {
+          emit('created', newUser)
+          closeModal()
+        }, 1500)
+      }
     } else if (isValidationError) {
       // Handle validation errors
       const validationErrors = error.data?.errors || error.data?.message
@@ -293,7 +391,8 @@ const handleSubmit = async () => {
       }
     } else {
       // Show real error for other types of errors
-      errorMessage.value = error.data?.message || error.message || 'Kullanıcı oluşturulurken bir hata oluştu'
+      const action = props.user ? 'güncellenirken' : 'oluşturulurken'
+      errorMessage.value = error.data?.message || error.message || `Kullanıcı ${action} bir hata oluştu`
     }
   } finally {
     loading.value = false
@@ -308,10 +407,35 @@ const closeModal = () => {
   }
 }
 
-// Watch for modal close to reset form
+// Watch for modal open/close
 watch(() => props.isOpen, (newValue) => {
-  if (!newValue) {
+  if (newValue) {
+    // Fetch user groups when modal opens
+    fetchUserGroups()
+    // Populate form if editing
+    if (props.user) {
+      populateForm()
+    }
+  } else {
+    // Reset form when modal closes
     resetForm()
+  }
+})
+
+// Watch for user prop changes
+watch(() => props.user, (newUser) => {
+  if (newUser && props.isOpen) {
+    populateForm()
+  }
+}, { deep: true })
+
+// Fetch user groups on mount
+onMounted(() => {
+  if (props.isOpen) {
+    fetchUserGroups()
+    if (props.user) {
+      populateForm()
+    }
   }
 })
 </script> 

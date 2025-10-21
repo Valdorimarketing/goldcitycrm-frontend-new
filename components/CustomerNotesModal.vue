@@ -81,6 +81,13 @@
                           {{ customer.status_info.name }}
                         </span>
                       </div>
+
+                      <!-- Reminder Info -->
+                      <div v-if="showReminderInfo" class="mt-3 bg-yellow-50 dark:bg-yellow-900/20 p-3 rounded-lg">
+                        <p class="text-sm text-gray-700 dark:text-gray-300">
+                          <span class="font-semibold">{{ reminderDays }} gün sonra aranacak</span>
+                        </p>
+                      </div>
                     </div>
 
                     <textarea
@@ -171,6 +178,7 @@
                           <PencilIcon class="h-4 w-4" />
                         </button>
                         <button
+                          v-if="isAdmin"
                           @click="deleteNote(note)"
                           class="text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                           title="Sil"
@@ -323,6 +331,24 @@ const newNote = reactive({
 // Computed
 const reminderCount = computed(() => {
   return notes.value.filter(n => n.isReminding).length
+})
+
+const isAdmin = computed(() => {
+  return authStore.user?.role === 'admin'
+})
+
+// Check if selected status is remindable
+const showReminderInfo = computed(() => {
+  if (!selectedStatus.value) return false
+  const status = availableStatuses.value.find(s => s.id === selectedStatus.value)
+  return status?.is_remindable || status?.isRemindable || false
+})
+
+// Get reminder days from selected status
+const reminderDays = computed(() => {
+  if (!selectedStatus.value) return 0
+  const status = availableStatuses.value.find(s => s.id === selectedStatus.value)
+  return status?.reminding_day || status?.remindingDay || 0
 })
 
 // Fetch customer notes
@@ -545,6 +571,9 @@ const handleSaleConverted = async (saleResult) => {
 
   // Refresh notes
   await fetchNotes()
+
+  // Close the notes modal as well
+  emit('close')
 }
 
 // Format date
