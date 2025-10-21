@@ -349,6 +349,7 @@
               <div v-for="field in sortedDynamicFields" :key="field.id">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {{ field.name }}
+                  <span v-if="field.is_required" class="text-red-500">*</span>
                 </label>
                 
                 <!-- Text Input -->
@@ -356,62 +357,69 @@
                   v-if="field.type === 'text'"
                   v-model="dynamicFieldValues[field.id]"
                   type="text"
+                  :required="field.is_required"
                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   :placeholder="`${field.name} giriniz`"
                 />
-                
+
                 <!-- Number Input -->
                 <input
                   v-else-if="field.type === 'number'"
                   v-model.number="dynamicFieldValues[field.id]"
                   type="number"
+                  :required="field.is_required"
                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   :placeholder="`${field.name} giriniz`"
                 />
-                
+
                 <!-- Email Input -->
                 <input
                   v-else-if="field.type === 'email'"
                   v-model="dynamicFieldValues[field.id]"
                   type="email"
+                  :required="field.is_required"
                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   :placeholder="`${field.name} giriniz`"
                 />
-                
+
                 <!-- Phone Input -->
                 <input
                   v-else-if="field.type === 'phone'"
                   v-model="dynamicFieldValues[field.id]"
                   type="tel"
+                  :required="field.is_required"
                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   :placeholder="`${field.name} giriniz`"
                 />
-                
+
                 <!-- URL Input -->
                 <input
                   v-else-if="field.type === 'url'"
                   v-model="dynamicFieldValues[field.id]"
                   type="url"
+                  :required="field.is_required"
                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   :placeholder="`${field.name} giriniz`"
                 />
-                
+
                 <!-- Date Input -->
                 <input
                   v-else-if="field.type === 'date'"
                   v-model="dynamicFieldValues[field.id]"
                   type="date"
+                  :required="field.is_required"
                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
-                
+
                 <!-- Select Dropdown -->
                 <select
                   v-else-if="field.type === 'select'"
                   v-model="dynamicFieldValues[field.id]"
+                  :required="field.is_required"
                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Seçiniz</option>
-                  <option 
+                  <option
                     v-for="option in parseOptionsData(field.options_data)"
                     :key="option"
                     :value="option"
@@ -419,7 +427,7 @@
                     {{ option }}
                   </option>
                 </select>
-                
+
                 <!-- Checkbox -->
                 <div v-else-if="field.type === 'checkbox'" class="flex items-center">
                   <input
@@ -429,20 +437,22 @@
                   />
                   <label class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{ field.name }}</label>
                 </div>
-                
+
                 <!-- Textarea -->
                 <textarea
                   v-else-if="field.type === 'textarea'"
                   v-model="dynamicFieldValues[field.id]"
                   rows="3"
+                  :required="field.is_required"
                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   :placeholder="`${field.name} giriniz`"
                 ></textarea>
-                
+
                 <!-- File Input -->
                 <input
                   v-else-if="field.type === 'file'"
                   type="file"
+                  :required="field.is_required"
                   @change="handleFileUpload($event, field.id)"
                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -1151,6 +1161,17 @@ const validateForm = () => {
     const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/
     if (!urlPattern.test(form.website.trim())) {
       errors.value.website = 'Geçerli bir web adresi giriniz (örn: https://www.example.com)'
+    }
+  }
+
+  // Validate required dynamic fields
+  for (const field of dynamicFields.value) {
+    if (field.is_required) {
+      const value = dynamicFieldValues.value[field.id]
+      if (!value || (typeof value === 'string' && !value.trim())) {
+        submitError.value = `"${field.name}" alanı zorunludur`
+        return false
+      }
     }
   }
 
