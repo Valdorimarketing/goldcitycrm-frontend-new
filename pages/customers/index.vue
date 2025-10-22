@@ -21,7 +21,7 @@
 
     <!-- Search and Filters -->
     <div class="card mb-6">
-      <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Ara
@@ -48,6 +48,53 @@
               {{ status.label }}
             </option>
           </select>
+        </div>
+        <div v-if="authStore.user?.role === 'admin'">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Atanan Kullanıcı
+          </label>
+          <Combobox v-model="relevantUserFilter" nullable>
+            <div class="relative">
+              <ComboboxInput
+                class="form-input w-full"
+                :displayValue="(user) => user ? user.name : ''"
+                @change="userQuery = $event.target.value"
+                placeholder="Kullanıcı seçin..."
+              />
+              <ComboboxButton class="absolute inset-y-0 right-0 flex items-center pr-2">
+                <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+              </ComboboxButton>
+              <ComboboxOptions class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white dark:bg-gray-800 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                <ComboboxOption
+                  v-if="relevantUserFilter"
+                  :value="null"
+                  v-slot="{ active }"
+                  class="relative cursor-pointer select-none py-2 pl-3 pr-9"
+                  :class="active ? 'bg-indigo-600 text-white' : 'text-gray-900 dark:text-gray-100'"
+                >
+                  <span class="block truncate">Tüm Kullanıcılar</span>
+                </ComboboxOption>
+                <ComboboxOption
+                  v-for="user in filteredUsers"
+                  :key="user.id"
+                  :value="user"
+                  v-slot="{ active, selected }"
+                  class="relative cursor-pointer select-none py-2 pl-3 pr-9"
+                  :class="active ? 'bg-indigo-600 text-white' : 'text-gray-900 dark:text-gray-100'"
+                >
+                  <span class="block truncate" :class="selected ? 'font-semibold' : 'font-normal'">
+                    {{ user.name }}
+                  </span>
+                  <span v-if="selected" class="absolute inset-y-0 right-0 flex items-center pr-4" :class="active ? 'text-white' : 'text-indigo-600'">
+                    <CheckIcon class="h-5 w-5" aria-hidden="true" />
+                  </span>
+                </ComboboxOption>
+                <div v-if="filteredUsers.length === 0" class="relative cursor-default select-none py-2 px-3 text-gray-500 dark:text-gray-400">
+                  Kullanıcı bulunamadı
+                </div>
+              </ComboboxOptions>
+            </div>
+          </Combobox>
         </div>
         <div class="flex items-end">
           <button
@@ -418,8 +465,17 @@ import {
   ShoppingBagIcon,
   PencilIcon,
   TrashIcon,
-  FolderIcon
+  FolderIcon,
+  CheckIcon,
+  ChevronUpDownIcon
 } from '@heroicons/vue/24/outline'
+import {
+  Combobox,
+  ComboboxInput,
+  ComboboxButton,
+  ComboboxOptions,
+  ComboboxOption
+} from '@headlessui/vue'
 import { watchDebounced } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 
@@ -465,9 +521,31 @@ const customers = computed(() => {
 // Search and filters
 const searchTerm = ref('')
 const statusFilter = ref(undefined)
+const relevantUserFilter = ref(null)
 const statusOptions = ref([])
 const statusMap = ref({}) // Status ID to status object mapping
 const usersMap = ref({}) // User ID to user object mapping
+const userQuery = ref('')
+
+// Computed list of users for the filter
+const usersList = computed(() => {
+  return Object.values(usersMap.value).map(user => ({
+    id: user.id,
+    name: `${user.name || ''} ${user.surname || ''}`.trim(),
+    email: user.email
+  }))
+})
+
+// Filtered users based on search query
+const filteredUsers = computed(() => {
+  if (userQuery.value === '') {
+    return usersList.value
+  }
+  return usersList.value.filter((user) => {
+    return user.name.toLowerCase().includes(userQuery.value.toLowerCase()) ||
+           (user.email && user.email.toLowerCase().includes(userQuery.value.toLowerCase()))
+  })
+})
 
 // Modals
 const showDeleteModal = ref(false)
@@ -507,17 +585,26 @@ const loadCustomers = async (page = 1) => {
   const filters = getCustomerFilters()
   console.log('[loadCustomers] User role:', authStore.user?.role)
   console.log('[loadCustomers] Filters:', filters)
+
+  // If admin has selected a specific user to filter by, add it to filters
+  const customFilters = { ...filters }
+  if (authStore.user?.role === 'admin' && relevantUserFilter.value) {
+    customFilters.relevantUser = relevantUserFilter.value.id
+  }
+
   await customersStore.fetchCustomers({
     page,
     search: searchTerm.value || undefined,
     status: statusFilter.value,
-    ...filters
+    ...customFilters
   })
 }
 
 const resetFilters = () => {
   searchTerm.value = ''
   statusFilter.value = undefined
+  relevantUserFilter.value = null
+  userQuery.value = ''
 }
 
 const changePage = (page) => {
@@ -526,9 +613,9 @@ const changePage = (page) => {
   }
 }
 
-// Watch for search term and status changes with debounce
+// Watch for search term, status, and user filter changes with debounce
 watchDebounced(
-  [searchTerm, statusFilter],
+  [searchTerm, statusFilter, relevantUserFilter],
   () => {
     loadCustomers(1) // Reset to page 1 when searching or filtering
   },

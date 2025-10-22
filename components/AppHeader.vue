@@ -34,8 +34,8 @@
 
       <!-- Right side - User menu and notifications -->
       <div class="flex items-center space-x-4">
-        <!-- Fraud Alert Notifications -->
-        <FraudAlertNotification />
+        <!-- Fraud Alert Notifications (Admin Only) -->
+        <FraudAlertNotification v-if="authStore.user?.role === 'admin'" />
 
         <!-- Theme toggle -->
         <button
