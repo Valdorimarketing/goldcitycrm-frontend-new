@@ -410,13 +410,16 @@ const handleDelete = async () => {
     try {
       await deleteProduct(productToDelete.value.id)
       await loadProducts(pagination.value.page)
-      useToast().success('Ürün başarıyla silindi')
+      useToast().showSuccess('Ürün başarıyla silindi')
     } catch (error) {
-      useToast().error('Ürün silinirken bir hata oluştu')
+      useToast().showError('Ürün silinirken bir hata oluştu')
     }
   }
   showDeleteModal.value = false
   productToDelete.value = null
+
+  console.log(showDeleteModal.value);
+  
 }
 
 const formatCurrency = (amount) => {
@@ -437,7 +440,7 @@ const formatDate = (dateString) => {
 // Handle product creation
 const handleProductCreated = async (product) => {
   await loadProducts(pagination.value.page)
-  useToast().success('Ürün başarıyla oluşturuldu')
+  useToast().showSuccess('Ürün başarıyla oluşturuldu')
 }
 
 // Handle product edit
@@ -449,7 +452,7 @@ const editProduct = (product) => {
 // Handle product update
 const handleProductUpdated = async (updatedProduct) => {
   await loadProducts(pagination.value.page)
-  useToast().success('Ürün başarıyla güncellendi')
+  useToast().showSuccess('Ürün başarıyla güncellendi')
 }
 
 // Close modal functions

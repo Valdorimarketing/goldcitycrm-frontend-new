@@ -325,9 +325,9 @@ const handleDelete = async () => {
     try {
       await deleteHospital(hospitalToDelete.value.id)
       await loadHospitals(pagination.value.page)
-      useToast().success('Hastane başarıyla silindi')
+      useToast().showSuccess('Hastane başarıyla silindi')
     } catch (error) {
-      useToast().error('Hastane silinirken bir hata oluştu')
+      useToast().showError('Hastane silinirken bir hata oluştu')
     }
   }
   showDeleteModal.value = false

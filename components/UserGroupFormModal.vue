@@ -43,8 +43,8 @@
                             v-model="formData.name"
                             type="text"
                             required
-                            class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                            placeholder="Örn: Satış Temsilcileri"
+                            class="form-input mt-1"
+                            placeholder="Örn: Satış Temsilcileri" 
                           />
                         </div>
                       </div>

@@ -337,9 +337,9 @@ const handleDelete = async () => {
     try {
       await deleteDoctor(doctorToDelete.value.id)
       await loadDoctors(pagination.value.page)
-      useToast().success('Doktor başarıyla silindi')
+      useToast().showSuccess('Doktor başarıyla silindi')
     } catch (error) {
-      useToast().error('Doktor silinirken bir hata oluştu')
+      useToast().showError('Doktor silinirken bir hata oluştu')
     }
   }
   showDeleteModal.value = false
@@ -354,7 +354,7 @@ const editDoctor = async (doctor) => {
     selectedDoctor.value = fullDoctorData
     showFormModal.value = true
   } catch (error) {
-    useToast().error('Doktor bilgileri yüklenirken hata oluştu')
+    useToast().showError('Doktor bilgileri yüklenirken hata oluştu')
   }
 }
 

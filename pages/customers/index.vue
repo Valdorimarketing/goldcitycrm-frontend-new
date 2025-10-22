@@ -665,10 +665,10 @@ const handleDelete = async () => {
     try {
       await customersStore.deleteCustomer(customerToDelete.value.id)
       await loadCustomers(pagination.value.page)
-      useToast().success('Müşteri başarıyla silindi')
+      useToast().showSuccess('Müşteri başarıyla silindi')
     } catch (error) {
       console.error('Error deleting customer:', error)
-      useToast().error('Müşteri silinirken bir hata oluştu')
+      useToast().showError('Müşteri silinirken bir hata oluştu')
     }
   }
   showDeleteModal.value = false
@@ -678,7 +678,7 @@ const handleDelete = async () => {
 // Handle customer creation
 const handleCustomerCreated = async (customer) => {
   await loadCustomers(pagination.value.page)
-  useToast().success('Müşteri başarıyla oluşturuldu')
+  useToast().showSuccess('Müşteri başarıyla oluşturuldu')
 }
 
 const formatDate = (dateString) => {

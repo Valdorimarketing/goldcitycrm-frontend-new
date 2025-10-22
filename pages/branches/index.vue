@@ -342,9 +342,9 @@ const handleDelete = async () => {
     try {
       await deleteBranch(branchToDelete.value.id)
       await loadBranches(pagination.value.page)
-      useToast().success('Branş başarıyla silindi')
+      useToast().showSuccess('Branş başarıyla silindi')
     } catch (error) {
-      useToast().error('Branş silinirken bir hata oluştu')
+      useToast().showError('Branş silinirken bir hata oluştu')
     }
   }
   showDeleteModal.value = false

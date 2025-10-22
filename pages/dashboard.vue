@@ -4,7 +4,7 @@
     <div class="border-b border-gray-200 dark:border-gray-700 pb-6">
       <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
       <p class="mt-2 text-gray-600 dark:text-gray-400">
-        Hoş geldiniz, {{ authStore.user?.name || 'Kullanıcı' }}
+        Hoş geldiniz 2, {{ authStore.user?.name || 'Kullanıcı' }}
         <span class="text-sm ml-2 px-2 py-1 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded">
           {{ getRoleLabel(authStore.user?.role) }}
         </span>

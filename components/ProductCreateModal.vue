@@ -25,7 +25,7 @@
                       v-model="form.name"
                       type="text"
                       required
-                      class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      class="mt-1 form-input"
                       placeholder="Ürün adını giriniz"
                     />
                     <p v-if="errors.name" class="mt-1 text-sm text-red-600">{{ errors.name }}</p>
@@ -36,10 +36,7 @@
                     <label for="price" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                       Fiyat <span class="text-red-500">*</span>
                     </label>
-                    <div class="mt-1 relative rounded-md shadow-sm">
-                      <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                        <span class="text-gray-500 dark:text-gray-400 sm:text-sm">₺</span>
-                      </div>
+                    <div class="mt-1 relative rounded-md shadow-sm"> 
                       <input
                         id="price"
                         v-model.number="form.price"
@@ -47,8 +44,8 @@
                         step="0.01"
                         min="0"
                         required
-                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white pl-7 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                        placeholder="0.00"
+                        class="mt-1 form-input"
+                        placeholder="₺ 0.00"
                       />
                     </div>
                     <p v-if="errors.price" class="mt-1 text-sm text-red-600">{{ errors.price }}</p>
