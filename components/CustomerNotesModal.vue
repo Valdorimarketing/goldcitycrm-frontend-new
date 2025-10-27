@@ -86,6 +86,7 @@
                       <div v-if="showReminderInfo" class="mt-3 bg-yellow-50 dark:bg-yellow-900/20 p-3 rounded-lg">
                         <p class="text-sm text-gray-700 dark:text-gray-300">
                           <span class="font-semibold">{{ reminderDays }} gün sonra aranacak</span>
+                          <span v-if="reminderDate" class="ml-1">({{ reminderDate }})</span>
                         </p>
                       </div>
                     </div>
@@ -193,6 +194,7 @@
                       <textarea
                         v-model="editingNote.note"
                         rows="3"
+                        required
                         class="block w-full rounded-lg border-0 px-3 py-2 text-sm text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-amber-600 dark:bg-gray-600"
                       ></textarea>
                       <div class="flex items-center justify-between">
@@ -213,7 +215,8 @@
                           </button>
                           <button
                             @click="saveEdit"
-                            class="text-sm font-medium text-amber-600 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300"
+                            :disabled="!editingNote.note.trim()"
+                            class="text-sm font-medium text-amber-600 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                           >
                             Kaydet
                           </button>
@@ -303,6 +306,9 @@ const props = defineProps({
 
 const emit = defineEmits(['close', 'customer-updated'])
 
+// dayjs datetime library
+const { $dayjs } = useNuxtApp()
+
 // Stores
 const customerNotesStore = useCustomerNotesStore()
 const authStore = useAuthStore()
@@ -349,6 +355,12 @@ const reminderDays = computed(() => {
   if (!selectedStatus.value) return 0
   const status = availableStatuses.value.find(s => s.id === selectedStatus.value)
   return status?.reminding_day || status?.remindingDay || 0
+})
+
+// Yeni: reminder tarihini hesaplıyor
+const reminderDate = computed(() => {
+  if (!reminderDays.value) return null
+  return $dayjs().add(reminderDays.value, 'day').format('DD.MM.YYYY')
 })
 
 // Fetch customer notes
@@ -629,6 +641,7 @@ watch(() => newNote.isReminding, (value) => {
 
 // Watch for modal open
 watch(() => props.show, async (newValue) => {
+ 
   if (newValue) {
     // Fetch notes
     fetchNotes()

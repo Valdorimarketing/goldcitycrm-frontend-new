@@ -7,10 +7,10 @@ export interface Status {
   color: string
   description?: string
   order: number
-  is_remindable: boolean
-  is_first: boolean
-  is_closed: boolean
-  is_sale: boolean
+  isRemindable: boolean
+  isFirst: boolean
+  isClosed: boolean
+  isSale: boolean
   remindingDay?: number | null
   isDoctor?: boolean
   isPricing?: boolean

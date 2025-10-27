@@ -45,7 +45,13 @@ export const usePermissions = () => {
 
     // Doctor ve Pricing sadece müşteriler ve kişiler menusunu görür
     if (isDoctor.value || isPricing.value) {
-      const allowedMenus = ['Müşteriler', 'Kişiler', 'Dinamik Arama', 'Hatırlatmalar']
+      const allowedMenus = [
+        'Müşteriler',
+        'Kişiler',
+        'Dinamik Arama',
+        'Hatırlatmalar',
+        'Havuz Verileri'  // <- eklendi
+      ]
       return allowedMenus.includes(menuName)
     }
 

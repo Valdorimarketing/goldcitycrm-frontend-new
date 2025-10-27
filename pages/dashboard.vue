@@ -4,7 +4,7 @@
     <div class="border-b border-gray-200 dark:border-gray-700 pb-6">
       <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
       <p class="mt-2 text-gray-600 dark:text-gray-400">
-        Hoş geldiniz 2, {{ authStore.user?.name || 'Kullanıcı' }}
+        Hoş geldiniz, {{ authStore.user?.name || 'Kullanıcı' }}
         <span class="text-sm ml-2 px-2 py-1 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded">
           {{ getRoleLabel(authStore.user?.role) }}
         </span>
@@ -70,7 +70,7 @@
         <!-- Data -->
         <div v-else-if="unassignedNewCustomers.length > 0" class="space-y-3">
           <div
-            v-for="customer in unassignedNewCustomers"
+            v-for="customer in unassignedNewCustomers as any"
             :key="customer.id"
             class="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors cursor-pointer"
             @click="navigateTo(`/customers/show/${customer.id}`)"
@@ -133,7 +133,7 @@
         <!-- Data -->
         <div v-else-if="assignedNewCustomers.length > 0" class="space-y-3">
           <div
-            v-for="customer in assignedNewCustomers"
+            v-for="customer in assignedNewCustomers as any"
             :key="customer.id"
             class="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors cursor-pointer"
             @click="navigateTo(`/customers/show/${customer.id}`)"
@@ -210,7 +210,7 @@
         <!-- Data -->
         <div v-else-if="recentCustomers.length > 0" class="space-y-3">
           <div
-            v-for="customer in recentCustomers"
+            v-for="customer in recentCustomers as any"
             :key="customer.id"
             class="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors cursor-pointer"
             @click="navigateTo(`/customers/show/${customer.id}`)"
@@ -269,7 +269,7 @@
         <!-- Data -->
         <div v-else-if="upcomingReminders.length > 0" class="space-y-3">
           <div
-            v-for="reminder in upcomingReminders"
+            v-for="reminder in upcomingReminders as any"
             :key="reminder.id"
             class="flex items-start space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors cursor-pointer"
             @click="reminder.customer && navigateTo(`/customers/show/${reminder.customer}`)"
@@ -335,7 +335,7 @@
             </tr>
           </thead>
           <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-            <tr v-for="meeting in upcomingMeetings" :key="meeting.id" class="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
+            <tr v-for="meeting in upcomingMeetings as any" :key="meeting.id" class="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
               <td class="table-cell font-medium">{{ meeting.customerInfo?.name || '-' }} {{ meeting.customerInfo?.surname || '' }}</td>
               <td class="table-cell">{{ formatDateTime(meeting.startTime) }}</td>
               <td class="table-cell">{{ formatDateTime(meeting.endTime) }}</td>
@@ -402,17 +402,17 @@ const totalCustomers = ref(0)
 const totalSales = ref(0)
 const totalRevenue = ref(0)
 const totalMeetings = ref(0)
-const recentCustomers = ref([])
-const recentSales = ref([])
-const upcomingMeetings = ref([])
-const upcomingReminders = ref([])
-const unassignedNewCustomers = ref([])
+const recentCustomers = ref([]) as any
+const recentSales = ref([]) as any
+const upcomingMeetings = ref([]) as any
+const upcomingReminders = ref([]) as any
+const unassignedNewCustomers = ref([]) as any
 const unassignedNewCustomersTotal = ref(0)
-const assignedNewCustomers = ref([])
+const assignedNewCustomers = ref([]) as any
 const assignedNewCustomersTotal = ref(0)
-const users = ref([])
-const userCustomersForCalendar = ref([])
-const userMeetingsForCalendar = ref([])
+const users = ref([]) as any
+const userCustomersForCalendar = ref([]) as any
+const userMeetingsForCalendar = ref([]) as any
 
 // Role-based permissions
 const userRole = computed(() => authStore.user?.role || '')
@@ -485,7 +485,7 @@ const calculateStats = async () => {
 
     // Fetch customers directly using API
     console.log('Calling customers API with filters:', filters)
-    const customersResponse = await api('/customers', { query: filters })
+    const customersResponse = await api('/customers', { query: filters }) as any
     console.log('Customers response:', customersResponse)
 
     // Filter customers based on access permissions
@@ -494,7 +494,7 @@ const calculateStats = async () => {
       filteredCustomers = customersResponse.filter(c => canAccessCustomer(c))
       totalCustomers.value = filteredCustomers.length
     } else if (customersResponse.data && Array.isArray(customersResponse.data)) {
-      filteredCustomers = customersResponse.data.filter(c => canAccessCustomer(c))
+      filteredCustomers = customersResponse.data.filter((c:any) => canAccessCustomer(c))
       totalCustomers.value = filteredCustomers.length
     } else {
       totalCustomers.value = 0
@@ -504,7 +504,7 @@ const calculateStats = async () => {
     // Fetch sales
     const salesFilters = getRelatedDataFilters() || {}
 
-    const salesResponse = await api('/sales', { query: salesFilters })
+    const salesResponse = await api('/sales', { query: salesFilters }) as any
     console.log('Sales response:', salesResponse)
 
     let allSales = []
@@ -519,18 +519,18 @@ const calculateStats = async () => {
     const currentMonth = now.getMonth()
     const currentYear = now.getFullYear()
 
-    const currentMonthSales = allSales.filter(sale => {
+    const currentMonthSales = allSales.filter((sale:any) => {
       const saleDate = new Date(sale.date)
       return saleDate.getMonth() === currentMonth && saleDate.getFullYear() === currentYear
     })
 
-    totalSales.value = currentMonthSales.reduce((sum, sale) => sum + (sale.amount || 0), 0)
-    totalRevenue.value = allSales.reduce((sum, sale) => sum + (sale.amount || 0), 0)
+    totalSales.value = currentMonthSales.reduce((sum:any, sale:any) => sum + (sale.amount || 0), 0)
+    totalRevenue.value = allSales.reduce((sum:any, sale:any) => sum + (sale.amount || 0), 0)
 
     // Fetch meetings
     const meetingFilters = getRelatedDataFilters() || {}
 
-    const meetingsResponse = await api('/meetings', { query: meetingFilters })
+    const meetingsResponse = await api('/meetings', { query: meetingFilters }) as any
     console.log('Meetings response:', meetingsResponse)
 
     if (Array.isArray(meetingsResponse)) {
@@ -555,14 +555,14 @@ const fetchRecentCustomers = async () => {
     const api = useApi()
     const filters = await getRoleBasedFilters()
 
-    const customersResponse = await api('/customers', { query: filters })
+    const customersResponse = await api('/customers', { query: filters }) as any
 
     // Filter customers based on access permissions
     if (Array.isArray(customersResponse)) {
       const filtered = customersResponse.filter(c => canAccessCustomer(c))
       recentCustomers.value = filtered.slice(0, 5)
     } else if (customersResponse.data && Array.isArray(customersResponse.data)) {
-      const filtered = customersResponse.data.filter(c => canAccessCustomer(c))
+      const filtered = customersResponse.data.filter((c:any) => canAccessCustomer(c))
       recentCustomers.value = filtered.slice(0, 5)
     } else {
       recentCustomers.value = []
@@ -582,7 +582,7 @@ const fetchRecentSales = async () => {
     const api = useApi()
     const filters = getRelatedDataFilters() || {}
 
-    const salesResponse = await api('/sales', { query: filters })
+    const salesResponse = await api('/sales', { query: filters }) as any
 
     if (Array.isArray(salesResponse)) {
       recentSales.value = salesResponse.slice(0, 5)
@@ -606,7 +606,7 @@ const fetchUpcomingMeetings = async () => {
     const api = useApi()
     const filters = getRelatedDataFilters() || {}
 
-    const meetingsResponse = await api('/meetings', { query: filters })
+    const meetingsResponse = await api('/meetings', { query: filters })  as any
 
     if (Array.isArray(meetingsResponse)) {
       upcomingMeetings.value = meetingsResponse.slice(0, 5)
@@ -645,7 +645,7 @@ const fetchUpcomingReminders = async () => {
       filters = { ...filters, ...userFilters }
     }
 
-    const remindersResponse = await api('/customer-notes', { query: filters })
+    const remindersResponse = await api('/customer-notes', { query: filters }) as any
     console.log('Reminders response:', remindersResponse)
 
     let allReminders = []
@@ -657,8 +657,8 @@ const fetchUpcomingReminders = async () => {
 
     // Sort by remindingAt and get first 5
     upcomingReminders.value = allReminders
-      .filter(r => r.remindingAt && new Date(r.remindingAt) >= now)
-      .sort((a, b) => new Date(a.remindingAt).getTime() - new Date(b.remindingAt).getTime())
+      .filter((r:any) => r.remindingAt && new Date(r.remindingAt) >= now)
+      .sort((a:any, b:any) => new Date(a.remindingAt).getTime() - new Date(b.remindingAt).getTime())
       .slice(0, 5)
   } catch (error) {
     console.error('Error fetching upcoming reminders:', error)
@@ -688,7 +688,7 @@ const fetchUnassignedNewCustomers = async () => {
         hasRelevantUser: false,
         limit: 50  // Fetch more than needed for display
       }
-    })
+    }) as any
 
     console.log('Unassigned customers response:', customersResponse)
 
@@ -738,7 +738,7 @@ const fetchUserCustomersForCalendar = async () => {
     // If admin, fetch all customers. If regular user, fetch only their customers
     const filters = isAdmin.value ? {} : getCustomerFilters()
 
-    const customersResponse = await api('/customers', { query: filters })
+    const customersResponse = await api('/customers', { query: filters }) as any
 
     let allCustomers = []
     if (Array.isArray(customersResponse)) {
@@ -748,7 +748,7 @@ const fetchUserCustomersForCalendar = async () => {
     }
 
     // If admin, include all customers. If regular user, filter by access
-    userCustomersForCalendar.value = isAdmin.value ? allCustomers : allCustomers.filter(c => canAccessCustomer(c))
+    userCustomersForCalendar.value = isAdmin.value ? allCustomers : allCustomers.filter((c:any) => canAccessCustomer(c))
   } catch (error) {
     console.error('Error fetching user customers for calendar:', error)
     userCustomersForCalendar.value = []
@@ -764,7 +764,7 @@ const fetchUserMeetingsForCalendar = async () => {
     // If admin, fetch all meetings. If regular user, fetch only their meetings
     const filters = isAdmin.value ? {} : (getRelatedDataFilters() || {})
 
-    const meetingsResponse = await api('/meetings', { query: filters })
+    const meetingsResponse = await api('/meetings', { query: filters }) as any
 
     if (Array.isArray(meetingsResponse)) {
       userMeetingsForCalendar.value = meetingsResponse
@@ -804,7 +804,7 @@ const fetchAssignedNewCustomers = async () => {
         hasRelevantUser: true,
         limit: 50  // Fetch more than needed for display
       }
-    })
+    }) as any
 
     console.log('Assigned customers response:', customersResponse)
 
@@ -819,12 +819,12 @@ const fetchAssignedNewCustomers = async () => {
 
     // Create users map for quick lookup
     const usersMap: Record<string, any> = {}
-    users.value.forEach(user => {
+    users.value.forEach((user:any) => {
       usersMap[user.id] = user
     })
 
     // Add user info to each customer
-    const customersWithUserInfo = allCustomers.map(customer => {
+    const customersWithUserInfo = allCustomers.map((customer:any) => {
       const relevantUserId = customer.relevantUserId || customer.relevant_user_id || customer.relevent_user || customer.relevantUser
 
       // Parse relevantUser correctly - handle both ID and object cases

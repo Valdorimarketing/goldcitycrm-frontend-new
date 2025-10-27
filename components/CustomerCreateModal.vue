@@ -204,8 +204,7 @@
                               id="phone"
                               v-model="form.phone"
                               type="tel"
-                              required
-                              @input="formatPhoneNumber"
+                              required 
                               @blur="checkPhoneUniqueness"
                               :disabled="checkingPhone"
                               class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
