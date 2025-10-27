@@ -280,7 +280,8 @@
                       Müşteri Dosyaları
                     </span>
                   </button>
-                  <NuxtLink
+                  <NuxtLink 
+                    v-if="isEditable"
                     :to="`/customers/edit/${customer.id}`"
                     class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     title="Düzenle"
@@ -293,7 +294,8 @@
                   <button
                     @click="confirmDelete(customer)"
                     class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    title="Sil"
+                    title="Sil" 
+                    v-if="isDeleteable"
                   >
                     <TrashIcon class="h-4 w-4 text-red-600 dark:text-red-400" />
                     <span class="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 dark:bg-gray-700 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
@@ -490,8 +492,11 @@ import {
   FolderIcon
 } from '@heroicons/vue/24/outline'
 
+import { useAuthStore } from '~/stores/auth'
+const { $dayjs } = useNuxtApp()
+
 definePageMeta({
-  middleware: ['auth', 'admin'] // Only admin can access pool data
+  middleware: ['auth', 'admindoctor'] // Only admin can access pool data
 })
 
 const loading = ref(true)
@@ -503,11 +508,14 @@ const pagination = ref({
 })
 
 const customersData = ref([])
-
+const authStore = useAuthStore()
+ 
 // Tab state - read from URL query parameter
 const route = useRoute()
 const router = useRouter()
 const activeTab = ref(route.query.tab || 'unassigned')
+const isEditable = ref(true);
+const isDeleteable = ref(true);
 
 // Search and filters
 const searchTerm = ref('')
@@ -935,35 +943,7 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString('tr-TR')
 }
 
-const getWaitingTime = (dateString) => {
-  if (!dateString) return '-'
-
-  const now = new Date()
-  const createdDate = new Date(dateString)
-  const diffMs = now - createdDate
-
-  // Convert to different units
-  const diffMinutes = Math.floor(diffMs / (1000 * 60))
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
-  const diffMonths = Math.floor(diffDays / 30)
-  const diffYears = Math.floor(diffDays / 365)
-
-  if (diffYears > 0) {
-    return `${diffYears} yıl`
-  } else if (diffMonths > 0) {
-    return `${diffMonths} ay`
-  } else if (diffDays > 0) {
-    return `${diffDays} gün`
-  } else if (diffHours > 0) {
-    return `${diffHours} saat`
-  } else if (diffMinutes > 0) {
-    return `${diffMinutes} dakika`
-  } else {
-    return 'Az önce'
-  }
-}
-
+ 
 const getStatusClass = (statusId) => {
   const status = statusMap.value[statusId]
   if (!status) {
@@ -993,6 +973,14 @@ const getStatusText = (statusId) => {
   const status = statusMap.value[statusId]
   return status?.name || statusId || 'Bilinmiyor'
 }
+
+const getWaitingTime = (dateString) => {
+  if (!dateString) return '-'
+
+  return $dayjs(dateString).fromNow()   
+  
+}
+
 
 // Initialize data
 onMounted(async () => {
@@ -1053,6 +1041,12 @@ onMounted(async () => {
 
     // Fetch customers based on active tab
     await fetchCustomers(1)
+
+    
+  isEditable.value = authStore.user?.role != 'doctor' ? true : false
+  isDeleteable.value = authStore.user?.role != 'doctor' ? true : false
+ 
+  
   } catch (error) {
     console.error('Failed to load data:', error)
     loading.value = false
@@ -1067,7 +1061,8 @@ watch(activeTab, async (newTab) => {
   // Reset filters and fetch new data
   resetFilters()
   pagination.value.page = 1
-  await fetchCustomers(1)
+  await fetchCustomers(1) 
+ 
 })
 
 // Page head

@@ -250,6 +250,7 @@
                     </span>
                   </button>
                   <NuxtLink
+                    v-if="isEditable"
                     :to="`/customers/edit/${customer.id}`"
                     class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     title="Düzenle"
@@ -260,6 +261,7 @@
                     </span>
                   </NuxtLink>
                   <button
+                    v-if="isDeleteable"
                     @click="confirmDelete(customer)"
                     class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     title="Sil"
@@ -281,15 +283,7 @@
                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
                   {{ searchTerm || statusFilter ? 'Arama kriterlerinize uygun müşteri bulunamadı.' : 'Henüz müşteri eklenmemiş.' }}
                 </p>
-                <div class="mt-6">
-                  <NuxtLink
-                    to="/customers/new"
-                    class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
-                  >
-                    <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
-                    İlk müşteriyi ekle
-                  </NuxtLink>
-                </div>
+                
               </td>
             </tr>
           </tbody>
@@ -423,7 +417,7 @@
       :show="showNotesModal"
       :customer="selectedCustomer"
       @close="showNotesModal = false"
-      @customer-updated="() => customersStore.fetchCustomers(pagination.page)"
+      @customer-updated="() => loadCustomers(pagination.page)"
     />
 
     <!-- Doctor Assignment Modal -->
@@ -483,6 +477,8 @@ definePageMeta({
   // middleware: 'auth' // Temporarily disabled
 })
 
+const isEditable = ref(true);
+const isDeleteable = ref(true);
 const authStore = useAuthStore()
 
 // Permissions
@@ -766,9 +762,16 @@ onMounted(async () => {
 
     // Load customers
     await loadCustomers()
+
+    isEditable.value = authStore.user?.role != 'doctor' ? true : false
+    isDeleteable.value = authStore.user?.role != 'doctor' ? true : false
+
+
   } catch (error) {
     console.error('Failed to load data:', error)
   }
+
+
 })
 
 // Page head

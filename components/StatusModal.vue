@@ -118,7 +118,7 @@
                       <div class="flex items-center">
                         <input
                           id="is_remindable"
-                          v-model="formData.is_remindable"
+                          v-model="formData.isRemindable"
                           type="checkbox"
                           class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                         />
@@ -127,7 +127,7 @@
                         </label>
                       </div>
 
-                      <div v-if="formData.is_remindable" class="ml-6">
+                      <div v-if="formData.isRemindable" class="ml-6">
                         <label for="remindingDay" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                           Zorunlu Arama Günü
                         </label>
@@ -143,12 +143,12 @@
 
                       <div class="flex items-center">
                         <input
-                          id="is_first"
-                          v-model="formData.is_first"
+                          id="isFirst"
+                          v-model="formData.isFirst"
                           type="checkbox"
                           class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                         />
-                        <label for="is_first" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                        <label for="isFirst" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                           İlk durum
                         </label>
                       </div>
@@ -156,7 +156,7 @@
                       <div class="flex items-center">
                         <input
                           id="is_closed"
-                          v-model="formData.is_closed"
+                          v-model="formData.isClosed"
                           type="checkbox"
                           class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                         />
@@ -168,7 +168,7 @@
                       <div class="flex items-center">
                         <input
                           id="is_sale"
-                          v-model="formData.is_sale"
+                          v-model="formData.isSale"
                           type="checkbox"
                           class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                         />
@@ -271,10 +271,10 @@ const defaultFormData = () => ({
   description: '',
   color: '#3b82f6',
   order: 0,
-  is_remindable: false,
-  is_first: false,
-  is_closed: false,
-  is_sale: false,
+  isRemindable: false,
+  isFirst: false,
+  isClosed: false,
+  isSale: false,
   remindingDay: null as number | null,
   isDoctor: false,
   isPricing: false
@@ -289,10 +289,10 @@ watch(() => props.status, (newStatus) => {
       description: newStatus.description || '',
       color: newStatus.color || '#3b82f6',
       order: newStatus.order ?? 0,
-      is_remindable: newStatus.is_remindable === true || (newStatus as any).isRemindable === true,
-      is_first: newStatus.is_first === true || (newStatus as any).isFirst === true,
-      is_closed: newStatus.is_closed === true || (newStatus as any).isClosed === true,
-      is_sale: newStatus.is_sale === true || (newStatus as any).isSale === true,
+      isRemindable: newStatus.isRemindable === true || (newStatus as any).isRemindable === true,
+      isFirst: newStatus.isFirst === true || (newStatus as any).isFirst === true,
+      isClosed: newStatus.isClosed === true || (newStatus as any).isClosed === true,
+      isSale: newStatus.isSale === true || (newStatus as any).isSale === true,
       remindingDay: newStatus.remindingDay ?? (newStatus as any).reminding_day ?? null,
       isDoctor: newStatus.isDoctor === true || (newStatus as any).is_doctor === true,
       isPricing: newStatus.isPricing === true || (newStatus as any).is_pricing === true

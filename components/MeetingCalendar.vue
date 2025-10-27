@@ -28,6 +28,7 @@ const props = defineProps({
     default: false
   }
 })
+ 
 
 const emit = defineEmits(['eventClick', 'dateSelect'])
 
@@ -84,63 +85,65 @@ const events = computed(() => {
   })
 })
 
-const handleEventClick = (clickInfo) => {
-  const meeting = clickInfo.event.extendedProps.meeting
-  emit('eventClick', meeting)
+
+
+// 🔹 Dark mode'u izleyen reactive değer
+const isDarkMode = ref(document.documentElement.classList.contains('dark'))
+
+// 🔹 Dark mode değişimlerini dinle (örneğin Tailwind dark toggle)
+const observer = new MutationObserver(() => {
+  isDarkMode.value = document.documentElement.classList.contains('dark')
+})
+observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+
+ 
+
+// 🔹 Dark mode'a göre dinamik tema renkleri
+const calendarOptions = ref({})
+
+const updateCalendarOptions = () => {
+  calendarOptions.value = {
+    plugins: [timeGridPlugin, dayGridPlugin, interactionPlugin, listPlugin],
+    initialView: 'timeGridWeek',
+    locale: trLocale,
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
+    },
+    slotMinTime: '08:00:00',
+    slotMaxTime: '20:00:00',
+    allDaySlot: false,
+    height: 'auto',
+    expandRows: true,
+    events: events.value,
+    nowIndicator: true,
+    selectable: true,
+    selectMirror: true,
+    dayMaxEvents: true,
+    weekends: true,
+    editable: false,
+    eventTimeFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
+    slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
+    displayEventTime: true,
+    displayEventEnd: true,
+
+    // 🔹 Tema farkı
+    eventClassNames: isDarkMode.value ? ['fc-dark-event'] : ['fc-light-event'],
+    dayHeaderClassNames: isDarkMode.value ? ['fc-dark-header'] : ['fc-light-header'],
+    slotLabelClassNames: isDarkMode.value ? ['fc-dark-slot'] : ['fc-light-slot'],
+    slotLaneContentClassNames: isDarkMode.value ? ['fc-dark-slot-lane'] : ['fc-light-slot-lane'],
+  }
 }
 
-const handleDateSelect = (selectInfo) => {
-  emit('dateSelect', {
-    start: selectInfo.start,
-    end: selectInfo.end
-  })
-}
+// İlk yükleme
+updateCalendarOptions()
 
-const calendarOptions = computed(() => ({
-  plugins: [timeGridPlugin, dayGridPlugin, interactionPlugin, listPlugin],
-  initialView: 'timeGridWeek',
-  headerToolbar: {
-    left: 'prev,next today',
-    center: 'title',
-    right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-  },
-  locale: trLocale,
-  buttonText: {
-    today: 'Bugün',
-    month: 'Ay',
-    week: 'Hafta',
-    day: 'Gün',
-    list: 'Liste'
-  },
-  slotMinTime: '08:00:00',
-  slotMaxTime: '20:00:00',
-  allDaySlot: false,
-  height: 'auto',
-  expandRows: true,
-  slotDuration: '00:30:00',
-  slotLabelInterval: '01:00',
-  nowIndicator: true,
-  selectable: true,
-  selectMirror: true,
-  dayMaxEvents: true,
-  weekends: true,
-  editable: false,
-  events: events.value,
-  eventClick: handleEventClick,
-  select: handleDateSelect,
-  eventTimeFormat: {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-  },
-  slotLabelFormat: {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-  },
-  displayEventTime: true,
-  displayEventEnd: true
-}))
+// 🔹 Dark mode değiştiğinde otomatik güncelle
+watch(isDarkMode, () => {
+  updateCalendarOptions()
+})
+ 
 
 watch(() => props.meetings, () => {
 }, { deep: true })
