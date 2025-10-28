@@ -5,14 +5,17 @@
       <nav class="flex mb-6" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-3">
           <li class="inline-flex items-center">
-            <NuxtLink to="/customers" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+            <NuxtLink to="/customers"
+              class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
               Müşteriler
             </NuxtLink>
           </li>
           <li>
             <div class="flex items-center">
               <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                <path fill-rule="evenodd"
+                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                  clip-rule="evenodd"></path>
               </svg>
               <span class="text-gray-500 dark:text-gray-400 ml-1 md:ml-2">{{ customer?.name || 'Müşteri' }}</span>
             </div>
@@ -40,16 +43,11 @@
             <div class="px-6 pb-6">
               <div class="relative -mt-16 mb-4">
                 <div class="inline-block rounded-full ring-4 ring-white dark:ring-gray-800">
-                  <img
-                    v-if="customer.image"
-                    :src="getImageUrl(customer.image)"
+                  <img v-if="customer.image" :src="getImageUrl(customer.image)"
                     :alt="`${customer.name} ${customer.surname}`"
-                    class="h-32 w-32 rounded-full object-cover bg-gray-200 dark:bg-gray-700"
-                  />
-                  <div
-                    v-else
-                    class="h-32 w-32 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center"
-                  >
+                    class="h-32 w-32 rounded-full object-cover bg-gray-200 dark:bg-gray-700" />
+                  <div v-else
+                    class="h-32 w-32 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
                     <span class="text-4xl font-bold text-indigo-600 dark:text-indigo-300">
                       {{ customer.name?.charAt(0)?.toUpperCase() }}{{ customer.surname?.charAt(0)?.toUpperCase() }}
                     </span>
@@ -86,9 +84,14 @@
 
               <!-- Contact Info -->
               <div class="space-y-3 border-t border-gray-200 dark:border-gray-700 pt-4">
+                <div title="Atanan Sağlık Danışmanı" v-if="customer?.relevantUserData?.name" class="flex items-center text-sm">
+                  <UserIcon class="h-5 w-5 text-gray-400 mr-3 flex-shrink-0" /> 
+                    {{ customer?.relevantUserData?.name }} 
+                </div>
                 <div v-if="customer.email" class="flex items-center text-sm">
                   <EnvelopeIcon class="h-5 w-5 text-gray-400 mr-3 flex-shrink-0" />
-                  <a :href="`mailto:${customer.email}`" class="text-indigo-600 dark:text-indigo-400 hover:underline truncate">
+                  <a :href="`mailto:${customer.email}`"
+                    class="text-indigo-600 dark:text-indigo-400 hover:underline truncate">
                     {{ customer.email }}
                   </a>
                 </div>
@@ -122,52 +125,41 @@
 
               <!-- Action Buttons -->
               <div class="mt-6 space-y-2 border-t border-gray-200 dark:border-gray-700 pt-4">
-                <button
-                  @click="showNotes"
-                  class="w-full inline-flex items-center justify-center rounded-md bg-amber-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-amber-500"
-                >
+                <button @click="showNotes"
+                  class="w-full inline-flex items-center justify-center rounded-md bg-amber-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-amber-500">
                   <DocumentTextIcon class="h-5 w-5 mr-2" />
                   Notlar
                 </button>
-                <button
-                  @click="showDoctorAssignment"
-                  class="w-full inline-flex items-center justify-center rounded-md bg-purple-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-500"
-                >
+                <button @click="showDoctorAssignment"
+                  class="w-full inline-flex items-center justify-center rounded-md bg-purple-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-500">
                   <UserIcon class="h-5 w-5 mr-2" />
                   Doktor Görüşü
                 </button>
-                <button
-                  @click="showServices"
-                  class="w-full inline-flex items-center justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500"
-                >
+                <button @click="showServices"
+                  class="w-full inline-flex items-center justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500">
                   <ShoppingBagIcon class="h-5 w-5 mr-2" />
                   Hizmetler
                 </button>
-                <button
-                  @click="showFiles"
-                  class="w-full inline-flex items-center justify-center rounded-md bg-cyan-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-cyan-500"
-                >
+                <button @click="showFiles"
+                  class="w-full inline-flex items-center justify-center rounded-md bg-cyan-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-cyan-500">
                   <FolderIcon class="h-5 w-5 mr-2" />
                   Dosyalar
                 </button>
-                <NuxtLink
-                  :to="`/customers/edit/${$route.params.id}`"
-                  class="w-full inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
-                >
+                <NuxtLink v-if="!isDoctor" :to="`/customers/edit/${$route.params.id}`"
+                  class="w-full inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
                   <PencilIcon class="h-5 w-5 mr-2" />
                   Düzenle
                 </NuxtLink>
-                <button
-                  @click="goBack"
-                  class="w-full inline-flex items-center justify-center rounded-md bg-white dark:bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600"
-                >
+                <button @click="goBack"
+                  class="w-full inline-flex items-center justify-center rounded-md bg-white dark:bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600">
                   <ArrowLeftIcon class="h-5 w-5 mr-2" />
                   Geri
                 </button>
               </div>
 
               <!-- Additional Info -->
-              <div v-if="customer.description || customer.source || customer.user || customer.createdAt" class="mt-6 space-y-3 border-t border-gray-200 dark:border-gray-700 pt-4">
+              <div v-if="customer.description || customer.source || customer.user || customer.createdAt"
+                class="mt-6 space-y-3 border-t border-gray-200 dark:border-gray-700 pt-4">
                 <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Ek Bilgiler</h3>
 
                 <div v-if="customer.source?.name" class="text-sm">
@@ -199,13 +191,21 @@
           <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
             <!-- Header -->
             <div class="bg-gradient-to-r from-blue-600 to-cyan-600 px-6 py-4 rounded-t-lg">
-              <div class="flex items-center space-x-3">
-                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur">
-                  <ClockIcon class="h-6 w-6 text-white" />
+              <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                  <div class="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur">
+                    <ClockIcon class="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 class="text-lg font-semibold text-white">Müşteri Geçmişi</h3>
+                    <p class="text-sm text-blue-100">Tüm aktiviteler ve değişiklikler</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 class="text-lg font-semibold text-white">Müşteri Geçmişi</h3>
-                  <p class="text-sm text-blue-100">Tüm aktiviteler ve değişiklikler</p>
+                <div class="relative"> 
+                    <button @click="refreshData" class="inline-flex items-center px-3 py-2 bg-white/20 hover:bg-white/30 text-white text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition">
+                      <ArrowPathIcon class="h-5 w-5 mr-2" />
+                      Yenile 
+                    </button>
                 </div>
               </div>
             </div>
@@ -226,61 +226,45 @@
                   <div class="flex items-start space-x-4">
                     <!-- Actions Dropdown Button -->
                     <div class="relative">
-                      <button
-                        @click="toggleActionsDropdown"
+                      <button @click="toggleActionsDropdown"
                         class="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 hover:bg-indigo-500 ring-4 ring-white dark:ring-gray-800 transition-colors shadow-lg"
-                        title="Hızlı İşlemler"
-                      >
+                        title="Hızlı İşlemler">
                         <PlusIcon class="h-4 w-4 text-white" />
                       </button>
 
                       <!-- Dropdown Menu -->
-                      <Transition
-                        enter-active-class="transition ease-out duration-100"
-                        enter-from-class="transform opacity-0 scale-95"
-                        enter-to-class="transform opacity-100 scale-100"
+                      <Transition enter-active-class="transition ease-out duration-100"
+                        enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100"
                         leave-active-class="transition ease-in duration-75"
                         leave-from-class="transform opacity-100 scale-100"
-                        leave-to-class="transform opacity-0 scale-95"
-                      >
-                        <div
-                          v-if="showActionsDropdown"
-                          class="absolute left-12 top-0 w-56 rounded-lg bg-white dark:bg-gray-700 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
-                        >
+                        leave-to-class="transform opacity-0 scale-95">
+                        <div v-if="showActionsDropdown"
+                          class="absolute left-12 top-0 w-56 rounded-lg bg-white dark:bg-gray-700 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
                           <div class="py-1">
-                            <button
-                              @click="handleDropdownAction(showNotes)"
-                              class="flex w-full items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                            >
+                            <button @click="handleDropdownAction(showNotes)"
+                              class="flex w-full items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                               <DocumentTextIcon class="h-5 w-5 mr-3 text-amber-600 dark:text-amber-400" />
                               Notlar
                             </button>
-                            <button
-                              @click="handleDropdownAction(showDoctorAssignment)"
-                              class="flex w-full items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                            >
+                            <button @click="handleDropdownAction(showDoctorAssignment)"
+                              class="flex w-full items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                               <UserIcon class="h-5 w-5 mr-3 text-purple-600 dark:text-purple-400" />
                               Doktor Görüşü
                             </button>
-                            <button
-                              @click="handleDropdownAction(showServices)"
-                              class="flex w-full items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                            >
+                            <button @click="handleDropdownAction(showServices)"
+                              class="flex w-full items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                               <ShoppingBagIcon class="h-5 w-5 mr-3 text-green-600 dark:text-green-400" />
                               Hizmetler
                             </button>
-                            <button
-                              @click="handleDropdownAction(showFiles)"
-                              class="flex w-full items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                            >
+                            <button @click="handleDropdownAction(showFiles)"
+                              class="flex w-full items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                               <FolderIcon class="h-5 w-5 mr-3 text-cyan-600 dark:text-cyan-400" />
                               Dosyalar
                             </button>
                             <div class="border-t border-gray-100 dark:border-gray-600"></div>
-                            <button
+                            <button v-if="!isDoctor"
                               @click="handleDropdownAction(() => router.push(`/customers/edit/${route.params.id}`))"
-                              class="flex w-full items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                            >
+                              class="flex w-full items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                               <PencilIcon class="h-5 w-5 mr-3 text-indigo-600 dark:text-indigo-400" />
                               Düzenle
                             </button>
@@ -298,16 +282,15 @@
 
                 <div v-for="(item, index) in history" :key="item.id" class="relative">
                   <!-- Timeline line -->
-                  <div v-if="index < history.length - 1" class="absolute left-4 top-10 h-full w-0.5 bg-gray-200 dark:bg-gray-700"></div>
+                  <div v-if="index < history.length - 1"
+                    class="absolute left-4 top-10 h-full w-0.5 bg-gray-200 dark:bg-gray-700"></div>
 
                   <!-- Timeline item -->
                   <div class="flex items-start space-x-4">
                     <!-- Icon -->
-                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 ring-4 ring-white dark:ring-gray-800">
-                      <component
-                        :is="getActionIcon(item.action)"
-                        class="h-4 w-4 text-blue-600 dark:text-blue-400"
-                      />
+                    <div
+                      class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 ring-4 ring-white dark:ring-gray-800">
+                      <component :is="getActionIcon(item.action)" class="h-4 w-4 text-blue-600 dark:text-blue-400" />
                     </div>
 
                     <!-- Content -->
@@ -321,19 +304,25 @@
                             {{ item.description }}
                           </p>
                           <!-- Request Data -->
-                          <div v-if="item.requestData" class="mt-2">
-                            <p class="text-xs font-medium text-gray-500 dark:text-gray-400">İstek Verisi:</p>
-                            <p class="text-xs text-gray-600 dark:text-gray-400 font-mono bg-gray-100 dark:bg-gray-800 p-1 rounded mt-1">
-                              {{ item.requestData }}
-                            </p>
+                          <div class="relative" v-if="showStates[item.id]">
+                            <div v-if="item.requestData" class="mt-2">
+                              <p class="text-xs font-medium text-gray-500 dark:text-gray-400">İstek Verisi:</p>
+                              <p
+                                class="text-xs text-gray-600 dark:text-gray-400 font-mono bg-gray-100 dark:bg-gray-800 p-1 rounded mt-1">
+                                {{ item.requestData }}
+                              </p>
+                            </div>
+                            <!-- Response Data -->
+                            <div v-if="item.responseData" class="mt-2">
+                              <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Yanıt Verisi:</p>
+                              <p
+                                class="text-xs text-gray-600 dark:text-gray-400 font-mono bg-gray-100 dark:bg-gray-800 p-1 rounded mt-1">
+                                {{ item.responseData }}
+                              </p>
+                            </div>
                           </div>
-                          <!-- Response Data -->
-                          <div v-if="item.responseData" class="mt-2">
-                            <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Yanıt Verisi:</p>
-                            <p class="text-xs text-gray-600 dark:text-gray-400 font-mono bg-gray-100 dark:bg-gray-800 p-1 rounded mt-1">
-                              {{ item.responseData }}
-                            </p>
-                          </div>
+                          <button class="py-1 dark:text-white text-xs" @click="toggleShow(item.id)">{{ showStates[item.id] ? 'Gizle' : 'Göster' }}</button>
+
                         </div>
                         <div class="ml-4 text-right">
                           <p class="text-xs text-gray-500 dark:text-gray-400">
@@ -342,7 +331,8 @@
                           <p class="text-xs text-gray-400 dark:text-gray-500">
                             {{ formatTime(item.createdAt || item.updatesAt) }}
                           </p>
-                          <p v-if="item.user || item.userInfo" class="mt-1 text-xs font-medium text-gray-600 dark:text-gray-400">
+                          <p v-if="item.user || item.userInfo"
+                            class="mt-1 text-xs font-medium text-gray-600 dark:text-gray-400">
                             <UserIcon class="inline h-3 w-3 mr-1" />
                             {{ item.user?.name || item.userInfo?.name || 'Sistem' }}
                           </p>
@@ -375,42 +365,22 @@
     </div>
 
     <!-- Customer History Modal -->
-    <CustomerHistoryModal
-      :show="showHistoryModal"
-      :customer="customer"
-      @close="showHistoryModal = false"
-    />
+    <CustomerHistoryModal :show="showHistoryModal" :customer="customer" @close="showHistoryModal = false" />
 
     <!-- Customer Notes Modal -->
-    <CustomerNotesModal
-      :show="showNotesModal"
-      :customer="customer"
-      @close="showNotesModal = false"
-      @customer-updated="fetchCustomer"
-    />
+    <CustomerNotesModal :show="showNotesModal" :customer="customer" @close="showNotesModal = false"
+      @customer-updated="fetchCustomer" />
 
     <!-- Doctor Assignment Modal -->
-    <DoctorAssignmentModal
-      :show="showDoctorModal"
-      :customer="customer"
-      @close="showDoctorModal = false"
-      @assigned="handleDoctorAssigned"
-    />
+    <DoctorAssignmentModal :show="showDoctorModal" :customer="customer" @close="showDoctorModal = false"
+      @assigned="handleDoctorAssigned" />
 
     <!-- Customer Services Modal -->
-    <CustomerServicesModal
-      :show="showServicesModal"
-      :customer="customer"
-      @close="showServicesModal = false"
-      @saved="handleServicesSaved"
-    />
+    <CustomerServicesModal :show="showServicesModal" :customer="customer" @close="showServicesModal = false"
+      @saved="handleServicesSaved" />
 
     <!-- Customer Files Modal -->
-    <CustomerFilesModal
-      :show="showFilesModal"
-      :customer="customer"
-      @close="showFilesModal = false"
-    />
+    <CustomerFilesModal :show="showFilesModal" :customer="customer" @close="showFilesModal = false" />
   </div>
 </template>
 
@@ -444,7 +414,7 @@ const route = useRoute()
 const router = useRouter()
 
 // Permissions
-const { canAccessCustomer } = usePermissions()
+const { isDoctor } = usePermissions()
 
 // Reactive state
 const customer = ref(null)
@@ -460,6 +430,7 @@ const locations = ref({
 })
 const history = ref([])
 const loadingHistory = ref(false)
+const showStates = ref({})
 
 // Modal states
 const showHistoryModal = ref(false)
@@ -487,6 +458,10 @@ const locationText = computed(() => {
 
   return parts.join(', ')
 })
+
+const toggleShow = (id) => {
+  showStates.value[id] = !showStates.value[id]
+}
 
 const sortedDynamicFields = computed(() => {
   return customerDynamicFields.value.sort((a, b) => a.order - b.order)
@@ -688,11 +663,11 @@ const fetchCustomer = async () => {
     }
 
     // Check if user has permission to access this customer
-    if (!canAccessCustomer(response)) {
-      error.value = 'Bu müşteriye erişim yetkiniz bulunmamaktadır.'
-      customer.value = null
-      return
-    }
+    // if (!canAccessCustomer(response)) {
+    //   error.value = 'Bu müşteriye erişim yetkiniz bulunmamaktadır.'
+    //   customer.value = null
+    //   return
+    // }
 
     customer.value = response
   } catch (err) {
@@ -756,6 +731,12 @@ const fetchCustomerHistory = async () => {
   }
 }
 
+const refreshData = async () => {
+  await fetchCustomer()
+  await fetchCustomerDynamicFields()
+  await fetchCustomerHistory()
+}
+
 // Load data on mount
 onMounted(async () => {
   document.addEventListener('click', handleClickOutside)
@@ -771,10 +752,10 @@ onUnmounted(() => {
 
 // Page title
 useHead({
-  title: computed(() => 
-    customer.value 
+  title: computed(() =>
+    customer.value
       ? `${customer.value.name} ${customer.value.surname} - Müşteri Detayı`
       : 'Müşteri Detayı'
   )
 })
-</script> 
+</script>
