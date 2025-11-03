@@ -446,8 +446,7 @@ const getRoleBasedFilters = async () => {
   // Fetch statuses first if needed for doctor/pricing roles
   if (isDoctor.value || isPricing.value) {
     try {
-      await fetchStatuses()
-      console.log('Fetched Statuses:', statuses.value)
+      await fetchStatuses() 
     } catch (error) {
       console.error('Error fetching statuses:', error)
     }
@@ -468,25 +467,21 @@ const getRoleBasedFilters = async () => {
       return { status: pricingStatuses.map(s => s.id).join(',') }
     }
   }
-
-  console.log('Customer Filters:', customerFilters)
+ 
   return customerFilters
 }
 
 // Calculate statistics
 const calculateStats = async () => {
   try {
-    loadingStats.value = true
-    console.log('=== Starting calculateStats ===')
+    loadingStats.value = true 
     const api = useApi()
 
     // Get role-based filters
     const filters = await getRoleBasedFilters()
 
-    // Fetch customers directly using API
-    console.log('Calling customers API with filters:', filters)
-    const customersResponse = await api('/customers', { query: filters }) as any
-    console.log('Customers response:', customersResponse)
+    // Fetch customers directly using API 
+    const customersResponse = await api('/customers', { query: filters }) as any 
 
     // Filter customers based on access permissions
     let filteredCustomers = []
@@ -499,14 +494,13 @@ const calculateStats = async () => {
     } else {
       totalCustomers.value = 0
     }
-    console.log('Total Customers (after filtering):', totalCustomers.value)
-
+    
     // Fetch sales
     const salesFilters = getRelatedDataFilters() || {}
 
     const salesResponse = await api('/sales', { query: salesFilters }) as any
-    console.log('Sales response:', salesResponse)
-
+    
+    
     let allSales = []
     if (Array.isArray(salesResponse)) {
       allSales = salesResponse
@@ -531,8 +525,8 @@ const calculateStats = async () => {
     const meetingFilters = getRelatedDataFilters() || {}
 
     const meetingsResponse = await api('/meetings', { query: meetingFilters }) as any
-    console.log('Meetings response:', meetingsResponse)
-
+    
+    
     if (Array.isArray(meetingsResponse)) {
       totalMeetings.value = meetingsResponse.length
     } else if (meetingsResponse.data && Array.isArray(meetingsResponse.data)) {
@@ -646,8 +640,8 @@ const fetchUpcomingReminders = async () => {
     }
 
     const remindersResponse = await api('/customer-notes', { query: filters }) as any
-    console.log('Reminders response:', remindersResponse)
-
+    
+    
     let allReminders = []
     if (Array.isArray(remindersResponse)) {
       allReminders = remindersResponse
@@ -679,8 +673,8 @@ const fetchUnassignedNewCustomers = async () => {
     loadingUnassignedCustomers.value = true
     const api = useApi()
 
-    console.log('Fetching unassigned customers with isFirst=true, hasRelevantUser=false')
-
+    
+    
     // Fetch customers with isFirst=true and hasRelevantUser=false from backend
     const customersResponse = await api('/customers', {
       query: {
@@ -690,8 +684,8 @@ const fetchUnassignedNewCustomers = async () => {
       }
     }) as any
 
-    console.log('Unassigned customers response:', customersResponse)
-
+    
+    
     let allCustomers = []
     if (Array.isArray(customersResponse)) {
       allCustomers = customersResponse
@@ -795,8 +789,8 @@ const fetchAssignedNewCustomers = async () => {
       await fetchUsers()
     }
 
-    console.log('Fetching assigned customers with isFirst=true, hasRelevantUser=true')
-
+    
+    
     // Fetch customers with isFirst=true and hasRelevantUser=true from backend
     const customersResponse = await api('/customers', {
       query: {
@@ -806,8 +800,8 @@ const fetchAssignedNewCustomers = async () => {
       }
     }) as any
 
-    console.log('Assigned customers response:', customersResponse)
-
+    
+    
     let allCustomers = []
     if (Array.isArray(customersResponse)) {
       allCustomers = customersResponse

@@ -12,7 +12,7 @@
 
     <!-- Search and Filters -->
     <div class="card mb-6">
-      <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-4">
         <div>
           <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Ara
@@ -41,6 +41,22 @@
           </select>
         </div>
         <div>
+          <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Atanan Kullanıcı
+          </label>
+          <select
+            id="status"
+            v-model="relevantUserFilter"
+            class="form-input"
+          >
+            <option value="">Seç</option>
+            <option v-for="item in relevantUserList" :key="item.value" :value="item.value">
+              {{ item.name }}
+            </option>
+          </select>
+        </div>
+       
+        <div>
           <label for="dateFilter" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Tarih Filtresi
           </label>
@@ -61,10 +77,10 @@
           </select>
         </div>
       </div>
-
+ 
       <!-- Custom Date Range -->
       <template v-if="dateFilter === 'custom'">
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 mt-4">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-4 mt-4">
           <div>
             <label for="startDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Başlangıç Tarihi
@@ -137,7 +153,7 @@
             </tr>
           </thead>
           <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
-            <tr v-for="customer in filteredCustomers" :key="customer.id">
+            <tr v-for="customer in customersData" :key="customer.id">
               <td class="table-cell">
                 <div class="flex items-center">
                   <div class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
@@ -148,9 +164,10 @@
                   <div class="ml-4">
                     <NuxtLink
                       :to="`/customers/show/${customer.id}`"
-                      class="text-sm font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
+                      class="text-sm flex flex-col gap-1 font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
                     >
-                      {{ customer.name }}
+                      <span>{{ customer.name }}</span>
+                      <span class="text-xs dark:text-gray-400">ID: {{ customer.id }}</span>
                     </NuxtLink>
                   </div>
                 </div>
@@ -268,7 +285,7 @@
             </tr>
 
             <!-- Empty State -->
-            <tr v-if="filteredCustomers.length === 0">
+            <tr v-if="customersData.length === 0">
               <td colspan="10" class="text-center py-12">
                 <UsersIcon class="mx-auto h-12 w-12 text-gray-400" />
                 <h3 class="mt-2 text-sm font-medium text-gray-900">Hatırlatma gerektiren müşteri bulunamadı</h3>
@@ -334,27 +351,27 @@ import {
   FolderIcon
 } from '@heroicons/vue/24/outline'
 
-definePageMeta({
-  // middleware: 'auth' // Temporarily disabled
-})
+definePageMeta({})
 
 const loading = ref(true)
-
-// Sample customers data for demo - will be replaced by API data
 const customersData = ref([])
 
-// Search and filters
+// 🔹 Filtreler
 const searchTerm = ref('')
 const statusFilter = ref('')
+const relevantUserFilter = ref('')
 const dateFilter = ref('all')
 const customStartDate = ref('')
 const customEndDate = ref('')
-const statusOptions = ref([])
-const statusMap = ref({}) // Status ID to status object mapping
-const remindableStatusIds = ref([]) // Store remindable status IDs
-const usersMap = ref({}) // User ID to user object mapping
 
-// Modals
+// 🔹 Yardımcı veriler
+const statusOptions = ref([])
+const statusMap = ref({})
+const remindableStatusIds = ref([])
+const usersMap = ref({})
+const relevantUserList = ref([])
+
+// 🔹 Modallar
 const showHistoryModal = ref(false)
 const showNotesModal = ref(false)
 const showDoctorModal = ref(false)
@@ -362,136 +379,122 @@ const showServicesModal = ref(false)
 const showFilesModal = ref(false)
 const selectedCustomer = ref(null)
 
-// Helper functions for date filtering
-const getTodayDateString = () => {
-  const today = new Date()
-  const year = today.getFullYear()
-  const month = String(today.getMonth() + 1).padStart(2, '0')
-  const day = String(today.getDate()).padStart(2, '0')
-  return `${year}-${month}-${day}`
-}
+// =====================================================
+// 🧩 ANA METOD: Müşteri, kullanıcı, statü ve filtreleri yükle
+// =====================================================
+const loadCustomers = async () => {
+  loading.value = true
+  try {
+    const api = useApi()
+    const { getCustomerFilters, canAccessCustomer } = usePermissions()
 
-const getTomorrowDateString = () => {
-  const tomorrow = new Date()
-  tomorrow.setDate(tomorrow.getDate() + 1)
-  return tomorrow.toISOString().split('T')[0]
-}
-
-const getWeekEndDateString = () => {
-  const weekEnd = new Date()
-  weekEnd.setDate(weekEnd.getDate() + 7)
-  return weekEnd.toISOString().split('T')[0]
-}
-
-const getMonthEndDateString = () => {
-  const monthEnd = new Date()
-  monthEnd.setMonth(monthEnd.getMonth() + 1)
-  return monthEnd.toISOString().split('T')[0]
-}
-
-// Check if a date is within the selected date range
-const isDateInRange = (dateString) => {
-  if (!dateString) return false
-
-  const reminderDate = new Date(dateString)
-  reminderDate.setHours(0, 0, 0, 0)
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-
-  switch (dateFilter.value) {
-    case 'today':
-      // Bugün ve öncesi
-      return reminderDate <= today
-    case 'today-only':
-      // Sadece bugün
-      return reminderDate.getTime() === today.getTime()
-    case 'overdue':
-      // Gecikmiş (bugünden öncekiler)
-      return reminderDate < today
-    case 'tomorrow': {
-      // Yarın
-      const tomorrow = new Date(today)
-      tomorrow.setDate(tomorrow.getDate() + 1)
-      return reminderDate.getTime() === tomorrow.getTime()
+    // 🔸 Filtre parametreleri hazırlanıyor
+    const baseFilters = getCustomerFilters()
+    const query = {
+      ...baseFilters,
+      search: searchTerm.value || undefined,
+      status: statusFilter.value || undefined,
+      relevantUser: relevantUserFilter.value || undefined,
+      dateFilter: dateFilter.value,
+      startDate: customStartDate.value || undefined,
+      endDate: customEndDate.value || undefined
     }
-    case 'week': {
-      // Bu hafta (bugünden hafta sonuna)
-      const weekEnd = new Date(today)
-      weekEnd.setDate(weekEnd.getDate() + 7)
-      return reminderDate >= today && reminderDate <= weekEnd
-    }
-    case 'month': {
-      // Bu ay (bugünden ay sonuna)
-      const monthEnd = new Date(today)
-      monthEnd.setMonth(monthEnd.getMonth() + 1)
-      return reminderDate >= today && reminderDate <= monthEnd
-    }
-    case 'all':
-      // Tümü
-      return true
-    case 'custom': {
-      // Özel tarih aralığı
-      if (!customStartDate.value && !customEndDate.value) return true
 
-      const start = customStartDate.value ? new Date(customStartDate.value) : null
-      const end = customEndDate.value ? new Date(customEndDate.value) : null
 
-      if (start && end) {
-        start.setHours(0, 0, 0, 0)
-        end.setHours(23, 59, 59, 999)
-        return reminderDate >= start && reminderDate <= end
-      } else if (start) {
-        start.setHours(0, 0, 0, 0)
-        return reminderDate >= start
-      } else if (end) {
-        end.setHours(23, 59, 59, 999)
-        return reminderDate <= end
+    // ========================
+    // 🧠 Kullanıcıları yükle
+    // ========================
+    if (Object.keys(usersMap.value).length === 0) {
+      const usersResponse = await api('/users')
+      if (Array.isArray(usersResponse)) {
+        relevantUserList.value = usersResponse.map(u => ({ value: u.id, name: u.name }))
+        usersResponse.forEach(u => (usersMap.value[u.id] = u))
       }
-      return true
     }
-    default:
-      return true
+
+    // ========================
+    // 🧠 Statüleri yükle
+    // ========================
+    if (statusOptions.value.length === 0) {
+      const statusResponse = await api('/statuses')
+      if (Array.isArray(statusResponse)) {
+        statusResponse.forEach(status => {
+          statusMap.value[status.id] = status
+          if (status.is_remindable || status.isRemindable) {
+            remindableStatusIds.value.push(status.id)
+          }
+        })
+        statusOptions.value = statusResponse
+          .filter(s => (s.is_remindable || s.isRemindable) && s.isActive !== false)
+          .map(s => ({ value: s.id, label: s.name }))
+      }
+    }
+
+    // ========================
+    // 🧠 Müşterileri yükle (dinamik filtreli)
+    // ========================
+    const response = await api('/customers', { query })
+    let customers = Array.isArray(response) ? response : response.data || []
+
+    customers = customers.map(customer => {
+      const userId = customer.userId || customer.user_id || customer.user
+      const relevantUserId = customer.relevantUserId || customer.relevant_user_id || customer.relevantUser
+
+      return {
+        ...customer,
+        name: `${customer.name || ''} ${customer.surname || ''}`.trim() || 'İsimsiz',
+        status: customer.statusId || customer.status,
+        source: customer.source || '-',
+        isActive: customer.isActive ?? true,
+        remindingDate: customer.remindingDate || customer.reminding_date || null,
+        user: usersMap.value[userId] || customer.user,
+        relevantUser: usersMap.value[relevantUserId] || customer.relevantUser
+      }
+    })
+
+    // 🔹 Hatırlatma statüsü filtreleme
+    customers = customers.filter(c => remindableStatusIds.value.includes(c.status))
+
+    // 🔹 Erişim kontrolü
+    customers = customers.filter(c => canAccessCustomer(c))
+
+    customersData.value = customers
+  } catch (error) {
+    console.error('loadCustomers error:', error)
+  } finally {
+    loading.value = false
   }
 }
 
-// Computed properties
-const filteredCustomers = computed(() => {
-  let filtered = customersData.value
+// =====================================================
+// 🧠 Debounce ile filtreleri dinle ve API çağrısı yap
+// =====================================================
+watchDebounced(
+  [searchTerm, statusFilter, relevantUserFilter, dateFilter, customStartDate, customEndDate],
+  () => {
+    loadCustomers()
+  },
+  { debounce: 600 }
+)
 
-  if (searchTerm.value) {
-    const search = searchTerm.value.toLowerCase()
-    filtered = filtered.filter(customer =>
-      customer.name?.toLowerCase().includes(search) ||
-      customer.email?.toLowerCase().includes(search) ||
-      customer.phone?.toLowerCase().includes(search) ||
-      customer.source?.toLowerCase().includes(search)
-    )
-  }
-
-  if (statusFilter.value) {
-    filtered = filtered.filter(customer => customer.status === statusFilter.value)
-  }
-
-  // Apply date filter
-  filtered = filtered.filter(customer => isDateInRange(customer.remindingDate))
-
-  // Sort by reminding date (ascending - earliest first)
-  filtered.sort((a, b) => {
-    const dateA = a.remindingDate ? new Date(a.remindingDate).getTime() : Infinity
-    const dateB = b.remindingDate ? new Date(b.remindingDate).getTime() : Infinity
-    return dateA - dateB
-  })
-
-  return filtered
+// =====================================================
+// 🏁 İlk sayfa yüklenirken veriyi çek
+// =====================================================
+onMounted(() => {
+  loadCustomers()
 })
 
-// Methods
+// =====================================================
+// 🎨 Yardımcı metodlar
+// =====================================================
 const resetFilters = () => {
   searchTerm.value = ''
   statusFilter.value = ''
+  relevantUserFilter.value = ''
   dateFilter.value = 'all'
   customStartDate.value = ''
   customEndDate.value = ''
+  loadCustomers()
 }
 
 const handleDateFilterChange = () => {
@@ -499,217 +502,31 @@ const handleDateFilterChange = () => {
     customStartDate.value = ''
     customEndDate.value = ''
   }
+  loadCustomers()
 }
 
-const showHistory = (customer) => {
-  selectedCustomer.value = customer
-  showHistoryModal.value = true
-}
+const showHistory = c => { selectedCustomer.value = c; showHistoryModal.value = true }
+const showNotes = c => { selectedCustomer.value = c; showNotesModal.value = true }
+const showDoctorAssignment = c => { selectedCustomer.value = c; showDoctorModal.value = true }
+const showServices = c => { selectedCustomer.value = c; showServicesModal.value = true }
+const showFiles = c => { selectedCustomer.value = c; showFilesModal.value = true }
 
-const showNotes = (customer) => {
-  selectedCustomer.value = customer
-  showNotesModal.value = true
-}
-
-const showDoctorAssignment = (customer) => {
-  selectedCustomer.value = customer
-  showDoctorModal.value = true
-}
-
-const handleDoctorAssigned = (assignment) => {
-  console.log('Doctor assigned:', assignment)
-  // Optionally refresh customer data or show success message
-}
-
-const showServices = (customer) => {
-  selectedCustomer.value = customer
-  showServicesModal.value = true
-}
-
-const handleServicesSaved = () => {
-  console.log('Services saved successfully')
-  showServicesModal.value = false
-}
-
-const showFiles = (customer) => {
-  selectedCustomer.value = customer
-  showFilesModal.value = true
-}
-
-const formatDateTime = (dateString) => {
+const formatDateTime = dateString => {
   if (!dateString) return '-'
   const date = new Date(dateString)
-  return date.toLocaleString('tr-TR', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit'
-  })
+  return date.toLocaleString('tr-TR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
 }
 
-const getStatusClass = (statusId) => {
+const getStatusClass = statusId => {
   const status = statusMap.value[statusId]
-  if (!status) {
-    return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
-  }
-
-  // Use color from status if available
-  if (status.color) {
-    return `bg-[${status.color}20] text-[${status.color}] dark:bg-[${status.color}30] dark:text-[${status.color}]`
-  }
-
-  // Default colors based on status flags
-  if (status.isSale) {
-    return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
-  }
-  if (status.isClosed) {
-    return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
-  }
-  if (status.isFirst) {
-    return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
-  }
-
+  if (!status) return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+  if (status.isSale) return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+  if (status.isClosed) return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
+  if (status.isFirst) return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
   return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
 }
 
-const getStatusText = (statusId) => {
-  const status = statusMap.value[statusId]
-  return status?.name || statusId || 'Bilinmiyor'
-}
+const getStatusText = statusId => statusMap.value[statusId]?.name || 'Bilinmiyor'
 
-// Initialize data
-onMounted(async () => {
-  try {
-    const api = useApi()
-    const { getCustomerFilters, canAccessCustomer } = usePermissions()
-    console.log('Loading statuses, users and customers...')
-
-    // Load users first
-    try {
-      const usersResponse = await api('/users')
-      console.log('Users loaded:', usersResponse)
-      if (Array.isArray(usersResponse)) {
-        usersResponse.forEach(user => {
-          usersMap.value[user.id] = user
-        })
-      }
-    } catch (usersError) {
-      console.error('Failed to load users:', usersError)
-    }
-
-    // Load statuses
-    try {
-      const statusResponse = await api('/statuses')
-      console.log('Statuses loaded:', statusResponse)
-
-      if (Array.isArray(statusResponse)) {
-        // Create status map for quick lookup
-        statusResponse.forEach(status => {
-          statusMap.value[status.id] = status
-
-          // Track remindable status IDs
-          if (status.is_remindable || status.isRemindable) {
-            remindableStatusIds.value.push(status.id)
-          }
-        })
-
-        // Create status options for filter dropdown (only remindable statuses)
-        statusOptions.value = statusResponse
-          .filter(status => (status.is_remindable || status.isRemindable) && status.isActive !== false)
-          .map(status => ({
-            value: status.id,
-            label: status.name
-          }))
-      }
-    } catch (statusError) {
-      console.error('Failed to load statuses:', statusError)
-    }
-
-    // Load customers with role-based filters
-    const filters = getCustomerFilters()
-    console.log('[Dinamik Arama] Applying role-based filters:', filters)
-    const response = await api('/customers', { query: filters })
-
-    console.log('[Dinamik Arama] Customers loaded:', response.length, 'customers')
-    if (Array.isArray(response)) {
-      // Direct array response from backend
-      const allCustomers = response.map(customer => {
-        // Map user IDs to user objects
-        const userId = customer.userId || customer.user_id || customer.user
-        const relevantUserId = customer.relevantUserId || customer.relevant_user_id || customer.relevent_user || customer.relevantUser
-
-        return {
-          ...customer,
-          name: `${customer.name || ''} ${customer.surname || ''}`.trim() || 'İsimsiz',
-          status: customer.statusId || customer.status,
-          source: customer.source || '-',
-          isActive: customer.isActive !== undefined ? customer.isActive : true,
-          remindingDate: customer.remindingDate || customer.reminding_date || null,
-          user: usersMap.value[userId] || customer.user,
-          relevantUser: usersMap.value[relevantUserId] || customer.relevantUser
-        }
-      })
-
-      console.log('[Dinamik Arama] Before status filter:', allCustomers.length)
-      const afterStatusFilter = allCustomers.filter(customer => {
-        const hasRemindableStatus = remindableStatusIds.value.includes(customer.status)
-        console.log('[Dinamik Arama] Customer', customer.id, 'status:', customer.status, 'is remindable:', hasRemindableStatus)
-        return hasRemindableStatus
-      })
-      console.log('[Dinamik Arama] After status filter:', afterStatusFilter.length)
-
-      const afterAccessFilter = afterStatusFilter.filter(customer => {
-        const hasAccess = canAccessCustomer(customer)
-        console.log('[Dinamik Arama] Customer', customer.id, 'relevantUser:', customer.relevantUser, 'hasAccess:', hasAccess)
-        return hasAccess
-      })
-      console.log('[Dinamik Arama] After access filter:', afterAccessFilter.length)
-
-      customersData.value = afterAccessFilter
-      console.log('[Dinamik Arama] Final filtered remindable customers:', customersData.value.length)
-    } else {
-      const allCustomers = (response.data || []).map(customer => {
-        // Map user IDs to user objects
-        const userId = customer.userId || customer.user_id || customer.user
-        const relevantUserId = customer.relevantUserId || customer.relevant_user_id || customer.relevent_user || customer.relevantUser
-
-        return {
-          ...customer,
-          name: `${customer.name || ''} ${customer.surname || ''}`.trim() || 'İsimsiz',
-          status: customer.statusId || customer.status,
-          source: customer.source || '-',
-          isActive: customer.isActive !== undefined ? customer.isActive : true,
-          remindingDate: customer.remindingDate || customer.reminding_date || null,
-          user: usersMap.value[userId] || customer.user,
-          relevantUser: usersMap.value[relevantUserId] || customer.relevantUser
-        }
-      })
-
-      console.log('[Dinamik Arama] Before status filter:', allCustomers.length)
-      const afterStatusFilter = allCustomers.filter(customer => {
-        const hasRemindableStatus = remindableStatusIds.value.includes(customer.status)
-        return hasRemindableStatus
-      })
-      console.log('[Dinamik Arama] After status filter:', afterStatusFilter.length)
-
-      const afterAccessFilter = afterStatusFilter.filter(customer => {
-        const hasAccess = canAccessCustomer(customer)
-        return hasAccess
-      })
-      console.log('[Dinamik Arama] After access filter:', afterAccessFilter.length)
-
-      customersData.value = afterAccessFilter
-    }
-  } catch (error) {
-    console.error('Failed to load data:', error)
-  } finally {
-    loading.value = false
-  }
-})
-
-// Page head
-useHead({
-  title: 'Dinamik Arama - Valdori CRM'
-})
+useHead({ title: 'Dinamik Arama - Valdori CRM' })
 </script>

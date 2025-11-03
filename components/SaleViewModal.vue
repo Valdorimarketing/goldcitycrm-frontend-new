@@ -3,10 +3,12 @@
     <div class="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
       <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="$emit('close')"></div>
 
-      <div class="inline-block transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:align-middle">
+      <div
+        class="inline-block transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:align-middle">
         <div class="bg-white dark:bg-gray-800 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
           <div class="sm:flex sm:items-start">
-            <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100 dark:bg-green-900 sm:mx-0 sm:h-10 sm:w-10">
+            <div
+              class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100 dark:bg-green-900 sm:mx-0 sm:h-10 sm:w-10">
               <ShoppingBagIcon class="h-6 w-6 text-green-600 dark:text-green-300" />
             </div>
             <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
@@ -46,10 +48,12 @@
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                       <thead class="bg-gray-50 dark:bg-gray-900">
                         <tr>
-                          <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                          <th
+                            class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                             Ürün
                           </th>
-                          <th class="px-3 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                          <th
+                            class="px-3 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                             Fiyat
                           </th>
                         </tr>
@@ -60,7 +64,8 @@
                             {{ product.productDetails?.name || product.name || 'Ürün' }}
                           </td>
                           <td class="px-3 py-2 text-sm text-gray-900 dark:text-white text-right font-medium">
-                            ₺{{ formatCurrency(product.offer || product.price || 0) }}
+                            {{ product.productDetails?.currency?.code || 'TRY' }} {{ formatCurrency(product.offer ||
+                            product.price || 0) }}
                           </td>
                         </tr>
                       </tbody>
@@ -74,7 +79,7 @@
                     Toplam Tutar
                   </label>
                   <p class="mt-1 text-2xl font-bold text-green-600 dark:text-green-400">
-                    ₺{{ formatCurrency(sale.amount) }}
+                    {{ currentCurrency }} {{ formatCurrency(sale.amount) }}
                   </p>
                 </div>
 
@@ -94,10 +99,8 @@
                     Durum
                   </label>
                   <div class="mt-1">
-                    <span
-                      class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
-                      :class="getStatusClass(sale.status)"
-                    >
+                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
+                      :class="getStatusClass(sale.status)">
                       {{ getStatusText(sale.status) }}
                     </span>
                   </div>
@@ -135,10 +138,8 @@
           </div>
         </div>
         <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-          <button
-            @click="$emit('close')"
-            class="inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-600 px-4 py-2 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 sm:w-auto"
-          >
+          <button @click="$emit('close')"
+            class="inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-600 px-4 py-2 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 sm:w-auto">
             Kapat
           </button>
         </div>
@@ -158,11 +159,14 @@ const props = defineProps({
   }
 })
 
+const currentCurrency = ref({ code: 'TRY' })
 const emit = defineEmits(['close'])
 
 const formatCurrency = (amount) => {
   return new Intl.NumberFormat('tr-TR').format(amount)
 }
+
+
 
 const formatDate = (dateString) => {
   if (!dateString) return '-'
@@ -204,4 +208,13 @@ const getStatusText = (status) => {
       return 'Bilinmiyor'
   }
 }
+
+watch(
+  () => props.show,
+  (newSale) => {
+    currentCurrency.value = props.sale?.products?.[0]?.productDetails?.currency.code || 'TRY'
+  }
+);
+
+
 </script>

@@ -18,11 +18,7 @@ const props = defineProps({
     type: Array,
     required: true,
     default: () => []
-  },
-  customerNames: {
-    type: Object,
-    default: () => ({})
-  },
+  }, 
   loading: {
     type: Boolean,
     default: false
@@ -35,16 +31,8 @@ const emit = defineEmits(['eventClick', 'dateSelect'])
 const getEventTitle = (meeting) => {
   const parts = []
 
-  if (meeting.customer) {
-    let customerName = ''
-    if (props.customerNames && props.customerNames[meeting.customer]) {
-      customerName = props.customerNames[meeting.customer]
-    } else if (typeof meeting.customer === 'object' && meeting.customer.name) {
-      customerName = `${meeting.customer.name} ${meeting.customer.surname || ''}`.trim()
-    } else {
-      customerName = `Müşteri #${meeting.customer}`
-    }
-    parts.push(customerName)
+  if (meeting.customerData) { 
+    parts.push(meeting.customerData)
   }
 
   if (meeting.hospital?.name) {

@@ -5,6 +5,7 @@ export interface Meeting {
   // Ana alanlar
   id: number
   customer: number
+  customerData: any
   hospitalId?: number
   hospital?: {
     id: number

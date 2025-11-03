@@ -81,17 +81,20 @@
 
     <!-- Customers Table -->
     <div v-else class="card">
-      <CustomerTable :data="customers" :users-map="usersMap" :status-map="statusMap" @sort="handleSort">
-        <template #actions="{ customer }">
-          <button v-if="isEditable" @click="$emit('edit', customer)">Düzenle</button>
-          <button v-if="isDeleteable" @click="$emit('confirm-delete', customer)">Sil</button>
-          <button @click="$emit('show-history', customer)">Geçmiş</button>
-          <button @click="$emit('show-notes', customer)">Notlar</button>
-          <button @click="$emit('show-doctor-assignment', customer)">Doktor Ata</button>
-          <button @click="$emit('show-services', customer)">Hizmetler</button>
-          <button @click="$emit('show-files', customer)">Dosyalar</button>
-        </template>
-      </CustomerTable>
+      
+      <CustomerTable :data="customers" 
+        :users-map="usersMap" 
+        :status-map="statusMap" 
+        @sort="handleSort"
+        :is-editable="isEditable" 
+        :is-deleteable="isDeleteable" 
+        @delete="confirmDelete" 
+        @show-history="showHistory"
+        @show-notes="showNotes" 
+        @show-doctor="showDoctorAssignment" 
+        @show-services="showServices" 
+        @show-files="showFiles"
+      ></CustomerTable>
 
 
       <!-- Pagination -->
@@ -125,9 +128,10 @@
           </nav>
         </div>
       </div>
+      
     </div>
 
-    <!-- Modals -->
+ 
     <CustomerCreateModal :show="showCreateModal" @close="showCreateModal = false" @created="handleCustomerCreated" />
     <CustomerHistoryModal :show="showHistoryModal" :customer="selectedCustomer" @close="showHistoryModal = false" />
     <CustomerNotesModal :show="showNotesModal" :customer="selectedCustomer" @close="showNotesModal = false"
@@ -297,9 +301,7 @@ const visiblePages = computed(() => {
 
 // Methods
 const loadCustomers = async (page = 1) => {
-  const filters = getCustomerFilters()
-  console.log('[loadCustomers] User role:', authStore.user?.role)
-  console.log('[loadCustomers] Filters:', filters)
+  const filters = getCustomerFilters() 
 
   // If admin has selected a specific user to filter by, add it to filters
   const customFilters = { ...filters }
@@ -327,6 +329,7 @@ const changePage = (page) => {
     loadCustomers(page)
   }
 }
+
 
 // Watch for search term, status, and user filter changes with debounce
 watchDebounced(

@@ -8,6 +8,14 @@
           Tüm satış işlemlerinizi buradan yönetebilirsiniz.
         </p>
       </div>
+
+      <div class="relative">
+        <button @click="loadSalesData"
+          class="inline-flex items-center px-3 py-2 bg-white/20 hover:bg-white/30 text-white text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition">
+          <ArrowPathIcon class="h-5 w-5 mr-2" />
+          Yenile
+        </button>
+      </div>
     </div>
 
     <!-- Search and Filters -->
@@ -17,23 +25,14 @@
           <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Ara
           </label>
-          <input
-            id="search"
-            v-model="searchTerm"
-            type="text"
-            class="form-input"
-            placeholder="Müşteri adı veya açıklama..."
-          />
+          <input id="search" v-model="searchTerm" type="text" class="form-input"
+            placeholder="Müşteri adı veya açıklama..." />
         </div>
         <div>
           <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Durum
           </label>
-          <select
-            id="status"
-            v-model="statusFilter"
-            class="form-input"
-          >
+          <select id="status" v-model="statusFilter" class="form-input">
             <option value="">Tüm Durumlar</option>
             <option value="pending">Bekliyor</option>
             <option value="completed">Tamamlandı</option>
@@ -44,29 +43,16 @@
           <label for="startDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Başlangıç Tarihi
           </label>
-          <input
-            id="startDate"
-            v-model="startDate"
-            type="date"
-            class="form-input"
-          />
+          <input id="startDate" v-model="startDate" type="date" class="form-input" />
         </div>
         <div>
           <label for="endDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Bitiş Tarihi
           </label>
-          <input
-            id="endDate"
-            v-model="endDate"
-            type="date"
-            class="form-input"
-          />
+          <input id="endDate" v-model="endDate" type="date" class="form-input" />
         </div>
         <div class="flex items-end">
-          <button
-            @click="resetFilters"
-            class="btn-secondary w-full"
-          >
+          <button @click="resetFilters" class="btn-secondary w-full">
             Filtreleri Temizle
           </button>
         </div>
@@ -157,10 +143,8 @@
                     </span>
                   </div>
                   <div class="ml-4">
-                    <div
-                      @click="navigateToCustomer(sale.customerId)"
-                      class="text-sm font-medium text-gray-900 dark:text-gray-100 cursor-pointer hover:text-indigo-600 dark:hover:text-indigo-400 hover:underline"
-                    >
+                    <div @click="navigateToCustomer(sale.customerId)"
+                      class="text-sm font-medium text-gray-900 dark:text-gray-100 cursor-pointer hover:text-indigo-600 dark:hover:text-indigo-400 hover:underline">
                       {{ sale.customer?.name || 'Bilinmeyen Müşteri' }}
                     </div>
                     <div class="text-sm text-gray-500 dark:text-gray-400">
@@ -174,7 +158,7 @@
               </td>
               <td class="table-cell">
                 <div class="text-sm font-medium text-green-600">
-                  ₺{{ formatCurrency(sale.amount) }}
+                  {{ sale.currency }} {{ formatCurrency(sale.amount) }}
                 </div>
               </td>
               <td class="table-cell">
@@ -183,24 +167,20 @@
                 </div>
               </td>
               <td class="table-cell">
-                <span
-                  class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
-                  :class="getStatusClass(sale.status)"
-                >
+                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
+                  :class="getStatusClass(sale.status)">
                   {{ getStatusText(sale.status) }}
                 </span>
               </td>
               <td class="table-cell">
-                <button
-                  @click="viewSaleDetails(sale)"
+                <button @click="viewSaleDetails(sale)"
                   class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300"
-                  title="Görüntüle"
-                >
+                  title="Görüntüle">
                   <EyeIcon class="h-5 w-5" />
                 </button>
               </td>
             </tr>
-            
+
             <!-- Empty State -->
             <tr v-if="filteredSales.length === 0">
               <td colspan="6" class="text-center py-12">
@@ -216,20 +196,15 @@
       </div>
 
       <!-- Pagination -->
-      <div v-if="pagination.totalPages > 1" class="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 sm:px-6">
+      <div v-if="pagination.totalPages > 1"
+        class="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 sm:px-6">
         <div class="flex flex-1 justify-between sm:hidden">
-          <button
-            :disabled="pagination.page === 1"
-            @click="changePage(pagination.page - 1)"
-            class="relative inline-flex items-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
-          >
+          <button :disabled="pagination.page === 1" @click="changePage(pagination.page - 1)"
+            class="relative inline-flex items-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50">
             Önceki
           </button>
-          <button
-            :disabled="pagination.page === pagination.totalPages"
-            @click="changePage(pagination.page + 1)"
-            class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
-          >
+          <button :disabled="pagination.page === pagination.totalPages" @click="changePage(pagination.page + 1)"
+            class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50">
             Sonraki
           </button>
         </div>
@@ -246,33 +221,22 @@
           </div>
           <div>
             <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm">
-              <button
-                :disabled="pagination.page === 1"
-                @click="changePage(pagination.page - 1)"
-                class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 dark:text-gray-500 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
-              >
+              <button :disabled="pagination.page === 1" @click="changePage(pagination.page - 1)"
+                class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 dark:text-gray-500 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50">
                 <ChevronLeftIcon class="h-5 w-5" />
               </button>
 
-              <button
-                v-for="page in visiblePages"
-                :key="page"
-                @click="changePage(page)"
-                :class="[
-                  page === pagination.page
-                    ? 'bg-indigo-600 text-white'
-                    : 'text-gray-900 dark:text-gray-300 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700',
-                  'relative inline-flex items-center px-4 py-2 text-sm font-semibold'
-                ]"
-              >
+              <button v-for="page in visiblePages" :key="page" @click="changePage(page)" :class="[
+                page === pagination.page
+                  ? 'bg-indigo-600 text-white'
+                  : 'text-gray-900 dark:text-gray-300 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700',
+                'relative inline-flex items-center px-4 py-2 text-sm font-semibold'
+              ]">
                 {{ page }}
               </button>
 
-              <button
-                :disabled="pagination.page === pagination.totalPages"
-                @click="changePage(pagination.page + 1)"
-                class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 dark:text-gray-500 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
-              >
+              <button :disabled="pagination.page === pagination.totalPages" @click="changePage(pagination.page + 1)"
+                class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 dark:text-gray-500 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50">
                 <ChevronRightIcon class="h-5 w-5" />
               </button>
             </nav>
@@ -282,11 +246,7 @@
     </div>
 
     <!-- Sale Detail Modal -->
-    <SaleViewModal
-      :show="showDetailModal"
-      :sale="selectedSale"
-      @close="closeDetailModal"
-    />
+    <SaleViewModal :show="showDetailModal" :sale="selectedSale" @close="closeDetailModal" />
   </div>
 </template>
 
@@ -297,7 +257,8 @@ import {
   ArrowTrendingUpIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  EyeIcon
+  EyeIcon,
+  ArrowPathIcon
 } from '@heroicons/vue/24/outline'
 import { useApi } from '~/composables/useApi'
 
@@ -356,6 +317,10 @@ const loadSalesData = async () => {
 
     if (response?.data) {
       // Map response to expected format
+
+      
+      
+
       salesData.value = response.data.map(sale => ({
         id: sale.id,
         customerId: sale.customer,
@@ -366,6 +331,7 @@ const loadSalesData = async () => {
           company: sale.customerDetails?.company || sale.customerDetails?.companyName || ''
         },
         amount: calculateSaleAmount(sale.salesProducts),
+        currency: sale.salesProducts?.[0]?.productDetails?.currency?.code || 'TRY',
         description: sale.title || '-',
         date: sale.createdAt || new Date().toISOString(),
         status: 'completed', // Default status since these are sales
@@ -564,4 +530,4 @@ const closeDetailModal = () => {
 useHead({
   title: 'Satışlar - Valdori CRM'
 })
-</script> 
+</script>

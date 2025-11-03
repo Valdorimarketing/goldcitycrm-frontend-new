@@ -70,9 +70,6 @@
               </label>
             </div>
             <div class="relative">
-              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">₺</span>
-              </div>
               <input
                 id="edit-price"
                 v-model.number="form.price"
@@ -80,76 +77,45 @@
                 step="0.01"
                 min="0"
                 required
-                class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 pl-10 pr-20 text-sm font-medium text-gray-700 transition-all hover:border-orange-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
-                placeholder="0.00"
-              />
-              <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs font-medium text-gray-400">TRY</span>
+                class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 transition-all hover:border-orange-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
+                placeholder="0"
+              /> 
             </div>
             <p v-if="errors.price" class="flex items-center space-x-1 text-sm text-red-600">
               <ExclamationCircleIcon class="h-4 w-4" />
               <span>{{ errors.price }}</span>
             </p>
-          </div>
+          </div> 
 
-          <!-- Category (Optional) -->
-          <div class="space-y-3">
-            <div class="flex items-center space-x-2">
-              <FolderIcon class="h-5 w-5 text-orange-600" />
-              <label for="edit-category" class="text-sm font-semibold text-gray-700 dark:text-gray-200">
-                Kategori
-              </label>
-            </div>
-            <div class="relative">
-              <select
-                id="edit-category"
-                v-model="form.category"
-                class="w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-3 pr-10 text-sm font-medium text-gray-700 transition-all hover:border-orange-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
-              >
-                <option value="">Kategori Seçin</option>
-                <option value="web">Web Geliştirme</option>
-                <option value="mobile">Mobil Uygulama</option>
-                <option value="design">Tasarım</option>
-                <option value="consulting">Danışmanlık</option>
-              </select>
-              <ChevronDownIcon class="pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
-            </div>
-          </div>
 
-          <!-- Description (Optional) -->
-          <div class="space-y-3">
-            <div class="flex items-center space-x-2">
-              <DocumentTextIcon class="h-5 w-5 text-orange-600" />
-              <label for="edit-description" class="text-sm font-semibold text-gray-700 dark:text-gray-200">
-                Açıklama
-              </label>
-            </div>
-            <div class="relative">
-              <textarea
-                id="edit-description"
-                v-model="form.description"
-                rows="3"
-                class="w-full resize-none rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 transition-all hover:border-orange-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
-                placeholder="Ürün hakkında detaylı açıklama..."
-              />
-              <div class="absolute bottom-2 right-2 text-xs text-gray-400">
-                {{ form.description?.length || 0 }}/500
+          <!-- Currency Select Bölümü: Price altına ekleyelim -->
+            <div class="space-y-3">
+              <div class="flex items-center space-x-2">
+                <CurrencyDollarIcon class="h-5 w-5 text-orange-600" />
+                <label for="edit-currency" class="text-sm font-semibold text-gray-700 dark:text-gray-200">
+                  Para Birimi <span class="text-red-500">*</span>
+                </label>
               </div>
+              <div class="relative">
+                <select
+                  id="edit-currency"
+                  v-model="form.currencyId"
+                  required
+                  class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 transition-all hover:border-orange-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
+                >
+                  <option value="" disabled>Seçiniz</option>
+                  <option v-for="c in currencies" :key="c.id" :value="c.id">
+                    {{ c.code }} - {{ c.name }}
+                  </option>
+                </select>
+              </div>
+              <p v-if="errors.currencyId" class="flex items-center space-x-1 text-sm text-red-600">
+                <ExclamationCircleIcon class="h-4 w-4" />
+                <span>{{ errors.currencyId }}</span>
+              </p>
             </div>
-          </div>
 
-          <!-- Changes Preview -->
-          <div v-if="hasChanges" class="flex items-start space-x-3 rounded-xl border border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-900/20 p-4">
-            <InformationCircleIcon class="h-5 w-5 shrink-0 text-blue-600 dark:text-blue-400" />
-            <div class="space-y-1 text-sm">
-              <p class="font-medium text-blue-800 dark:text-blue-400">Değişiklikler tespit edildi:</p>
-              <ul class="ml-4 list-disc text-blue-700 dark:text-blue-300">
-                <li v-if="form.name !== product?.name">Ürün adı değiştirildi</li>
-                <li v-if="form.price !== product?.price">Fiyat güncellendi</li>
-                <li v-if="form.category !== product?.category">Kategori değiştirildi</li>
-                <li v-if="form.description !== product?.description">Açıklama güncellendi</li>
-              </ul>
-            </div>
-          </div>
+ 
 
           <!-- Error Message with enhanced styling -->
           <transition
@@ -228,11 +194,7 @@ import {
   XMarkIcon,
   CubeIcon,
   TagIcon,
-  CurrencyDollarIcon,
-  FolderIcon,
-  DocumentTextIcon,
-  ChevronDownIcon,
-  InformationCircleIcon,
+  CurrencyDollarIcon, 
   ExclamationCircleIcon,
   ExclamationTriangleIcon,
   CheckCircleIcon,
@@ -249,13 +211,13 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['close', 'updated'])
+const currencies = ref([])
 
 // Form data
 const form = reactive({
   name: '',
-  price: null,
-  category: '',
-  description: ''
+  price: null, 
+  currencyId: null,
 })
 
 // Form state
@@ -264,43 +226,42 @@ const errors = ref({})
 const errorMessage = ref('')
 const successMessage = ref('')
 
-// Watch for product changes and populate form
+
+// Modal mount olduğunda currency listesini çek
+onMounted(async () => {
+  try {
+    const api = useApi()
+    const res = await api('/currencies')
+    currencies.value = res || []
+  } catch (err) {
+    console.error('Currency listesi çekilemedi', err)
+  }
+})
+
+// Ürün değiştiğinde formu doldur
 watch(() => props.product, (newProduct) => {
   if (newProduct) {
     form.name = newProduct.name || ''
     form.price = newProduct.price || null
-    form.category = newProduct.category || ''
-    form.description = newProduct.description || ''
+    form.currencyId = newProduct.currency?.id || null
   }
 }, { immediate: true })
 
-// Computed to check if there are changes
-const hasChanges = computed(() => {
-  if (!props.product) return false
-  return (
-    form.name !== props.product.name ||
-    form.price !== props.product.price ||
-    form.category !== (props.product.category || '') ||
-    form.description !== (props.product.description || '')
-  )
-})
+
+ 
 
 // Validate form
 const validateForm = () => {
   errors.value = {}
 
-  if (!form.name?.trim()) {
-    errors.value.name = 'Ürün adı gereklidir'
-  }
-
-  if (!form.price || form.price <= 0) {
-    errors.value.price = 'Geçerli bir fiyat giriniz'
-  }
+  if (!form.name?.trim()) errors.value.name = 'Ürün adı gereklidir'
+  if (!form.price || form.price <= 0) errors.value.price = 'Geçerli bir fiyat giriniz'
+  if (!form.currencyId) errors.value.currencyId = 'Para birimi seçilmelidir'
 
   return Object.keys(errors.value).length === 0
 }
 
-// Handle form submission
+// Submit
 const handleSubmit = async () => {
   if (!validateForm() || !props.product || !hasChanges.value) return
 
@@ -310,74 +271,43 @@ const handleSubmit = async () => {
 
   try {
     const api = useApi()
-
     const updateData = {}
-    if (form.name.trim() !== props.product.name) {
-      updateData.name = form.name.trim()
-    }
-    if (form.price !== props.product.price) {
-      updateData.price = parseFloat(form.price)
-    }
-    if (form.category !== (props.product.category || '')) {
-      updateData.category = form.category
-    }
-    if (form.description !== (props.product.description || '')) {
-      updateData.description = form.description
-    }
+    if (form.name.trim() !== props.product.name) updateData.name = form.name.trim()
+    if (form.price !== props.product.price) updateData.price = parseFloat(form.price)
+    if (form.currencyId !== props.product.currency?.id) updateData.currencyId = form.currencyId
 
     const response = await api(`/products/${props.product.id}`, {
       method: 'PATCH',
-      body: updateData
+      body: updateData,
     })
 
-    console.log('Product updated:', response)
     successMessage.value = 'Ürün başarıyla güncellendi!'
-
-    // Emit the updated product
     emit('updated', { ...props.product, ...updateData })
 
-    // Close modal after short delay
     setTimeout(() => {
       emit('close')
       successMessage.value = ''
     }, 1500)
-
   } catch (error) {
     console.error('Error updating product:', error)
-
-    if (error.status === 500 || error.name === 'FetchError') {
-      // Demo mode fallback for server errors
-      const demoProduct = {
-        ...props.product,
-        name: form.name.trim(),
-        price: parseFloat(form.price),
-        category: form.category,
-        description: form.description,
-        updatesAt: new Date().toISOString()
-      }
-
-      successMessage.value = 'Ürün başarıyla güncellendi! (Demo Mode - Backend Error)'
-      emit('updated', demoProduct)
-
-      setTimeout(() => {
-        emit('close')
-        successMessage.value = ''
-      }, 1500)
-
-    } else if (error.status === 400 && error.data?.message) {
-      // Validation errors from backend
-      if (Array.isArray(error.data.message)) {
-        errorMessage.value = error.data.message.join(', ')
-      } else {
-        errorMessage.value = error.data.message
-      }
-    } else {
-      errorMessage.value = 'Ürün güncellenirken bir hata oluştu'
-    }
+    errorMessage.value = 'Ürün güncellenirken bir hata oluştu'
   } finally {
     loading.value = false
   }
 }
+
+
+// Computed: değişiklik var mı
+const hasChanges = computed(() => {
+  if (!props.product) return false
+  return (
+    form.name !== props.product.name ||
+    form.price !== props.product.price ||
+    form.currencyId !== props.product.currency?.id
+  )
+})
+
+
 </script>
 
 <style scoped>

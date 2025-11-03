@@ -9,43 +9,39 @@
         </p>
       </div>
       <div class="mt-4 sm:mt-0 flex gap-3">
+        <div class="relative">
+          <button @click="InitializeData"
+            class="inline-flex items-center px-3 py-2 bg-white/20 hover:bg-white/30 text-white text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition">
+            <ArrowPathIcon class="h-5 w-5 mr-2" />
+            Yenile
+          </button>
+        </div>
         <div class="inline-flex rounded-md shadow-sm">
-          <button
-            @click="viewMode = 'calendar'"
-            :class="[
-              viewMode === 'calendar'
-                ? 'bg-indigo-600 text-white'
-                : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600',
-              'inline-flex items-center justify-center rounded-l-md px-3 py-2 text-sm font-semibold border border-gray-300 dark:border-gray-600'
-            ]"
-          >
+          <button @click="viewMode = 'calendar'" :class="[
+            viewMode === 'calendar'
+              ? 'bg-indigo-600 text-white'
+              : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600',
+            'inline-flex items-center justify-center rounded-l-md px-3 py-2 text-sm font-semibold border border-gray-300 dark:border-gray-600'
+          ]">
             <CalendarIcon class="h-5 w-5 mr-1.5" />
             Takvim
           </button>
-          <button
-            @click="viewMode = 'table'"
-            :class="[
-              viewMode === 'table'
-                ? 'bg-indigo-600 text-white'
-                : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600',
-              'inline-flex items-center justify-center rounded-r-md px-3 py-2 text-sm font-semibold border border-l-0 border-gray-300 dark:border-gray-600'
-            ]"
-          >
+          <button @click="viewMode = 'table'" :class="[
+            viewMode === 'table'
+              ? 'bg-indigo-600 text-white'
+              : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600',
+            'inline-flex items-center justify-center rounded-r-md px-3 py-2 text-sm font-semibold border border-l-0 border-gray-300 dark:border-gray-600'
+          ]">
             <TableCellsIcon class="h-5 w-5 mr-1.5" />
             Liste
           </button>
         </div>
-        <button
-          v-if="viewMode === 'table'"
-          @click="resetFilters"
-          class="inline-flex items-center justify-center rounded-md bg-gray-100 dark:bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-700 dark:text-gray-200 shadow-sm hover:bg-gray-200 dark:hover:bg-gray-600"
-        >
+        <button v-if="viewMode === 'table'" @click="resetFilters"
+          class="inline-flex items-center justify-center rounded-md bg-gray-100 dark:bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-700 dark:text-gray-200 shadow-sm hover:bg-gray-200 dark:hover:bg-gray-600">
           Filtreleri Temizle
         </button>
-        <button
-          @click="openCreateModal"
-          class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
-        >
+        <button @click="openCreateModal"
+          class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
           <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
           Yeni Görüşme
         </button>
@@ -57,18 +53,13 @@
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-4">
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            🔍 Müşteri Ara
+            Müşteri Ara
           </label>
-          <input
-            v-model="filters.customerSearch"
-            type="text"
-            class="form-input"
-            placeholder="Müşteri adı..."
-          />
+          <input v-model="filters.customerSearch" type="text" class="form-input" placeholder="Müşteri adı..." />
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            📊 Durum
+            Durum
           </label>
           <select v-model="filters.status" class="form-input">
             <option value="">Tümü</option>
@@ -79,25 +70,15 @@
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            🏥 Hastane
+            Hastane
           </label>
-          <input
-            v-model="filters.hospitalSearch"
-            type="text"
-            class="form-input"
-            placeholder="Hastane adı..."
-          />
+          <input v-model="filters.hospitalSearch" type="text" class="form-input" placeholder="Hastane adı..." />
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            👨‍⚕️ Doktor
+            Doktor
           </label>
-          <input
-            v-model="filters.doctorSearch"
-            type="text"
-            class="form-input"
-            placeholder="Doktor adı..."
-          />
+          <input v-model="filters.doctorSearch" type="text" class="form-input" placeholder="Doktor adı..." />
         </div>
       </div>
     </div>
@@ -108,14 +89,8 @@
     </div>
 
     <!-- Calendar View -->
-    <MeetingCalendar
-      v-else-if="viewMode === 'calendar'"
-      :meetings="meetings"
-      :customer-names="customerNames"
-      :loading="loading"
-      @event-click="handleEventClick"
-      @date-select="handleDateSelect"
-    />
+    <MeetingCalendar v-else-if="viewMode === 'calendar'" :meetings="meetings" :loading="loading"
+      @event-click="handleEventClick" @date-select="handleDateSelect" />
 
     <!-- Meetings Table -->
     <div v-else-if="viewMode === 'table'" class="card">
@@ -134,7 +109,8 @@
             </tr>
           </thead>
           <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
-            <tr v-for="meeting in filteredMeetings" :key="meeting.id" :class="isPastMeeting(meeting.startTime) ? 'bg-gray-50 dark:bg-gray-800/50' : ''">
+            <tr v-for="meeting in filteredMeetings" :key="meeting.id"
+              :class="isPastMeeting(meeting.startTime) ? 'bg-gray-50 dark:bg-gray-800/50' : ''">
               <td class="table-cell">
                 <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
                   #{{ meeting.id }}
@@ -142,7 +118,7 @@
               </td>
               <td class="table-cell">
                 <div class="text-sm text-gray-900 dark:text-gray-100">
-                  {{ getCustomerName(meeting.customer) }}
+                  {{ meeting.customerData }}
                 </div>
               </td>
               <td class="table-cell">
@@ -172,27 +148,23 @@
               </td>
               <td class="table-cell">
                 <div class="flex gap-1">
-                  <button
-                    @click="viewMeeting(meeting)"
+                  <button @click="viewMeeting(meeting)"
                     class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    title="Görüntüle"
-                  >
+                    title="Görüntüle">
                     <EyeIcon class="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
                   </button>
-                  <NuxtLink
-                    :to="`/meetings/edit/${meeting.id}`"
+                  <NuxtLink :to="`/meetings/edit/${meeting.id}`"
                     class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    title="Düzenle"
-                  >
+                    title="Düzenle">
                     <PencilIcon class="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
                   </NuxtLink>
-                  <button
+                  <!-- <button
                     @click="confirmDelete(meeting)"
                     class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     title="Sil"
                   >
                     <TrashIcon class="h-4 w-4 text-red-600 dark:text-red-400" />
-                  </button>
+                  </button> -->
                 </div>
               </td>
             </tr>
@@ -212,20 +184,15 @@
       </div>
 
       <!-- Pagination -->
-      <div v-if="meta.total > meta.limit" class="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 sm:px-6">
+      <div v-if="meta.total > meta.limit"
+        class="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 sm:px-6">
         <div class="flex flex-1 justify-between sm:hidden">
-          <button
-            :disabled="meta.page === 1"
-            @click="changePage(meta.page - 1)"
-            class="relative inline-flex items-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
-          >
+          <button :disabled="meta.page === 1" @click="changePage(meta.page - 1)"
+            class="relative inline-flex items-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50">
             Önceki
           </button>
-          <button
-            :disabled="meta.page * meta.limit >= meta.total"
-            @click="changePage(meta.page + 1)"
-            class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
-          >
+          <button :disabled="meta.page * meta.limit >= meta.total" @click="changePage(meta.page + 1)"
+            class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50">
             Sonraki
           </button>
         </div>
@@ -242,33 +209,22 @@
           </div>
           <div>
             <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm">
-              <button
-                :disabled="meta.page === 1"
-                @click="changePage(meta.page - 1)"
-                class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
-              >
+              <button :disabled="meta.page === 1" @click="changePage(meta.page - 1)"
+                class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50">
                 <ChevronLeftIcon class="h-5 w-5" />
               </button>
 
-              <button
-                v-for="page in visiblePages"
-                :key="page"
-                @click="changePage(page)"
-                :class="[
-                  page === meta.page
-                    ? 'bg-indigo-600 text-white'
-                    : 'text-gray-900 dark:text-gray-300 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700',
-                  'relative inline-flex items-center px-4 py-2 text-sm font-semibold'
-                ]"
-              >
+              <button v-for="page in visiblePages" :key="page" @click="changePage(page)" :class="[
+                page === meta.page
+                  ? 'bg-indigo-600 text-white'
+                  : 'text-gray-900 dark:text-gray-300 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700',
+                'relative inline-flex items-center px-4 py-2 text-sm font-semibold'
+              ]">
                 {{ page }}
               </button>
 
-              <button
-                :disabled="meta.page * meta.limit >= meta.total"
-                @click="changePage(meta.page + 1)"
-                class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
-              >
+              <button :disabled="meta.page * meta.limit >= meta.total" @click="changePage(meta.page + 1)"
+                class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50">
                 <ChevronRightIcon class="h-5 w-5" />
               </button>
             </nav>
@@ -280,12 +236,15 @@
     <!-- Delete Confirmation Modal -->
     <div v-if="showDeleteModal" class="fixed inset-0 z-50 overflow-y-auto">
       <div class="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
-        <div class="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-80 transition-opacity"></div>
+        <div class="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-80 transition-opacity">
+        </div>
 
-        <div class="inline-block transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
+        <div
+          class="inline-block transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
           <div class="bg-white dark:bg-gray-800 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
             <div class="sm:flex sm:items-start">
-              <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30 sm:mx-0 sm:h-10 sm:w-10">
+              <div
+                class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30 sm:mx-0 sm:h-10 sm:w-10">
                 <ExclamationTriangleIcon class="h-6 w-6 text-red-600 dark:text-red-400" />
               </div>
               <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
@@ -301,16 +260,12 @@
             </div>
           </div>
           <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-            <button
-              @click="handleDelete"
-              class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-            >
+            <button @click="handleDelete"
+              class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">
               Sil
             </button>
-            <button
-              @click="showDeleteModal = false"
-              class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-600 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 sm:mt-0 sm:w-auto"
-            >
+            <button @click="showDeleteModal = false"
+              class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-600 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 sm:mt-0 sm:w-auto">
               İptal
             </button>
           </div>
@@ -321,9 +276,11 @@
     <!-- View Meeting Modal -->
     <div v-if="showViewModal && selectedMeeting" class="fixed inset-0 z-50 overflow-y-auto">
       <div class="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
-        <div class="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-80 transition-opacity" @click="showViewModal = false"></div>
+        <div class="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-80 transition-opacity"
+          @click="showViewModal = false"></div>
 
-        <div class="inline-block transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:align-middle">
+        <div
+          class="inline-block transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:align-middle">
           <div class="bg-white dark:bg-gray-800 px-4 pb-4 pt-5 sm:p-6">
             <div class="flex items-center justify-between mb-4">
               <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
@@ -339,7 +296,8 @@
               <div class="grid grid-cols-2 gap-4">
                 <div>
                   <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Müşteri</label>
-                  <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ getCustomerName(selectedMeeting.customer) }}</p>
+                  <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{
+                    selectedMeeting.customerData }}</p>
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Durum</label>
@@ -351,7 +309,8 @@
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">🏥 Hastane</label>
-                  <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ selectedMeeting.hospital?.name || '-' }}</p>
+                  <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ selectedMeeting.hospital?.name || '-' }}
+                  </p>
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">👨‍⚕️ Doktor</label>
@@ -359,35 +318,35 @@
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">⏰ Başlangıç Zamanı</label>
-                  <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ formatDateTime(selectedMeeting.startTime) }}</p>
+                  <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ formatDateTime(selectedMeeting.startTime)
+                    }}</p>
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">⏰ Bitiş Zamanı</label>
-                  <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ formatDateTime(selectedMeeting.endTime) }}</p>
+                  <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ formatDateTime(selectedMeeting.endTime) }}
+                  </p>
                 </div>
                 <div v-if="selectedMeeting.remindingAt">
                   <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">🔔 Hatırlatma Zamanı</label>
-                  <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ formatDateTime(selectedMeeting.remindingAt) }}</p>
+                  <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{
+                    formatDateTime(selectedMeeting.remindingAt) }}</p>
                 </div>
               </div>
 
               <div v-if="selectedMeeting.description">
                 <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Açıklama</label>
-                <p class="mt-1 text-sm text-gray-900 dark:text-gray-100 whitespace-pre-wrap">{{ selectedMeeting.description }}</p>
+                <p class="mt-1 text-sm text-gray-900 dark:text-gray-100 whitespace-pre-wrap">{{
+                  selectedMeeting.description }}</p>
               </div>
             </div>
           </div>
           <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-            <NuxtLink
-              :to="`/meetings/edit/${selectedMeeting.id}`"
-              class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto"
-            >
+            <NuxtLink :to="`/meetings/edit/${selectedMeeting.id}`"
+              class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto">
               Düzenle
             </NuxtLink>
-            <button
-              @click="showViewModal = false"
-              class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-600 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 sm:mt-0 sm:w-auto"
-            >
+            <button @click="showViewModal = false"
+              class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-600 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 sm:mt-0 sm:w-auto">
               Kapat
             </button>
           </div>
@@ -396,12 +355,8 @@
     </div>
 
     <!-- Create Meeting Modal -->
-    <MeetingCreateModal
-      v-model="showCreateModal"
-      :initial-start-time="selectedStartTime"
-      :initial-end-time="selectedEndTime"
-      @created="handleMeetingCreated"
-    />
+    <MeetingCreateModal v-model="showCreateModal" :initial-start-time="selectedStartTime"
+      :initial-end-time="selectedEndTime" @created="handleMeetingCreated" />
   </div>
 </template>
 
@@ -416,7 +371,8 @@ import {
   PencilIcon,
   TrashIcon,
   XMarkIcon,
-  TableCellsIcon
+  TableCellsIcon,
+  ArrowPathIcon
 } from '@heroicons/vue/24/outline'
 
 definePageMeta({
@@ -446,19 +402,13 @@ const selectedMeeting = ref(null)
 const selectedStartTime = ref(null)
 const selectedEndTime = ref(null)
 
-// Customer names cache
-const customerNames = ref({})
+
 
 // Computed
 const filteredMeetings = computed(() => {
   let filtered = meetings.value
+ 
 
-  if (filters.value.customerSearch) {
-    const search = filters.value.customerSearch.toLowerCase()
-    filtered = filtered.filter(m =>
-      getCustomerName(m.customer).toLowerCase().includes(search)
-    )
-  }
 
   if (filters.value.hospitalSearch) {
     const search = filters.value.hospitalSearch.toLowerCase()
@@ -504,28 +454,7 @@ const visiblePages = computed(() => {
   return pages.filter(page => page !== '...')
 })
 
-// Methods
-const getCustomerName = (customerId) => {
-  if (customerNames.value[customerId]) {
-    return customerNames.value[customerId]
-  }
-  return `Müşteri #${customerId}`
-}
 
-const fetchCustomerNames = async () => {
-  try {
-    const api = useApi()
-    const response = await api('/customers')
-    const customers = Array.isArray(response) ? response : (response.data || [])
-
-    customers.forEach(customer => {
-      const fullName = `${customer.name || ''} ${customer.surname || ''}`.trim() || 'İsimsiz'
-      customerNames.value[customer.id] = fullName
-    })
-  } catch (err) {
-    console.error('Failed to fetch customer names:', err)
-  }
-}
 
 const getStatusName = (statusId) => {
   const status = meetingStatuses.value.find(s => s.id === statusId)
@@ -649,17 +578,16 @@ watch(() => filters.value.status, (newStatus) => {
   })
 })
 
+const InitializeData = async () => {
+  await fetchMeetingStatuses()
+  await fetchMeetings({
+    page: 1,
+    limit: 20
+  })
+}
 // Initialize
 onMounted(async () => {
-  try {
-    await Promise.all([
-      fetchMeetings({ page: 1, limit: 20 }),
-      fetchMeetingStatuses(),
-      fetchCustomerNames()
-    ])
-  } catch (err) {
-    console.error('Failed to initialize meetings page:', err)
-  }
+  await InitializeData()
 })
 
 // Page head

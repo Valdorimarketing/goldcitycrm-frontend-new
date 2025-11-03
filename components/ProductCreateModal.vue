@@ -10,12 +10,14 @@
               <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-900 sm:mx-0 sm:h-10 sm:w-10">
                 <PlusIcon class="h-6 w-6 text-indigo-600 dark:text-indigo-300" />
               </div>
+
               <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
                 <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-white">
                   Yeni Ürün Ekle
                 </h3>
+
                 <div class="mt-4 space-y-4">
-                  <!-- Product Name -->
+                  <!-- Ürün Adı -->
                   <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                       Ürün Adı <span class="text-red-500">*</span>
@@ -31,12 +33,12 @@
                     <p v-if="errors.name" class="mt-1 text-sm text-red-600">{{ errors.name }}</p>
                   </div>
 
-                  <!-- Price -->
+                  <!-- Fiyat -->
                   <div>
                     <label for="price" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                       Fiyat <span class="text-red-500">*</span>
                     </label>
-                    <div class="mt-1 relative rounded-md shadow-sm"> 
+                    <div class="flex items-center gap-2">
                       <input
                         id="price"
                         v-model.number="form.price"
@@ -44,18 +46,27 @@
                         step="0.01"
                         min="0"
                         required
-                        class="mt-1 form-input"
-                        placeholder="₺ 0.00"
+                        class="form-input w-full"
+                        placeholder="0.00"
                       />
+                      <select
+                        v-model="form.currencyId"
+                        class="form-select border-gray-300 rounded-md text-gray-900 dark:text-white dark:bg-gray-700"
+                        required
+                      >
+                        <option value="">Para Birimi</option>
+                        <option v-for="currency in currencies" :key="currency.id" :value="currency.id">
+                          {{ currency.name }} ({{ currency.code }})
+                        </option>
+                      </select>
                     </div>
                     <p v-if="errors.price" class="mt-1 text-sm text-red-600">{{ errors.price }}</p>
                   </div>
 
-                  <!-- Error/Success Messages -->
+                  <!-- Hata / Başarı Mesajları -->
                   <div v-if="errorMessage" class="rounded-md bg-red-50 dark:bg-red-900/20 p-4">
                     <div class="text-sm text-red-700 dark:text-red-300">{{ errorMessage }}</div>
                   </div>
-
                   <div v-if="successMessage" class="rounded-md bg-green-50 dark:bg-green-900/20 p-4">
                     <div class="text-sm text-green-700 dark:text-green-300">{{ successMessage }}</div>
                   </div>
@@ -63,6 +74,7 @@
               </div>
             </div>
           </div>
+
           <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
             <button
               type="submit"
@@ -78,6 +90,7 @@
               </span>
               <span v-else>Ürün Ekle</span>
             </button>
+
             <button
               type="button"
               @click="$emit('close')"
@@ -96,124 +109,79 @@
 <script setup>
 import { PlusIcon } from '@heroicons/vue/24/outline'
 
-const props = defineProps({
-  show: Boolean
-})
-
+const props = defineProps({ show: Boolean })
 const emit = defineEmits(['close', 'created'])
 
-// Form data
+const api = useApi()
+
+// --- Form Data ---
 const form = reactive({
   name: '',
-  price: null
+  price: null,
+  currencyId: ''
 })
 
-// Form state
+// --- State ---
 const loading = ref(false)
 const errors = ref({})
 const errorMessage = ref('')
 const successMessage = ref('')
+const currencies = ref([])
 
-// Validate form
+// --- Para Birimlerini Çek ---
+const fetchCurrencies = async () => {
+  try {
+    const response = await api('/currencies')
+    currencies.value = response || []
+  } catch (error) {
+    console.error('Para birimleri alınamadı:', error) 
+  }
+}
+
+// --- Validate ---
 const validateForm = () => {
   errors.value = {}
-  
-  if (!form.name?.trim()) {
-    errors.value.name = 'Ürün adı gereklidir'
-  }
-  
-  if (!form.price || form.price <= 0) {
-    errors.value.price = 'Geçerli bir fiyat giriniz'
-  }
-  
+  if (!form.name?.trim()) errors.value.name = 'Ürün adı gereklidir'
+  if (!form.price || form.price <= 0) errors.value.price = 'Geçerli bir fiyat giriniz'
+  if (!form.currencyId) errors.value.currencyId = 'Para birimi seçiniz'
   return Object.keys(errors.value).length === 0
 }
 
-// Handle form submission
+// --- Submit ---
 const handleSubmit = async () => {
   if (!validateForm()) return
-  
   loading.value = true
   errorMessage.value = ''
   successMessage.value = ''
-  
+
   try {
-    const api = useApi()
-    
-    const productData = {
-      name: form.name.trim(),
-      price: parseFloat(form.price)
-    }
-    
-    const response = await api('/products', {
-      method: 'POST',
-      body: productData
-    })
-    
-    console.log('Product created:', response)
+    const productData = { ...form, price: parseFloat(form.price) }
+    const response = await api('/products', { method: 'POST', body: productData })
+
     successMessage.value = 'Ürün başarıyla oluşturuldu!'
-    
-    // Emit the created product
     emit('created', response)
-    
-    // Reset form
-    form.name = ''
-    form.price = null
-    
-    // Close modal after short delay
+    Object.assign(form, { name: '', price: null, currencyId: '' })
+
     setTimeout(() => {
       emit('close')
       successMessage.value = ''
     }, 1500)
-    
   } catch (error) {
-    console.error('Error creating product:', error)
-    
-    if (error.status === 500 || error.name === 'FetchError') {
-      // Demo mode fallback for server errors
-      const demoProduct = {
-        id: Date.now(),
-        name: form.name.trim(),
-        price: parseFloat(form.price),
-        createdAt: new Date().toISOString(),
-        updatesAt: new Date().toISOString()
-      }
-      
-      successMessage.value = 'Ürün başarıyla oluşturuldu! (Demo Mode - Backend Error)'
-      emit('created', demoProduct)
-      
-      // Reset form
-      form.name = ''
-      form.price = null
-      
-      setTimeout(() => {
-        emit('close')
-        successMessage.value = ''
-      }, 1500)
-      
-    } else if (error.status === 400 && error.data?.message) {
-      // Validation errors from backend
-      if (Array.isArray(error.data.message)) {
-        errorMessage.value = error.data.message.join(', ')
-      } else {
-        errorMessage.value = error.data.message
-      }
-    } else {
-      errorMessage.value = 'Ürün oluşturulurken bir hata oluştu'
-    }
+    console.error(error)
+    errorMessage.value = 'Ürün oluşturulurken bir hata oluştu'
   } finally {
     loading.value = false
   }
 }
 
-// Reset form when modal closes
-watch(() => props.show, (newValue) => {
-  if (!newValue) {
-    form.name = ''
-    form.price = null
+// Modal açıldığında para birimlerini getir
+watch(() => props.show, async (newVal) => {
+  if (newVal) await fetchCurrencies()
+  else {
+    Object.assign(form, { name: '', price: null, currencyId: '' })
     errors.value = {}
     errorMessage.value = ''
     successMessage.value = ''
   }
 })
-</script> 
+</script>

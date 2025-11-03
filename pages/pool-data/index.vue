@@ -152,9 +152,10 @@
                   <div class="ml-4">
                     <NuxtLink
                       :to="`/customers/show/${customer.id}`"
-                      class="text-sm font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
+                      class="text-sm flex flex-col gap-1 font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
                     >
-                      {{ customer.name }}
+                      <span>{{ customer.name }}</span>
+                      <span class="text-xs dark:text-gray-400">ID: {{ customer.id }}</span>
                     </NuxtLink>
                   </div>
                 </div>

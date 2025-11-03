@@ -8,7 +8,14 @@
           Tüm ürünlerinizi buradan yönetebilirsiniz.
         </p>
       </div>
-      <div class="mt-4 sm:mt-0">
+      <div class="mt-4 sm:mt-0 flex flex-wrap gap-2">
+        <button
+          @click="loadProducts(pagination.page)"
+          class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+        >
+          <ArrowPathIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
+          Yenile
+        </button>
         <button
           @click="showCreateModal = true"
           class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
@@ -111,7 +118,7 @@
         <!-- Price -->
         <div class="mb-4">
           <div class="text-2xl font-bold text-gray-900 dark:text-white">
-            ₺{{ formatCurrency(product.price) }}
+            {{ product?.currency?.code }} {{ formatCurrency(product.price) }}
           </div>
           <div class="text-sm text-gray-500 dark:text-gray-400">Başlangıç fiyatı</div>
         </div>
@@ -290,6 +297,7 @@
 
     <!-- Product Edit Modal -->
     <ProductEditModal
+      v-if="selectedProduct"
       :show="showEditModal"
       :product="selectedProduct"
       @close="closeEditModal"
@@ -322,7 +330,8 @@ import {
   CubeIcon,
   ExclamationTriangleIcon,
   ChevronLeftIcon,
-  ChevronRightIcon
+  ChevronRightIcon,
+  ArrowPathIcon
 } from '@heroicons/vue/24/outline'
 import { watchDebounced } from '@vueuse/core'
 
@@ -347,13 +356,13 @@ const pagination = computed(() => ({
 
 // Modals
 const showDeleteModal = ref(false)
-const productToDelete = ref(null)
+const productToDelete = ref(null) as any
 const showCreateModal = ref(false)
 const showEditModal = ref(false)
 const selectedProduct = ref(null)
 const showActionCreateModal = ref(false)
 const showActionListModal = ref(false)
-const selectedProductForAction = ref(null)
+const selectedProductForAction = ref(null) as any
 
 // Computed properties
 const visiblePages = computed(() => {
@@ -394,13 +403,13 @@ const resetFilters = () => {
   maxPrice.value = undefined
 }
 
-const changePage = (page) => {
+const changePage = (page:any) => {
   if (page >= 1 && page <= pagination.value.totalPages) {
     loadProducts(page)
   }
 }
 
-const confirmDelete = (product) => {
+const confirmDelete = (product:any) => {
   productToDelete.value = product
   showDeleteModal.value = true
 }
@@ -422,11 +431,11 @@ const handleDelete = async () => {
   
 }
 
-const formatCurrency = (amount) => {
+const formatCurrency = (amount:any) => {
   return new Intl.NumberFormat('tr-TR').format(amount)
 }
 
-const formatDate = (dateString) => {
+const formatDate = (dateString:any) => {
   if (!dateString) return 'Belirtilmemiş'
   return new Date(dateString).toLocaleDateString('tr-TR', {
     year: 'numeric',
@@ -438,19 +447,19 @@ const formatDate = (dateString) => {
 }
 
 // Handle product creation
-const handleProductCreated = async (product) => {
+const handleProductCreated = async () => {
   await loadProducts(pagination.value.page)
   useToast().showSuccess('Ürün başarıyla oluşturuldu')
 }
 
 // Handle product edit
-const editProduct = (product) => {
+const editProduct = (product:any) => {
   selectedProduct.value = product
   showEditModal.value = true
 }
 
 // Handle product update
-const handleProductUpdated = async (updatedProduct) => {
+const handleProductUpdated = async () => {
   await loadProducts(pagination.value.page)
   useToast().showSuccess('Ürün başarıyla güncellendi')
 }
@@ -462,12 +471,12 @@ const closeEditModal = () => {
 }
 
 // Action modal functions
-const openActionCreateModal = (product) => {
+const openActionCreateModal = (product:any) => {
   selectedProductForAction.value = product
   showActionCreateModal.value = true
 }
 
-const openActionListModal = (product) => {
+const openActionListModal = (product:any) => {
   selectedProductForAction.value = product
   showActionListModal.value = true
 }

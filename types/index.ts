@@ -281,8 +281,7 @@ export interface Product {
   id: number
   name: string
   price: number
-  description?: string
-  category?: string
+  currency: any
   isActive?: boolean
   createdAt?: string | Date
   updatesAt?: string | Date
@@ -332,6 +331,7 @@ export interface SalesProduct {
   id: number
   name: string
   price: number
+  currency: any
   description?: string
   createdAt?: string
   updatedAt?: string

@@ -84,9 +84,9 @@
 
               <!-- Contact Info -->
               <div class="space-y-3 border-t border-gray-200 dark:border-gray-700 pt-4">
-                <div title="Atanan Sağlık Danışmanı" v-if="customer?.relevantUserData?.name" class="flex items-center text-sm">
+                <div title="Atanan Sağlık Danışmanı" v-if="customer?.relevantUserData" class="flex items-center text-sm">
                   <UserIcon class="h-5 w-5 text-gray-400 mr-3 flex-shrink-0" /> 
-                    {{ customer?.relevantUserData?.name }} 
+                    {{ customer?.relevantUserData }} 
                 </div>
                 <div v-if="customer.email" class="flex items-center text-sm">
                   <EnvelopeIcon class="h-5 w-5 text-gray-400 mr-3 flex-shrink-0" />
@@ -175,6 +175,11 @@
                 <div v-if="customer.createdAt" class="text-sm">
                   <span class="text-gray-500 dark:text-gray-400">Kayıt:</span>
                   <span class="ml-2 text-gray-900 dark:text-white">{{ formatDate(customer.createdAt) }}</span>
+                </div>
+
+                <div v-if="customer.updatesAt" class="text-sm">
+                  <span class="text-gray-500 dark:text-gray-400">Güncelleme:</span>
+                  <span class="ml-2 text-gray-900 dark:text-white">{{ formatDate(customer.updatesAt) }}</span>
                 </div>
 
                 <div v-if="customer.description" class="text-sm">
@@ -363,9 +368,7 @@
         </div>
       </div>
     </div>
-
-    <!-- Customer History Modal -->
-    <CustomerHistoryModal :show="showHistoryModal" :customer="customer" @close="showHistoryModal = false" />
+ 
 
     <!-- Customer Notes Modal -->
     <CustomerNotesModal :show="showNotesModal" :customer="customer" @close="showNotesModal = false"
@@ -433,7 +436,7 @@ const loadingHistory = ref(false)
 const showStates = ref({})
 
 // Modal states
-const showHistoryModal = ref(false)
+ 
 const showNotesModal = ref(false)
 const showDoctorModal = ref(false)
 const showServicesModal = ref(false)
@@ -462,10 +465,7 @@ const locationText = computed(() => {
 const toggleShow = (id) => {
   showStates.value[id] = !showStates.value[id]
 }
-
-const sortedDynamicFields = computed(() => {
-  return customerDynamicFields.value.sort((a, b) => a.order - b.order)
-})
+ 
 
 const customerStatus = computed(() => {
   if (!customer.value || !customer.value.status) return null
@@ -579,12 +579,7 @@ const handleClickOutside = (event) => {
     showActionsDropdown.value = false
   }
 }
-
-// Modal functions
-const showHistory = () => {
-  showHistoryModal.value = true
-}
-
+ 
 const showNotes = () => {
   showNotesModal.value = true
 }
@@ -651,8 +646,8 @@ const fetchCustomer = async () => {
     const api = useApi()
     const response = await api(`/customers/${route.params.id}`)
 
-    console.log('Customer data received:', response)
-
+    
+    
     // Enrich customer with status info
     if (response.status && statuses.value.length > 0) {
       const statusInfo = statuses.value.find(s => s.id === response.status)
@@ -721,8 +716,6 @@ const fetchCustomerHistory = async () => {
         const dateB = new Date(b.createdAt || b.created_at || b.updatesAt || b.updated_at || 0)
         return dateB - dateA
       })
-
-    console.log('Customer history loaded:', history.value)
   } catch (error) {
     console.error('Error fetching customer history:', error)
     history.value = []

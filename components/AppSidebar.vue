@@ -1,7 +1,7 @@
 <template>
   <aside
     :class="[
-      'fixed top-0 left-0 z-50 h-screen transition-all duration-300 ease-in-out bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700',
+      'fixed overflow-x-hidden top-0 left-0 z-50 h-screen transition-all duration-300 ease-in-out bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700',
       sidebarOpen ? 'w-64' : 'w-20',
       mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
     ]"

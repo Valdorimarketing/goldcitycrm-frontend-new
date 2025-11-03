@@ -1,24 +1,20 @@
 <template>
   <div class="overflow-x-auto">
-    
+
 
     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
       <thead class="bg-gray-50 dark:bg-gray-800">
         <tr>
-          <th
-            v-for="col in columns"
-            :key="col.key"
-            @click="sortBy(col.key)" 
-            class="table-header cursor-pointer text-gray-700 dark:text-gray-300"
-          >
+          <th v-for="col in columns" :key="col.key" @click="sortBy(col.key)"
+            class="table-header cursor-pointer text-gray-700 dark:text-gray-300">
             <div class="flex items-center gap-1">
               {{ col.label }}
               <span v-if="sortColumn === col.key">
                 <svg v-if="sortDirection === 'asc'" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M5 12l5-5 5 5H5z"/>
+                  <path d="M5 12l5-5 5 5H5z" />
                 </svg>
                 <svg v-else class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M5 8l5 5 5-5H5z"/>
+                  <path d="M5 8l5 5 5-5H5z" />
                 </svg>
               </span>
             </div>
@@ -29,7 +25,22 @@
 
       <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700 text-sm font-light">
         <tr v-for="customer in filteredAndSorted" :key="customer.id">
-          <td class="table-cell">{{ customer.name }}</td>
+          <td class="table-cell">
+            <div class="flex items-center">
+              <div class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
+                <span class="text-sm font-medium text-indigo-600 dark:text-indigo-300">
+                  {{ customer.name.charAt(0).toUpperCase() }}
+                </span>
+              </div>
+              <div class="ml-4">
+                <NuxtLink :to="`/customers/show/${customer.id}`"
+                  class="text-sm flex flex-col gap-1 font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer">
+                  <span>{{ customer.name }}</span>
+                  <span class="text-xs dark:text-gray-400">ID: {{ customer.id }}</span>
+                </NuxtLink>
+              </div>
+            </div>
+          </td>
           <td class="table-cell">{{ customer.phone || '-' }}</td>
           <td class="table-cell">{{ getStatusText(customer.status) }}</td>
           <td class="table-cell">{{ customer.source || '-' }}</td>
@@ -38,84 +49,72 @@
           <td class="table-cell">{{ customer.relevantUser ? `${customer.relevantUser.name}` : '-' }}</td>
           <td class="table-cell">{{ customer.isActive ? 'Aktif' : 'Pasif' }}</td>
           <td class="table-cell">{{ formatDate(customer.createdAt) }}</td>
-          <td class="table-cell">
-            <!-- Actions -->
-            <div class="flex gap-1">
-              <NuxtLink
-                :to="`/customers/show/${customer.id}`"
-                class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                title="Görüntüle"
-              >
-                <EyeIcon class="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
-                <span class="tooltip">Görüntüle</span>
-              </NuxtLink>
 
-              <button
-                @click="$emit('show-history', customer)"
-                class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                title="Geçmiş"
-              >
-                <ClockIcon class="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                <span class="tooltip">Geçmiş</span>
+          <td class="table-cell text-right">
+            <div class="relative inline-block text-left">
+              <!-- Trigger Button -->
+              <button type="button"
+                class="inline-flex items-center justify-center w-9 h-9 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                @click="toggleShow(customer.id)">
+                <EllipsisHorizontalIcon class="h-5 w-5 text-gray-700 dark:text-gray-300" />
               </button>
 
-              <button
-                @click="$emit('show-notes', customer)"
-                class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                title="Notlar"
-              >
-                <DocumentTextIcon class="h-4 w-4 text-amber-600 dark:text-amber-400" />
-                <span class="tooltip">Notlar</span>
-              </button>
+              <!-- Dropdown -->
+              <div v-show="showStates.activeId === customer.id"
+                class="absolute  right-0 z-50 mt-2 w-48 origin-top-right rounded-lg bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transition">
+                <div class="py-1">
+                  <NuxtLink :to="`/customers/show/${customer.id}`"
+                    class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                    <EyeIcon class="h-4 w-4 text-indigo-500" />
+                    Görüntüle
+                  </NuxtLink>
 
-              <button
-                @click="$emit('show-doctor-assignment', customer)"
-                class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                title="Doktor Görüşüne Gönder"
-              >
-                <UserIcon class="h-4 w-4 text-purple-600 dark:text-purple-400" />
-                <span class="tooltip z-10">Doktor Görüşüne Gönder</span>
-              </button>
+                  <button @click="emit('show-history', customer)"
+                    class="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <ClockIcon class="h-4 w-4 text-blue-500" />
+                    Geçmiş
+                  </button>
 
-              <button
-                @click="$emit('show-services', customer)"
-                class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                title="Hizmetler"
-              >
-                <ShoppingBagIcon class="h-4 w-4 text-green-600 dark:text-green-400" />
-                <span class="tooltip">Hizmetler</span>
-              </button>
+                  <button @click="emit('show-notes', customer)"
+                    class="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <DocumentTextIcon class="h-4 w-4 text-amber-500" />
+                    Notlar
+                  </button>
 
-              <button
-                @click="$emit('show-files', customer)"
-                class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                title="Müşteri Dosyaları"
-              >
-                <FolderIcon class="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
-                <span class="tooltip">Müşteri Dosyaları</span>
-              </button>
+                  <button @click="emit('show-doctor', customer)"
+                    class="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <UserIcon class="h-4 w-4 text-purple-500" />
+                    Doktor Görüşü
+                  </button>
 
-              <NuxtLink
-                v-if="isEditable"
-                :to="`/customers/edit/${customer.id}`"
-                class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                title="Düzenle"
-              >
-                <PencilIcon class="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
-                <span class="tooltip">Düzenle</span>
-              </NuxtLink>
+                  <button @click="emit('show-services', customer)"
+                    class="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <ShoppingBagIcon class="h-4 w-4 text-green-500" />
+                    Hizmetler
+                  </button>
 
-              <button
-                v-if="isDeleteable"
-                @click="$emit('confirm-delete', customer)"
-                class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                title="Sil"
-              >
-                <TrashIcon class="h-4 w-4 text-red-600 dark:text-red-400" />
-                <span class="tooltip">Sil</span>
-              </button>
+                  <button @click="emit('show-files', customer)"
+                    class="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <FolderIcon class="h-4 w-4 text-cyan-500" />
+                    Müşteri Dosyaları
+                  </button>
+
+                  <NuxtLink v-if="isEditable" :to="`/customers/edit/${customer.id}`"
+                    class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <PencilIcon class="h-4 w-4 text-yellow-500" />
+                    Düzenle
+                  </NuxtLink>
+
+                  <button v-if="isDeleteable" @click="emit('confirm-delete', customer)"
+                    class="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30">
+                    <TrashIcon class="h-4 w-4 text-red-500" />
+                    Sil
+                  </button>
+                </div>
+              </div>
             </div>
           </td>
+
         </tr>
 
         <tr v-if="filteredAndSorted.length === 0">
@@ -130,7 +129,7 @@
 </template>
 
 <script setup>
-import { ClockIcon, DocumentTextIcon, EyeIcon, FolderIcon, PencilIcon, ShoppingBagIcon, TrashIcon, UserIcon } from '@heroicons/vue/24/outline'
+import { ClockIcon, DocumentTextIcon, EllipsisHorizontalIcon, EyeIcon, FolderIcon, PencilIcon, ShoppingBagIcon, TrashIcon, UserIcon } from '@heroicons/vue/24/outline'
 import { ref, computed } from 'vue'
 
 const props = defineProps({
@@ -138,6 +137,19 @@ const props = defineProps({
   isEditable: { type: Boolean, default: false },
   isDeleteable: { type: Boolean, default: false }
 })
+
+const showStates = ref({ activeId: null })
+
+const toggleShow = (id) => {
+  if (showStates.value.activeId === id) {
+    // Aynı id'ye tıklandıysa: kapat
+    showStates.value.activeId = null
+  } else {
+    // Farklı id'ye tıklandıysa: mevcut açık olanı kapat, yenisini aç
+    showStates.value.activeId = id
+  }
+}
+
 
 const emit = defineEmits([
   'confirm-delete',
@@ -155,7 +167,8 @@ const statusMap = ref({
   4: 'Reddedildi'
 })
 
- 
+// Dropdown durumu
+const open = ref(false)
 
 // Sıralama
 const sortColumn = ref('')
@@ -185,7 +198,7 @@ const customers = computed(() => props.data)
 
 const filteredAndSorted = computed(() => {
   let result = customers.value
-  
+
   if (sortColumn.value) {
     result = result.slice().sort((a, b) => {
       const aVal = getValueByPath(a, sortColumn.value)

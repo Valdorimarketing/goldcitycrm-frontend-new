@@ -91,8 +91,7 @@ const useReminderNotifications = () => {
   // Bugün ve öncesi için hatırlatmaları al
   const getTodayReminders = async () => {
     try {
-      const currentUserId = authStore.user?.id || useCookie('user-id').value
-      console.log('👤 Kullanıcı ID:', currentUserId)
+      const currentUserId = authStore.user?.id || useCookie('user-id').value 
 
       if (!currentUserId) {
         console.warn('❌ Kullanıcı ID bulunamadı!')
@@ -102,10 +101,7 @@ const useReminderNotifications = () => {
       const today = new Date()
       const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
 
-      console.log('📅 Tarih aralığı:', {
-        'Başlangıç': '2020-01-01',
-        'Bitiş': todayStr
-      })
+   
 
       // Token'ı al
       const token = useCookie('auth-token').value || authStore.token
@@ -123,8 +119,7 @@ const useReminderNotifications = () => {
           Authorization: `Bearer ${token}`
         }
       })
-
-      console.log(`✅ API'den ${response?.length || 0} hatırlatma geldi`)
+ 
       return response || []
     } catch (error) {
       console.error('❌ Hatırlatmaları getirirken hata:', error)
@@ -134,13 +129,13 @@ const useReminderNotifications = () => {
 
   // Yaklaşan hatırlatmaları kontrol et
   const checkForDueReminders = async () => {
-    console.log('🔔 Hatırlatmaları kontrol ediyorum...')
+  
     const reminders = await getTodayReminders()
-    console.log(`📋 Toplam ${reminders.length} hatırlatma bulundu`)
+  
 
     const now = new Date()
     const currentTime = now.getTime()
-    console.log('⏰ Şu anki saat:', now.toLocaleString('tr-TR'))
+    
 
     for (const reminder of reminders) {
       if (!reminder.remindingAt) continue
@@ -149,11 +144,7 @@ const useReminderNotifications = () => {
       const timeDiff = reminderTime - currentTime
       const timeDiffMinutes = Math.ceil(timeDiff / 60000)
 
-      console.log(`📌 Hatırlatma #${reminder.id}:`, {
-        'Hatırlatma Zamanı': new Date(reminder.remindingAt).toLocaleString('tr-TR'),
-        'Kalan Süre (dakika)': timeDiffMinutes,
-        'Not': reminder.note.substring(0, 50) + '...'
-      })
+   
 
       // Session storage'da bu hatırlatmanın gösterilip gösterilmediğini kontrol et
       const sessionKey = `reminder_${reminder.id}_shown`
@@ -161,7 +152,7 @@ const useReminderNotifications = () => {
 
       // Zamanı geçmiş veya 5 dakika içinde olan hatırlatmalar
       if (timeDiff <= 5 * 60 * 1000 && !reminderShown && !notifiedReminders.value.has(reminder.id)) {
-        console.log(`✅ Hatırlatma #${reminder.id} gösterilecek!`)
+      
         // Müşteri bilgilerini al
         if (reminder.customer && !reminder.customerInfo) {
           try {
@@ -176,7 +167,7 @@ const useReminderNotifications = () => {
               name: customer.name,
               surname: customer.surname
             }
-            console.log(`👤 Müşteri bilgileri alındı: ${customer.name} ${customer.surname}`)
+            
           } catch (error) {
             console.error('❌ Müşteri bilgileri alınamadı:', error)
           }
@@ -229,7 +220,7 @@ const useReminderNotifications = () => {
 
       showPopup.value = false
       currentReminder.value = null
-      console.log('✅ Hatırlatma tamamlandı olarak işaretlendi')
+      
       return true
     } catch (error) {
       console.error('❌ Hatırlatma tamamlanırken hata:', error)
@@ -300,19 +291,13 @@ const completeReminder = async () => {
 }
 
 onMounted(async () => {
-  console.log('🚀 Layout mounted - Bildirim sistemini başlatıyorum...')
+ 
 
   // Request notification permission
-  const permissionGranted = await requestNotificationPermission()
-  console.log('📢 Bildirim izni:', permissionGranted ? 'Verildi ✅' : 'Verilmedi ❌')
-
-  // Initial check for fraud alerts
-  console.log('🔍 Fraud alert kontrolü yapılıyor...')
+   await requestNotificationPermission() 
+ 
   await checkForNewAlerts()
-  await getUnreadCount()
-
-  // Initial check for reminders
-  console.log('🔍 İlk hatırlatma kontrolü yapılıyor...')
+  await getUnreadCount() 
   await checkForDueReminders()
 
   // Set up interval to check every 30 seconds for fraud alerts
@@ -321,12 +306,10 @@ onMounted(async () => {
   }, 30000)
 
   // Set up interval to check every 30 seconds for reminders
-  reminderInterval = setInterval(async () => {
-    console.log('⏱️ 30 saniye doldu, hatırlatmaları tekrar kontrol ediyorum...')
+  reminderInterval = setInterval(async () => { 
     await checkForDueReminders()
   }, 30000)
-
-  console.log('✅ Bildirim sistemi başarıyla kuruldu!')
+ 
 })
 
 onUnmounted(() => {
