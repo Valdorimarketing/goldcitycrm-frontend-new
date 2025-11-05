@@ -92,9 +92,9 @@
     <div v-else class="card">
 
       <CustomerTable :data="customers" :users-map="usersMap" :status-map="statusMap" @sort="handleSort"
-        :is-editable="isEditable" :is-deleteable="isDeleteable" @confirm-delete="confirmDelete" @show-history="showHistory"
-        @show-notes="showNotes" @show-doctor="showDoctorAssignment" @show-services="showServices"
-        @show-files="showFiles"></CustomerTable>
+        :is-editable="isEditable" :is-deleteable="isDeleteable" @confirm-delete="confirmDelete"
+        @show-history="showHistory" @show-notes="showNotes" @show-doctor="showDoctorAssignment"
+        @show-services="showServices" @show-files="showFiles"></CustomerTable>
 
 
       <!-- Pagination -->
@@ -349,6 +349,7 @@ const loadCustomers = async (page = 1) => {
   })
 }
 
+
 const resetFilters = () => {
   searchTerm.value = ''
   statusFilter.value = undefined
@@ -361,6 +362,9 @@ const changePage = (page) => {
     loadCustomers(page)
   }
 }
+
+
+
 
 
 // --- Debounced izleme (arama + filtre değişiminde çağrılır) ---
@@ -377,6 +381,38 @@ watchDebounced(
 onMounted(async () => {
   loadFiltersFromStorage()
   await loadCustomers(1)
+
+  // Load statuses
+  try {
+    const statusResponse = await api('/statuses')
+
+    if (Array.isArray(statusResponse)) {
+      // Create status map for quick lookup with field mapping
+      statusResponse.forEach(status => {
+        // Map snake_case to camelCase for consistency
+        statusMap.value[status.id] = {
+          ...status,
+          isDoctor: status.isDoctor ?? status.is_doctor ?? false,
+          isPricing: status.isPricing ?? status.is_pricing ?? false,
+          isRemindable: status.isRemindable ?? status.is_remindable ?? false,
+          isFirst: status.isFirst ?? status.is_first ?? false,
+          isClosed: status.isClosed ?? status.is_closed ?? false,
+          isSale: status.isSale ?? status.is_sale ?? false
+        }
+      })
+
+      // Create status options for filter dropdown
+      statusOptions.value = statusResponse
+        .filter(status => status.isActive !== false) // Only show active statuses
+        .map(status => ({
+          value: status.id,
+          label: status.name
+        }))
+    }
+  } catch (statusError) {
+    console.error('Failed to load statuses:', statusError)
+  }
+
 
   isEditable.value = authStore.user?.role != 'doctor' ? true : false
   isDeleteable.value = authStore.user?.role != 'doctor' ? true : false
