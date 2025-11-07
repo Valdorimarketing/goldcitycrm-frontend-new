@@ -145,6 +145,11 @@
                   <FolderIcon class="h-5 w-5 mr-2" />
                   Dosyalar
                 </button>
+                <button @click="showOperationFollowUpModal"
+                  class="w-full inline-flex items-center justify-center rounded-md bg-rose-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-rose-500">
+                  <ViewfinderCircleIcon class="h-5 w-5 mr-2" />
+                  Operasyon Sonrası Takip
+                </button>
                 <NuxtLink v-if="!isDoctor" :to="`/customers/edit/${$route.params.id}`"
                   class="w-full inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
                   <PencilIcon class="h-5 w-5 mr-2" />
@@ -326,7 +331,7 @@
                               </p>
                             </div>
                           </div>
-                          <button class="py-1 dark:text-white text-xs" @click="toggleShow(item.id)">{{ showStates[item.id] ? 'Gizle' : 'Göster' }}</button>
+                          <button v-if="item.requestData || item.responseData" class="py-1 dark:text-white text-xs" @click="toggleShow(item.id)">{{ showStates[item.id] ? 'Gizle' : 'Göster' }}</button>
 
                         </div>
                         <div class="ml-4 text-right">
@@ -384,6 +389,9 @@
 
     <!-- Customer Files Modal -->
     <CustomerFilesModal :show="showFilesModal" :customer="customer" @close="showFilesModal = false" />
+
+    <!-- Customer Files Modal -->
+    <OperationFollowUpModal :show="showOperationFollowUp" :customer="customer" @close="showOperationFollowUp = false" />
   </div>
 </template>
 
@@ -406,7 +414,8 @@ import {
   TrashIcon,
   CheckCircleIcon,
   XCircleIcon,
-  ArrowPathIcon
+  ArrowPathIcon,
+  ViewfinderCircleIcon
 } from '@heroicons/vue/24/outline'
 
 // definePageMeta({
@@ -442,6 +451,7 @@ const showDoctorModal = ref(false)
 const showServicesModal = ref(false)
 const showFilesModal = ref(false)
 const showActionsDropdown = ref(false)
+const showOperationFollowUp = ref(false)
 
 // Computed properties
 const locationText = computed(() => {
@@ -595,6 +605,10 @@ const handleDoctorAssigned = (assignment) => {
 
 const showServices = () => {
   showServicesModal.value = true
+}
+
+const showOperationFollowUpModal = () => {
+  showOperationFollowUp.value = true
 }
 
 const handleServicesSaved = () => {
