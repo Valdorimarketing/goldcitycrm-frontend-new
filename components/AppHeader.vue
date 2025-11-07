@@ -36,6 +36,7 @@
       <div class="flex items-center space-x-4">
         <!-- Fraud Alert Notifications (Admin Only) -->
         <FraudAlertNotification v-if="authStore.user?.role === 'admin'" />
+        <OperationNotifications v-if="authStore.user?.role === 'admin'"  />
         <Notification v-if="authStore.user?.role === 'user'" />
 
 
@@ -104,8 +105,7 @@
 <script setup>
 import { ref, inject, onMounted, onUnmounted } from 'vue'
 import { useAuthStore } from '~/stores/auth'
-import FraudAlertNotification from '~/components/FraudAlertNotification.vue'
-import NotificationBell from '~/components/NotificationBell.vue'
+import FraudAlertNotification from '~/components/FraudAlertNotification.vue' 
 import Notification from '~/components/Notification.vue'
 import {
   Bars3Icon,

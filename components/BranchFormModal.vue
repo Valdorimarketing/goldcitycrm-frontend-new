@@ -42,7 +42,7 @@
                             id="hospitalId"
                             v-model="formData.hospitalId"
                             required
-                            class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            class="select-input"
                           >
                             <option value="">Hastane Seçin</option>
                             <option v-for="hospital in hospitals" :key="hospital.id" :value="hospital.id">
