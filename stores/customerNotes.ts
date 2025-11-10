@@ -29,7 +29,7 @@ export const useCustomerNotesStore = defineStore('customerNotes', () => {
 
       const response = await api('/customer-notes', {
         query
-      })
+      }) as any
       
       // Eğer response direkt array ise
       if (Array.isArray(response)) {

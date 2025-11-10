@@ -19,17 +19,7 @@
           <Bars3Icon class="w-5 h-5" />
         </button>
 
-        <!-- Search -->
-        <div class="relative ml-4 max-w-xs w-full lg:max-w-md">
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <MagnifyingGlassIcon class="h-5 w-5 text-gray-400" />
-          </div>
-          <input
-            type="search"
-            placeholder="Arama..."
-            class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-        </div>
+        
       </div>
 
       <!-- Right side - User menu and notifications -->
@@ -56,11 +46,12 @@
             @click="userMenuOpen = !userMenuOpen"
             class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
-            <div class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center">
+            <div class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center" v-if="!authStore.user.avatar">
               <span class="text-sm font-medium text-white">
                 {{ authStore.user?.name?.charAt(0) || 'U' }}
               </span>
             </div>
+            <img :src="path + authStore.user.avatar" class="w-8 h-8 rounded-full border-2 border-white" alt="">
           </button>
 
           <!-- User dropdown menu -->
@@ -108,8 +99,7 @@ import { useAuthStore } from '~/stores/auth'
 import FraudAlertNotification from '~/components/FraudAlertNotification.vue' 
 import Notification from '~/components/Notification.vue'
 import {
-  Bars3Icon,
-  MagnifyingGlassIcon,
+  Bars3Icon, 
   SunIcon,
   MoonIcon
 } from '@heroicons/vue/24/outline'
@@ -117,9 +107,11 @@ import {
 const authStore = useAuthStore()
 const sidebar = inject('sidebar')
 const { toggleSidebar, openMobileSidebar } = sidebar
+const config = useRuntimeConfig()
 
 const userMenuOpen = ref(false)
 const isDarkMode = ref(false)
+const path = config.public.apiBase
 
 // Close user menu when clicking outside
 const closeUserMenu = (event) => {

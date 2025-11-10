@@ -42,7 +42,7 @@ export const useAuthStore = defineStore('auth', () => {
         baseURL: config.public.apiBase,
         method: 'POST',
         body: credentials
-      })
+      }) as any
 
       // Save token and user
       token.value = response.access_token
@@ -64,7 +64,7 @@ export const useAuthStore = defineStore('auth', () => {
       }
 
       return true
-    } catch (error) {
+    } catch (error:any) {
       console.error('Login error:', error)
       
       // Fallback to demo mode if API fails
@@ -105,7 +105,7 @@ export const useAuthStore = defineStore('auth', () => {
         baseURL: config.public.apiBase,
         method: 'POST',
         body: data
-      })
+      }) as any
 
       // Save token and user
       token.value = response.access_token
@@ -127,7 +127,7 @@ export const useAuthStore = defineStore('auth', () => {
       }
 
       return true
-    } catch (error) {
+    } catch (error:any) {
       console.error('Register error:', error)
       
       // Fallback to demo mode if API fails

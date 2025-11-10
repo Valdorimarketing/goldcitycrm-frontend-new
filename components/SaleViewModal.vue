@@ -93,24 +93,13 @@
                   </p>
                 </div>
 
-                <!-- Status -->
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Durum
-                  </label>
-                  <div class="mt-1">
-                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
-                      :class="getStatusClass(sale.status)">
-                      {{ getStatusText(sale.status) }}
-                    </span>
-                  </div>
-                </div>
+             
 
                 <!-- Users -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-gray-200 dark:border-gray-700">
                   <div v-if="sale.user">
                     <label class="block text-xs font-medium text-gray-500 dark:text-gray-400">
-                      Oluşturan
+                      Satış Yapan
                     </label>
                     <p class="mt-1 text-sm text-gray-900 dark:text-white">
                       {{ sale.user.name || '-' }}
@@ -182,37 +171,12 @@ const formatDate = (dateString) => {
     return 'Geçersiz tarih'
   }
 }
-
-const getStatusClass = (status) => {
-  switch (status) {
-    case 'completed':
-      return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-    case 'pending':
-      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
-    case 'cancelled':
-      return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
-    default:
-      return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
-  }
-}
-
-const getStatusText = (status) => {
-  switch (status) {
-    case 'completed':
-      return 'Tamamlandı'
-    case 'pending':
-      return 'Bekliyor'
-    case 'cancelled':
-      return 'İptal'
-    default:
-      return 'Bilinmiyor'
-  }
-}
+ 
 
 watch(
   () => props.show,
   (newSale) => {
-    currentCurrency.value = props.sale?.products?.[0]?.productDetails?.currency.code || 'TRY'
+    currentCurrency.value = props.sale?.products?.[0]?.productDetails?.currency?.code || 'TRY'
   }
 );
 

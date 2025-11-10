@@ -228,10 +228,9 @@ const loadProducts = async () => {
   loading.value = true
   try {
     const data = await fetchUnsoldProducts(props.customer.id)
-    products.value = data || []
+    products.value = data || [] 
 
-
-    currentCurrency.value = products[0].product.currency.code
+    currentCurrency.value = products.value[0].product.currency.code
 
 
 

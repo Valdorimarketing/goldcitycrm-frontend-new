@@ -48,7 +48,7 @@
 
     <!-- Users List -->
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      <div v-for="user in filteredUsers" :key="user.id" class="card border-l-4 p-4 rounded-lg shadow-sm transition"
+      <div v-for="user in filteredUsers" :key="user.id" class="card border-l-4 p-3 rounded-lg shadow-sm transition"
         :class="[
           user.role === 'admin'
             ? 'border-red-500 hover:bg-red-50 dark:hover:bg-red-900/20'
@@ -64,10 +64,22 @@
         <div class="flex flex-col space-y-3">
           <div class="flex items-center justify-between">
             <div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ user.name || 'İsimsiz Kullanıcı' }}
-              </h3>
-              <p class="text-sm text-gray-600 dark:text-gray-400">{{ user.email || 'E-posta yok' }}</p>
-              <p class="text-xs text-gray-500 dark:text-gray-500">{{ getRoleText(user.role) }}</p>
+              <div class="flex gap-2">
+                <div
+                  class="relative w-16 h-16 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600">
+                  <img v-if="user.avatar" :src="path + user.avatar" alt="Avatar" class="object-cover w-full h-full" />
+                  <div v-else
+                    class="flex items-center justify-center w-full h-full text-gray-400 dark:text-gray-500 text-sm">
+                    Yok
+                  </div>
+                </div>
+                <div class="relative flex flex-col">
+                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ user.name || 'İsimsiz Kullanıcı' }}
+                  </h3>
+                  <p class="text-sm text-gray-600 dark:text-gray-400">{{ user.email || 'E-posta yok' }}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-500">{{ getRoleText(user.role) }}</p>
+                </div>
+              </div>
             </div>
             <div class="flex items-end gap-2 flex-col">
               <span
@@ -131,12 +143,14 @@ import { ArrowPathIcon, PlusIcon } from '@heroicons/vue/24/outline'
 import { useUsersStore } from '~/stores/users'
 import UserCreateModal from '~/components/UserCreateModal.vue'
 import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime' 
-dayjs.extend(relativeTime) 
+import relativeTime from 'dayjs/plugin/relativeTime'
+dayjs.extend(relativeTime)
 
 definePageMeta({
   // middleware: 'auth' // Temporarily disabled
 })
+
+const config = useRuntimeConfig()
 
 // Store
 const usersStore = useUsersStore()
@@ -145,6 +159,7 @@ const usersStore = useUsersStore()
 const showCreateModal = ref(false)
 const selectedUser = ref(null)
 const activeRole = ref(null)
+const path = config.public.apiBase
 
 // Loading state for toggle buttons
 const toggleLoading = ref({})
@@ -185,12 +200,10 @@ const getLastActiveText = (lastActiveTime) => {
 // Load users function
 const loadUsers = async () => {
   try {
-    const api = useApi()
-    console.log('Loading users...')
+    const api = useApi() 
 
     const response = await api('/users')
-
-    console.log('Users loaded:', response)
+ 
     if (Array.isArray(response)) {
       usersStore.users.value = response
     } else {
@@ -301,22 +314,15 @@ const handleUserCreated = (newUser) => {
 }
 
 // Handle user update
-const handleUserUpdated = (updatedUser) => {
-  console.log('User updated:', updatedUser)
-  // Update in store
-  const index = usersStore.users.value.findIndex(u => u.id === updatedUser.id)
-  if (index !== -1) {
-    usersStore.users.value[index] = updatedUser
-  }
+const handleUserUpdated = () => {  
+  loadUsers()
 }
 
 // Data is loaded above in script setup
 
- 
 
-const toggleUserStatus = async (user) => {
-  console.log('Toggling user status for:', user.name || `User ID ${user.id}`)
 
+const toggleUserStatus = async (user) => {  
   // Set loading state
   toggleLoading.value[user.id] = true
 

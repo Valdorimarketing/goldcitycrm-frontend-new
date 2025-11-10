@@ -128,30 +128,29 @@
               <th class="table-header">Müşteri</th>
               <th class="table-header">Açıklama</th>
               <th class="table-header">Miktar</th>
-              <th class="table-header">Tarih</th>
-              <th class="table-header">Durum</th>
+              <th class="table-header">Tarih</th> 
               <th class="table-header">İşlemler</th>
             </tr>
           </thead>
           <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
             <tr v-for="sale in filteredSales" :key="sale.id">
               <td class="table-cell">
+
                 <div class="flex items-center">
-                  <div class="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                    <span class="text-sm font-medium text-gray-600 dark:text-gray-400">
-                      {{ sale.customer?.name?.charAt(0)?.toUpperCase() || '?' }}
+                  <div class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
+                    <span class="text-sm font-medium text-indigo-600 dark:text-indigo-300">
+                      {{ sale.customer.name.charAt(0).toUpperCase() }}
                     </span>
                   </div>
                   <div class="ml-4">
-                    <div @click="navigateToCustomer(sale.customerId)"
-                      class="text-sm font-medium text-gray-900 dark:text-gray-100 cursor-pointer hover:text-indigo-600 dark:hover:text-indigo-400 hover:underline">
-                      {{ sale.customer?.name || 'Bilinmeyen Müşteri' }}
-                    </div>
-                    <div class="text-sm text-gray-500 dark:text-gray-400">
-                      {{ sale.customer?.company || '-' }}
-                    </div>
+                    <NuxtLink :to="`/customers/show/${sale.customer.id}`"
+                      class="text-sm flex flex-col gap-1 font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer">
+                      <span>{{ sale.customer.name }}</span>
+                      <span class="text-xs dark:text-gray-400">ID: {{ sale.customer.id }}</span>
+                    </NuxtLink>
                   </div>
                 </div>
+
               </td>
               <td class="table-cell">
                 <div class="text-sm text-gray-900 dark:text-gray-100">{{ sale.description || '-' }}</div>
@@ -165,13 +164,7 @@
                 <div class="text-sm text-gray-900 dark:text-gray-100">
                   {{ formatDate(sale.date) }}
                 </div>
-              </td>
-              <td class="table-cell">
-                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
-                  :class="getStatusClass(sale.status)">
-                  {{ getStatusText(sale.status) }}
-                </span>
-              </td>
+              </td> 
               <td class="table-cell">
                 <button @click="viewSaleDetails(sale)"
                   class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300"
@@ -318,8 +311,8 @@ const loadSalesData = async () => {
     if (response?.data) {
       // Map response to expected format
 
-      
-      
+
+
 
       salesData.value = response.data.map(sale => ({
         id: sale.id,
@@ -328,13 +321,13 @@ const loadSalesData = async () => {
           name: [sale.customerDetails?.name, sale.customerDetails?.surname]
             .filter(Boolean)
             .join(' ') || 'Bilinmeyen Müşteri',
-          company: sale.customerDetails?.company || sale.customerDetails?.companyName || ''
+          company: sale.customerDetails?.company || sale.customerDetails?.companyName || '',
+          id: sale.customer
         },
         amount: calculateSaleAmount(sale.salesProducts),
         currency: sale.salesProducts?.[0]?.productDetails?.currency?.code || 'TRY',
         description: sale.title || '-',
         date: sale.createdAt || new Date().toISOString(),
-        status: 'completed', // Default status since these are sales
         user: sale.userDetails,
         responsibleUser: sale.responsibleUserDetails,
         followerUser: sale.followerUserDetails,
@@ -417,6 +410,7 @@ const filteredSales = computed(() => {
     })
   }
 
+
   return filtered
 })
 
@@ -484,37 +478,7 @@ const formatCurrency = (amount) => {
   return new Intl.NumberFormat('tr-TR').format(amount)
 }
 
-const getStatusClass = (status) => {
-  switch (status) {
-    case 'completed':
-      return 'bg-green-100 text-green-800'
-    case 'pending':
-      return 'bg-yellow-100 text-yellow-800'
-    case 'cancelled':
-      return 'bg-red-100 text-red-800'
-    default:
-      return 'bg-gray-100 text-gray-800'
-  }
-}
-
-const getStatusText = (status) => {
-  switch (status) {
-    case 'completed':
-      return 'Tamamlandı'
-    case 'pending':
-      return 'Bekliyor'
-    case 'cancelled':
-      return 'İptal'
-    default:
-      return 'Bilinmiyor'
-  }
-}
-
-const navigateToCustomer = (customerId) => {
-  if (customerId) {
-    router.push(`/customers/show/${customerId}`)
-  }
-}
+ 
 
 const viewSaleDetails = (sale) => {
   selectedSale.value = sale
