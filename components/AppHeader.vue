@@ -43,15 +43,16 @@
         <!-- User menu -->
         <div class="relative">
           <button
+            v-if="authStore"
             @click="userMenuOpen = !userMenuOpen"
             class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
-            <div class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center" v-if="!authStore.user.avatar">
+            <img :src="path + authStore.user?.avatar" class="w-8 h-8 rounded-full border-2 border-white" v-if="authStore.user?.avatar" alt="">
+            <div class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center" v-else>
               <span class="text-sm font-medium text-white">
                 {{ authStore.user?.name?.charAt(0) || 'U' }}
               </span>
             </div>
-            <img :src="path + authStore.user.avatar" class="w-8 h-8 rounded-full border-2 border-white" alt="">
           </button>
 
           <!-- User dropdown menu -->

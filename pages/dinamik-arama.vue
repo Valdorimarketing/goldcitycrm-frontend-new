@@ -42,7 +42,6 @@
             </option>
           </select>
         </div>
-
         <div>
           <label for="dateFilter" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Tarih Filtresi
@@ -59,7 +58,6 @@
           </select>
         </div>
       </div>
-
       <!-- Custom Date Range -->
       <template v-if="dateFilter === 'custom'">
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-4 mt-4">
@@ -75,24 +73,12 @@
             </label>
             <input id="endDate" v-model="customEndDate" type="date" class="form-input" />
           </div>
-          <div class="flex items-end">
-            <button @click="resetFilters" class="btn-secondary">
-              Filtreleri Temizle
-            </button>
-          </div>
         </div>
       </template>
-      <template v-else>
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 mt-4">
-          <div></div>
-          <div></div>
-          <div class="flex items-end">
-            <button @click="resetFilters" class="btn-secondary">
-              Filtreleri Temizle
-            </button>
-          </div>
-        </div>
-      </template>
+
+      <button @click="resetFilters" class="btn-secondary">
+        Filtreleri Temizle
+      </button>
     </div>
 
     <!-- Loading State -->
@@ -375,6 +361,7 @@ const loadCustomers = async () => {
       }
     }
 
+
     // ========================
     // 🧠 Müşterileri yükle (dinamik filtreli)
     // ========================
@@ -397,8 +384,10 @@ const loadCustomers = async () => {
       }
     })
 
+
     // 🔹 Hatırlatma statüsü filtreleme
     customers = customers.filter(c => remindableStatusIds.value.includes(c.status))
+
 
     // 🔹 Erişim kontrolü
     customers = customers.filter(c => canAccessCustomer(c))

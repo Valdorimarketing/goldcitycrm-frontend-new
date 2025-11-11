@@ -51,7 +51,7 @@
           <td class="table-cell">{{ formatDate(customer.createdAt) }}</td>
           <td class="table-cell">{{ formatDate(customer.updatesAt) }}</td>
 
-          <td class="table-cell text-right">
+          <td class="table-cell">
             <div class="relative inline-block text-left">
               <!-- Trigger Button -->
               <button type="button"
@@ -122,6 +122,7 @@
                   </div>
                 </div>
               </div>
+
             </div>
           </td>
 
@@ -139,7 +140,7 @@
 </template>
 
 <script setup>
-import { ClockIcon, DocumentTextIcon, EllipsisHorizontalIcon, EyeIcon, FolderIcon, PencilIcon, ShoppingBagIcon, TrashIcon, UserCircleIcon, UsersIcon, XCircleIcon } from '@heroicons/vue/24/outline'
+import { ClockIcon, DocumentTextIcon, EllipsisHorizontalIcon, EyeIcon, FolderIcon, PencilIcon, ShoppingBagIcon, TrashIcon, UsersIcon, XCircleIcon } from '@heroicons/vue/24/outline'
 import { ref, computed } from 'vue'
 
 const props = defineProps({

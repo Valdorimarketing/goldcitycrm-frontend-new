@@ -9,16 +9,12 @@
         </p>
       </div>
       <div class="mt-4 sm:mt-0 flex gap-3">
-        <button
-          @click="resetFilters"
-          class="inline-flex items-center justify-center rounded-md bg-gray-100 dark:bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-700 dark:text-gray-200 shadow-sm hover:bg-gray-200 dark:hover:bg-gray-600"
-        >
+        <button @click="resetFilters"
+          class="inline-flex items-center justify-center rounded-md bg-gray-100 dark:bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-700 dark:text-gray-200 shadow-sm hover:bg-gray-200 dark:hover:bg-gray-600">
           Filtreleri Temizle
         </button>
-        <button
-          @click="showCreateModal = true"
-          class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
-        >
+        <button @click="showCreateModal = true"
+          class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
           <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
           Yeni Müşteri
         </button>
@@ -29,26 +25,20 @@
     <div class="mb-6">
       <div class="border-b border-gray-200 dark:border-gray-700">
         <nav class="-mb-px flex space-x-8">
-          <button
-            @click="activeTab = 'unassigned'"
-            :class="[
-              activeTab === 'unassigned'
-                ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
-                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300',
-              'whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium'
-            ]"
-          >
+          <button @click="activeTab = 'unassigned'" :class="[
+            activeTab === 'unassigned'
+              ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
+              : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300',
+            'whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium'
+          ]">
             Henüz Atanmamış
           </button>
-          <button
-            @click="activeTab = 'assigned'"
-            :class="[
-              activeTab === 'assigned'
-                ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
-                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300',
-              'whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium'
-            ]"
-          >
+          <button @click="activeTab = 'assigned'" :class="[
+            activeTab === 'assigned'
+              ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
+              : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300',
+            'whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium'
+          ]">
             Atandı, Beklemede
           </button>
         </nav>
@@ -67,18 +57,14 @@
           <thead class="bg-gray-50 dark:bg-gray-800">
             <tr>
               <th v-if="activeTab === 'unassigned'" class="table-header text-gray-700 dark:text-gray-300 w-12">
-                <input
-                  type="checkbox"
-                  :checked="isAllSelected"
-                  @change="toggleSelectAll"
-                  class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                />
+                <input type="checkbox" :checked="isAllSelected" @change="toggleSelectAll"
+                  class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
               </th>
               <th class="table-header text-gray-700 dark:text-gray-300">İsim</th>
               <th class="table-header text-gray-700 dark:text-gray-300">E-posta</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Telefon</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Kaynak</th>
-              <th class="table-header text-gray-700 dark:text-gray-300">Eklenme Tarihi</th> 
+              <th class="table-header text-gray-700 dark:text-gray-300">Eklenme Tarihi</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Bekleme Süresi</th>
               <th v-if="activeTab === 'unassigned'" class="table-header text-gray-700 dark:text-gray-300">Atama</th>
               <th v-if="activeTab === 'assigned'" class="table-header text-gray-700 dark:text-gray-300">Atanan</th>
@@ -87,44 +73,29 @@
             <tr>
               <th v-if="activeTab === 'unassigned'" class="px-3 py-2"></th>
               <th class="px-3 py-2">
-                <input
-                  v-model="columnFilters.name"
-                  type="text"
+                <input v-model="columnFilters.name" type="text"
                   class="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                  placeholder="Filtre..."
-                />
+                  placeholder="Filtre..." />
               </th>
               <th class="px-3 py-2">
-                <input
-                  v-model="columnFilters.email"
-                  type="text"
+                <input v-model="columnFilters.email" type="text"
                   class="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                  placeholder="Filtre..."
-                />
+                  placeholder="Filtre..." />
               </th>
               <th class="px-3 py-2">
-                <input
-                  v-model="columnFilters.phone"
-                  type="text"
+                <input v-model="columnFilters.phone" type="text"
                   class="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                  placeholder="Filtre..."
-                />
+                  placeholder="Filtre..." />
               </th>
               <th class="px-3 py-2">
-                <input
-                  v-model="columnFilters.source"
-                  type="text"
+                <input v-model="columnFilters.source" type="text"
                   class="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                  placeholder="Filtre..."
-                />
+                  placeholder="Filtre..." />
               </th>
               <th class="px-3 py-2">
-                <input
-                  v-model="columnFilters.createdAt"
-                  type="text"
+                <input v-model="columnFilters.createdAt" type="text"
                   class="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                  placeholder="Filtre..."
-                />
+                  placeholder="Filtre..." />
               </th>
               <th class="px-3 py-2"></th>
               <th v-if="activeTab === 'unassigned'" class="px-3 py-2"></th>
@@ -135,12 +106,9 @@
           <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
             <tr v-for="customer in filteredCustomers" :key="customer.id">
               <td v-if="activeTab === 'unassigned'" class="table-cell w-12">
-                <input
-                  type="checkbox"
-                  :checked="isCustomerSelected(customer.id)"
+                <input type="checkbox" :checked="isCustomerSelected(customer.id)"
                   @change="toggleCustomerSelection(customer.id)"
-                  class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                />
+                  class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
               </td>
               <td class="table-cell">
                 <div class="flex items-center">
@@ -150,10 +118,8 @@
                     </span>
                   </div>
                   <div class="ml-4">
-                    <NuxtLink
-                      :to="`/customers/show/${customer.id}`"
-                      class="text-sm flex flex-col gap-1 font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
-                    >
+                    <NuxtLink :to="`/customers/show/${customer.id}`"
+                      class="text-sm flex flex-col gap-1 font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer">
                       <span>{{ customer.name }}</span>
                       <span class="text-xs dark:text-gray-400">ID: {{ customer.id }}</span>
                     </NuxtLink>
@@ -176,40 +142,30 @@
               </td>
               <td class="table-cell">
                 <div class="text-sm text-gray-900 dark:text-gray-100">
-                  {{ getWaitingTime(activeTab === 'assigned' ? (customer.updatesAt || customer.updatedAt) : customer.createdAt) }}
+                  {{ getWaitingTime(activeTab === 'assigned' ? (customer.updatesAt || customer.updatedAt) :
+                    customer.createdAt) }}
                 </div>
               </td>
               <td v-if="activeTab === 'unassigned'" class="table-cell">
                 <div class="flex gap-2 items-center">
-                  <select
-                    v-model="rowAssignments[customer.id].selectedGroupId"
-                    @change="onGroupChange(customer.id)"
-                    class="form-input text-xs py-1 px-2 min-w-[120px]"
-                  >
+                  <select v-model="rowAssignments[customer.id].selectedGroupId" @change="onGroupChange(customer.id)"
+                    class="form-input text-xs py-1 px-2 min-w-[120px]">
                     <option value="">Grup Seç</option>
                     <option v-for="group in userGroups" :key="group.id" :value="group.id">
                       {{ group.name }}
                     </option>
                   </select>
-                  <select
-                    v-model="rowAssignments[customer.id].selectedUserId"
+                  <select v-model="rowAssignments[customer.id].selectedUserId"
                     :disabled="!rowAssignments[customer.id].selectedGroupId"
-                    class="form-input text-xs py-1 px-2 min-w-[120px]"
-                  >
+                    class="form-input text-xs py-1 px-2 min-w-[120px]">
                     <option value="">Kullanıcı Seç</option>
-                    <option
-                      v-for="user in getGroupUsers(customer.id)"
-                      :key="user.id"
-                      :value="user.id"
-                    >
+                    <option v-for="user in getGroupUsers(customer.id)" :key="user.id" :value="user.id">
                       {{ user.name }}
                     </option>
                   </select>
-                  <button
-                    @click="assignCustomerToUser(customer)"
+                  <button @click="assignCustomerToUser(customer)"
                     :disabled="!rowAssignments[customer.id].selectedUserId"
-                    class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
-                  >
+                    class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap">
                     Bu Kullanıcıya Ata
                   </button>
                 </div>
@@ -219,90 +175,80 @@
                   {{ customer.relevantUser?.name || '-' }}
                 </div>
               </td>
+
               <td class="table-cell">
-                <div class="flex gap-1">
-                  <NuxtLink
-                    :to="`/customers/show/${customer.id}`"
-                    class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    title="Görüntüle"
-                  >
-                    <EyeIcon class="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
-                    <span class="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 dark:bg-gray-700 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                      Görüntüle
-                    </span>
-                  </NuxtLink>
-                  <button
-                    @click="showHistory(customer)"
-                    class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    title="Geçmiş"
-                  >
-                    <ClockIcon class="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                    <span class="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 dark:bg-gray-700 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                      Geçmiş
-                    </span>
+                <div class="relative inline-block text-left">
+                  <!-- Trigger Button -->
+                  <button type="button"
+                    class="inline-flex items-center justify-center w-9 h-9 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                    @click="toggleShow(customer.id)">
+                    <EllipsisHorizontalIcon class="h-5 w-5 text-gray-700 dark:text-gray-300" />
                   </button>
-                  <button
-                    @click="showNotes(customer)"
-                    class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    title="Notlar"
-                  >
-                    <DocumentTextIcon class="h-4 w-4 text-amber-600 dark:text-amber-400" />
-                    <span class="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 dark:bg-gray-700 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                      Notlar
-                    </span>
-                  </button>
-                  <button
-                    @click="showDoctorAssignment(customer)"
-                    class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    title="Doktor Görüşüne Gönder"
-                  >
-                    <UserIcon class="h-4 w-4 text-purple-600 dark:text-purple-400" />
-                    <span class="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 dark:bg-gray-700 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
-                      Doktor Görüşüne Gönder
-                    </span>
-                  </button>
-                  <button
-                    @click="showServices(customer)"
-                    class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    title="Hizmetler"
-                  >
-                    <ShoppingBagIcon class="h-4 w-4 text-green-600 dark:text-green-400" />
-                    <span class="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 dark:bg-gray-700 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                      Hizmetler
-                    </span>
-                  </button>
-                  <button
-                    @click="showFiles(customer)"
-                    class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    title="Müşteri Dosyaları"
-                  >
-                    <FolderIcon class="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
-                    <span class="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 dark:bg-gray-700 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                      Müşteri Dosyaları
-                    </span>
-                  </button>
-                  <NuxtLink 
-                    v-if="isEditable"
-                    :to="`/customers/edit/${customer.id}`"
-                    class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    title="Düzenle"
-                  >
-                    <PencilIcon class="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
-                    <span class="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 dark:bg-gray-700 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                      Düzenle
-                    </span>
-                  </NuxtLink>
-                  <button
-                    @click="confirmDelete(customer)"
-                    class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    title="Sil" 
-                    v-if="isDeleteable"
-                  >
-                    <TrashIcon class="h-4 w-4 text-red-600 dark:text-red-400" />
-                    <span class="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 dark:bg-gray-700 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                      Sil
-                    </span>
-                  </button>
+
+                  <!-- Dropdown -->
+                  <div v-show="showStates.activeId === customer.id"
+                    class="fixed left-0 top-0 bottom-0 m-auto z-20 bg-white/50 dark:bg-black/50 w-full h-full flex justify-center items-center">
+                    <div
+                      class="flex flex-col h-96 max-w-lg rounded-lg bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transition">
+                      <div
+                        class="flex flex-wrap gap-2 justify-between items-center px-4 py-1 border-b border-gray-200 dark:border-gray-700">
+                        <div class="text-lg font-semibold">İşlemler</div>
+                        <button @click="toggleShow(customer.id)" class="p-2 rounded-md">
+                          <XCircleIcon class="h-6 w-6 text-gray-400 dark:text-white" />
+                        </button>
+                      </div>
+                      <div class="p-3 grid grid-cols-3 gap-2">
+                        <NuxtLink :to="`/customers/show/${customer.id}`"
+                          class="flex flex-col items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                          <EyeIcon class="h-8 w-8 text-indigo-500" />
+                          Görüntüle
+                        </NuxtLink>
+
+                        <button @click="showHistory(customer)"
+                          class="flex flex-col items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                          <ClockIcon class="h-8 w-8 text-blue-500" />
+                          Geçmiş
+                        </button>
+
+                        <button @click="showNotes(customer)"
+                          class="flex flex-col items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                          <DocumentTextIcon class="h-8 w-8 text-amber-500" />
+                          Notlar
+                        </button>
+
+                        <button @click="showDoctorAssignment(customer)"
+                          class="flex flex-col items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                          <UsersIcon class="h-8 w-8 text-purple-500" />
+                          Doktor Görüşü
+                        </button>
+
+                        <button @click="showServices(customer)"
+                          class="flex flex-col items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                          <ShoppingBagIcon class="h-8 w-8 text-green-500" />
+                          Hizmetler
+                        </button>
+
+                        <button @click="showFiles(customer)"
+                          class="flex flex-col items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                          <FolderIcon class="h-8 w-8 text-cyan-500" />
+                          Müşteri Dosyaları
+                        </button>
+
+                        <NuxtLink v-if="isEditable" :to="`/customers/edit/${customer.id}`"
+                          class="flex flex-col items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                          <PencilIcon class="h-8 w-8 text-yellow-500" />
+                          Düzenle
+                        </NuxtLink>
+
+                        <button v-if="isDeleteable" @click="confirmDelete(customer)"
+                          class="flex flex-col items-center gap-2 w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30">
+                          <TrashIcon class="h-8 w-8 text-red-500" />
+                          Sil
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
               </td>
             </tr>
@@ -322,20 +268,15 @@
       </div>
 
       <!-- Pagination -->
-      <div v-if="pagination.totalPages > 1" class="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 sm:px-6">
+      <div v-if="pagination.totalPages > 1"
+        class="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 sm:px-6">
         <div class="flex flex-1 justify-between sm:hidden">
-          <button
-            :disabled="pagination.page === 1"
-            @click="changePage(pagination.page - 1)"
-            class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
-          >
+          <button :disabled="pagination.page === 1" @click="changePage(pagination.page - 1)"
+            class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50">
             Önceki
           </button>
-          <button
-            :disabled="pagination.page === pagination.totalPages"
-            @click="changePage(pagination.page + 1)"
-            class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
-          >
+          <button :disabled="pagination.page === pagination.totalPages" @click="changePage(pagination.page + 1)"
+            class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50">
             Sonraki
           </button>
         </div>
@@ -352,33 +293,22 @@
           </div>
           <div>
             <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm">
-              <button
-                :disabled="pagination.page === 1"
-                @click="changePage(pagination.page - 1)"
-                class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:opacity-50"
-              >
+              <button :disabled="pagination.page === 1" @click="changePage(pagination.page - 1)"
+                class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:opacity-50">
                 <ChevronLeftIcon class="h-5 w-5" />
               </button>
 
-              <button
-                v-for="page in visiblePages"
-                :key="page"
-                @click="changePage(page)"
-                :class="[
-                  page === pagination.page
-                    ? 'bg-indigo-600 text-white'
-                    : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50',
-                  'relative inline-flex items-center px-4 py-2 text-sm font-semibold'
-                ]"
-              >
+              <button v-for="page in visiblePages" :key="page" @click="changePage(page)" :class="[
+                page === pagination.page
+                  ? 'bg-indigo-600 text-white'
+                  : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50',
+                'relative inline-flex items-center px-4 py-2 text-sm font-semibold'
+              ]">
                 {{ page }}
               </button>
 
-              <button
-                :disabled="pagination.page === pagination.totalPages"
-                @click="changePage(pagination.page + 1)"
-                class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:opacity-50"
-              >
+              <button :disabled="pagination.page === pagination.totalPages" @click="changePage(pagination.page + 1)"
+                class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:opacity-50">
                 <ChevronRightIcon class="h-5 w-5" />
               </button>
             </nav>
@@ -390,12 +320,15 @@
     <!-- Delete Confirmation Modal -->
     <div v-if="showDeleteModal" class="fixed inset-0 z-50 overflow-y-auto">
       <div class="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
-        <div class="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-80 transition-opacity"></div>
+        <div class="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-80 transition-opacity">
+        </div>
 
-        <div class="inline-block transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
+        <div
+          class="inline-block transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
           <div class="bg-white dark:bg-gray-800 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
             <div class="sm:flex sm:items-start">
-              <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30 sm:mx-0 sm:h-10 sm:w-10">
+              <div
+                class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30 sm:mx-0 sm:h-10 sm:w-10">
                 <ExclamationTriangleIcon class="h-6 w-6 text-red-600 dark:text-red-400" />
               </div>
               <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
@@ -404,7 +337,8 @@
                 </h3>
                 <div class="mt-2">
                   <p class="text-sm text-gray-500 dark:text-gray-400">
-                    <strong class="text-gray-700 dark:text-gray-300">{{ customerToDelete?.name }}</strong> adlı kişiyi silmek istediğinizden emin misiniz?
+                    <strong class="text-gray-700 dark:text-gray-300">{{ customerToDelete?.name }}</strong> adlı kişiyi
+                    silmek istediğinizden emin misiniz?
                     Bu işlem geri alınamaz.
                   </p>
                 </div>
@@ -412,16 +346,12 @@
             </div>
           </div>
           <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-            <button
-              @click="handleDelete"
-              class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 dark:bg-red-600 dark:hover:bg-red-700 sm:ml-3 sm:w-auto"
-            >
+            <button @click="handleDelete"
+              class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 dark:bg-red-600 dark:hover:bg-red-700 sm:ml-3 sm:w-auto">
               Sil
             </button>
-            <button
-              @click="showDeleteModal = false"
-              class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-600 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 sm:mt-0 sm:w-auto"
-            >
+            <button @click="showDeleteModal = false"
+              class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-600 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 sm:mt-0 sm:w-auto">
               İptal
             </button>
           </div>
@@ -430,49 +360,25 @@
     </div>
 
     <!-- Customer Create Modal -->
-    <CustomerCreateModal
-      :show="showCreateModal"
-      @close="showCreateModal = false"
-      @created="handleCustomerCreated"
-    />
+    <CustomerCreateModal :show="showCreateModal" @close="showCreateModal = false" @created="handleCustomerCreated" />
 
     <!-- Customer History Modal -->
-    <CustomerHistoryModal
-      :show="showHistoryModal"
-      :customer="selectedCustomer"
-      @close="showHistoryModal = false"
-    />
+    <CustomerHistoryModal :show="showHistoryModal" :customer="selectedCustomer" @close="showHistoryModal = false" />
 
     <!-- Customer Notes Modal -->
-    <CustomerNotesModal
-      :show="showNotesModal"
-      :customer="selectedCustomer"
-      @close="showNotesModal = false"
-      @customer-updated="() => customersStore.fetchCustomers(pagination.page)"
-    />
+    <CustomerNotesModal :show="showNotesModal" :customer="selectedCustomer" @close="showNotesModal = false"
+      @customer-updated="() => customersStore.fetchCustomers(pagination.page)" />
 
     <!-- Doctor Assignment Modal -->
-    <DoctorAssignmentModal
-      :show="showDoctorModal"
-      :customer="selectedCustomer"
-      @close="showDoctorModal = false"
-      @assigned="handleDoctorAssigned"
-    />
+    <DoctorAssignmentModal :show="showDoctorModal" :customer="selectedCustomer" @close="showDoctorModal = false"
+      @assigned="handleDoctorAssigned" />
 
     <!-- Customer Services Modal -->
-    <CustomerServicesModal
-      :show="showServicesModal"
-      :customer="selectedCustomer"
-      @close="showServicesModal = false"
-      @saved="handleServicesSaved"
-    />
+    <CustomerServicesModal :show="showServicesModal" :customer="selectedCustomer" @close="showServicesModal = false"
+      @saved="handleServicesSaved" />
 
     <!-- Customer Files Modal -->
-    <CustomerFilesModal
-      :show="showFilesModal"
-      :customer="selectedCustomer"
-      @close="showFilesModal = false"
-    />
+    <CustomerFilesModal :show="showFilesModal" :customer="selectedCustomer" @close="showFilesModal = false" />
   </div>
 </template>
 
@@ -485,12 +391,13 @@ import {
   ExclamationTriangleIcon,
   EyeIcon,
   ClockIcon,
-  DocumentTextIcon,
-  UserIcon,
+  DocumentTextIcon, 
   ShoppingBagIcon,
   PencilIcon,
   TrashIcon,
-  FolderIcon
+  FolderIcon,
+  XCircleIcon,
+  EllipsisHorizontalIcon
 } from '@heroicons/vue/24/outline'
 
 import { useAuthStore } from '~/stores/auth'
@@ -510,7 +417,7 @@ const pagination = ref({
 
 const customersData = ref([])
 const authStore = useAuthStore()
- 
+
 // Tab state - read from URL query parameter
 const route = useRoute()
 const router = useRouter()
@@ -524,6 +431,10 @@ const statusFilter = ref('')
 const statusOptions = ref([])
 const statusMap = ref({})
 const usersMap = ref({}) // User ID to user object mapping
+
+const showStates = ref({ activeId: null })
+
+
 
 // Column filters
 const columnFilters = ref({
@@ -556,6 +467,16 @@ const showDoctorModal = ref(false)
 const showServicesModal = ref(false)
 const showFilesModal = ref(false)
 const selectedCustomer = ref(null)
+
+const toggleShow = (id) => {
+  if (showStates.value.activeId === id) {
+    // Aynı id'ye tıklandıysa: kapat
+    showStates.value.activeId = null
+  } else {
+    // Farklı id'ye tıklandıysa: mevcut açık olanı kapat, yenisini aç
+    showStates.value.activeId = id
+  }
+}
 
 // Computed properties
 const filteredCustomers = computed(() => {
@@ -944,7 +865,7 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString('tr-TR')
 }
 
- 
+
 const getStatusClass = (statusId) => {
   const status = statusMap.value[statusId]
   if (!status) {
@@ -978,8 +899,8 @@ const getStatusText = (statusId) => {
 const getWaitingTime = (dateString) => {
   if (!dateString) return '-'
 
-  return $dayjs(dateString).fromNow()   
-  
+  return $dayjs(dateString).fromNow()
+
 }
 
 
@@ -1043,11 +964,11 @@ onMounted(async () => {
     // Fetch customers based on active tab
     await fetchCustomers(1)
 
-    
-  isEditable.value = authStore.user?.role != 'doctor' ? true : false
-  isDeleteable.value = authStore.user?.role != 'doctor' ? true : false
- 
-  
+
+    isEditable.value = authStore.user?.role != 'doctor' ? true : false
+    isDeleteable.value = authStore.user?.role != 'doctor' ? true : false
+
+
   } catch (error) {
     console.error('Failed to load data:', error)
     loading.value = false
@@ -1062,8 +983,8 @@ watch(activeTab, async (newTab) => {
   // Reset filters and fetch new data
   resetFilters()
   pagination.value.page = 1
-  await fetchCustomers(1) 
- 
+  await fetchCustomers(1)
+
 })
 
 // Page head

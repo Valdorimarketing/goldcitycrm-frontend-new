@@ -239,14 +239,7 @@
           <p class="text-sm text-gray-500 dark:text-gray-400">Henüz müşteri bulunmuyor</p>
         </div>
 
-        <div v-if="canAddCustomer" class="mt-4">
-          <NuxtLink
-            to="/customers/new"
-            class="btn-primary text-center block"
-          >
-            Yeni Müşteri Ekle
-          </NuxtLink>
-        </div>
+         
       </div>
 
       <!-- Upcoming Reminders -->
