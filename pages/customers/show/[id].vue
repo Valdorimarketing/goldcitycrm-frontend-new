@@ -105,9 +105,13 @@
                   <UserIcon class="h-5 w-5 text-gray-400 mr-3 flex-shrink-0" />
                   <span class="text-gray-700 dark:text-gray-300">{{ getGenderText(customer.gender) }}</span>
                 </div>
-                <div v-if="customer.url" class="flex items-start text-sm" title="Hangi linkten geldi?">
+                <div v-if="customer.url" class="flex items-start text-sm" title="Hangi Linkten Geldi">
                   <GlobeAltIcon class="h-5 w-5 text-gray-400 mr-3 flex-shrink-0 mt-0.5" />
                   <span class="text-gray-700 dark:text-gray-300">{{ customer.url }}</span>
+                </div>
+                <div v-if="customer.checkup_package" class="flex items-start text-sm" title="Hangi Checkup Paketi">
+                  <CursorArrowRippleIcon class="h-5 w-5 text-gray-400 mr-3 flex-shrink-0 mt-0.5" />
+                  <span class="text-gray-700 dark:text-gray-300">{{ customer.checkup_package }}</span>
                 </div>
                 <div v-if="customer.birth_date" class="flex items-center text-sm">
                   <CalendarIcon class="h-5 w-5 text-gray-400 mr-3 flex-shrink-0" />
@@ -419,7 +423,8 @@ import {
   CheckCircleIcon,
   XCircleIcon,
   ArrowPathIcon,
-  ViewfinderCircleIcon
+  ViewfinderCircleIcon,
+  CursorArrowRippleIcon
 } from '@heroicons/vue/24/outline'
 
 // definePageMeta({

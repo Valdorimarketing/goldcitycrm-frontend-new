@@ -91,6 +91,17 @@
             </select>
           </div>
 
+          <!-- User Team -->
+          <div>
+            <label for="userGroupId" class="form-label">Kullanıcı Takımı</label>
+            <select id="userGroupId" v-model="form.userTeamId" class="form-input">
+              <option :value="null">Takım seçin (opsiyonel)</option>
+              <option v-for="team in userTeams" :key="team.id" :value="team.id">
+                {{ team.name }}
+              </option>
+            </select>
+          </div>
+
           <!-- Error Message -->
           <div v-if="errorMessage"
             class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
@@ -144,6 +155,7 @@ const props = defineProps({
 const emit = defineEmits(['close', 'created', 'updated'])
 
 const { userGroups, fetchUserGroups } = useUserGroups()
+const { userTeams, fetchUserTeams } = useUserTeams()
 
 const loading = ref(false)
 const errorMessage = ref('')
@@ -158,6 +170,7 @@ const form = reactive({
   password: '',
   role: '',
   userGroupId: null,
+  userTeamId: null,
   avatar: null
 })
 
@@ -167,6 +180,7 @@ const errors = reactive({
   password: '',
   role: '',
   userGroupId: '',
+  userTeamId: '',
   avatar: ''
 })
 
@@ -184,6 +198,7 @@ const populateForm = () => {
     form.email = props.user.email || ''
     form.role = props.user.role || ''
     form.userGroupId = props.user.userGroupId || null
+    form.userTeamId = props.user.userTeamId || null
     previewAvatar.value =  props.user.avatar ? path + props.user.avatar : null
   } 
 }
@@ -205,38 +220,53 @@ const validateForm = () => {
   if (!form.role) { errors.role = 'Rol seçimi gereklidir'; isValid = false }
   return isValid
 }
-
 const handleSubmit = async () => {
   if (!validateForm()) return
-
   loading.value = true
   errorMessage.value = ''
   successMessage.value = ''
 
   try {
     const api = useApi()
-    const formData = new FormData()
-    formData.append('name', form.name)
-    formData.append('email', form.email)
-    formData.append('role', form.role)
-    if (form.userGroupId) formData.append('userGroupId', form.userGroupId)
-    if (form.password) formData.append('password', form.password)
-    if (form.avatar) formData.append('avatar', form.avatar)
+
+    const userData = {
+      name: form.name,
+      email: form.email,
+      role: form.role,
+      userGroupId: form.userGroupId,
+      userTeamId: form.userTeamId,
+      password: form.password || undefined,
+    }
 
     let result
     if (props.user) {
-      result = await api(`/users/${props.user.id}`, { method: 'PATCH', body: formData })
-      successMessage.value = 'Kullanıcı başarıyla güncellendi!'
+      // 🟢 JSON gönderiyoruz, FormData değil
+      result = await api(`/users/${props.user.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData),
+      })
 
-      // avatar varsa ayrıca yükle
+      // Avatar ayrıca gönderiliyor
       if (form.avatar instanceof File) {
         const avatarData = new FormData()
         avatarData.append('avatar', form.avatar)
-        await api(`/users/${props.user.id}/avatar`, { method: 'POST', body: avatarData })
+        await api(`/users/${props.user.id}/avatar`, {
+          method: 'POST',
+          body: avatarData,
+        })
       }
 
+      successMessage.value = 'Kullanıcı başarıyla güncellendi!'
       emit('updated', result)
     } else {
+      // Yeni kullanıcı için
+      const formData = new FormData()
+      Object.entries(userData).forEach(([key, val]) => {
+        if (val !== undefined) formData.append(key, val)
+      })
+      if (form.avatar) formData.append('avatar', form.avatar)
+
       result = await api('/users', { method: 'POST', body: formData })
       successMessage.value = 'Kullanıcı başarıyla oluşturuldu!'
       emit('created', result)
@@ -250,6 +280,7 @@ const handleSubmit = async () => {
   }
 }
 
+
 const closeModal = () => {
   if (!loading.value) {
     resetForm()
@@ -257,5 +288,5 @@ const closeModal = () => {
   }
 }
 
-watch(() => props.isOpen, (v) => v ? (fetchUserGroups(), populateForm()) : resetForm())
+watch(() => props.isOpen, (v) => v ? (fetchUserGroups(), fetchUserTeams(), populateForm()) : resetForm())
 </script>

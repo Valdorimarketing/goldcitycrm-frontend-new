@@ -239,6 +239,7 @@ const customers = computed(() => {
 })
 
 // Search and filters
+const users = ref([])
 const searchTerm = ref('')
 const statusFilter = ref(undefined)
 const relevantUserFilter = ref(null)
@@ -382,6 +383,21 @@ watchDebounced(
 onMounted(async () => {
   loadFiltersFromStorage()
   await loadCustomers(1)
+
+
+  // Load users
+  try {
+    const usersResponse = await api('/users')
+    if (Array.isArray(usersResponse)) {
+      users.value = usersResponse
+      // Create users map
+      usersResponse.forEach(user => {
+        usersMap.value[user.id] = user
+      })
+    }
+  } catch (usersError) {
+    console.error('Failed to load users:', usersError)
+  }
 
   // Load statuses
   try {
