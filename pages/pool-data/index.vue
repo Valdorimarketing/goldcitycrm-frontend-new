@@ -70,6 +70,7 @@
               <th class="table-header text-gray-700 dark:text-gray-300">Telefon</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Kaynak</th>
               <th class="table-header text-gray-700 dark:text-gray-300">URL</th>
+              <th class="table-header text-gray-700 dark:text-gray-300">Checkup Paket</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Eklenme Tarihi</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Bekleme Süresi</th>
               <th v-if="activeTab === 'unassigned'" class="table-header text-gray-700 dark:text-gray-300">Atama</th>
@@ -99,6 +100,11 @@
               </th> 
               <th class="px-3 py-2">
                 <input v-model="columnFilters.url" type="text"
+                  class="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                  placeholder="Filtre..." />
+              </th> 
+              <th class="px-3 py-2">
+                <input v-model="columnFilters.checkup_package" type="text"
                   class="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                   placeholder="Filtre..." />
               </th> 
@@ -142,6 +148,9 @@
               </td>
               <td class="table-cell">
                 <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.url || '-' }}</div>
+              </td>
+              <td class="table-cell">
+                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.checkup_package || '-' }}</div>
               </td>
               <td class="table-cell">
                 <div class="text-sm text-gray-900 dark:text-gray-100">
@@ -449,6 +458,7 @@ const columnFilters = ref({
   email: '',
   phone: '',
   url: '',
+  checkup_package: '',
   source: '',
   createdAt: ''
 })
@@ -519,6 +529,13 @@ const filteredCustomers = computed(() => {
     const urlFilter = columnFilters.value.url.toLowerCase()
     filtered = filtered.filter(customer =>
       customer.url?.toLowerCase().includes(urlFilter)
+    )
+  }
+
+  if (columnFilters.value.checkup_package) {
+    const checkupPackageFilter = columnFilters.value.checkup_package.toLowerCase()
+    filtered = filtered.filter(customer =>
+      customer.checkup_package?.toLowerCase().includes(checkupPackageFilter)
     )
   }
 
@@ -748,6 +765,7 @@ const resetFilters = () => {
     email: '',
     phone: '',
     url: '',
+    checkup_package: '',
     source: '',
     createdAt: ''
   }

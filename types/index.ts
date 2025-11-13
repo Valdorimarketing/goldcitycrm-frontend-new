@@ -16,6 +16,8 @@ export interface User {
   name: string
   email: string
   role: string
+  userGroup?: any
+  userTeam?:any
   isActive: boolean
   createdAt?: string
   updatedAt?: string

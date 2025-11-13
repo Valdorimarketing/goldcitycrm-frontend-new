@@ -47,7 +47,7 @@
 
 
     <!-- Users List -->
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2  xl:grid-cols-3">
       <div v-for="user in filteredUsers" :key="user.id" class="card border-l-4 p-3 rounded-lg shadow-sm transition"
         :class="[
           user.role === 'admin'
@@ -73,15 +73,47 @@
                     Yok
                   </div>
                 </div>
-                <div class="relative flex flex-col">
-                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ user.name || 'İsimsiz Kullanıcı' }}
-                  </h3>
-                  <p class="text-sm text-gray-600 dark:text-gray-400">{{ user.email || 'E-posta yok' }}</p>
-                  <p class="text-xs text-gray-500 dark:text-gray-500">{{ getRoleText(user.role) }}</p>
+
+
+                <div class="flex flex-col items-start gap-2 mt-1 text-xs text-gray-500 dark:text-gray-400 ">
+
+
+                  <div class="flex items-center justify-between gap-2">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white truncate">
+                      {{ user.name || 'İsimsiz Kullanıcı' }}
+                    </h3>
+                    <span
+                      class="px-2 py-1 text-xs rounded-full bg-indigo-100 text-indigo-700 dark:bg-indigo-700 dark:text-indigo-100">
+                      {{ getRoleText(user.role) }}
+                    </span>
+                  </div>
+
+
+                  <span v-if="user?.userGroup?.name" title="Grup Bilgisi"
+                    class="flex items-center gap-1 px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700">
+                    {{ user.userGroup.name }}
+                  </span>
+
+                  <span v-else title="Grup Bilgisi"
+                    class="flex items-center gap-1 px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700">
+                    bulunamadı
+                  </span>
+
+                  <span v-if="user?.userTeam?.name" title="Takım Bilgisi"
+                    class="flex items-center gap-1 px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700">
+                    {{ user.userTeam.name }}
+                  </span>
+
+                  <span v-else title="Takım Bilgisi"
+                    class="flex items-center gap-1 px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700">
+                    bulunamadı
+                  </span>
+                   
                 </div>
+
               </div>
             </div>
-            <div class="flex items-end gap-2 flex-col">
+            <div class="flex items-end space-y-1 flex-col">
               <span
                 :class="user.isActive ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'"
                 class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
@@ -120,6 +152,12 @@
               </span>
             </button>
           </div>
+          <div class="w-full relative flex justify-center">
+            <span
+              class="bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
+              son görülme: {{ getLastSeen(user.lastActiveTime) }}
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -139,7 +177,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { ArrowPathIcon, PlusIcon } from '@heroicons/vue/24/outline'
+import { ArrowPathIcon, FlagIcon, PlusIcon, UserGroupIcon } from '@heroicons/vue/24/outline'
 import { useUsersStore } from '~/stores/users'
 import UserCreateModal from '~/components/UserCreateModal.vue'
 import dayjs from 'dayjs'
@@ -197,13 +235,17 @@ const getLastActiveText = (lastActiveTime) => {
   }
 }
 
+const getLastSeen = (lastActiveTime) => {
+  return dayjs(lastActiveTime).fromNow()
+}
+
 // Load users function
 const loadUsers = async () => {
   try {
-    const api = useApi() 
+    const api = useApi()
 
     const response = await api('/users')
- 
+
     if (Array.isArray(response)) {
       usersStore.users.value = response
     } else {
@@ -288,7 +330,9 @@ const getRoleColorClass = (role, isActive) => {
 // Load data on mount
 onMounted(() => {
   loadUsers()
+  setInterval(loadUsers, 30000)
 })
+
 
 // Modal functions
 const openModal = () => {
@@ -314,7 +358,7 @@ const handleUserCreated = (newUser) => {
 }
 
 // Handle user update
-const handleUserUpdated = () => {  
+const handleUserUpdated = () => {
   loadUsers()
 }
 
@@ -322,7 +366,7 @@ const handleUserUpdated = () => {
 
 
 
-const toggleUserStatus = async (user) => {  
+const toggleUserStatus = async (user) => {
   // Set loading state
   toggleLoading.value[user.id] = true
 

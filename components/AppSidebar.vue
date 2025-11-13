@@ -135,7 +135,8 @@ import {
   UserGroupIcon,
   UserPlusIcon,
   MagnifyingGlassIcon,
-  CircleStackIcon
+  CircleStackIcon,
+  FlagIcon
 } from '@heroicons/vue/24/outline'
 
 const authStore = useAuthStore()
@@ -187,6 +188,7 @@ const allNavigationItems = [
     items: [
       { name: 'Kullanıcılar', href: '/users', icon: UserIcon },
       { name: 'Kullanıcı Grupları', href: '/user-groups', icon: UserGroupIcon },
+      { name: 'Takımlar', href: '/teams', icon: FlagIcon },
       { name: 'Ürünler', href: '/products', icon: ShoppingBagIcon },
       { name: 'Durumlar', href: '/statuses', icon: TagIcon },
       { name: 'Hastaneler', href: '/hospitals', icon: BuildingOffice2Icon },

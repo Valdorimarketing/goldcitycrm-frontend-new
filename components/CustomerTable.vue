@@ -46,6 +46,7 @@
           <td class="table-cell">{{ customer.source || '-' }}</td>
           <td class="table-cell">{{ customer.relatedTransaction || '-' }}</td>
           <td class="table-cell">{{ customer.patient || '-' }}</td>
+          <td class="table-cell">{{ customer.checkup_package || '-' }}</td>
           <td class="table-cell">{{ customer.relevantUserData ? customer.relevantUserData : '-' }}</td>
           <td class="table-cell">{{ customer.isActive ? 'Aktif' : 'Pasif' }}</td>
           <td class="table-cell">{{ formatDate(customer.createdAt) }}</td>
@@ -189,6 +190,7 @@ const columns = [
   { label: 'Kaynak', key: 'source' },
   { label: 'İlgilenilen Konu', key: 'relatedTransaction' },
   { label: 'Hastalık', key: 'patient' },
+  { label: 'Checkup Paketi', key: 'checkup_package' },
   { label: 'Atanan', key: 'relevantUserData' },
   { label: 'Aktif', key: 'isActive' },
   { label: 'Eklenme Tarihi', key: 'createdAt' },
