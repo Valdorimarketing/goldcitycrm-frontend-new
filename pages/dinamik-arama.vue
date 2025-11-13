@@ -76,7 +76,7 @@
         </div>
       </template>
 
-      <button @click="resetFilters" class="btn-secondary">
+      <button @click="resetFilters" class="btn-secondary mt-3">
         Filtreleri Temizle
       </button>
     </div>
@@ -92,6 +92,7 @@
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead class="bg-gray-50 dark:bg-gray-800">
             <tr>
+              <th class="table-header text-gray-700 dark:text-gray-300"></th>
               <th class="table-header text-gray-700 dark:text-gray-300">İsim</th>
               <th class="table-header text-gray-700 dark:text-gray-300">E-posta</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Telefon</th>
@@ -101,11 +102,88 @@
               <th class="table-header text-gray-700 dark:text-gray-300">Oluşturan</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Atanan</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Aktif</th>
-              <th class="table-header text-gray-700 dark:text-gray-300">İşlemler</th>
             </tr>
           </thead>
           <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
             <tr v-for="customer in customersData" :key="customer.id">
+
+            
+                  <td class="table-cell">
+                <div class="relative inline-block text-left">
+                  <!-- Trigger Button -->
+                  <button type="button"
+                    class="inline-flex items-center justify-center w-9 h-9 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                    @click="toggleShow(customer.id)">
+                    <EllipsisHorizontalIcon class="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                  </button>
+
+                  <!-- Dropdown -->
+                  <div v-show="showStates.activeId === customer.id"
+                    class="fixed left-0 top-0 bottom-0 m-auto z-20 bg-white/50 dark:bg-black/50 w-full h-full flex justify-center items-center">
+                    <div
+                      class="flex flex-col h-96 max-w-lg rounded-lg bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transition">
+                      <div
+                        class="flex flex-wrap gap-2 justify-between items-center px-4 py-1 border-b border-gray-200 dark:border-gray-700">
+                        <div class="text-lg font-semibold">İşlemler</div>
+                        <button @click="toggleShow(customer.id)" class="p-2 rounded-md">
+                          <XCircleIcon class="h-6 w-6 text-gray-400 dark:text-white" />
+                        </button>
+                      </div>
+                      <div class="p-3 grid grid-cols-3 gap-2">
+                        <NuxtLink :to="`/customers/show/${customer.id}`"
+                          class="flex flex-col items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                          <EyeIcon class="h-8 w-8 text-indigo-500" />
+                          Görüntüle
+                        </NuxtLink>
+
+                        <button @click="showHistory(customer)"
+                          class="flex flex-col items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                          <ClockIcon class="h-8 w-8 text-blue-500" />
+                          Geçmiş
+                        </button>
+
+                        <button @click="showNotes(customer)"
+                          class="flex flex-col items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                          <DocumentTextIcon class="h-8 w-8 text-amber-500" />
+                          Notlar
+                        </button>
+
+                        <button @click="showDoctorAssignment(customer)"
+                          class="flex flex-col items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                          <UsersIcon class="h-8 w-8 text-purple-500" />
+                          Doktor Görüşü
+                        </button>
+
+                        <button @click="showServices(customer)"
+                          class="flex flex-col items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                          <ShoppingBagIcon class="h-8 w-8 text-green-500" />
+                          Hizmetler
+                        </button>
+
+                        <button @click="showFiles(customer)"
+                          class="flex flex-col items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                          <FolderIcon class="h-8 w-8 text-cyan-500" />
+                          Müşteri Dosyaları
+                        </button>
+
+                        <NuxtLink v-if="isEditable" :to="`/customers/edit/${customer.id}`"
+                          class="flex flex-col items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                          <PencilIcon class="h-8 w-8 text-yellow-500" />
+                          Düzenle
+                        </NuxtLink>
+
+                        <button v-if="isDeleteable" @click="confirmDelete(customer)"
+                          class="flex flex-col items-center gap-2 w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30">
+                          <TrashIcon class="h-8 w-8 text-red-500" />
+                          Sil
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </td>
+
               <td class="table-cell">
                 <div class="flex items-center">
                   <div class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
@@ -154,73 +232,6 @@
                   {{ customer.isActive ? 'Aktif' : 'Pasif' }}
                 </span>
               </td>
-
-              <td class="table-cell text-right">
-                <div class="relative inline-block text-left">
-                  <!-- Trigger Button -->
-                  <button type="button"
-                    class="inline-flex items-center justify-center w-9 h-9 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition"
-                    @click="toggleShow(customer.id)">
-                    <EllipsisHorizontalIcon class="h-5 w-5 text-gray-700 dark:text-gray-300" />
-                  </button>
-
-                  <!-- Dropdown -->
-                  <div v-show="showStates.activeId === customer.id"
-                    class="absolute  right-0 z-50 mt-2 w-48 origin-top-right rounded-lg bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transition">
-                    <div class="py-1">
-                      <NuxtLink :to="`/customers/show/${customer.id}`"
-                        class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                        <EyeIcon class="h-4 w-4 text-indigo-500" />
-                        Görüntüle
-                      </NuxtLink>
-
-                      <button @click="showHistory(customer)"
-                        class="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <ClockIcon class="h-4 w-4 text-blue-500" />
-                        Geçmiş
-                      </button>
-
-                      <button @click="showNotes(customer)"
-                        class="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <DocumentTextIcon class="h-4 w-4 text-amber-500" />
-                        Notlar
-                      </button>
-
-                      <button @click="showDoctorAssignment(customer)"
-                        class="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <UserIcon class="h-4 w-4 text-purple-500" />
-                        Doktor Görüşü
-                      </button>
-
-                      <button @click="showServices(customer)"
-                        class="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <ShoppingBagIcon class="h-4 w-4 text-green-500" />
-                        Hizmetler
-                      </button>
-
-                      <button @click="showFiles(customer)"
-                        class="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <FolderIcon class="h-4 w-4 text-cyan-500" />
-                        Müşteri Dosyaları
-                      </button>
-
-                      <NuxtLink v-if="isEditable" :to="`/customers/edit/${customer.id}`"
-                        class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <PencilIcon class="h-4 w-4 text-yellow-500" />
-                        Düzenle
-                      </NuxtLink>
-
-                      <button v-if="isDeleteable" @click="emit('confirm-delete', customer)"
-                        class="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30">
-                        <TrashIcon class="h-4 w-4 text-red-500" />
-                        Sil
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </td>
-
-
             </tr>
 
             <!-- Empty State -->
@@ -264,11 +275,11 @@ import {
   EyeIcon,
   ClockIcon,
   DocumentTextIcon,
-  UserIcon,
   ShoppingBagIcon,
   PencilIcon,
   FolderIcon,
-  EllipsisHorizontalIcon
+  EllipsisHorizontalIcon,
+  XCircleIcon
 } from '@heroicons/vue/24/outline'
 
 definePageMeta({})

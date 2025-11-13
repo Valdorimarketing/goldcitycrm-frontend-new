@@ -8,7 +8,8 @@
 
           <!-- Sinyal animasyonu -->
           <div class="relative w-4 h-4">
-            <span class="absolute left-0 bottom-0 right-0 top-0 inline-flex h-full w-full rounded-full bg-green-400 opacity-75 animate-ping"></span>
+            <span
+              class="absolute left-0 bottom-0 right-0 top-0 inline-flex h-full w-full rounded-full bg-green-400 opacity-75 animate-ping"></span>
             <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
           </div>
         </div>
@@ -62,9 +63,14 @@
     <!-- Customers Table -->
     <div v-else class="card">
       <div class="overflow-x-auto">
+
+        <input v-model="columnFilters.name" type="text"
+          class="w-full max-w-xl px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+          placeholder="Ad, Soyad, Email, Telefon, Checkup Paket, URL alanlarında filtrele" />
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead class="bg-gray-50 dark:bg-gray-800">
-            <tr>  
+            <tr>
+              <th class="table-header text-gray-700 dark:text-gray-300"></th>
               <th class="table-header text-gray-700 dark:text-gray-300">İsim</th>
               <th class="table-header text-gray-700 dark:text-gray-300">E-posta</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Telefon</th>
@@ -75,124 +81,10 @@
               <th class="table-header text-gray-700 dark:text-gray-300">Bekleme Süresi</th>
               <th v-if="activeTab === 'unassigned'" class="table-header text-gray-700 dark:text-gray-300">Atama</th>
               <th v-if="activeTab === 'assigned'" class="table-header text-gray-700 dark:text-gray-300">Atanan</th>
-              <th class="table-header text-gray-700 dark:text-gray-300">İşlemler</th>
-            </tr>
-            <tr> 
-              <th class="px-3 py-2">
-                <input v-model="columnFilters.name" type="text"
-                  class="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                  placeholder="Filtre..." />
-              </th>
-              <th class="px-3 py-2">
-                <input v-model="columnFilters.email" type="text"
-                  class="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                  placeholder="Filtre..." />
-              </th>
-              <th class="px-3 py-2">
-                <input v-model="columnFilters.phone" type="text"
-                  class="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                  placeholder="Filtre..." />
-              </th>
-              <th class="px-3 py-2">
-                <input v-model="columnFilters.source" type="text"
-                  class="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                  placeholder="Filtre..." />
-              </th> 
-              <th class="px-3 py-2">
-                <input v-model="columnFilters.url" type="text"
-                  class="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                  placeholder="Filtre..." />
-              </th> 
-              <th class="px-3 py-2">
-                <input v-model="columnFilters.checkup_package" type="text"
-                  class="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                  placeholder="Filtre..." />
-              </th> 
-              <th class="px-3 py-2">
-                <input v-model="columnFilters.createdAt" type="text"
-                  class="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                  placeholder="Filtre..." />
-              </th>
-              <th class="px-3 py-2"></th>
-              <th v-if="activeTab === 'unassigned'" class="px-3 py-2"></th>
-              <th v-if="activeTab === 'assigned'" class="px-3 py-2"></th>
-              <th class="px-3 py-2"></th>
-            </tr>
+            </tr> 
           </thead>
           <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
-            <tr v-for="customer in filteredCustomers" :key="customer.id">
-              <td class="table-cell">
-                <div class="flex items-center">
-                  <div class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
-                    <span class="text-sm font-medium text-indigo-600 dark:text-indigo-300">
-                      {{ customer.name.charAt(0).toUpperCase() }}
-                    </span>
-                  </div>
-                  <div class="ml-4">
-                    <NuxtLink :to="`/customers/show/${customer.id}`"
-                      class="text-sm flex flex-col gap-1 font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer">
-                      <span>{{ customer.name }}</span>
-                      <span class="text-xs dark:text-gray-400">ID: {{ customer.id }}</span>
-                    </NuxtLink>
-                  </div>
-                </div>
-              </td>
-              <td class="table-cell">
-                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.email || '-' }}</div>
-              </td>
-              <td class="table-cell">
-                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.phone || '-' }}</div>
-              </td>
-              <td class="table-cell">
-                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.source || '-' }}</div>
-              </td>
-              <td class="table-cell">
-                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.url || '-' }}</div>
-              </td>
-              <td class="table-cell">
-                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.checkup_package || '-' }}</div>
-              </td>
-              <td class="table-cell">
-                <div class="text-sm text-gray-900 dark:text-gray-100">
-                  {{ formatDate(customer.createdAt) }}
-                </div>
-              </td>
-              <td class="table-cell">
-                <div class="text-sm text-gray-900 dark:text-gray-100">
-                  {{ getWaitingTime(activeTab === 'assigned' ? (customer.updatesAt || customer.updatedAt) :
-                    customer.createdAt) }}
-                </div>
-              </td>
-              <td v-if="activeTab === 'unassigned'" class="table-cell">
-                <div class="flex gap-2 items-center">
-                  <select v-model="rowAssignments[customer.id].selectedGroupId" @change="onGroupChange(customer.id)"
-                    class="form-input text-xs py-1 px-2 min-w-[120px]">
-                    <option value="">Grup Seç</option>
-                    <option v-for="group in userGroups" :key="group.id" :value="group.id">
-                      {{ group.name }}
-                    </option>
-                  </select>
-                  <select v-model="rowAssignments[customer.id].selectedUserId"
-                    :disabled="!rowAssignments[customer.id].selectedGroupId"
-                    class="form-input text-xs py-1 px-2 min-w-[120px]">
-                    <option value="">Kullanıcı Seç</option>
-                    <option v-for="user in getGroupUsers(customer.id)" :key="user.id" :value="user.id">
-                      {{ user.name }}
-                    </option>
-                  </select>
-                  <button @click="assignCustomerToUser(customer)"
-                    :disabled="!rowAssignments[customer.id].selectedUserId"
-                    class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap">
-                    Bu Kullanıcıya Ata
-                  </button>
-                </div>
-              </td>
-              <td v-if="activeTab === 'assigned'" class="table-cell">
-                <div class="text-sm text-gray-900 dark:text-gray-100">
-                  {{ customer.relevantUser?.name || '-' }}
-                </div>
-              </td>
-
+            <tr v-for="customer in customersData" :key="customer.id">
               <td class="table-cell">
                 <div class="relative inline-block text-left">
                   <!-- Trigger Button -->
@@ -268,11 +160,90 @@
 
                 </div>
               </td>
+              <td class="table-cell">
+                <div class="flex items-center">
+                  <div class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
+                    <span class="text-sm font-medium text-indigo-600 dark:text-indigo-300">
+                      {{ customer.name.charAt(0).toUpperCase() }}
+                    </span>
+                  </div>
+                  <div class="ml-4">
+                    <NuxtLink :to="`/customers/show/${customer.id}`"
+                      class="text-sm flex flex-col gap-1 font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer">
+                      <span>{{ customer.name }}</span>
+                      <span class="text-xs dark:text-gray-400">ID: {{ customer.id }}</span>
+                    </NuxtLink>
+                  </div>
+                </div>
+              </td>
+              <td class="table-cell">
+                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.email || '-' }}</div>
+              </td>
+              <td class="table-cell">
+                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.phone || '-' }}</div>
+              </td>
+              <td class="table-cell">
+                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.source || '-' }}</div>
+              </td>
+              <td class="table-cell">
+                <div class="text-sm text-gray-900 dark:text-gray-100">
+                  <a v-if="customer.url" :href="customer.url" target="_blank" rel="noopener noreferrer"
+                    class="text-blue-600 hover:underline">
+                    {{ customer.url }}
+                  </a>
+                  <span v-else>-</span>
+                </div>
+              </td>
+              <td class="table-cell">
+                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.checkup_package || '-' }}</div>
+              </td>
+              <td class="table-cell">
+                <div class="text-sm text-gray-900 dark:text-gray-100">
+                  {{ formatDate(customer.createdAt) }}
+                </div>
+              </td>
+              <td class="table-cell">
+                <div class="text-sm text-gray-900 dark:text-gray-100">
+                  {{ getWaitingTime(activeTab === 'assigned' ? (customer.updatesAt || customer.updatedAt) :
+                    customer.createdAt) }}
+                </div>
+              </td>
+              <td v-if="activeTab === 'unassigned'" class="table-cell">
+                <div class="flex gap-2 items-center">
+                  <select v-model="rowAssignments[customer.id].selectedGroupId" @change="onGroupChange(customer.id)"
+                    class="form-input text-xs py-1 px-2 min-w-[120px]">
+                    <option value="">Grup Seç</option>
+                    <option v-for="group in userGroups" :key="group.id" :value="group.id">
+                      {{ group.name }}
+                    </option>
+                  </select>
+                  <select v-model="rowAssignments[customer.id].selectedUserId"
+                    :disabled="!rowAssignments[customer.id].selectedGroupId"
+                    class="form-input text-xs py-1 px-2 min-w-[120px]">
+                    <option value="">Kullanıcı Seç</option>
+                    <option v-for="user in getGroupUsers(customer.id)" :key="user.id" :value="user.id">
+                      {{ user.name }}
+                    </option>
+                  </select>
+                  <button @click="assignCustomerToUser(customer)"
+                    :disabled="!rowAssignments[customer.id].selectedUserId"
+                    class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap">
+                    Bu Kullanıcıya Ata
+                  </button>
+                </div>
+              </td>
+              <td v-if="activeTab === 'assigned'" class="table-cell">
+                <div class="text-sm text-gray-900 dark:text-gray-100">
+                  {{ customer.relevantUser?.name || '-' }}
+                </div>
+              </td>
+
+
             </tr>
 
             <!-- Empty State -->
-            <tr v-if="filteredCustomers.length === 0">
-              <td :colspan="activeTab === 'unassigned' ? 9 : 8" class="text-center py-12">
+            <tr v-if="customersData.length === 0">
+              <td :colspan="10" class="text-center py-12">
                 <UsersIcon class="mx-auto h-12 w-12 text-gray-400" />
                 <h3 class="mt-2 text-sm font-medium text-gray-900">Havuz verisi bulunamadı</h3>
                 <p class="mt-1 text-sm text-gray-500">
@@ -443,7 +414,7 @@ const isEditable = ref(true);
 const isDeleteable = ref(true);
 
 // Search and filters
- 
+
 const statusOptions = ref([])
 const statusMap = ref({})
 const usersMap = ref({}) // User ID to user object mapping
@@ -463,12 +434,13 @@ const columnFilters = ref({
   createdAt: ''
 })
 
+// 🔄 Filtre değiştikçe API çağır
+watch(columnFilters, () => {
+  fetchCustomers(1)
+}, { deep: true })
+
 // User assignment
-const users = ref([])
-const selectedUser = ref(null)
-const userSearch = ref('')
-const showUserDropdown = ref(false)
-const selectedCustomers = ref([])
+const users = ref([]) 
 
 // User groups and row-level assignments
 const userGroups = ref([])
@@ -485,6 +457,7 @@ const showDoctorModal = ref(false)
 const showServicesModal = ref(false)
 const showFilesModal = ref(false)
 const selectedCustomer = ref(null)
+const isInitialLoad = ref(true)
 
 const toggleShow = (id) => {
   if (showStates.value.activeId === id) {
@@ -495,70 +468,12 @@ const toggleShow = (id) => {
     showStates.value.activeId = id
   }
 }
-
-// Computed properties
-const filteredCustomers = computed(() => {
-  let filtered = customersData.value
-
-  // Backend already filters by isFirst and hasRelevantUser
-  // We only need to apply column filters here
-
-  // Column filters
-  if (columnFilters.value.name) {
-    const nameFilter = columnFilters.value.name.toLowerCase()
-    filtered = filtered.filter(customer =>
-      customer.name?.toLowerCase().includes(nameFilter)
-    )
-  }
-
-  if (columnFilters.value.email) {
-    const emailFilter = columnFilters.value.email.toLowerCase()
-    filtered = filtered.filter(customer =>
-      customer.email?.toLowerCase().includes(emailFilter)
-    )
-  }
-
-  if (columnFilters.value.phone) {
-    const phoneFilter = columnFilters.value.phone.toLowerCase()
-    filtered = filtered.filter(customer =>
-      customer.phone?.toLowerCase().includes(phoneFilter)
-    )
-  }
-
-  if (columnFilters.value.url) {
-    const urlFilter = columnFilters.value.url.toLowerCase()
-    filtered = filtered.filter(customer =>
-      customer.url?.toLowerCase().includes(urlFilter)
-    )
-  }
-
-  if (columnFilters.value.checkup_package) {
-    const checkupPackageFilter = columnFilters.value.checkup_package.toLowerCase()
-    filtered = filtered.filter(customer =>
-      customer.checkup_package?.toLowerCase().includes(checkupPackageFilter)
-    )
-  }
-
-  if (columnFilters.value.source) {
-    const sourceFilter = columnFilters.value.source.toLowerCase()
-    filtered = filtered.filter(customer =>
-      customer.source?.toLowerCase().includes(sourceFilter)
-    )
-  }
-
-  if (columnFilters.value.createdAt) {
-    const dateFilter = columnFilters.value.createdAt.toLowerCase()
-    filtered = filtered.filter(customer =>
-      formatDate(customer.createdAt)?.toLowerCase().includes(dateFilter)
-    )
-  }
-
-  return filtered
-})
+ 
 
 const hasActiveFilters = computed(() => {
-  return Object.values(columnFilters.value).some(filter => filter !== '')
+  return Object.values(columnFilters.value).some(v => v !== '')
 })
+
 
 const visiblePages = computed(() => {
   const pages = []
@@ -581,51 +496,12 @@ const visiblePages = computed(() => {
 
   return pages.filter(page => page !== '...')
 })
-
-const filteredUsers = computed(() => {
-  if (!userSearch.value) {
-    return users.value
-  }
-  const search = userSearch.value.toLowerCase()
-  return users.value.filter(user =>
-    user.name?.toLowerCase().includes(search) ||
-    user.email?.toLowerCase().includes(search)
-  )
-})
-
-const isAllSelected = computed(() => {
-  return filteredCustomers.value.length > 0 &&
-    filteredCustomers.value.every(customer => selectedCustomers.value.includes(customer.id))
-})
-
-const isCustomerSelected = (customerId) => {
-  return selectedCustomers.value.includes(customerId)
-}
  
-const toggleCustomerSelection = (customerId) => {
-  const index = selectedCustomers.value.indexOf(customerId)
-  if (index > -1) {
-    selectedCustomers.value.splice(index, 1)
-  } else {
-    selectedCustomers.value.push(customerId)
-  }
-}
 
-const toggleSelectAll = () => {
-  if (isAllSelected.value) {
-    selectedCustomers.value = []
-  } else {
-    selectedCustomers.value = filteredCustomers.value.map(customer => customer.id)
-  }
-}
- 
 // Row-level assignment methods
-const initializeRowAssignment = (customerId) => {
-  if (!rowAssignments.value[customerId]) {
-    rowAssignments.value[customerId] = {
-      selectedGroupId: '',
-      selectedUserId: ''
-    }
+const initializeRowAssignment = (id) => {
+  if (!rowAssignments.value[id]) {
+    rowAssignments.value[id] = { selectedGroupId: '', selectedUserId: '' }
   }
 }
 
@@ -684,9 +560,11 @@ const assignCustomerToUser = async (customer) => {
 }
 
 // Fetch customers based on active tab
+
+// ✅ Backend query tabanlı filtreleme
 const fetchCustomers = async (page = 1) => {
   try {
-    loading.value = true
+    if (isInitialLoad.value) loading.value = true
     const api = useApi()
 
     const queryParams = {
@@ -695,52 +573,36 @@ const fetchCustomers = async (page = 1) => {
       limit: pagination.value.limit
     }
 
-    // Explicitly set hasRelevantUser based on active tab
+    // Tab filtresi
     if (activeTab.value === 'unassigned') {
       queryParams.hasRelevantUser = false
     } else if (activeTab.value === 'assigned') {
       queryParams.hasRelevantUser = true
     }
 
-    console.log('Fetching customers with params:', queryParams)
+    // 🔍 Dinamik kolon filtreleri
+    for (const [key, value] of Object.entries(columnFilters.value)) {
+      if (value && value.trim() !== '') {
+        queryParams['search'] = value.trim()
+      }
+    }
 
-    const response = await api('/customers', {
-      query: queryParams
-    })
+    const response = await api('/customers', { query: queryParams })
 
-    // Handle both array and {data, meta} response formats
-    const customersArray = Array.isArray(response) ? response : (response.data || [])
+    const customersArray = Array.isArray(response)
+      ? response
+      : (response.data || [])
     const meta = response.meta || {}
 
-    // Map customers with proper structure
-    customersData.value = customersArray.map(customer => {
-      // Map user IDs to user objects
-      const userId = customer.userId || customer.user_id || customer.user
-      const relevantUserId = customer.relevantUserId || customer.relevant_user_id || customer.relevent_user || customer.relevantUser
+    customersData.value = customersArray.map(customer => ({
+      ...customer,
+      name: `${customer.name || ''} ${customer.surname || ''}`.trim() || 'İsimsiz',
+      source: customer.source || '-',
+      isActive: customer.isActive !== undefined ? customer.isActive : true,
+      user: usersMap.value[customer.userId] || customer.user,
+      relevantUser: usersMap.value[customer.relevantUserId] || customer.relevantUser
+    }))
 
-      // Parse relevantUser correctly - handle both ID and object cases
-      let relevantUserObj = null
-      if (relevantUserId !== null && relevantUserId !== undefined) {
-        if (typeof relevantUserId === 'object') {
-          // Already an object
-          relevantUserObj = relevantUserId
-        } else {
-          // It's an ID, look it up in usersMap
-          relevantUserObj = usersMap.value[relevantUserId]
-        }
-      }
-
-      return {
-        ...customer,
-        name: `${customer.name || ''} ${customer.surname || ''}`.trim() || 'İsimsiz',
-        source: customer.source || '-',
-        isActive: customer.isActive !== undefined ? customer.isActive : true,
-        user: usersMap.value[userId] || customer.user,
-        relevantUser: relevantUserObj
-      }
-    })
-
-    // Update pagination
     pagination.value = {
       total: meta.total || customersArray.length,
       page: meta.page || page,
@@ -748,27 +610,22 @@ const fetchCustomers = async (page = 1) => {
       totalPages: meta.totalPages || Math.ceil((meta.total || customersArray.length) / pagination.value.limit)
     }
 
-    // Initialize row assignments for each customer
-    customersData.value.forEach(customer => {
-      initializeRowAssignment(customer.id)
-    })
+    customersData.value.forEach(c => initializeRowAssignment(c.id))
   } catch (error) {
     console.error('Failed to load customers:', error)
   } finally {
-    loading.value = false
+    if (isInitialLoad.value) {
+          loading.value = false
+          isInitialLoad.value = false
+        }
   }
 }
 
 const resetFilters = () => {
-  columnFilters.value = {
-    name: '',
-    email: '',
-    phone: '',
-    url: '',
-    checkup_package: '',
-    source: '',
-    createdAt: ''
+  for (const key in columnFilters.value) {
+    columnFilters.value[key] = ''
   }
+  fetchCustomers(1)
 }
 
 const changePage = (page) => {
@@ -852,36 +709,7 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString('tr-TR')
 }
 
-
-const getStatusClass = (statusId) => {
-  const status = statusMap.value[statusId]
-  if (!status) {
-    return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
-  }
-
-  // Use color from status if available
-  if (status.color) {
-    return `bg-[${status.color}20] text-[${status.color}] dark:bg-[${status.color}30] dark:text-[${status.color}]`
-  }
-
-  // Default colors based on status flags
-  if (status.isSale) {
-    return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
-  }
-  if (status.isClosed) {
-    return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
-  }
-  if (status.isFirst) {
-    return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
-  }
-
-  return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
-}
-
-const getStatusText = (statusId) => {
-  const status = statusMap.value[statusId]
-  return status?.name || statusId || 'Bilinmiyor'
-}
+ 
 
 const getWaitingTime = (dateString) => {
   if (!dateString) return '-'
@@ -893,73 +721,40 @@ const getWaitingTime = (dateString) => {
 
 // Initialize data
 onMounted(async () => {
+  const api = useApi()
   try {
-    const api = useApi()
-    console.log('Loading statuses, users and customers...')
+    const [usersResponse, groupsResponse, statusResponse] = await Promise.all([
+      api('/users'),
+      api('/user-group'),
+      api('/statuses')
+    ])
 
-    // Load users
-    try {
-      const usersResponse = await api('/users')
-      if (Array.isArray(usersResponse)) {
-        users.value = usersResponse
-        // Create users map
-        usersResponse.forEach(user => {
-          usersMap.value[user.id] = user
-        })
-      }
-    } catch (usersError) {
-      console.error('Failed to load users:', usersError)
+    if (Array.isArray(usersResponse)) {
+      users.value = usersResponse
+      usersResponse.forEach(u => (usersMap.value[u.id] = u))
     }
 
-    // Load user groups
-    try {
-      const groupsResponse = await api('/user-group')
-      if (Array.isArray(groupsResponse)) {
-        userGroups.value = groupsResponse
-      } else if (groupsResponse?.data && Array.isArray(groupsResponse.data)) {
-        userGroups.value = groupsResponse.data
-      } else if (groupsResponse) {
-        // If it's an object with a groups property or similar
-        userGroups.value = groupsResponse.groups || groupsResponse.userGroups || []
-      }
-    } catch (groupsError) {
-      console.error('Failed to load user groups:', groupsError)
+    if (Array.isArray(groupsResponse)) {
+      userGroups.value = groupsResponse
     }
 
-    // Load statuses
-    try {
-      const statusResponse = await api('/statuses')
-
-      if (Array.isArray(statusResponse)) {
-        // Create status map for quick lookup
-        statusResponse.forEach(status => {
-          statusMap.value[status.id] = status
-        })
-
-        // Filter to show only statuses with is_first flag
-        statusOptions.value = statusResponse
-          .filter(status => status.isActive !== false && status.isFirst === true)
-          .map(status => ({
-            value: status.id,
-            label: status.name
-          }))
-      }
-    } catch (statusError) {
-      console.error('Failed to load statuses:', statusError)
+    if (Array.isArray(statusResponse)) {
+      statusResponse.forEach(s => (statusMap.value[s.id] = s))
+      statusOptions.value = statusResponse
+        .filter(s => s.isActive !== false && s.isFirst === true)
+        .map(s => ({ value: s.id, label: s.name }))
     }
-
-    // Fetch customers based on active tab
-    await fetchCustomers(1)
-
 
     isEditable.value = authStore.user?.role != 'doctor' ? true : false
     isDeleteable.value = authStore.user?.role != 'doctor' ? true : false
 
-
+    // İlk yüklemede API'den müşteriler
+    await fetchCustomers(1)
   } catch (error) {
-    console.error('Failed to load data:', error)
+    console.error('Initialization failed:', error)
     loading.value = false
   }
+
 })
 
 // Watch tab changes and refetch data

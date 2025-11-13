@@ -182,8 +182,7 @@
                   Checkup Paketi
                 </label>
                 <input :value="form.checkup_package" type="text" disabled title="Değiştirilemez"
-                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-md"
-                  placeholder="URL" />
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-md" />
               </div>
             </div>
           </div>

@@ -25,7 +25,7 @@
         <form @submit.prevent="handleSubmit" class="space-y-4">
 
           <!-- Avatar -->
-          <div>
+          <div v-if="user">
             <label class="form-label">Profil Fotoğrafı</label>
             <div class="flex items-center space-x-4">
               <div
@@ -193,14 +193,14 @@ const resetForm = () => {
 }
 
 const populateForm = () => {
-  if (props.user) { 
+  if (props.user) {
     form.name = props.user.name || ''
     form.email = props.user.email || ''
     form.role = props.user.role || ''
     form.userGroupId = props.user.userGroupId || null
     form.userTeamId = props.user.userTeamId || null
-    previewAvatar.value =  props.user.avatar ? path + props.user.avatar : null
-  } 
+    previewAvatar.value = props.user.avatar ? path + props.user.avatar : null
+  }
 }
 
 const onAvatarChange = (e) => {
@@ -260,17 +260,20 @@ const handleSubmit = async () => {
       successMessage.value = 'Kullanıcı başarıyla güncellendi!'
       emit('updated', result)
     } else {
-      // Yeni kullanıcı için
-      const formData = new FormData()
-      Object.entries(userData).forEach(([key, val]) => {
-        if (val !== undefined) formData.append(key, val)
-      })
-      if (form.avatar) formData.append('avatar', form.avatar)
+      // Yeni kullanıcı için - JSON gönderiyoruz
+      const payload = { ...userData }
 
-      result = await api('/users', { method: 'POST', body: formData })
+      // Eğer avatar varsa ayrı endpoint ile gönderebilirsin
+      result = await api('/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+
       successMessage.value = 'Kullanıcı başarıyla oluşturuldu!'
       emit('created', result)
     }
+
 
     setTimeout(() => closeModal(), 1500)
   } catch (e) {
