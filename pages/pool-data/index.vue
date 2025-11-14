@@ -729,16 +729,20 @@ onMounted(async () => {
       api('/statuses')
     ])
 
-    if (Array.isArray(usersResponse)) {
+    
+
+    if (usersResponse) {
       users.value = usersResponse
       usersResponse.forEach(u => (usersMap.value[u.id] = u))
     }
 
-    if (Array.isArray(groupsResponse)) {
-      userGroups.value = groupsResponse
+    if (groupsResponse) {
+      userGroups.value = groupsResponse.data
     }
+ 
+    
 
-    if (Array.isArray(statusResponse)) {
+    if (statusResponse) {
       statusResponse.forEach(s => (statusMap.value[s.id] = s))
       statusOptions.value = statusResponse
         .filter(s => s.isActive !== false && s.isFirst === true)
