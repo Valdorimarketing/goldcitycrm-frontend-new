@@ -77,11 +77,12 @@
               <th class="table-header text-gray-700 dark:text-gray-300">Kaynak</th>
               <th class="table-header text-gray-700 dark:text-gray-300">URL</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Checkup Paket</th>
+              <th class="table-header text-gray-700 dark:text-gray-300">Hastalık</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Eklenme Tarihi</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Bekleme Süresi</th>
               <th v-if="activeTab === 'unassigned'" class="table-header text-gray-700 dark:text-gray-300">Atama</th>
               <th v-if="activeTab === 'assigned'" class="table-header text-gray-700 dark:text-gray-300">Atanan</th>
-            </tr> 
+            </tr>
           </thead>
           <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
             <tr v-for="customer in customersData" :key="customer.id">
@@ -187,7 +188,7 @@
               </td>
               <td class="table-cell">
                 <div class="text-sm text-gray-900 dark:text-gray-100">
-                  <a v-if="customer.url" :href="customer.url" target="_blank" rel="noopener noreferrer"
+                  <a v-if="customer.url" :href="getCustomerUrl(customer)" target="_blank" rel="noopener noreferrer"
                     class="text-blue-600 hover:underline">
                     {{ customer.url }}
                   </a>
@@ -197,6 +198,7 @@
               <td class="table-cell">
                 <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.checkup_package || '-' }}</div>
               </td>
+              <td class="table-cell">{{ customer.patient || '-' }}</td>
               <td class="table-cell">
                 <div class="text-sm text-gray-900 dark:text-gray-100">
                   {{ formatDate(customer.createdAt) }}
@@ -234,7 +236,7 @@
               </td>
               <td v-if="activeTab === 'assigned'" class="table-cell">
                 <div class="text-sm text-gray-900 dark:text-gray-100">
-                  {{ customer.relevantUser?.name || '-' }}
+                  {{ customer?.relevantUserData || '-' }}
                 </div>
               </td>
 
@@ -440,7 +442,7 @@ watch(columnFilters, () => {
 }, { deep: true })
 
 // User assignment
-const users = ref([]) 
+const users = ref([])
 
 // User groups and row-level assignments
 const userGroups = ref([])
@@ -468,11 +470,26 @@ const toggleShow = (id) => {
     showStates.value.activeId = id
   }
 }
- 
+
 
 const hasActiveFilters = computed(() => {
   return Object.values(columnFilters.value).some(v => v !== '')
 })
+
+
+const getCustomerUrl = (customer) => {
+  if (!customer?.url) return null;
+
+  const domains = {
+    4: 'https://lp.livhospital.com',
+    8: 'https://int.livhospital.com',
+  };
+
+  const base = domains[customer.sourceId] || '#';
+
+  return base + customer.url;
+};
+
 
 
 const visiblePages = computed(() => {
@@ -496,7 +513,7 @@ const visiblePages = computed(() => {
 
   return pages.filter(page => page !== '...')
 })
- 
+
 
 // Row-level assignment methods
 const initializeRowAssignment = (id) => {
@@ -615,9 +632,9 @@ const fetchCustomers = async (page = 1) => {
     console.error('Failed to load customers:', error)
   } finally {
     if (isInitialLoad.value) {
-          loading.value = false
-          isInitialLoad.value = false
-        }
+      loading.value = false
+      isInitialLoad.value = false
+    }
   }
 }
 
@@ -709,7 +726,7 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString('tr-TR')
 }
 
- 
+
 
 const getWaitingTime = (dateString) => {
   if (!dateString) return '-'
@@ -729,7 +746,7 @@ onMounted(async () => {
       api('/statuses')
     ])
 
-    
+
 
     if (usersResponse) {
       users.value = usersResponse
@@ -739,8 +756,8 @@ onMounted(async () => {
     if (groupsResponse) {
       userGroups.value = groupsResponse.data
     }
- 
-    
+
+
 
     if (statusResponse) {
       statusResponse.forEach(s => (statusMap.value[s.id] = s))

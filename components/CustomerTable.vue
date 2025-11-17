@@ -5,6 +5,7 @@
     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
       <thead class="bg-gray-50 dark:bg-gray-800">
         <tr>
+          <th class="table-header text-gray-700 dark:text-gray-300"></th>
           <th v-for="col in columns" :key="col.key" @click="sortBy(col.key)"
             class="table-header cursor-pointer text-gray-700 dark:text-gray-300">
             <div class="flex items-center gap-1">
@@ -19,39 +20,13 @@
               </span>
             </div>
           </th>
-          <th class="table-header text-gray-700 dark:text-gray-300">İşlemler</th>
         </tr>
       </thead>
 
       <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700 text-sm font-light">
         <tr v-for="customer in filteredAndSorted" :key="customer.id">
-          <td class="table-cell">
-            <div class="flex items-center">
-              <div class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
-                <span class="text-sm font-medium text-indigo-600 dark:text-indigo-300">
-                  {{ customer.name.charAt(0).toUpperCase() }}
-                </span>
-              </div>
-              <div class="ml-4">
-                <NuxtLink :to="`/customers/show/${customer.id}`"
-                  class="text-sm flex flex-col gap-1 font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer">
-                  <span>{{ customer.name }}</span>
-                  <span class="text-xs dark:text-gray-400">ID: {{ customer.id }}</span>
-                </NuxtLink>
-              </div>
-            </div>
-          </td>
-          <td class="table-cell">{{ customer.phone || '-' }}</td>
-          <td class="table-cell">{{ getStatusText(customer.status) }}</td>
-          <td class="table-cell">{{ customer.source || '-' }}</td>
-          <td class="table-cell">{{ customer.relatedTransaction || '-' }}</td>
-          <td class="table-cell">{{ customer.patient || '-' }}</td>
-          <td class="table-cell">{{ customer.checkup_package || '-' }}</td>
-          <td class="table-cell">{{ customer.relevantUserData ? customer.relevantUserData : '-' }}</td>
-          <td class="table-cell">{{ customer.isActive ? 'Aktif' : 'Pasif' }}</td>
-          <td class="table-cell">{{ formatDate(customer.createdAt) }}</td>
-          <td class="table-cell">{{ formatDate(customer.updatesAt) }}</td>
 
+          
           <td class="table-cell">
             <div class="relative inline-block text-left">
               <!-- Trigger Button -->
@@ -126,6 +101,34 @@
 
             </div>
           </td>
+
+          <td class="table-cell">
+            <div class="flex items-center">
+              <div class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
+                <span class="text-sm font-medium text-indigo-600 dark:text-indigo-300">
+                  {{ customer.name.charAt(0).toUpperCase() }}
+                </span>
+              </div>
+              <div class="ml-4">
+                <NuxtLink :to="`/customers/show/${customer.id}`"
+                  class="text-sm flex flex-col gap-1 font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer">
+                  <span>{{ customer.name }}</span>
+                  <span class="text-xs dark:text-gray-400">ID: {{ customer.id }}</span>
+                </NuxtLink>
+              </div>
+            </div>
+          </td>
+          <td class="table-cell">{{ customer.phone || '-' }}</td>
+          <td class="table-cell">{{ getStatusText(customer.status) }}</td>
+          <td class="table-cell">{{ customer.source || '-' }}</td>
+          <td class="table-cell">{{ customer.relatedTransaction || '-' }}</td>
+          <td class="table-cell">{{ customer.patient || '-' }}</td>
+          <td class="table-cell">{{ customer.checkup_package || '-' }}</td>
+          <td class="table-cell">{{ customer.relevantUserData ? customer.relevantUserData : '-' }}</td>
+          <td class="table-cell">{{ customer.isActive ? 'Aktif' : 'Pasif' }}</td>
+          <td class="table-cell">{{ formatDate(customer.createdAt) }}</td>
+          <td class="table-cell">{{ formatDate(customer.updatesAt) }}</td>
+
 
         </tr>
 
