@@ -315,7 +315,7 @@ const filteredStatuses = computed(() => {
     status.name.toLowerCase().includes(query) ||
     (status.description && status.description.toLowerCase().includes(query))
   )
-})
+}) as any
 
 const displayedPages = computed(() => {
   const pages = []

@@ -102,6 +102,11 @@
             </div>
           </td>
 
+          
+          <td class="table-cell">
+            <StatusBadge :name="customer.statusData?.name" :color="customer.statusData?.color" />
+          </td>
+
           <td class="table-cell">
             <div class="flex items-center">
               <div class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
@@ -119,7 +124,6 @@
             </div>
           </td>
           <td class="table-cell">{{ customer.phone || '-' }}</td>
-          <td class="table-cell">{{ getStatusText(customer.status) }}</td>
           <td class="table-cell">{{ customer.source || '-' }}</td>
           <td class="table-cell">{{ customer.relatedTransaction || '-' }}</td>
           <td class="table-cell">{{ customer.patient || '-' }}</td>
@@ -133,7 +137,7 @@
         </tr>
 
         <tr v-if="filteredAndSorted.length === 0">
-          <td colspan="10" class="text-center py-12">
+          <td colspan="13" class="text-center py-12">
             <UsersIcon class="mx-auto h-12 w-12 text-gray-400" />
             <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">Müşteri bulunamadı</h3>
           </td>
@@ -174,22 +178,16 @@ const emit = defineEmits([
   'show-services',
   'show-files'
 ])
-
-const statusMap = ref({
-  1: 'Yeni',
-  2: 'İlgileniliyor',
-  3: 'Tamamlandı',
-  4: 'Reddedildi'
-})
+ 
 
 
 // Sıralama
 const sortColumn = ref('')
 const sortDirection = ref('asc')
 const columns = [
+  { label: 'Durum', key: 'statusData' },
   { label: 'İsim', key: 'name' },
   { label: 'Telefon', key: 'phone' },
-  { label: 'Durum', key: 'status' },
   { label: 'Kaynak', key: 'source' },
   { label: 'İlgilenilen Konu', key: 'relatedTransaction' },
   { label: 'Hastalık', key: 'patient' },
@@ -239,9 +237,7 @@ function formatDate(date) {
   return new Date(date).toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' })
 }
 
-function getStatusText(status) {
-  return statusMap.value[status] || '-'
-}
+ 
 </script>
 
 <style scoped>

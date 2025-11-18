@@ -11,7 +11,7 @@
       class="w-2 h-2 rounded-full mr-1.5"
       :style="{ backgroundColor: color || '#6366f1' }"
     />
-    {{ name }}
+    {{ name ? name : 'Durumsuz' }}
   </span>
 </template>
 

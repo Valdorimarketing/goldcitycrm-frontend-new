@@ -18,11 +18,7 @@
           Havuz verileri canlı olarak listelenmektedir.
         </p>
       </div>
-      <div class="mt-4 sm:mt-0 flex gap-3">
-        <button @click="resetFilters"
-          class="inline-flex items-center justify-center rounded-md bg-gray-100 dark:bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-700 dark:text-gray-200 shadow-sm hover:bg-gray-200 dark:hover:bg-gray-600">
-          Filtreleri Temizle
-        </button>
+      <div class="mt-4 sm:mt-0 flex gap-3"> 
         <button @click="showCreateModal = true"
           class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
           <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
@@ -245,7 +241,7 @@
 
             <!-- Empty State -->
             <tr v-if="customersData.length === 0">
-              <td :colspan="10" class="text-center py-12">
+              <td colspan="11" class="text-center py-12">
                 <UsersIcon class="mx-auto h-12 w-12 text-gray-400" />
                 <h3 class="mt-2 text-sm font-medium text-gray-900">Havuz verisi bulunamadı</h3>
                 <p class="mt-1 text-sm text-gray-500">
@@ -638,12 +634,7 @@ const fetchCustomers = async (page = 1) => {
   }
 }
 
-const resetFilters = () => {
-  for (const key in columnFilters.value) {
-    columnFilters.value[key] = ''
-  }
-  fetchCustomers(1)
-}
+ 
 
 const changePage = (page) => {
   if (page >= 1 && page <= pagination.value.totalPages) {

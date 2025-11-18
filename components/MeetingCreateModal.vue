@@ -125,6 +125,31 @@
                   </button>
                 </div>
               </div>
+
+              <div class="relative">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Branş
+                </label>
+                <input
+                  v-model="branchSearch"
+                  type="text"
+                  class="form-input"
+                  placeholder="Branş adı yazın..."
+                  @focus="showBranchDropdownList"
+                  @blur="hideBranchDropdown"
+                />
+                <div v-if="showBranchDropdown && filteredBranchForSearch.length > 0" class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 shadow-lg rounded-md border border-gray-200 dark:border-gray-700 max-h-60 overflow-auto">
+                  <button
+                    v-for="branch in filteredBranchForSearch"
+                    :key="branch.id"
+                    type="button"
+                    @mousedown.prevent="selectBranch(branch)"
+                    class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-gray-100"
+                  >
+                    {{ branch.name }}
+                  </button>
+                </div>
+              </div>
             </div>
 
             <!-- Durum -->
@@ -208,33 +233,38 @@ const authStore = useAuthStore()
 const { createMeeting } = useMeetings()
 const { hospitals, fetchHospitals } = useHospitals()
 const { statuses: meetingStatuses, fetchMeetingStatuses } = useMeetingStatuses()
+const { branches, fetchBranches } = useBranches()
+const { customers, fetchCustomers } = useCustomers()
 
 // Form state
 const form = ref({
   customer: '',
   hospitalId: '',
   doctorId: '',
+  branchId: '',
   startTime: '',
   endTime: '',
   meetingStatus: '',
   description: ''
 })
-
+ 
 const errors = ref<Record<string, string>>({})
 const loading = ref(false)
-const customers = ref<any[]>([])
 const hospitalDoctors = ref<any[]>([])
+const searchTimeout = ref<number | null>(null)
 
 // Search states
 const customerSearch = ref('')
 const hospitalSearch = ref('')
 const doctorSearch = ref('')
+const branchSearch = ref('')
 const showCustomerDropdown = ref(false)
 const showHospitalDropdown = ref(false)
 const showDoctorDropdown = ref(false)
+const showBranchDropdown = ref(false)
 
 // Computed
-const filteredCustomers = computed(() => customers.value)
+const filteredCustomers = computed(() => customers.value) as any
 
 const filteredHospitals = computed(() => {
   if (!hospitalSearch.value) {
@@ -261,6 +291,21 @@ const filteredDoctorsForSearch = computed(() => {
   )
 })
 
+const filteredBranch = computed(() => branches.value)
+
+const filteredBranchForSearch = computed(() => {
+  const baseBranch = filteredBranch.value
+
+  if (!branchSearch.value) {
+    return baseBranch
+  }
+
+  const search = branchSearch.value.toLowerCase()
+  return baseBranch.filter(branch =>
+    branch.name.toLowerCase().includes(search)
+  )
+})
+
 // Watch for initial values
 watch(() => props.initialStartTime, (newVal) => {
   if (newVal) {
@@ -277,7 +322,6 @@ watch(() => props.initialEndTime, (newVal) => {
 }, { immediate: true })
 
 // Watch customerSearch and fetch from API
-const searchTimeout = ref<number | null>(null)
 watch(customerSearch, (newValue) => {
   if (searchTimeout.value) {
     clearTimeout(searchTimeout.value)
@@ -293,8 +337,30 @@ watch(customerSearch, (newValue) => {
   }
 
   searchTimeout.value = window.setTimeout(() => {
-    fetchCustomers(newValue)
+    fetchCustomers({ search: newValue })
     searchTimeout.value = null
+  }, 300)
+})
+
+
+const branchTimeout = ref<number | null>(null)
+watch(branchSearch, (newValue) => {
+  if (branchTimeout.value) {
+    clearTimeout(branchTimeout.value)
+    branchTimeout.value = null
+  }
+
+  if (!newValue || newValue.length < 3) {
+    if (!newValue) {
+      form.value.branchId = ''
+    }
+    fetchBranches()
+    return
+  }
+
+  branchTimeout.value = window.setTimeout(() => {
+    fetchBranches({search: newValue})
+    branchTimeout.value = null
   }, 300)
 })
 
@@ -332,10 +398,26 @@ const selectHospital = async (hospital: any) => {
   }
 }
 
-const selectDoctor = (doctor: any) => {
+const selectDoctor = async (doctor: any) => {
   form.value.doctorId = doctor.id
   doctorSearch.value = doctor.name
   showDoctorDropdown.value = false
+  branches.value = [];
+
+    try {
+    const $api = useApi()
+    const response = await $api(`/branches`) as any
+    branches.value = Array.isArray(response) ? response : (response.data || [])
+  } catch (err) {
+    console.error('Failed to fetch branches:', err)
+    branches.value = []
+  }
+}
+
+const selectBranch = (item: any) => {
+  form.value.branchId = item.id
+  branchSearch.value = item.name
+  showBranchDropdown.value = false 
 }
 
 const hideCustomerDropdown = () => {
@@ -356,19 +438,16 @@ const hideDoctorDropdown = () => {
   }, 200)
 }
 
-const fetchCustomers = async (search = '') => {
-  try {
-    const api = useApi()
-    const params = new URLSearchParams({
-      search: search,
-      page: '1',
-      limit: '50'
-    })
-    const response = await api(`/customers?${params.toString()}`) as any
-    customers.value = Array.isArray(response) ? response : (response.data || [])
-  } catch (err) {
-    console.error('Failed to fetch customers:', err)
-    customers.value = []
+const hideBranchDropdown = () => {
+  setTimeout(() => {
+    showBranchDropdown.value = false
+  }, 200)
+}
+
+const showBranchDropdownList = () => {
+  showBranchDropdown.value = true
+  if(!branchSearch.value){
+    fetchBranches()
   }
 }
 
@@ -422,6 +501,10 @@ const handleSubmit = async () => {
       data.doctorId = parseInt(form.value.doctorId)
     }
 
+    if (form.value.branchId) {
+      data.branchId = parseInt(form.value.branchId)
+    }
+
     if (form.value.endTime) {
       data.endTime = new Date(form.value.endTime).toISOString()
     }
@@ -451,6 +534,7 @@ const resetForm = () => {
     customer: '',
     hospitalId: '',
     doctorId: '',
+    branchId: '',
     startTime: '',
     endTime: '',
     meetingStatus: '',

@@ -3,10 +3,7 @@
     <!-- Header -->
     <div class="mb-6">
       <div class="flex items-center gap-2 mb-2">
-        <NuxtLink
-          to="/meetings"
-          class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-        >
+        <NuxtLink to="/meetings" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
           <ChevronLeftIcon class="h-5 w-5" />
         </NuxtLink>
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Gorusmeyi Duzenle</h1>
@@ -25,68 +22,36 @@
     <form v-else @submit.prevent="handleSubmit" class="space-y-6">
       <!-- Musteri (Zorunlu) -->
       <div class="card">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Musteri Bilgileri</h2>
-        <div class="grid grid-cols-1 gap-6">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Genel Bilgiler</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div class="relative">
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Musteri <span class="text-red-500">*</span>
             </label>
-            <input
-              v-model="customerSearch"
-              type="text"
-              placeholder="Musteri ara..."
-              required
-              class="form-input"
-              :class="{ 'border-red-500': errors.customer }"
-              @focus="showCustomerDropdown = true"
-              @blur="hideCustomerDropdown"
-            />
-            <div
-              v-if="showCustomerDropdown && filteredCustomers.length > 0"
-              class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
-            >
-              <button
-                v-for="customer in filteredCustomers"
-                :key="customer.id"
-                type="button"
+            <input v-model="customerSearch" type="text" placeholder="Musteri ara..." required class="form-input"
+              :class="{ 'border-red-500': errors.customer }" @focus="showCustomerDropdown = true"
+              @blur="hideCustomerDropdown" />
+            <div v-if="showCustomerDropdown && filteredCustomers.length > 0"
+              class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto">
+              <button v-for="customer in filteredCustomers" :key="customer.id" type="button"
                 class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
-                @mousedown.prevent="selectCustomer(customer)"
-              >
+                @mousedown.prevent="selectCustomer(customer)">
                 {{ customer.name }} {{ customer.surname }}
               </button>
             </div>
             <p v-if="errors.customer" class="mt-1 text-sm text-red-600">{{ errors.customer }}</p>
           </div>
-        </div>
-      </div>
-
-      <!-- Lokasyon Bilgileri -->
-      <div class="card">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Lokasyon Bilgileri</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div class="relative">
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Hastane
             </label>
-            <input
-              v-model="hospitalSearch"
-              type="text"
-              placeholder="Hastane ara..."
-              class="form-input"
-              @focus="showHospitalDropdown = true"
-              @blur="hideHospitalDropdown"
-            />
-            <div
-              v-if="showHospitalDropdown && filteredHospitals.length > 0"
-              class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
-            >
-              <button
-                v-for="hospital in filteredHospitals"
-                :key="hospital.id"
-                type="button"
+            <input v-model="hospitalSearch" type="text" placeholder="Hastane ara..." class="form-input"
+              @focus="showHospitalDropdown = true" @blur="hideHospitalDropdown" />
+            <div v-if="showHospitalDropdown && filteredHospitals.length > 0"
+              class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto">
+              <button v-for="hospital in filteredHospitals" :key="hospital.id" type="button"
                 class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
-                @mousedown.prevent="selectHospital(hospital)"
-              >
+                @mousedown.prevent="selectHospital(hospital)">
                 {{ hospital.name }}
               </button>
             </div>
@@ -96,32 +61,36 @@
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Doktor
             </label>
-            <input
-              v-model="doctorSearch"
-              type="text"
-              placeholder="Doktor ara..."
-              class="form-input"
-              :disabled="!form.hospitalId"
-              @focus="showDoctorDropdown = true"
-              @blur="hideDoctorDropdown"
-            />
-            <div
-              v-if="showDoctorDropdown && filteredDoctorsForSearch.length > 0"
-              class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
-            >
-              <button
-                v-for="doctor in filteredDoctorsForSearch"
-                :key="doctor.id"
-                type="button"
+            <input v-model="doctorSearch" type="text" placeholder="Doktor ara..." class="form-input"
+              :disabled="!form.hospitalId" @focus="showDoctorDropdown = true" @blur="hideDoctorDropdown" />
+            <div v-if="showDoctorDropdown && filteredDoctorsForSearch.length > 0"
+              class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto">
+              <button v-for="doctor in filteredDoctorsForSearch" :key="doctor.id" type="button"
                 class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
-                @mousedown.prevent="selectDoctor(doctor)"
-              >
+                @mousedown.prevent="selectDoctor(doctor)">
                 {{ doctor.name }}
               </button>
             </div>
             <p v-if="form.hospitalId" class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ filteredDoctors.length }} doktor listeleniyor
             </p>
+          </div>
+
+
+          <div class="relative">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Branş
+            </label>
+            <input v-model="branchSearch" type="text" class="form-input" placeholder="Branş adı yazın..."
+              @focus="showBranchDropdownList" @blur="hideBranchDropdown" />
+            <div v-if="showBranchDropdown && filteredBranchForSearch.length > 0"
+              class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 shadow-lg rounded-md border border-gray-200 dark:border-gray-700 max-h-60 overflow-auto">
+              <button v-for="branch in filteredBranchForSearch" :key="branch.id" type="button"
+                @mousedown.prevent="selectBranch(branch)"
+                class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-gray-100">
+                {{ branch.name }}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -134,12 +103,8 @@
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Baslangic Zamani
             </label>
-            <input
-              v-model="form.startTime"
-              type="datetime-local"
-              class="form-input"
-              :class="{ 'border-red-500': errors.startTime }"
-            />
+            <input v-model="form.startTime" type="datetime-local" class="form-input"
+              :class="{ 'border-red-500': errors.startTime }" />
             <p v-if="errors.startTime" class="mt-1 text-sm text-red-600">{{ errors.startTime }}</p>
           </div>
 
@@ -147,12 +112,8 @@
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Bitis Zamani
             </label>
-            <input
-              v-model="form.endTime"
-              type="datetime-local"
-              class="form-input"
-              :class="{ 'border-red-500': errors.endTime }"
-            />
+            <input v-model="form.endTime" type="datetime-local" class="form-input"
+              :class="{ 'border-red-500': errors.endTime }" />
             <p v-if="errors.endTime" class="mt-1 text-sm text-red-600">{{ errors.endTime }}</p>
           </div>
 
@@ -160,23 +121,15 @@
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Hatirlatma Zamani
             </label>
-            <input
-              v-model="form.remindingAt"
-              type="datetime-local"
-              class="form-input"
-            />
+            <input v-model="form.remindingAt" type="datetime-local" class="form-input" />
           </div>
 
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Durum <span class="text-red-500">*</span>
             </label>
-            <select
-              v-model="form.meetingStatus"
-              required
-              class="form-input"
-              :class="{ 'border-red-500': errors.meetingStatus }"
-            >
+            <select v-model="form.meetingStatus" required class="form-input"
+              :class="{ 'border-red-500': errors.meetingStatus }">
               <option value="">Durum secin...</option>
               <option v-for="status in meetingStatuses" :key="status.id" :value="status.id">
                 {{ status.name }}
@@ -195,10 +148,7 @@
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Satis Urunu
             </label>
-            <select
-              v-model="form.salesProductId"
-              class="form-input"
-            >
+            <select v-model="form.salesProductId" class="form-input">
               <option value="">Satis urunu secin...</option>
               <option v-for="product in salesProducts" :key="product.id" :value="product.id">
                 {{ product.name }}
@@ -216,13 +166,8 @@
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Gorusme Notlari
             </label>
-            <textarea
-              v-model="form.description"
-              rows="4"
-              maxlength="1000"
-              class="form-input"
-              placeholder="Gorusme ile ilgili notlarinizi buraya yazin..."
-            ></textarea>
+            <textarea v-model="form.description" rows="4" maxlength="1000" class="form-input"
+              placeholder="Gorusme ile ilgili notlarinizi buraya yazin..."></textarea>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ form.description?.length || 0 }} / 1000 karakter
             </p>
@@ -232,21 +177,18 @@
 
       <!-- Form Actions -->
       <div class="flex justify-end gap-3">
-        <NuxtLink
-          to="/meetings"
-          class="inline-flex items-center justify-center rounded-md bg-gray-100 dark:bg-gray-700 px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-200 shadow-sm hover:bg-gray-200 dark:hover:bg-gray-600"
-        >
+        <NuxtLink to="/meetings"
+          class="inline-flex items-center justify-center rounded-md bg-gray-100 dark:bg-gray-700 px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-200 shadow-sm hover:bg-gray-200 dark:hover:bg-gray-600">
           Iptal
         </NuxtLink>
-        <button
-          type="submit"
-          :disabled="loading"
-          class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
+        <button type="submit" :disabled="loading"
+          class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed">
           <span v-if="loading" class="mr-2">
             <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              <path class="opacity-75" fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+              </path>
             </svg>
           </span>
           {{ loading ? 'Guncelleniyor...' : 'Gorusmeyi Guncelle' }}
@@ -256,14 +198,14 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ChevronLeftIcon } from '@heroicons/vue/24/outline'
 
 definePageMeta({
   middleware: ['auth']
 })
 
-const route = useRoute()
+const route = useRoute() as any
 const router = useRouter()
 const authStore = useAuthStore()
 
@@ -273,27 +215,32 @@ const { hospitals, fetchHospitals } = useHospitals()
 const { doctors, fetchDoctors } = useDoctors()
 const { statuses: meetingStatuses, fetchMeetingStatuses } = useMeetingStatuses()
 const { products: salesProducts, fetchProducts } = useProducts()
+const { branches, fetchBranches } = useBranches()
+const { customers, fetchCustomers } = useCustomers()
 
 // State
 const initialLoading = ref(true)
+const errors = ref<Record<string, string>>({})
 const loading = ref(false)
-const errors = ref({})
-const customers = ref([])
-const hospitalDoctors = ref([]) // Doctors from selected hospital
+const hospitalDoctors = ref<any[]>([])
+const searchTimeout = ref<number | null>(null)
 
 // Search states
 const customerSearch = ref('')
 const hospitalSearch = ref('')
 const doctorSearch = ref('')
+const branchSearch = ref('')
 const showCustomerDropdown = ref(false)
 const showHospitalDropdown = ref(false)
 const showDoctorDropdown = ref(false)
+const showBranchDropdown = ref(false)
 
 // Form state
 const form = ref({
   customer: '',
   hospitalId: '',
   doctorId: '',
+  branchId: '',
   startTime: '',
   endTime: '',
   remindingAt: '',
@@ -303,16 +250,8 @@ const form = ref({
 })
 
 // Computed - Filter customers by search
-const filteredCustomers = computed(() => {
-  if (!customerSearch.value) {
-    return customers.value
-  }
-  const search = customerSearch.value.toLowerCase()
-  return customers.value.filter(customer => {
-    const fullName = `${customer.name} ${customer.surname}`.toLowerCase()
-    return fullName.includes(search)
-  })
-})
+
+const filteredCustomers = computed(() => customers.value) as any
 
 // Computed - Filter hospitals by search
 const filteredHospitals = computed(() => {
@@ -344,14 +283,32 @@ const filteredDoctorsForSearch = computed(() => {
   )
 })
 
+
+const filteredBranch = computed(() => branches.value)
+
+const filteredBranchForSearch = computed(() => {
+  const baseBranch = filteredBranch.value
+
+  if (!branchSearch.value) {
+    return baseBranch
+  }
+
+  const search = branchSearch.value.toLowerCase()
+  return baseBranch.filter(branch =>
+    branch.name.toLowerCase().includes(search)
+  )
+})
+
+
 // Select methods
-const selectCustomer = (customer) => {
+const selectCustomer = (customer: any) => {
   form.value.customer = customer.id
   customerSearch.value = `${customer.name} ${customer.surname}`
   showCustomerDropdown.value = false
 }
 
-const selectHospital = async (hospital) => {
+
+const selectHospital = async (hospital: any) => {
   form.value.hospitalId = hospital.id
   hospitalSearch.value = hospital.name
   showHospitalDropdown.value = false
@@ -363,7 +320,7 @@ const selectHospital = async (hospital) => {
   // Fetch doctors for the selected hospital
   try {
     const $api = useApi()
-    const response = await $api(`/hospitals/${hospital.id}/doctors`)
+    const response = await $api(`/hospitals/${hospital.id}/doctors`) as any
     hospitalDoctors.value = Array.isArray(response) ? response : (response.data || [])
     console.log(`Loaded ${hospitalDoctors.value.length} doctors for hospital ${hospital.name}`)
   } catch (err) {
@@ -372,10 +329,42 @@ const selectHospital = async (hospital) => {
   }
 }
 
-const selectDoctor = (doctor) => {
+const selectDoctor = async (doctor: any) => {
   form.value.doctorId = doctor.id
   doctorSearch.value = doctor.name
   showDoctorDropdown.value = false
+  branches.value = [];
+
+  try {
+    const $api = useApi()
+    const response = await $api(`/branches`) as any
+    branches.value = Array.isArray(response) ? response : (response.data || [])
+  } catch (err) {
+    console.error('Failed to fetch branches:', err)
+    branches.value = []
+  }
+}
+
+
+const hideBranchDropdown = () => {
+  setTimeout(() => {
+    showBranchDropdown.value = false
+  }, 200)
+}
+
+
+const selectBranch = (item: any) => {
+  form.value.branchId = item.id
+  branchSearch.value = item.name
+  showBranchDropdown.value = false
+}
+
+
+const showBranchDropdownList = () => {
+  showBranchDropdown.value = true
+  if (!branchSearch.value) {
+    fetchBranches()
+  }
 }
 
 // Hide dropdown methods
@@ -398,7 +387,7 @@ const hideDoctorDropdown = () => {
 }
 
 // Helper to format date for datetime-local input
-const formatDateTimeLocal = (dateString) => {
+const formatDateTimeLocal = (dateString: Date) => {
   if (!dateString) return ''
   const date = new Date(dateString)
   const year = date.getFullYear()
@@ -409,28 +398,20 @@ const formatDateTimeLocal = (dateString) => {
   return `${year}-${month}-${day}T${hours}:${minutes}`
 }
 
-// Fetch all required data
-const fetchCustomers = async () => {
-  try {
-    const api = useApi()
-    const response = await api('/customers')
-    customers.value = Array.isArray(response) ? response : (response.data || [])
-  } catch (err) {
-    console.error('Failed to fetch customers:', err)
-  }
-}
+
 
 // Load meeting data
 const loadMeetingData = async () => {
   try {
     const meetingId = parseInt(route.params.id)
-    const meeting = await fetchMeeting(meetingId)
+    const meeting = await fetchMeeting(meetingId) as any
 
     // Populate form with meeting data
     form.value = {
       customer: meeting.customer,
       hospitalId: meeting.hospitalId || '',
       doctorId: meeting.doctorId || '',
+      branchId: meeting.branchId || '',
       startTime: formatDateTimeLocal(meeting.startTime),
       endTime: formatDateTimeLocal(meeting.endTime),
       remindingAt: formatDateTimeLocal(meeting.remindingAt),
@@ -439,11 +420,8 @@ const loadMeetingData = async () => {
       description: meeting.description || ''
     }
 
-    // Set search values
-    const customer = customers.value.find(c => c.id === meeting.customer)
-    if (customer) {
-      customerSearch.value = `${customer.name} ${customer.surname}`
-    }
+    customerSearch.value = `${meeting.customerData?.name} ${meeting.customerData?.surname}`
+    branchSearch.value = meeting.branch?.name
 
     if (meeting.hospital) {
       hospitalSearch.value = meeting.hospital.name
@@ -451,7 +429,7 @@ const loadMeetingData = async () => {
       // Fetch doctors for the selected hospital
       try {
         const $api = useApi()
-        const response = await $api(`/hospitals/${meeting.hospitalId}/doctors`)
+        const response = await $api(`/hospitals/${meeting.hospitalId}/doctors`) as any
         hospitalDoctors.value = Array.isArray(response) ? response : (response.data || [])
       } catch (err) {
         console.error('Failed to fetch hospital doctors:', err)
@@ -509,6 +487,7 @@ const handleSubmit = async () => {
       meetingStatus: parseInt(form.value.meetingStatus),
       ...(form.value.hospitalId && { hospitalId: parseInt(form.value.hospitalId) }),
       ...(form.value.doctorId && { doctorId: parseInt(form.value.doctorId) }),
+      ...(form.value.branchId && { branchId: parseInt(form.value.branchId) }),
       ...(form.value.startTime && { startTime: new Date(form.value.startTime).toISOString() }),
       ...(form.value.endTime && { endTime: new Date(form.value.endTime).toISOString() }),
       ...(form.value.remindingAt && { remindingAt: new Date(form.value.remindingAt).toISOString() }),
@@ -528,12 +507,52 @@ const handleSubmit = async () => {
   }
 }
 
+
+watch(customerSearch, (newValue) => {
+  if (searchTimeout.value) {
+    clearTimeout(searchTimeout.value)
+    searchTimeout.value = null
+  }
+
+  if (!newValue || newValue.length < 3) {
+    customers.value = []
+    if (!newValue) {
+      form.value.customer = ''
+    }
+    return
+  }
+
+  searchTimeout.value = window.setTimeout(() => {
+    fetchCustomers({ search: newValue })
+    searchTimeout.value = null
+  }, 300)
+})
+
+watch(branchSearch, (newValue) => {
+  if (searchTimeout.value) {
+    clearTimeout(searchTimeout.value)
+    searchTimeout.value = null
+  }
+
+  if (!newValue || newValue.length < 3) {
+    branches.value = []
+    if (!newValue) {
+      form.value.branchId = ''
+    }
+    return
+  }
+
+  searchTimeout.value = window.setTimeout(() => {
+    fetchBranches({ search: newValue })
+    searchTimeout.value = null
+  }, 300)
+})
+
 // Initialize
 onMounted(async () => {
   try {
     // Load all required data
-    await Promise.all([
-      fetchCustomers(),
+    await Promise.all([ 
       fetchHospitals({ limit: 1000 }),
       fetchDoctors({ limit: 1000 }),
       fetchMeetingStatuses(),
@@ -548,6 +567,14 @@ onMounted(async () => {
     initialLoading.value = false
   }
 })
+
+// Cleanup
+onBeforeUnmount(() => {
+  if (searchTimeout.value) {
+    clearTimeout(searchTimeout.value)
+  }
+})
+
 
 // Page head
 useHead({

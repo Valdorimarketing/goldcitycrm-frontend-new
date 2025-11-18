@@ -9,9 +9,12 @@
         </p>
       </div>
 
-      <div class="relative">
+      <div class="flex gap-2">
+        <button @click="resetFilters" class="btn-secondary">
+          Filtreleri Temizle
+        </button>
         <button @click="loadSalesData"
-          class="inline-flex items-center px-3 py-2 bg-white/20 hover:bg-white/30 text-white text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition">
+          class="btn-secondary flex items-center">
           <ArrowPathIcon class="h-5 w-5 mr-2" />
           Yenile
         </button>
@@ -50,66 +53,81 @@
             Bitiş Tarihi
           </label>
           <input id="endDate" v-model="endDate" type="date" class="form-input" />
-        </div>
-        <div class="flex items-end">
-          <button @click="resetFilters" class="btn-secondary w-full">
-            Filtreleri Temizle
-          </button>
-        </div>
+        </div> 
       </div>
     </div>
 
-    <!-- Stats Cards -->
+    <!-- Stats Cards - Multi Currency -->
     <div class="grid grid-cols-1 gap-5 sm:grid-cols-3 mb-6">
+      <!-- Toplam Satış (Para Birimine Göre) -->
       <div class="card">
-        <div class="flex items-center">
+        <div class="flex items-center mb-3">
           <div class="flex-shrink-0">
             <CurrencyDollarIcon class="h-8 w-8 text-green-600" />
           </div>
           <div class="ml-5 w-0 flex-1">
-            <dl>
-              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
-                Toplam Satış
-              </dt>
-              <dd class="text-lg font-medium text-gray-900 dark:text-white">
-                ₺{{ formatCurrency(totalSales) }}
-              </dd>
-            </dl>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
+              Toplam Satış
+            </dt>
           </div>
         </div>
-      </div>
-      <div class="card">
-        <div class="flex items-center">
-          <div class="flex-shrink-0">
-            <ShoppingBagIcon class="h-8 w-8 text-blue-600" />
-          </div>
-          <div class="ml-5 w-0 flex-1">
-            <dl>
-              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
-                Bu Ay
-              </dt>
-              <dd class="text-lg font-medium text-gray-900 dark:text-white">
-                ₺{{ formatCurrency(monthSales) }}
-              </dd>
-            </dl>
-          </div>
+        <div class="space-y-1">
+          <dd v-for="(amount, currency) in totalSalesByCurrency" :key="currency" 
+            class="text-base font-medium text-gray-900 dark:text-white">
+            {{ formatMoney(amount, currency) }}
+          </dd>
+          <dd v-if="Object.keys(totalSalesByCurrency).length === 0" 
+            class="text-base font-medium text-gray-500 dark:text-gray-400">
+            -
+          </dd>
         </div>
       </div>
+
+      <!-- Bu Ay (Para Birimine Göre) -->
       <div class="card">
-        <div class="flex items-center">
+        <div class="flex items-center mb-3">
           <div class="flex-shrink-0">
-            <ArrowTrendingUpIcon class="h-8 w-8 text-indigo-600" />
+            <CurrencyDollarIcon class="h-8 w-8 text-orange-500" />
           </div>
           <div class="ml-5 w-0 flex-1">
-            <dl>
-              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
-                Ortalama Satış
-              </dt>
-              <dd class="text-lg font-medium text-gray-900 dark:text-white">
-                ₺{{ formatCurrency(averageSale) }}
-              </dd>
-            </dl>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
+              Bu Ay
+            </dt>
           </div>
+        </div>
+        <div class="space-y-1">
+          <dd v-for="(amount, currency) in monthSalesByCurrency" :key="currency" 
+            class="text-base font-medium text-gray-900 dark:text-white">
+            {{ formatMoney(amount, currency) }}
+          </dd>
+          <dd v-if="Object.keys(monthSalesByCurrency).length === 0" 
+            class="text-base font-medium text-gray-500 dark:text-gray-400">
+            -
+          </dd>
+        </div>
+      </div>
+
+      <!-- Ortalama Satış (Para Birimine Göre) -->
+      <div class="card">
+        <div class="flex items-center mb-3">
+          <div class="flex-shrink-0">
+            <CurrencyDollarIcon class="h-8 w-8 text-indigo-600" />
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
+              Ortalama Satış
+            </dt>
+          </div>
+        </div>
+        <div class="space-y-1">
+          <dd v-for="(amount, currency) in averageSaleByCurrency" :key="currency" 
+            class="text-base font-medium text-gray-900 dark:text-white">
+            {{ formatMoney(amount, currency) }}
+          </dd>
+          <dd v-if="Object.keys(averageSaleByCurrency).length === 0" 
+            class="text-base font-medium text-gray-500 dark:text-gray-400">
+            -
+          </dd>
         </div>
       </div>
     </div>
@@ -135,7 +153,6 @@
           <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
             <tr v-for="sale in filteredSales" :key="sale.id">
               <td class="table-cell">
-
                 <div class="flex items-center">
                   <div class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
                     <span class="text-sm font-medium text-indigo-600 dark:text-indigo-300">
@@ -150,14 +167,13 @@
                     </NuxtLink>
                   </div>
                 </div>
-
               </td>
               <td class="table-cell">
                 <div class="text-sm text-gray-900 dark:text-gray-100">{{ sale.description || '-' }}</div>
               </td>
               <td class="table-cell">
                 <div class="text-sm font-medium text-green-600">
-                  {{ sale.currency }} {{ formatCurrency(sale.amount) }}
+                  {{ formatMoney(sale.amount, sale.currency) }}
                 </div>
               </td>
               <td class="table-cell">
@@ -255,10 +271,6 @@ import {
 } from '@heroicons/vue/24/outline'
 import { useApi } from '~/composables/useApi'
 
-// definePageMeta({
-//   middleware: 'auth'
-// })
-
 const api = useApi()
 const router = useRouter()
 const { userId, isAdmin } = usePermissions()
@@ -310,29 +322,31 @@ const loadSalesData = async () => {
 
     if (response?.data) {
       // Map response to expected format
+      salesData.value = response.data.map(sale => {
+        // Her satış için toplam tutarı ve para birimini hesapla
+        const totalAmount = calculateSaleAmount(sale.salesProducts)
+        const currency = getSaleCurrency(sale.salesProducts)
 
-
-
-
-      salesData.value = response.data.map(sale => ({
-        id: sale.id,
-        customerId: sale.customer,
-        customer: {
-          name: [sale.customerDetails?.name, sale.customerDetails?.surname]
-            .filter(Boolean)
-            .join(' ') || 'Bilinmeyen Müşteri',
-          company: sale.customerDetails?.company || sale.customerDetails?.companyName || '',
-          id: sale.customer
-        },
-        amount: calculateSaleAmount(sale.salesProducts),
-        currency: sale.salesProducts?.[0]?.productDetails?.currency?.code || 'TRY',
-        description: sale.title || '-',
-        date: sale.createdAt || new Date().toISOString(),
-        user: sale.userDetails,
-        responsibleUser: sale.responsibleUserDetails,
-        followerUser: sale.followerUserDetails,
-        products: sale.salesProducts || []
-      }))
+        return {
+          id: sale.id,
+          customerId: sale.customer,
+          customer: {
+            name: [sale.customerDetails?.name, sale.customerDetails?.surname]
+              .filter(Boolean)
+              .join(' ') || 'Bilinmeyen Müşteri',
+            company: sale.customerDetails?.company || sale.customerDetails?.companyName || '',
+            id: sale.customer
+          },
+          amount: totalAmount,
+          currency: currency,
+          description: sale.title || '-',
+          date: sale.createdAt || new Date().toISOString(),
+          user: sale.userDetails,
+          responsibleUser: sale.responsibleUserDetails,
+          followerUser: sale.followerUserDetails,
+          products: sale.salesProducts || []
+        }
+      })
 
       // Update pagination
       if (response.meta) {
@@ -358,11 +372,34 @@ const loadSalesData = async () => {
 const calculateSaleAmount = (products) => {
   if (!products || !Array.isArray(products)) return 0
   return products.reduce((sum, item) => {
-    return sum + (item.offer || item.price || 0)
+    return sum + (item.totalPrice || item.offer || item.price || 0)
   }, 0)
 }
 
-// Computed properties
+// Get currency from first product
+const getSaleCurrency = (products) => {
+  if (!products || !Array.isArray(products) || products.length === 0) return 'TRY'
+  const firstProduct = products[0]
+  return firstProduct?.currency?.code || 
+         firstProduct?.productDetails?.currency?.code || 
+         'TRY'
+}
+
+// Format money with currency
+const formatMoney = (amount, currencyCode = 'TRY') => {
+  const value = Number(amount || 0)
+  const code = currencyCode || 'TRY'
+  try {
+    return new Intl.NumberFormat('tr-TR', {
+      style: 'currency',
+      currency: code
+    }).format(value)
+  } catch (e) {
+    return new Intl.NumberFormat('tr-TR').format(value) + ' ' + code
+  }
+}
+
+// Computed properties - Para birimine göre gruplandırılmış
 const filteredSales = computed(() => {
   let filtered = salesData.value
 
@@ -371,8 +408,7 @@ const filteredSales = computed(() => {
     filtered = filtered.filter(sale =>
       sale.customer?.name?.toLowerCase().includes(search) ||
       sale.description?.toLowerCase().includes(search) ||
-      sale.customer?.company?.toLowerCase().includes(search) ||
-      sale.productName?.toLowerCase().includes(search)
+      sale.customer?.company?.toLowerCase().includes(search)
     )
   }
 
@@ -387,17 +423,9 @@ const filteredSales = computed(() => {
       const start = startDate.value ? new Date(startDate.value) : null
       const end = endDate.value ? new Date(endDate.value) : null
 
-      // Set time to start of day for start date
-      if (start) {
-        start.setHours(0, 0, 0, 0)
-      }
+      if (start) start.setHours(0, 0, 0, 0)
+      if (end) end.setHours(23, 59, 59, 999)
 
-      // Set time to end of day for end date
-      if (end) {
-        end.setHours(23, 59, 59, 999)
-      }
-
-      // Check if sale date is within range
       if (start && end) {
         return saleDate >= start && saleDate <= end
       } else if (start) {
@@ -410,26 +438,54 @@ const filteredSales = computed(() => {
     })
   }
 
-
   return filtered
 })
 
-const totalSales = computed(() => {
-  return salesData.value.reduce((sum, sale) => sum + sale.amount, 0)
+// Toplam satış - Para birimine göre
+const totalSalesByCurrency = computed(() => {
+  const totals = {}
+  filteredSales.value.forEach(sale => {
+    const currency = sale.currency || 'TRY'
+    totals[currency] = (totals[currency] || 0) + sale.amount
+  })
+  return totals
 })
 
-const monthSales = computed(() => {
+// Bu ay satışlar - Para birimine göre
+const monthSalesByCurrency = computed(() => {
   const now = new Date()
-  return salesData.value
+  const totals = {}
+  
+  filteredSales.value
     .filter(sale => {
       const saleDate = new Date(sale.date)
-      return saleDate.getMonth() === now.getMonth() && saleDate.getFullYear() === now.getFullYear()
+      return saleDate.getMonth() === now.getMonth() && 
+             saleDate.getFullYear() === now.getFullYear()
     })
-    .reduce((sum, sale) => sum + sale.amount, 0)
+    .forEach(sale => {
+      const currency = sale.currency || 'TRY'
+      totals[currency] = (totals[currency] || 0) + sale.amount
+    })
+  
+  return totals
 })
 
-const averageSale = computed(() => {
-  return salesData.value.length > 0 ? totalSales.value / salesData.value.length : 0
+// Ortalama satış - Para birimine göre
+const averageSaleByCurrency = computed(() => {
+  const averages = {}
+  const counts = {}
+  
+  filteredSales.value.forEach(sale => {
+    const currency = sale.currency || 'TRY'
+    averages[currency] = (averages[currency] || 0) + sale.amount
+    counts[currency] = (counts[currency] || 0) + 1
+  })
+  
+  Object.keys(averages).forEach(currency => {
+    averages[currency] = averages[currency] / (counts[currency] || 1)
+  })
+  
+  return averages
 })
 
 const visiblePages = computed(() => {
@@ -473,12 +529,6 @@ const formatDate = (dateString) => {
   if (!dateString) return '-'
   return new Date(dateString).toLocaleDateString('tr-TR')
 }
-
-const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('tr-TR').format(amount)
-}
-
- 
 
 const viewSaleDetails = (sale) => {
   selectedSale.value = sale

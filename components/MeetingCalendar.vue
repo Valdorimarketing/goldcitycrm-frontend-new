@@ -38,9 +38,10 @@ const emit = defineEmits(['eventClick', 'dateSelect'])
 
 const getEventTitle = (meeting) => {
   const parts = []
-
+  let customerNameSurname = 'Bilinmiyor';
   if (meeting.customerData) { 
-    parts.push(meeting.customerData)
+    customerNameSurname = `${meeting.customerData.name} ${meeting.customerData.surname}`
+    parts.push(customerNameSurname)
   }
 
   if (meeting.hospital?.name) {
