@@ -775,7 +775,6 @@ watch(activeTab, async (newTab) => {
   router.push({ query: { tab: newTab } })
 
   // Reset filters and fetch new data
-  resetFilters()
   pagination.value.page = 1
   await fetchCustomers(1)
 
