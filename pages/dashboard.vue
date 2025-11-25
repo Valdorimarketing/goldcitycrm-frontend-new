@@ -123,7 +123,7 @@
             </div>
 
             <!-- Data -->
-            <div v-else-if="todayAssignments.length > 0" class="space-y-3">
+            <div v-else-if="todayAssignments.length > 0" class="space-y-3 overflow-x-hidden max-h-[600px]">
               <div v-for="assignment in todayAssignments" :key="assignment.salesRepId"
                 class="p-4 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors border border-gray-200 dark:border-gray-700">
 

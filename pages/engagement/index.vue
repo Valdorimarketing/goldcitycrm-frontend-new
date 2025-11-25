@@ -243,7 +243,7 @@
         </div>
 
           <!-- Stats -->
-          <div class="space-y-3 mb-4">
+          <div class="space-y-3 my-4">
             <div class="flex items-center justify-between text-sm">
               <span class="text-gray-600 dark:text-gray-400">Bu {{ period === 'week' ? 'Hafta' : 'Ay' }}:</span>
               <span class="font-semibold text-gray-900 dark:text-white">{{ user.stats.totalCustomers }} müşteri</span>
@@ -1003,6 +1003,40 @@ const startGlobalTimer = () => {
   }, 1000)
 }
 
+const getEventColorClass = (event) => {
+  
+  // 1. Eğer event'in bir statusData varsa, onun rengini kullan
+  if (event.statusData?.color) {
+    return event.statusData.color;
+  }
+  
+  // 2. Eğer event'in type'ı varsa, type'a göre renk ver
+  if (event.type) {
+    const typeColors = {
+      'meeting': 'bg-blue-500',
+      'call': 'bg-green-500',
+      'task': 'bg-purple-500',
+      'reminder': 'bg-yellow-500',
+      'follow-up': 'bg-orange-500',
+      'appointment': 'bg-indigo-500',
+      'deadline': 'bg-red-500',
+    };
+    return typeColors[event.type] || 'bg-gray-500';
+  }
+  
+  // 3. Eğer event'in priority'si varsa, önceliğe göre renk ver
+  if (event.priority) {
+    const priorityColors = {
+      'high': 'bg-red-500',
+      'medium': 'bg-yellow-500',
+      'low': 'bg-green-500',
+    };
+    return priorityColors[event.priority] || 'bg-gray-500';
+  }
+  
+  // 4. Default renk
+  return 'bg-blue-500';
+}
 
 const initBase = async () => {
   await Promise.all([loadKpi(), loadUsers()])
