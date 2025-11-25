@@ -26,7 +26,7 @@
       <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700 text-sm font-light">
         <tr v-for="customer in filteredAndSorted" :key="customer.id">
 
-          
+
           <td class="table-cell">
             <div class="relative inline-block text-left">
               <!-- Trigger Button -->
@@ -41,7 +41,8 @@
                 class="fixed left-0 top-0 bottom-0 m-auto z-20 bg-white/50 dark:bg-black/50 w-full h-full flex justify-center items-center">
                 <div
                   class="flex flex-col h-96 max-w-lg rounded-lg bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transition">
-                  <div class="flex flex-wrap gap-2 justify-between items-center px-4 py-1 border-b border-gray-200 dark:border-gray-700">
+                  <div
+                    class="flex flex-wrap gap-2 justify-between items-center px-4 py-1 border-b border-gray-200 dark:border-gray-700">
                     <div class="text-lg font-semibold">İşlemler</div>
                     <button @click="toggleShow(customer.id)" class="p-2 rounded-md">
                       <XCircleIcon class="h-6 w-6 text-gray-400 dark:text-white" />
@@ -102,7 +103,7 @@
             </div>
           </td>
 
-          
+
           <td class="table-cell">
             <div class="flex items-center">
               <div class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
@@ -120,37 +121,45 @@
             </div>
           </td>
 
-          
+
           <td class="table-cell">
             <StatusBadge :name="customer.statusData?.name" :color="customer.statusData?.color" />
           </td>
 
 
-          <td class="table-cell">{{ customer.phone || '-' }}</td>
           <td class="table-cell">{{ customer.source || '-' }}</td>
           <td class="table-cell">{{ customer.relatedTransaction || '-' }}</td>
           <td class="table-cell">{{ customer.patient || '-' }}</td>
           <td class="table-cell">{{ customer.checkup_package || '-' }}</td>
-          <td class="table-cell">
-            <div class="flex items-center gap-2">
-              <div v-if="customer.relevantUserData && customer.relevantUserData.avatar" class="h-10 w-10 rounded-full overflow-hidden">
-                <img :src="path + customer.relevantUserData.avatar" alt="Avatar" class="h-full w-full object-cover" />
-              </div>
-              <div v-else class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
-                <span class="text-sm font-medium text-indigo-600 dark:text-indigo-300">
-                  {{ customer.relevantUserData?.name ? customer.relevantUserData?.name.charAt(0).toUpperCase() : 'A' }}
-                </span>
-              </div>
-              <div class="relative flex flex-col">
-                <span class="text-sm text-gray-900 dark:text-gray-100">
-                  {{ customer.relevantUserData ? customer.relevantUserData?.name : 'Atanmamış' }}
-                </span>
+          <td class="table-cell" v-if="isAdmin">
+            <NuxtLink :to="`/profile/${customer.relevantUserData?.id}`" class="inline-block">
+              <div class="flex items-center gap-2">
+                <div v-if="customer.relevantUserData && customer.relevantUserData.avatar"
+                  class="h-10 w-10 rounded-full overflow-hidden">
+                  <img :src="path + customer.relevantUserData.avatar" alt="Avatar" class="h-full w-full object-cover" />
+                </div>
+                <div v-else
+                  class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
+                  <span class="text-sm font-medium text-indigo-600 dark:text-indigo-300">
+                    {{ customer.relevantUserData?.name ? customer.relevantUserData?.name.charAt(0).toUpperCase() : 'A'}}
+                  </span>
+                </div>
+                <div class="relative flex flex-col">
+                  <span class="text-sm text-gray-900 dark:text-gray-100">
+                    {{ customer.relevantUserData ? customer.relevantUserData?.name : 'Atanmamış' }}
+                  </span>
                   <span v-if="customer.relevantUserData?.lastActiveTime"
                     class="bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
                     son görülme: {{ getLastSeen(customer.relevantUserData?.lastActiveTime) }}
                   </span>
+                </div>
               </div>
-            </div>
+            </NuxtLink>
+          </td>
+          <td v-else class="table-cell">
+            <span class="text-sm text-gray-900 dark:text-gray-100">
+              {{ customer.relevantUserData ? customer.relevantUserData?.name : 'Atanmamış' }}
+            </span>
           </td>
           <td class="table-cell">{{ customer.isActive ? 'Aktif' : 'Pasif' }}</td>
           <td class="table-cell">{{ formatDate(customer.createdAt) }}</td>
@@ -175,6 +184,7 @@ import { ClockIcon, DocumentTextIcon, EllipsisHorizontalIcon, EyeIcon, FolderIco
 import { ref, computed } from 'vue'
 
 const props = defineProps({
+  isAdmin: { type: Boolean, default: false },
   data: { type: Array, default: () => [] },
   isEditable: { type: Boolean, default: false },
   isDeleteable: { type: Boolean, default: false }
@@ -206,7 +216,7 @@ const emit = defineEmits([
   'show-services',
   'show-files'
 ])
- 
+
 
 
 // Sıralama
@@ -215,7 +225,6 @@ const sortDirection = ref('asc')
 const columns = [
   { label: 'İsim', key: 'name' },
   { label: 'Durum', key: 'statusData' },
-  { label: 'Telefon', key: 'phone' },
   { label: 'Kaynak', key: 'source' },
   { label: 'İlgilenilen Konu', key: 'relatedTransaction' },
   { label: 'Hastalık', key: 'patient' },
@@ -265,7 +274,7 @@ function formatDate(date) {
   return new Date(date).toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' })
 }
 
- 
+
 </script>
 
 <style scoped>

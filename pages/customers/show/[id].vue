@@ -104,7 +104,7 @@
                     Telefonu Göster
                   </button>
                   <span v-else class="text-gray-700 dark:text-gray-300">
-                    {{ customer.phone }}
+                    <a :href="`tel:${customer.phone}`">{{ customer.phone }}</a>
                   </span>
                 </div>
 

@@ -107,7 +107,7 @@
     <!-- Customers Table -->
     <div v-else class="card">
 
-      <CustomerTable :data="customers" :users-map="usersMap" :status-map="statusMap" @sort="handleSort"
+      <CustomerTable :isAdmin="isAdmin" :data="customers" :users-map="usersMap" :status-map="statusMap" @sort="handleSort"
         :is-editable="isEditable" :is-deleteable="isDeleteable" @confirm-delete="confirmDelete"
         @show-history="showHistory" @show-notes="showNotes" @show-doctor="showDoctorAssignment"
         @show-services="showServices" @show-files="showFiles"></CustomerTable>
@@ -224,7 +224,7 @@ const authStore = useAuthStore()
 const api = useApi()
 
 // Permissions
-const { getCustomerFilters } = usePermissions()
+const { isAdmin, getCustomerFilters } = usePermissions()
 
 // Store
 const customersStore = useCustomersStore()
@@ -305,7 +305,7 @@ const loadFiltersFromStorage = () => {
     const parsed = JSON.parse(saved)
     
     if (parsed.searchTerm) searchTerm.value = parsed.searchTerm
-    if (parsed.statusFilter !== undefined) statusFilter.value = parsed.statusFilter
+    if (parsed.statusFilter) statusFilter.value = parsed.statusFilter
     if (parsed.relevantUserFilter) {
       relevantUserFilter.value = parsed.relevantUserFilter
     }
@@ -451,6 +451,7 @@ watchDebounced(
   () => {
     if (isInitialLoad) return
     loadCustomers(pagination.value.page ?? 1)
+    saveFiltersToStorage()
   },
   { debounce: 500 }
 )
