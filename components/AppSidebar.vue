@@ -37,7 +37,7 @@
         <div v-if="item.type === 'group'">
           <!-- Group Header Button -->
           <button @click="toggleGroup(item.name)" :class="[
-            'group flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 cursor-pointer w-full text-left',
+            `group flex items-center ${sidebarOpen ? 'justify-between' : 'justify-center'} px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 cursor-pointer w-full text-left`,
             'text-gray-700 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
           ]" :title="!sidebarOpen ? item.name : ''">
             <div class="flex items-center">
@@ -96,7 +96,14 @@
       <div class="flex items-center">
         <div class="flex-shrink-0">
           <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-            <UserIcon class="w-5 h-5 text-gray-600" />
+            <img :src="path + authStore.user?.avatar" class="w-8 h-8 rounded-full border-2 border-white"
+              v-if="authStore.user?.avatar" alt="">
+            <div class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center" v-else>
+              <span class="text-sm font-medium text-white">
+                {{ authStore.user?.name?.charAt(0) || 'U' }}
+              </span>
+            </div>
+
           </div>
         </div>
         <transition name="fade">
@@ -107,11 +114,14 @@
             <p class="text-xs text-gray-500 dark:text-gray-400">
               {{ authStore.user?.email || 'demo@example.com' }}
             </p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">
+              #{{ authStore.user?.id }}
+            </p>
           </div>
         </transition>
       </div>
       <div class="relative" v-if="authStore.user?.role == 'user'">
-        <SoundToggle class="mt-4" />
+        <SoundToggle :sidebarOpen="sidebarOpen" class="mt-4" />
       </div>
     </div>
   </aside>
@@ -136,16 +146,19 @@ import {
   UserPlusIcon,
   MagnifyingGlassIcon,
   CircleStackIcon,
-  FlagIcon
+  FlagIcon,
+  ChartBarSquareIcon
 } from '@heroicons/vue/24/outline'
 
 const authStore = useAuthStore()
+const config = useRuntimeConfig()
 // Nuxt 3 auto-imports composables from ~/composables
 const { canViewMenu } = usePermissions()
 const sidebar = inject('sidebar')
 const { sidebarOpen, mobileSidebarOpen } = sidebar
 const router = useRouter()
 const route = useRoute()
+const path = config.public.apiBase
 
 const openGroups = ref({
   'Müşteriler': false,
@@ -187,6 +200,7 @@ const allNavigationItems = [
     icon: WrenchScrewdriverIcon,
     items: [
       { name: 'Kullanıcılar', href: '/users', icon: UserIcon },
+      { name: 'Etkileşim Analizi', href: '/engagement', icon: ChartBarSquareIcon },
       { name: 'Kullanıcı Grupları', href: '/user-groups', icon: UserGroupIcon },
       { name: 'Takımlar', href: '/teams', icon: FlagIcon },
       { name: 'Ürünler', href: '/products', icon: ShoppingBagIcon },

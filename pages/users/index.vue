@@ -24,14 +24,52 @@
       </div>
     </div>
 
+    <!-- Online/Offline Stats & Filter -->
+    <div class="mb-4 flex flex-wrap gap-2">
+      <!-- Tümü -->
+      <button @click="onlineFilter = null" class="px-4 py-2 rounded-md text-sm font-medium border transition" :class="[
+        onlineFilter === null
+          ? 'bg-indigo-600 text-white border-indigo-600'
+          : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:bg-indigo-50 dark:hover:bg-gray-700'
+      ]">
+        Tümü ({{ usersStore.users.value?.length }})
+      </button>
+
+      <!-- Çevrimiçi -->
+      <button @click="onlineFilter = 'online'" class="px-4 py-2 rounded-md text-sm font-medium border transition"
+        :class="[
+          onlineFilter === 'online'
+            ? 'bg-green-600 text-white border-green-600'
+            : 'bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-300 border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-800/40'
+        ]">
+        <span class="flex items-center gap-1.5">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+          </span>
+          Çevrimiçi ({{ onlineCount }})
+        </span>
+      </button>
+
+      <!-- Çevrimdışı -->
+      <button @click="onlineFilter = 'offline'" class="px-4 py-2 rounded-md text-sm font-medium border transition"
+        :class="[
+          onlineFilter === 'offline'
+            ? 'bg-gray-600 text-white border-gray-600'
+            : 'bg-gray-50 text-gray-700 dark:bg-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'
+        ]">
+        Çevrimdışı ({{ offlineCount }})
+      </button>
+    </div>
+
     <!-- Role Tabs / Statistics -->
-    <div v-if="roleStats.length" class="mt-6 flex flex-wrap gap-2 mb-4">
+    <div v-if="roleStats?.length" class="mt-6 flex flex-wrap gap-2 mb-4">
       <button @click="activeRole = null" class="px-4 py-2 rounded-md text-sm font-medium border transition" :class="[
         !activeRole
           ? 'bg-indigo-600 text-white border-indigo-600'
           : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:bg-indigo-50 dark:hover:bg-gray-700'
       ]">
-        Tümü ({{ usersStore.users.value.length }})
+        Tüm Roller ({{ filteredByOnlineUsers?.length }})
       </button>
 
       <button v-for="stat in roleStats" :key="stat.role" @click="activeRole = stat.role"
@@ -65,13 +103,25 @@
           <div class="flex items-center justify-between">
             <div>
               <div class="flex gap-2">
-                <div
-                  class="relative w-16 h-16 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600">
-                  <img v-if="user.avatar" :src="path + user.avatar" alt="Avatar" class="object-cover w-full h-full" />
-                  <div v-else
-                    class="flex items-center justify-center w-full h-full text-gray-400 dark:text-gray-500 text-sm">
-                    Yok
+                <div class="relative w-16 h-16">
+                  <div
+                    class="relative rounded-full w-full h-full overflow-hidden bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600">
+                    <img v-if="user.avatar" :src="path + user.avatar" alt="Avatar" class="object-cover w-full h-full" />
+                    <div v-else
+                      class="flex items-center justify-center w-full h-full text-gray-400 dark:text-gray-500 text-sm">
+                      Yok
+                    </div>
                   </div>
+
+                  <!-- Online indicator with pulse animation -->
+                  <span v-if="isUserOnline(user)" class="absolute bottom-0 right-0 block">
+                    <span class="relative flex h-4 w-4">
+                      <span
+                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                      <span
+                        class="relative inline-flex rounded-full h-4 w-4 bg-green-500 border-2 border-white dark:border-gray-800"></span>
+                    </span>
+                  </span>
                 </div>
 
 
@@ -82,8 +132,7 @@
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white truncate">
                       {{ user.name || 'İsimsiz Kullanıcı' }}
                     </h3>
-                    <span
-                      class="px-2 py-1 text-xs rounded-full bg-indigo-100 text-indigo-700 dark:bg-indigo-700 dark:text-indigo-100">
+                    <span :class="getRoleBadgeClass(user.role)">
                       {{ getRoleText(user.role) }}
                     </span>
                   </div>
@@ -108,7 +157,7 @@
                     class="flex items-center gap-1 px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700">
                     bulunamadı
                   </span>
-                   
+
                 </div>
 
               </div>
@@ -151,6 +200,10 @@
                 {{ user.isActive ? 'Deaktif Et' : 'Aktif Et' }}
               </span>
             </button>
+            <NuxtLink :to="`/profile/${user.id}`"
+              class="flex-1 px-3 py-1.5 text-xs text-center font-medium rounded transition-colors bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-300 dark:hover:bg-blue-800">
+              Profil
+            </NuxtLink>
           </div>
           <div class="w-full relative flex justify-center">
             <span
@@ -163,7 +216,7 @@
     </div>
 
     <!-- Empty State -->
-    <div v-if="filteredUsers.length === 0" class="text-center py-12">
+    <div v-if="filteredUsers?.length === 0" class="text-center py-12">
       <p class="text-gray-500 dark:text-gray-400">Kullanıcı bulunamadı</p>
     </div>
 
@@ -177,7 +230,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { ArrowPathIcon, FlagIcon, PlusIcon, UserGroupIcon } from '@heroicons/vue/24/outline'
+import { ArrowPathIcon,PlusIcon } from '@heroicons/vue/24/outline'
 import { useUsersStore } from '~/stores/users'
 import UserCreateModal from '~/components/UserCreateModal.vue'
 import dayjs from 'dayjs'
@@ -197,10 +250,28 @@ const usersStore = useUsersStore()
 const showCreateModal = ref(false)
 const selectedUser = ref(null)
 const activeRole = ref(null)
+const onlineFilter = ref(null) // null = tümü, 'online' = çevrimiçi, 'offline' = çevrimdışı
 const path = config.public.apiBase
 
 // Loading state for toggle buttons
 const toggleLoading = ref({})
+
+// Check if user is online (last active within 60 seconds)
+const isUserOnline = (user) => {
+  if (!user.lastActiveTime) return false
+  const diffSeconds = dayjs().diff(dayjs(user.lastActiveTime), 'second')
+  return diffSeconds < 60
+}
+
+// Count online users
+const onlineCount = computed(() => {
+  return usersStore.users.value?.filter(user => isUserOnline(user))?.length
+})
+
+// Count offline users
+const offlineCount = computed(() => {
+  return usersStore.users.value?.filter(user => !isUserOnline(user))?.length
+})
 
 const getLastActiveClass = (lastActiveTime) => {
   if (!lastActiveTime) return 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'
@@ -267,9 +338,22 @@ const loadUsers = async () => {
   }
 }
 
+// Filter by online/offline first
+const filteredByOnlineUsers = computed(() => {
+  const all = usersStore.users.value || []
 
+  if (onlineFilter.value === 'online') {
+    return all?.filter(user => isUserOnline(user))
+  } else if (onlineFilter.value === 'offline') {
+    return all?.filter(user => !isUserOnline(user))
+  }
+
+  return all
+})
+
+// Then calculate role stats based on online/offline filter
 const roleStats = computed(() => {
-  const users = usersStore.users.value || []
+  const users = filteredByOnlineUsers.value
   const counts = {}
 
   users.forEach(user => {
@@ -283,10 +367,11 @@ const roleStats = computed(() => {
   }))
 })
 
+// Finally filter by role
 const filteredUsers = computed(() => {
-  const all = usersStore.users.value || []
-  if (!activeRole.value) return all
-  return all.filter(user => user.role === activeRole.value)
+  const users = filteredByOnlineUsers.value
+  if (!activeRole.value) return users
+  return users?.filter(user => user.role === activeRole.value)
 })
 
 
@@ -413,6 +498,20 @@ const getRoleText = (role) => {
     default:
       return 'Bilinmiyor'
   }
+}
+
+const getRoleBadgeClass = (role) => {
+  const baseClass = 'px-2 py-1 text-xs rounded-full font-medium'
+
+  const roleColors = {
+    admin: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300',
+    doctor: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300',
+    pricing: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300',
+    user: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
+    default: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
+  }
+
+  return `${baseClass} ${roleColors[role] || roleColors.default}`
 }
 
 // Page head

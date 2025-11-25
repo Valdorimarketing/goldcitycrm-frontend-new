@@ -184,6 +184,13 @@
                 <input :value="form.checkup_package" type="text" disabled title="Değiştirilemez"
                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-md" />
               </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Form Mesajı
+                </label>
+                <textarea type="text" disabled title="Değiştirilemez"
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-md">{{ form.message }}</textarea>
+              </div>
             </div>
           </div>
 
@@ -697,6 +704,7 @@ const form = reactive({
   imageUrl: '',
   url: '',
   checkup_package: '',
+  message: '',
 })
 
 // Image upload
@@ -867,7 +875,8 @@ const loadCustomer = async () => {
       relatedTransaction: response.relatedTransaction || '',
       imageUrl: response.image || response.imageUrl || '',
       url: response.url || '',
-      checkup_package: response.checkup_package || ''
+      checkup_package: response.checkup_package || '',
+      message: response.message || ''
     })
 
     // Check if loaded status is remindable

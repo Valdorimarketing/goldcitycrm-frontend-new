@@ -170,13 +170,20 @@
                       </div>
                       
                       <!-- Actions -->
-                      <div class="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div class="flex items-center space-x-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          @click="cloneNote(note)"
+                          class="text-gray-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
+                          title="Klonla"
+                        >
+                          <DocumentDuplicateIcon class="h-6 w-6" />
+                        </button>
                         <button
                           @click="editNote(note)"
                           class="text-gray-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
                           title="Düzenle"
                         >
-                          <PencilIcon class="h-4 w-4" />
+                          <PencilIcon class="h-6 w-6" />
                         </button>
                         <button
                           v-if="isAdmin"
@@ -184,7 +191,7 @@
                           class="text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                           title="Sil"
                         >
-                          <TrashIcon class="h-4 w-4" />
+                          <TrashIcon class="h-6 w-6" />
                         </button>
                       </div>
                     </div>
@@ -295,7 +302,8 @@ import {
   PlusIcon,
   PencilIcon,
   TrashIcon,
-  BellIcon
+  BellIcon,
+  DocumentDuplicateIcon
 } from '@heroicons/vue/24/outline'
 import { useCustomer2Product } from '~/composables/useCustomer2Product'
 
@@ -323,7 +331,6 @@ const notes = ref([])
 const addingNote = ref(false)
 const editingNote = ref(null)
 const selectedStatus = ref(null)
-const updatingStatus = ref(false)
 const showConvertToSaleModal = ref(false)
 const pendingStatusId = ref(null)
 
@@ -386,6 +393,12 @@ const fetchNotes = async () => {
 // Add new note
 const addNote = async () => {
   if (!newNote.note.trim() || !props.customer?.id) return
+
+
+  if(notes.value.find(item => item.note == newNote.note.trim())){
+    alert("Aynı nottan tekrar oluşturulamaz")
+    return false;
+  }
 
   addingNote.value = true
   try {
@@ -476,6 +489,10 @@ const editNote = (note) => {
   editingNote.value = { ...note }
 }
 
+const cloneNote = (note) => {
+  newNote.note = note.note
+}
+
 // Cancel edit
 const cancelEdit = () => {
   editingNote.value = null
@@ -519,58 +536,7 @@ const isOverdue = (dateString) => {
   if (!dateString) return false
   return new Date(dateString) < new Date()
 }
-
-// Handle status change
-const handleStatusChange = async () => {
-  if (!selectedStatus.value || !props.customer?.id || updatingStatus.value) return
-
-  // Check if the selected status is a sale status
-  const selectedStatusObj = availableStatuses.value.find(s => s.id === selectedStatus.value)
-  const isSaleStatus = selectedStatusObj?.is_sale || selectedStatusObj?.isSale
-
-  updatingStatus.value = true
-  try {
-    // If changing to sale status, check if there are unsold products first
-    if (isSaleStatus) {
-      const unsoldProducts = await fetchUnsoldProducts(props.customer.id)
-      if (!unsoldProducts || unsoldProducts.length === 0) {
-        showError('Satış yapılamaz. Önce ürün girilmeli')
-        // Revert selection
-        selectedStatus.value = props.customer?.status || null
-        updatingStatus.value = false
-        return
-      }
-    }
-
-    // Attempt to update customer status
-    await customersStore.updateCustomer(props.customer.id, {
-      status: selectedStatus.value
-    })
-
-    // If it's a sale status and update was successful, open convert to sale modal
-    if (isSaleStatus) {
-      pendingStatusId.value = selectedStatus.value
-      showConvertToSaleModal.value = true
-    } else {
-      // For non-sale status, just refresh and notify
-      await customersStore.fetchCustomer(props.customer.id)
-      emit('customer-updated')
-      showSuccess('Müşteri durumu güncellendi')
-    }
-  } catch (error) {
-    console.error('Error updating customer status:', error)
-
-    // Show error message from backend
-    const errorMessage = error?.data?.message || 'Durum güncellenirken hata oluştu'
-    showError(errorMessage)
-
-    // Revert selection on error
-    selectedStatus.value = props.customer?.status || null
-  } finally {
-    updatingStatus.value = false
-  }
-}
-
+ 
 // Handle successful sale conversion
 const handleSaleConverted = async (saleResult) => {
   showConvertToSaleModal.value = false

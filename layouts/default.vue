@@ -2,45 +2,29 @@
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <!-- Sidebar -->
     <AppSidebar />
-    
+
     <!-- Main Content -->
-    <div 
-      class="transition-all duration-300 ease-in-out"
-      :class="[sidebarOpen ? 'lg:ml-64' : 'lg:ml-20']"
-    >
+    <div class="transition-all duration-300 ease-in-out" :class="[sidebarOpen ? 'lg:ml-64' : 'lg:ml-20']">
       <!-- Header -->
       <AppHeader />
-      
+
       <!-- Page Content -->
       <main class="p-4 lg:p-6">
         <slot />
       </main>
     </div>
-    
+
     <!-- Mobile Sidebar Overlay -->
-    <div 
-      v-if="mobileSidebarOpen" 
-      class="fixed inset-0 z-40 bg-gray-600 bg-opacity-75 lg:hidden"
-      @click="closeMobileSidebar"
-    ></div>
-    
+    <div v-if="mobileSidebarOpen" class="fixed inset-0 z-40 bg-gray-600 bg-opacity-75 lg:hidden"
+      @click="closeMobileSidebar"></div>
+
     <!-- Fraud Alert Popup -->
-    <FraudAlertPopup
-      :is-open="fraudAlertPopup"
-      :alert="currentFraudAlert"
-      :loading="fraudAlertLoading"
-      @dismiss="dismissFraudAlert"
-      @check="checkFraudAlert"
-    />
+    <FraudAlertPopup v-if="isAdmin" :is-open="fraudAlertPopup" :alert="currentFraudAlert" :loading="fraudAlertLoading"
+      @dismiss="dismissFraudAlert" @check="checkFraudAlert" />
 
     <!-- Reminder Popup -->
-    <ReminderPopup
-      :is-open="reminderPopup"
-      :reminder="currentReminder"
-      :loading="reminderLoading"
-      @dismiss="dismissReminder"
-      @complete="completeReminder"
-    />
+    <ReminderPopup :is-open="reminderPopup" :reminder="currentReminder" :loading="reminderLoading"
+      @dismiss="dismissReminder" @complete="completeReminder" />
   </div>
 </template>
 
@@ -77,6 +61,8 @@ const {
   getUnreadCount
 } = useFraudAlerts()
 
+const { isAdmin } = usePermissions()
+
 // Reminder Notification System - composable'ı inline olarak tanımlayalım
 const useReminderNotifications = () => {
   const config = useRuntimeConfig()
@@ -91,7 +77,7 @@ const useReminderNotifications = () => {
   // Bugün ve öncesi için hatırlatmaları al
   const getTodayReminders = async () => {
     try {
-      const currentUserId = authStore.user?.id || useCookie('user-id').value 
+      const currentUserId = authStore.user?.id || useCookie('user-id').value
 
       if (!currentUserId) {
         console.warn('❌ Kullanıcı ID bulunamadı!')
@@ -101,7 +87,7 @@ const useReminderNotifications = () => {
       const today = new Date()
       const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
 
-   
+
 
       // Token'ı al
       const token = useCookie('auth-token').value || authStore.token
@@ -119,7 +105,7 @@ const useReminderNotifications = () => {
           Authorization: `Bearer ${token}`
         }
       })
- 
+
       return response || []
     } catch (error) {
       console.error('❌ Hatırlatmaları getirirken hata:', error)
@@ -129,13 +115,13 @@ const useReminderNotifications = () => {
 
   // Yaklaşan hatırlatmaları kontrol et
   const checkForDueReminders = async () => {
-  
+
     const reminders = await getTodayReminders()
-  
+
 
     const now = new Date()
     const currentTime = now.getTime()
-    
+
 
     for (const reminder of reminders) {
       if (!reminder.remindingAt) continue
@@ -144,7 +130,7 @@ const useReminderNotifications = () => {
       const timeDiff = reminderTime - currentTime
       const timeDiffMinutes = Math.ceil(timeDiff / 60000)
 
-   
+
 
       // Session storage'da bu hatırlatmanın gösterilip gösterilmediğini kontrol et
       const sessionKey = `reminder_${reminder.id}_shown`
@@ -152,7 +138,7 @@ const useReminderNotifications = () => {
 
       // Zamanı geçmiş veya 5 dakika içinde olan hatırlatmalar
       if (timeDiff <= 5 * 60 * 1000 && !reminderShown && !notifiedReminders.value.has(reminder.id)) {
-      
+
         // Müşteri bilgilerini al
         if (reminder.customer && !reminder.customerInfo) {
           try {
@@ -167,7 +153,7 @@ const useReminderNotifications = () => {
               name: customer.name,
               surname: customer.surname
             }
-            
+
           } catch (error) {
             console.error('❌ Müşteri bilgileri alınamadı:', error)
           }
@@ -220,7 +206,7 @@ const useReminderNotifications = () => {
 
       showPopup.value = false
       currentReminder.value = null
-      
+
       return true
     } catch (error) {
       console.error('❌ Hatırlatma tamamlanırken hata:', error)
@@ -291,30 +277,32 @@ const completeReminder = async () => {
 }
 
 onMounted(async () => {
- 
+
 
   // Request notification permission
-   await requestNotificationPermission() 
- 
+  await requestNotificationPermission()
+
   await checkForNewAlerts()
-  await getUnreadCount() 
+  await getUnreadCount()
   await checkForDueReminders()
 
   // Set up interval to check every 30 seconds for fraud alerts
-  fraudAlertInterval = setInterval(async () => {
-    await checkForNewAlerts()
-  }, 30000)
+  if (isAdmin) {
+    fraudAlertInterval = setInterval(async () => {
+      await checkForNewAlerts()
+    }, 30000)
+  }
 
   // Set up interval to check every 30 seconds for reminders
-  reminderInterval = setInterval(async () => { 
+  reminderInterval = setInterval(async () => {
     await checkForDueReminders()
   }, 30000)
- 
+
 })
 
 onUnmounted(() => {
   // Clean up intervals
-  if (fraudAlertInterval) {
+  if (fraudAlertInterval && isAdmin) {
     clearInterval(fraudAlertInterval)
     fraudAlertInterval = null
   }
@@ -332,4 +320,4 @@ provide('sidebar', {
   openMobileSidebar,
   closeMobileSidebar
 })
-</script> 
+</script>

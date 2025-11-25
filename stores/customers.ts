@@ -11,6 +11,30 @@ export const useCustomersStore = defineStore('customers', () => {
     limit: 20,
     totalPages: 0
   })
+  const config = useRuntimeConfig()
+   
+
+    
+  const exportCustomers = async (params:any) => {
+    try {
+      
+    const token = (import.meta.client ? localStorage.getItem('auth-token') : null)
+                   
+    const response = await $fetch(config.public.apiBase + '/customers/export', {
+      method: 'GET',
+      params,
+      responseType: 'blob', // Bu çok önemli!
+      headers: {
+        Authorization: `Bearer ${token}` // veya token'ınızı nasıl saklıyorsanız
+      }
+    })
+    return response
+  } catch (error) {
+    console.error('Export error:', error)
+    throw error
+  }
+  }
+ 
 
   // Get all customers
   const fetchCustomers = async (pageOrParams?: number | {
@@ -245,6 +269,7 @@ export const useCustomersStore = defineStore('customers', () => {
     currentCustomer: readonly(currentCustomer),
     loading: readonly(loading),
     pagination: readonly(pagination),
+    exportCustomers,
     fetchCustomers,
     fetchCustomer,
     createCustomer,

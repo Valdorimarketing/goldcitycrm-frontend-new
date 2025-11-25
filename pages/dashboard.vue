@@ -4,7 +4,7 @@
     <div class="border-b border-gray-200 dark:border-gray-700 pb-6">
       <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
       <p class="mt-2 text-gray-600 dark:text-gray-400">
-        Hoş geldiniz, {{ authStore.user?.name || 'Kullanıcı' }} 
+        Hoş geldiniz, {{ authStore.user?.name || 'Kullanıcı' }}
       </p>
     </div>
 
@@ -13,17 +13,14 @@
       <div v-for="stat in stats" :key="stat.name" class="stats-card">
         <div class="flex items-center">
           <div class="flex-shrink-0">
-            <component
-              :is="stat.icon"
-              class="h-8 w-8 text-indigo-600 dark:text-indigo-400"
-            />
+            <component :is="stat.icon" class="h-8 w-8 text-indigo-600 dark:text-indigo-400" />
           </div>
           <div class="ml-5 w-0 flex-1">
             <dl>
               <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
                 {{ stat.name }}
               </dt>
-              <dd class="text-2xl font-bold text-gray-900 dark:text-white">
+              <dd class="text-2xl font-semibold text-gray-900 dark:text-white">
                 {{ stat.value }}
               </dd>
             </dl>
@@ -42,76 +39,142 @@
     <!-- New Customers Cards (Admin Only) -->
     <div v-if="isAdmin" class="grid grid-cols-1 gap-8 lg:grid-cols-2">
       <!-- Unassigned New Customers -->
-      <div class="card">
-        <div class="flex items-center justify-between mb-6">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Henüz Atanmamış Kişiler</h3>
-          <NuxtLink
-            to="/pool-data?tab=unassigned"
-            class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 font-medium transition-colors"
-          >
-            Tümünü gör
-          </NuxtLink>
-        </div>
+       
+       <div class="card">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Müşteri Dağılımı</h3>
+          </div>
 
-        <!-- Loading State -->
-        <div v-if="loadingUnassignedCustomers" class="space-y-3">
-          <div v-for="i in 3" :key="i" class="flex items-center space-x-3">
-            <div class="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
-            <div class="flex-1">
-              <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
-              <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-3/4"></div>
+          <!-- 2 Kolonlu Grid -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Sol Kolon: Henüz Atanmamış Kişiler -->
+            <div class="border-r border-gray-200 dark:border-gray-700 pr-0 lg:pr-6">
+              <div class="flex items-center justify-between mb-4">
+                <h4 class="text-base font-semibold text-gray-900 dark:text-white">Henüz Atanmamış Kişiler</h4>
+                <NuxtLink to="/pool-data?tab=unassigned"
+                  class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 font-medium transition-colors">
+                  Tümünü gör
+                </NuxtLink>
+              </div>
+
+              <!-- Loading State -->
+              <div v-if="loadingUnassignedCustomers" class="space-y-3">
+                <div v-for="i in 3" :key="i" class="flex items-center space-x-3">
+                  <div class="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
+                  <div class="flex-1">
+                    <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
+                    <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-3/4"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Data -->
+              <div v-else-if="unassignedNewCustomers.length > 0" class="space-y-3">
+                <div v-for="customer in unassignedNewCustomers as any" :key="customer.id"
+                  class="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors cursor-pointer"
+                  @click="navigateTo(`/customers/show/${customer.id}`)">
+                  <div class="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                    <span class="text-sm font-medium text-blue-600 dark:text-blue-400">
+                      {{ customer.name?.charAt(0) || '?' }}{{ customer.surname?.charAt(0) || '' }}
+                    </span>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
+                      {{ customer.name || 'İsimsiz' }} {{ customer.surname || '' }}
+                    </p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 truncate">
+                      {{ customer.email || customer.phone || '-' }}
+                    </p>
+                  </div>
+                  <div class="text-sm text-gray-500 dark:text-gray-400">
+                    {{ formatDate(customer.createdAt) }}
+                  </div>
+                </div>
+
+                <!-- Total Count -->
+                <div class="pt-3 border-t border-gray-200 dark:border-gray-700">
+                  <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Toplam: <span class="text-gray-900 dark:text-white">{{ unassignedNewCustomersTotal }}</span>
+                  </p>
+                </div>
+              </div>
+
+              <!-- Empty State -->
+              <div v-else class="text-center py-6">
+                <p class="text-sm text-gray-500 dark:text-gray-400">Henüz atanmamış kişi bulunmuyor</p>
+              </div>
             </div>
+
+            <!-- Sağ Kolon: Bugünkü Atamalar -->
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                <h4 class="text-base font-semibold text-gray-900 dark:text-white">Bugünkü Atamalar</h4>
+                <NuxtLink to="/assignments?tab=today"
+                  class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 font-medium transition-colors">
+                  Tümünü gör
+                </NuxtLink>
+              </div>
+
+              <!-- Loading State -->
+              <div v-if="loadingTodayAssignments" class="space-y-3">
+                <div v-for="i in 3" :key="i" class="flex items-center justify-between p-3">
+                  <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-1/2"></div>
+                  <div class="h-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-16"></div>
+                </div>
+              </div>
+
+              <!-- Data -->
+              <div v-else-if="todayAssignments.length > 0" class="space-y-2">
+                <div v-for="assignment in todayAssignments as any" :key="assignment.salesRepId"
+                  class="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
+                  <div class="flex items-center space-x-3">
+                    <div class="h-8 w-8 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
+                      <span class="text-xs font-medium text-purple-600 dark:text-purple-400">
+                        {{ assignment.salesRepName?.charAt(0) || '?' }}
+                      </span>
+                    </div>
+                    <span class="text-sm font-medium text-gray-900 dark:text-white">
+                      {{ assignment.salesRepName }}
+                    </span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
+                      {{ assignment.count }} atama
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Total Count -->
+                <div class="pt-3 border-t border-gray-200 dark:border-gray-700 mt-4">
+                  <div class="flex items-center justify-between">
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                      Toplam Atama:
+                    </p>
+                    <span class="text-lg font-bold text-gray-900 dark:text-white">
+                      {{ totalTodayAssignments }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Empty State -->
+              <div v-else class="text-center py-6">
+                <p class="text-sm text-gray-500 dark:text-gray-400">Bugün henüz atama yapılmadı</p>
+              </div>
+            </div>
+
           </div>
         </div>
 
-        <!-- Data -->
-        <div v-else-if="unassignedNewCustomers.length > 0" class="space-y-3">
-          <div
-            v-for="customer in unassignedNewCustomers as any"
-            :key="customer.id"
-            class="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors cursor-pointer"
-            @click="navigateTo(`/customers/show/${customer.id}`)"
-          >
-            <div class="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-              <span class="text-sm font-medium text-blue-600 dark:text-blue-400">
-                {{ customer.name?.charAt(0) || '?' }}{{ customer.surname?.charAt(0) || '' }}
-              </span>
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
-                {{ customer.name || 'İsimsiz' }} {{ customer.surname || '' }}
-              </p>
-              <p class="text-sm text-gray-500 dark:text-gray-400 truncate">
-                {{ customer.email || customer.phone || '-' }}
-              </p>
-            </div>
-            <div class="text-sm text-gray-500 dark:text-gray-400">
-              {{ formatDate(customer.createdAt) }}
-            </div>
-          </div>
 
-          <!-- Total Count -->
-          <div class="pt-3 border-t border-gray-200 dark:border-gray-700">
-            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
-              Toplam: <span class="text-gray-900 dark:text-white">{{ unassignedNewCustomersTotal }}</span>
-            </p>
-          </div>
-        </div>
-
-        <!-- Empty State -->
-        <div v-else class="text-center py-6">
-          <p class="text-sm text-gray-500 dark:text-gray-400">Henüz atanmamış kişi bulunmuyor</p>
-        </div>
-      </div>
 
       <!-- Assigned Waiting New Customers -->
       <div class="card">
         <div class="flex items-center justify-between mb-6">
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Atanmış Beklemedeki Kişiler</h3>
-          <NuxtLink
-            to="/pool-data?tab=assigned"
-            class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 font-medium transition-colors"
-          >
+          <NuxtLink to="/pool-data?tab=assigned"
+            class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 font-medium transition-colors">
             Tümünü gör
           </NuxtLink>
         </div>
@@ -129,12 +192,9 @@
 
         <!-- Data -->
         <div v-else-if="assignedNewCustomers.length > 0" class="space-y-3">
-          <div
-            v-for="customer in assignedNewCustomers as any"
-            :key="customer.id"
+          <div v-for="customer in assignedNewCustomers as any" :key="customer.id"
             class="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors cursor-pointer"
-            @click="navigateTo(`/customers/show/${customer.id}`)"
-          >
+            @click="navigateTo(`/customers/show/${customer.id}`)">
             <div class="h-10 w-10 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center">
               <span class="text-sm font-medium text-amber-600 dark:text-amber-400">
                 {{ customer.name?.charAt(0) || '?' }}{{ customer.surname?.charAt(0) || '' }}
@@ -173,10 +233,7 @@
 
     <!-- User Calendar (User and Admin Roles) -->
     <div v-if="isAdmin || isUser">
-      <DashboardCalendar
-        :customers-data="userCustomersForCalendar"
-        :meetings-data="userMeetingsForCalendar"
-      />
+      <DashboardCalendar :customers-data="userCustomersForCalendar" :meetings-data="userMeetingsForCalendar" />
     </div>
 
     <!-- Quick Actions -->
@@ -185,10 +242,8 @@
       <div class="card">
         <div class="flex items-center justify-between mb-6">
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Son Müşteriler</h3>
-          <NuxtLink
-            to="/customers"
-            class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 font-medium transition-colors"
-          >
+          <NuxtLink to="/customers"
+            class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 font-medium transition-colors">
             Tümünü gör
           </NuxtLink>
         </div>
@@ -206,12 +261,9 @@
 
         <!-- Data -->
         <div v-else-if="recentCustomers.length > 0" class="space-y-3">
-          <div
-            v-for="customer in recentCustomers as any"
-            :key="customer.id"
+          <div v-for="customer in recentCustomers as any" :key="customer.id"
             class="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors cursor-pointer"
-            @click="navigateTo(`/customers/show/${customer.id}`)"
-          >
+            @click="navigateTo(`/customers/show/${customer.id}`)">
             <div class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
               <span class="text-sm font-medium text-indigo-600 dark:text-indigo-400">
                 {{ customer.name?.charAt(0) || '?' }}{{ customer.surname?.charAt(0) || '' }}
@@ -236,7 +288,7 @@
           <p class="text-sm text-gray-500 dark:text-gray-400">Henüz müşteri bulunmuyor</p>
         </div>
 
-         
+
       </div>
 
       <!-- Upcoming Reminders -->
@@ -258,13 +310,11 @@
 
         <!-- Data -->
         <div v-else-if="upcomingReminders.length > 0" class="space-y-3">
-          <div
-            v-for="reminder in upcomingReminders as any"
-            :key="reminder.id"
+          <div v-for="reminder in upcomingReminders as any" :key="reminder.id"
             class="flex items-start space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors cursor-pointer"
-            @click="reminder.customer && navigateTo(`/customers/show/${reminder.customer}`)"
-          >
-            <div class="h-10 w-10 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center flex-shrink-0">
+            @click="reminder.customer && navigateTo(`/customers/show/${reminder.customer}`)">
+            <div
+              class="h-10 w-10 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center flex-shrink-0">
               <span class="text-sm font-medium text-amber-600 dark:text-amber-400">
                 {{ reminder.customerInfo?.name?.charAt(0) || '?' }}
               </span>
@@ -294,10 +344,8 @@
     <div v-if="canViewMeetings" class="card">
       <div class="flex items-center justify-between mb-6">
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Yaklaşan Randevular</h3>
-        <NuxtLink
-          to="/meetings"
-          class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 font-medium transition-colors"
-        >
+        <NuxtLink to="/meetings"
+          class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 font-medium transition-colors">
           Tümünü gör
         </NuxtLink>
       </div>
@@ -325,14 +373,14 @@
             </tr>
           </thead>
           <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-            <tr v-for="meeting in upcomingMeetings as any" :key="meeting.id" class="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
-              <td class="table-cell font-medium">{{ meeting.customerInfo?.name || '-' }} {{ meeting.customerInfo?.surname || '' }}</td>
+            <tr v-for="meeting in upcomingMeetings as any" :key="meeting.id"
+              class="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
+              <td class="table-cell font-medium">{{ meeting.customerInfo?.name || '-' }} {{
+                meeting.customerInfo?.surname || '' }}</td>
               <td class="table-cell">{{ formatDateTime(meeting.startTime) }}</td>
               <td class="table-cell">{{ formatDateTime(meeting.endTime) }}</td>
               <td class="table-cell">
-                <span
-                  class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800"
-                >
+                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
                   {{ meeting.meetingStatusInfo?.name || 'Belirsiz' }}
                 </span>
               </td>
@@ -347,10 +395,7 @@
       </div>
 
       <div class="mt-4">
-        <NuxtLink
-          to="/meetings"
-          class="btn-primary text-center block"
-        >
+        <NuxtLink to="/meetings" class="btn-primary text-center block">
           Randevuları Görüntüle
         </NuxtLink>
       </div>
@@ -388,10 +433,10 @@ const loadingUnassignedCustomers = ref(true)
 const loadingAssignedCustomers = ref(true)
 
 // Data
-const totalCustomers = ref(0)
+const totalCustomers = ref('0')
 const totalSales = ref(0)
 const totalRevenue = ref(0)
-const totalMeetings = ref(0)
+const totalMeetings = ref('0')
 const recentCustomers = ref([]) as any
 const recentSales = ref([]) as any
 const upcomingMeetings = ref([]) as any
@@ -403,6 +448,18 @@ const assignedNewCustomersTotal = ref(0)
 const users = ref([]) as any
 const userCustomersForCalendar = ref([]) as any
 const userMeetingsForCalendar = ref([]) as any
+
+
+// Bugünkü atamalar için state'ler
+const loadingTodayAssignments = ref(false)
+const todayAssignments = ref([])
+
+const totalTodayAssignments = computed(() => {
+  return todayAssignments.value.reduce((sum: number, assignment: any) => sum + (assignment.count || 0), 0)
+})
+
+
+
 
 // Role-based permissions
 const userRole = computed(() => authStore.user?.role || '')
@@ -436,7 +493,7 @@ const getRoleBasedFilters = async () => {
   // Fetch statuses first if needed for doctor/pricing roles
   if (isDoctor.value || isPricing.value) {
     try {
-      await fetchStatuses() 
+      await fetchStatuses()
     } catch (error) {
       console.error('Error fetching statuses:', error)
     }
@@ -457,73 +514,106 @@ const getRoleBasedFilters = async () => {
       return { status: pricingStatuses.map(s => s.id).join(',') }
     }
   }
- 
+
   return customerFilters
 }
 
 // Calculate statistics
 const calculateStats = async () => {
   try {
-    loadingStats.value = true 
+    loadingStats.value = true
     const api = useApi()
 
-    // Get role-based filters
-    const filters = await getRoleBasedFilters()
+    const filters = getRelatedDataFilters() || {}
 
-    // Fetch customers directly using API 
-    const customersResponse = await api('/customers', { query: filters }) as any 
+    // DOĞRU ENDPOINT — Sales page ile aynı
+    const response = await api('/sales/user/details', { query: filters }) as any
 
-    // Filter customers based on access permissions
-    
-    totalCustomers.value = customersResponse.meta?.total || 0;
-    
-    
-    // Fetch sales
-    const salesFilters = getRelatedDataFilters() || {}
+    let allSales = Array.isArray(response?.data) ? response.data : []
 
-    const salesResponse = await api('/sales', { query: salesFilters }) as any
-    
-    
-    let allSales = []
-    if (Array.isArray(salesResponse)) {
-      allSales = salesResponse
-    } else if (salesResponse.data && Array.isArray(salesResponse.data)) {
-      allSales = salesResponse.data
+    // Sale page ile birebir hesaplayan fonksiyon
+    const calcTotalAmount = (products:any) => {
+      if (!products || !Array.isArray(products)) return 0
+      return products.reduce((sum, p) => {
+        return sum + (p.totalPrice || p.offer || p.price || 0)
+      }, 0)
     }
 
-    // Calculate current month sales
-    const now = new Date()
-    const currentMonth = now.getMonth()
-    const currentYear = now.getFullYear()
+    // Para birimini sales page ile aynı mantıkta çek
+    const getCurrency = (products:any) => {
+      if (!products || !products.length) return 'TRY'
+      return (
+        products[0]?.currency?.code ||
+        products[0]?.productDetails?.currency?.code ||
+        'TRY'
+      )
+    }
 
-    const currentMonthSales = allSales.filter((sale:any) => {
-      const saleDate = new Date(sale.date)
-      return saleDate.getMonth() === currentMonth && saleDate.getFullYear() === currentYear
+    // Çoklu para birimi depoları (TS düzeltildi)
+    const revenue: Record<string, number> = {}
+    const revenueMonth: Record<string, number> = {}
+
+    const now = new Date()
+    const cm = now.getMonth()
+    const cy = now.getFullYear()
+
+    allSales.forEach((sale:any) => {
+      const amount = calcTotalAmount(sale.salesProducts)
+      const currency = getCurrency(sale.salesProducts)
+
+      // TOPLAM GELİR
+      revenue[currency] = (revenue[currency] || 0) + amount
+
+      // BU AYKI SATIŞ
+      const d = new Date(sale.createdAt)
+      if (d.getMonth() === cm && d.getFullYear() === cy) {
+        revenueMonth[currency] = (revenueMonth[currency] || 0) + amount
+      }
     })
 
-    totalSales.value = currentMonthSales.reduce((sum:any, sale:any) => sum + (sale.amount || 0), 0)
-    totalRevenue.value = allSales.reduce((sum:any, sale:any) => sum + (sale.amount || 0), 0)
 
-    // Fetch meetings
-    const meetingFilters = getRelatedDataFilters() || {}
+    // Dashboard kartlarına aktar
 
-    const meetingsResponse = await api('/meetings', { query: meetingFilters }) as any
-    
-    
-    if (Array.isArray(meetingsResponse)) {
-      totalMeetings.value = meetingsResponse.length
-    } else if (meetingsResponse.data && Array.isArray(meetingsResponse.data)) {
-      totalMeetings.value = meetingsResponse.data.length
-    } else {
-      totalMeetings.value = 0
-    }
 
-  } catch (error) {
-    console.error('Error calculating stats:', error)
+    totalRevenue.value = revenue as any
+    totalSales.value = revenueMonth as any
+
+  } catch (err) {
+    console.error('calculateStats error:', err)
   } finally {
     loadingStats.value = false
   }
 }
+
+
+const formatStatsValue = (data:any) => {
+  if (!data || typeof data !== 'object') return '-'
+
+  return Object.entries(data)
+    .map(([currency, amount]) =>
+      new Intl.NumberFormat('tr-TR', {
+        style: 'currency',
+        currency
+      }).format(Number(amount))
+    )
+    .join(' - ')
+}
+
+// Bugünkü atamaları çeken fonksiyon
+const fetchTodayAssignments = async () => {
+  loadingTodayAssignments.value = true
+  try {
+    const api = useApi()
+    const data = await api('/customers/assignments/today') as any
+    todayAssignments.value = data || []
+  } catch (error) {
+    console.error('Bugünkü atamalar yüklenemedi:', error)
+  } finally {
+    loadingTodayAssignments.value = false
+  }
+}
+
+
 
 // Fetch recent customers
 const fetchRecentCustomers = async () => {
@@ -539,11 +629,15 @@ const fetchRecentCustomers = async () => {
       const filtered = customersResponse.filter(c => canAccessCustomer(c))
       recentCustomers.value = filtered.slice(0, 5)
     } else if (customersResponse.data && Array.isArray(customersResponse.data)) {
-      const filtered = customersResponse.data.filter((c:any) => canAccessCustomer(c))
+      const filtered = customersResponse.data.filter((c: any) => canAccessCustomer(c))
       recentCustomers.value = filtered.slice(0, 5)
     } else {
       recentCustomers.value = []
     }
+
+    
+    totalCustomers.value = recentCustomers.value.length;
+
   } catch (error) {
     console.error('Error fetching recent customers:', error)
     recentCustomers.value = []
@@ -583,7 +677,7 @@ const fetchUpcomingMeetings = async () => {
     const api = useApi()
     const filters = getRelatedDataFilters() || {}
 
-    const meetingsResponse = await api('/meetings', { query: filters })  as any
+    const meetingsResponse = await api('/meetings', { query: filters }) as any
 
     if (Array.isArray(meetingsResponse)) {
       upcomingMeetings.value = meetingsResponse.slice(0, 5)
@@ -592,6 +686,11 @@ const fetchUpcomingMeetings = async () => {
     } else {
       upcomingMeetings.value = []
     }
+
+    
+    
+    totalMeetings.value = upcomingMeetings.value.length;
+    
   } catch (error) {
     console.error('Error fetching upcoming meetings:', error)
     upcomingMeetings.value = []
@@ -623,8 +722,8 @@ const fetchUpcomingReminders = async () => {
     }
 
     const remindersResponse = await api('/customer-notes', { query: filters }) as any
-    
-    
+
+
     let allReminders = []
     if (Array.isArray(remindersResponse)) {
       allReminders = remindersResponse
@@ -634,8 +733,8 @@ const fetchUpcomingReminders = async () => {
 
     // Sort by remindingAt and get first 5
     upcomingReminders.value = allReminders
-      .filter((r:any) => r.remindingAt && new Date(r.remindingAt) >= now)
-      .sort((a:any, b:any) => new Date(a.remindingAt).getTime() - new Date(b.remindingAt).getTime())
+      .filter((r: any) => r.remindingAt && new Date(r.remindingAt) >= now)
+      .sort((a: any, b: any) => new Date(a.remindingAt).getTime() - new Date(b.remindingAt).getTime())
       .slice(0, 5)
   } catch (error) {
     console.error('Error fetching upcoming reminders:', error)
@@ -656,8 +755,8 @@ const fetchUnassignedNewCustomers = async () => {
     loadingUnassignedCustomers.value = true
     const api = useApi()
 
-    
-    
+
+
     // Fetch customers with isFirst=true and hasRelevantUser=false from backend
     const customersResponse = await api('/customers', {
       query: {
@@ -667,8 +766,8 @@ const fetchUnassignedNewCustomers = async () => {
       }
     }) as any
 
-    
-    
+
+
     let allCustomers = []
     if (Array.isArray(customersResponse)) {
       allCustomers = customersResponse
@@ -725,7 +824,7 @@ const fetchUserCustomersForCalendar = async () => {
     }
 
     // If admin, include all customers. If regular user, filter by access
-    userCustomersForCalendar.value = isAdmin.value ? allCustomers : allCustomers.filter((c:any) => canAccessCustomer(c))
+    userCustomersForCalendar.value = isAdmin.value ? allCustomers : allCustomers.filter((c: any) => canAccessCustomer(c))
   } catch (error) {
     console.error('Error fetching user customers for calendar:', error)
     userCustomersForCalendar.value = []
@@ -772,8 +871,8 @@ const fetchAssignedNewCustomers = async () => {
       await fetchUsers()
     }
 
-    
-    
+
+
     // Fetch customers with isFirst=true and hasRelevantUser=true from backend
     const customersResponse = await api('/customers', {
       query: {
@@ -783,8 +882,8 @@ const fetchAssignedNewCustomers = async () => {
       }
     }) as any
 
-    
-    
+
+
     let allCustomers = []
     if (Array.isArray(customersResponse)) {
       allCustomers = customersResponse
@@ -796,12 +895,12 @@ const fetchAssignedNewCustomers = async () => {
 
     // Create users map for quick lookup
     const usersMap: Record<string, any> = {}
-    users.value.forEach((user:any) => {
+    users.value.forEach((user: any) => {
       usersMap[user.id] = user
     })
 
     // Add user info to each customer
-    const customersWithUserInfo = allCustomers.map((customer:any) => {
+    const customersWithUserInfo = allCustomers.map((customer: any) => {
       const relevantUserId = customer.relevantUserId || customer.relevant_user_id || customer.relevent_user || customer.relevantUser
 
       // Parse relevantUser correctly - handle both ID and object cases
@@ -844,7 +943,8 @@ onMounted(async () => {
     fetchUnassignedNewCustomers(),
     fetchAssignedNewCustomers(),
     fetchUserCustomersForCalendar(),
-    fetchUserMeetingsForCalendar()
+    fetchUserMeetingsForCalendar(),
+    fetchTodayAssignments()
   ])
 })
 
@@ -853,7 +953,7 @@ const stats = computed(() => {
   const baseStats = [
     {
       name: 'Toplam Müşteri',
-      value: loadingStats.value ? '...' : totalCustomers.value.toLocaleString('tr-TR'),
+      value: loadingStats.value ? '...' : totalCustomers.value,
       description: getRoleBasedDescription('customer'),
       icon: UsersIcon
     }
@@ -863,13 +963,13 @@ const stats = computed(() => {
     baseStats.push(
       {
         name: 'Bu Ay Satış',
-        value: loadingStats.value ? '...' : `₺${totalSales.value.toLocaleString('tr-TR')}`,
+        value: loadingStats.value ? '...' : formatStatsValue(totalSales.value),
         description: getRoleBasedDescription('sales'),
         icon: ShoppingBagIcon
       },
       {
         name: 'Toplam Gelir',
-        value: loadingStats.value ? '...' : `₺${totalRevenue.value.toLocaleString('tr-TR')}`,
+        value: loadingStats.value ? '...' : formatStatsValue(totalRevenue.value),
         description: getRoleBasedDescription('revenue'),
         icon: CurrencyDollarIcon
       }
@@ -878,7 +978,7 @@ const stats = computed(() => {
 
   baseStats.push({
     name: 'Randevular',
-    value: loadingStats.value ? '...' : totalMeetings.value.toLocaleString('tr-TR'),
+    value: loadingStats.value ? '...' : totalMeetings.value,
     description: getRoleBasedDescription('meetings'),
     icon: CalendarIcon
   })

@@ -19,6 +19,10 @@
         </p>
       </div>
       <div class="mt-4 sm:mt-0 flex gap-3"> 
+        <button @click="reFreshList()"
+          class="btn-secondary">
+          Yenile
+        </button>
         <button @click="showCreateModal = true"
           class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
           <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
@@ -712,9 +716,15 @@ const handleCustomerCreated = async (customer) => {
   await fetchCustomers(1)
 }
 
+
+
 const formatDate = (dateString) => {
   if (!dateString) return '-'
   return new Date(dateString).toLocaleDateString('tr-TR')
+}
+
+const reFreshList = async () => {
+    await fetchCustomers(pagination.value.page)
 }
 
 

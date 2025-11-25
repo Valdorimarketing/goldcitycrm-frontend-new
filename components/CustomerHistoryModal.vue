@@ -178,7 +178,6 @@ const fetchHistory = async () => {
         return dateB - dateA
       })
     
-    console.log('Customer history loaded:', history.value)
     
     // If no history exists, you might want to create an initial entry
     if (history.value.length === 0) {

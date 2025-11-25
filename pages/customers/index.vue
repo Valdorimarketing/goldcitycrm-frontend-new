@@ -9,8 +9,24 @@
         </p>
       </div>
       <div class="relative flex gap-2">
+          
         <div class="relative">
-          <button @click="loadCustomers(1)"
+          <button @click="showExportModal = true"
+            class="inline-flex items-center px-3 py-2 bg-white/20 hover:bg-white/30 text-white text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition">
+            <ArrowDownTrayIcon class="h-5 w-5 mr-2" />
+            Dışa Aktar
+          </button>
+        </div>
+
+        <!-- Export Modal -->
+        <CustomerExportModal
+          :isopen="showExportModal"
+          @close="showExportModal = false"
+          @export="handleExport"
+        />
+        
+        <div class="relative">
+          <button @click="loadCustomers(pagination.page)"
             class="inline-flex items-center px-3 py-2 bg-white/20 hover:bg-white/30 text-white text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition">
             <ArrowPathIcon class="h-5 w-5 mr-2" />
             Yenile
@@ -183,7 +199,8 @@ import {
   ExclamationTriangleIcon,
   CheckIcon,
   ChevronUpDownIcon,
-  ArrowPathIcon
+  ArrowPathIcon,
+  ArrowDownTrayIcon
 } from '@heroicons/vue/24/outline'
 import {
   Combobox,
@@ -195,6 +212,7 @@ import {
 import { watchDebounced } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import CustomerTable from '~/components/CustomerTable.vue'
+import CustomerExportModal from '~/components/CustomerExportModal.vue'
 
 definePageMeta({
   // middleware: 'auth' // Temporarily disabled
@@ -247,6 +265,7 @@ const statusOptions = ref([])
 const statusMap = ref({}) // Status ID to status object mapping
 const usersMap = ref({}) // User ID to user object mapping
 const userQuery = ref('')
+const showExportModal = ref(false)
 let isInitialLoad = true
 
 // Computed list of users for the filter
@@ -277,14 +296,24 @@ const STORAGE_KEY = 'customerFilters'
 const loadFiltersFromStorage = () => {
   try {
     const saved = localStorage.getItem(STORAGE_KEY)
-    if (!saved) return
+    if (!saved) {
+      // Storage'da veri yoksa default değerler
+      pagination.value.page = 1
+      return
+    }
 
     const parsed = JSON.parse(saved)
+    
     if (parsed.searchTerm) searchTerm.value = parsed.searchTerm
     if (parsed.statusFilter !== undefined) statusFilter.value = parsed.statusFilter
-    if (parsed.relevantUserFilter) relevantUserFilter.value = parsed.relevantUserFilter
+    if (parsed.relevantUserFilter) {
+      relevantUserFilter.value = parsed.relevantUserFilter
+    }
+    // Page değerini oku, yoksa 1 yap
+    pagination.value.page = parsed.page && parsed.page > 0 ? parsed.page : 1
   } catch (err) {
     console.warn('Filtreler yüklenemedi:', err)
+    pagination.value.page = 1
   }
 }
 
@@ -323,6 +352,50 @@ const visiblePages = computed(() => {
 
 // Methods
 
+const handleExport = async ({ format, columns }) => {
+  const filters = getCustomerFilters()
+
+  const customFilters = { ...filters }
+  if (authStore.user?.role === 'admin' && relevantUserFilter.value) {
+    customFilters.relevantUser = relevantUserFilter.value.id
+  }
+
+  try {
+    const response = await customersStore.exportCustomers({
+      format,
+      columns: columns.join(','), // Sütunları virgülle ayırarak gönder
+      search: searchTerm.value || undefined,
+      status: statusFilter.value,
+      ...customFilters,
+    })
+
+    // Determine the correct MIME type
+    const mimeType = format === 'excel' 
+      ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      : 'text/csv; charset=utf-8'
+
+    // Create a blob from the response data
+    const blob = new Blob([response], { type: mimeType })
+    const url = window.URL.createObjectURL(blob)
+
+    // Create a link to download the file
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', `customers_${new Date().getTime()}.${format === 'excel' ? 'xlsx' : 'csv'}`)
+    document.body.appendChild(link)
+    link.click()
+    
+    // Cleanup
+    document.body.removeChild(link)
+    window.URL.revokeObjectURL(url)
+    
+    showExportModal.value = false
+    useToast().showSuccess('Müşteriler başarıyla dışa aktarıldı')
+  } catch (error) {
+    console.error('Error exporting customers:', error)
+    useToast().showError('Müşteriler dışa aktarılırken bir hata oluştu')
+  }
+}
 
 // --- Storage'a filtreleri kaydet ---
 const saveFiltersToStorage = () => {
@@ -330,6 +403,7 @@ const saveFiltersToStorage = () => {
     searchTerm: searchTerm.value,
     statusFilter: statusFilter.value,
     relevantUserFilter: relevantUserFilter.value,
+    page: pagination.value.page // Güncel pagination değerini kaydet
   }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
 }
@@ -357,40 +431,39 @@ const resetFilters = () => {
   statusFilter.value = undefined
   relevantUserFilter.value = null
   userQuery.value = ''
+  // Filtreleri sıfırlarken pagination'ı da 1'e çek
+  pagination.value.page = 1
+  // İlk sayfayı yükle
+  loadCustomers(1)
 }
 
-const changePage = (page) => {
+const changePage = async (page) => {
   if (page >= 1 && page <= pagination.value.totalPages) {
-    loadCustomers(page)
+    pagination.value.page = page
+    await loadCustomers(page)
+    saveFiltersToStorage()
   }
 }
 
-
-
-
-
-// --- Debounced izleme (arama + filtre değişiminde çağrılır) ---
+// --- Filtre değişimlerini izle (search, status, user) ---
 watchDebounced(
   [searchTerm, statusFilter, relevantUserFilter],
   () => {
     if (isInitialLoad) return
-    saveFiltersToStorage()
-    loadCustomers(1)
+    loadCustomers(pagination.value.page ?? 1)
   },
   { debounce: 500 }
 )
 
 onMounted(async () => {
+  // Filtreleri yükle (page dahil)
   loadFiltersFromStorage()
-  await loadCustomers(1)
-
-
-  // Load users
+  
+  // Kullanıcıları ve durumları yükle
   try {
     const usersResponse = await api('/users')
     if (Array.isArray(usersResponse)) {
       users.value = usersResponse
-      // Create users map
       usersResponse.forEach(user => {
         usersMap.value[user.id] = user
       })
@@ -399,14 +472,10 @@ onMounted(async () => {
     console.error('Failed to load users:', usersError)
   }
 
-  // Load statuses
   try {
     const statusResponse = await api('/statuses')
-
     if (Array.isArray(statusResponse)) {
-      // Create status map for quick lookup with field mapping
       statusResponse.forEach(status => {
-        // Map snake_case to camelCase for consistency
         statusMap.value[status.id] = {
           ...status,
           isDoctor: status.isDoctor ?? status.is_doctor ?? false,
@@ -418,9 +487,8 @@ onMounted(async () => {
         }
       })
 
-      // Create status options for filter dropdown
       statusOptions.value = statusResponse
-        .filter(status => status.isActive !== false) // Only show active statuses
+        .filter(status => status.isActive !== false)
         .map(status => ({
           value: status.id,
           label: status.name
@@ -430,10 +498,13 @@ onMounted(async () => {
     console.error('Failed to load statuses:', statusError)
   }
 
-
   isEditable.value = authStore.user?.role != 'doctor' ? true : false
   isDeleteable.value = authStore.user?.role != 'doctor' ? true : false
 
+  // Müşterileri yükle (pagination.value.page zaten loadFiltersFromStorage ile set edildi)
+  await loadCustomers(pagination.value.page)
+  
+  // İlk yükleme tamamlandı
   isInitialLoad = false
 })
 

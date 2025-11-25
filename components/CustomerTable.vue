@@ -104,10 +104,6 @@
 
           
           <td class="table-cell">
-            <StatusBadge :name="customer.statusData?.name" :color="customer.statusData?.color" />
-          </td>
-
-          <td class="table-cell">
             <div class="flex items-center">
               <div class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
                 <span class="text-sm font-medium text-indigo-600 dark:text-indigo-300">
@@ -123,12 +119,39 @@
               </div>
             </div>
           </td>
+
+          
+          <td class="table-cell">
+            <StatusBadge :name="customer.statusData?.name" :color="customer.statusData?.color" />
+          </td>
+
+
           <td class="table-cell">{{ customer.phone || '-' }}</td>
           <td class="table-cell">{{ customer.source || '-' }}</td>
           <td class="table-cell">{{ customer.relatedTransaction || '-' }}</td>
           <td class="table-cell">{{ customer.patient || '-' }}</td>
           <td class="table-cell">{{ customer.checkup_package || '-' }}</td>
-          <td class="table-cell">{{ customer.relevantUserData ? customer.relevantUserData : '-' }}</td>
+          <td class="table-cell">
+            <div class="flex items-center gap-2">
+              <div v-if="customer.relevantUserData && customer.relevantUserData.avatar" class="h-10 w-10 rounded-full overflow-hidden">
+                <img :src="path + customer.relevantUserData.avatar" alt="Avatar" class="h-full w-full object-cover" />
+              </div>
+              <div v-else class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
+                <span class="text-sm font-medium text-indigo-600 dark:text-indigo-300">
+                  {{ customer.relevantUserData?.name ? customer.relevantUserData?.name.charAt(0).toUpperCase() : 'A' }}
+                </span>
+              </div>
+              <div class="relative flex flex-col">
+                <span class="text-sm text-gray-900 dark:text-gray-100">
+                  {{ customer.relevantUserData ? customer.relevantUserData?.name : 'Atanmamış' }}
+                </span>
+                  <span v-if="customer.relevantUserData?.lastActiveTime"
+                    class="bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
+                    son görülme: {{ getLastSeen(customer.relevantUserData?.lastActiveTime) }}
+                  </span>
+              </div>
+            </div>
+          </td>
           <td class="table-cell">{{ customer.isActive ? 'Aktif' : 'Pasif' }}</td>
           <td class="table-cell">{{ formatDate(customer.createdAt) }}</td>
           <td class="table-cell">{{ formatDate(customer.updatesAt) }}</td>
@@ -156,6 +179,9 @@ const props = defineProps({
   isEditable: { type: Boolean, default: false },
   isDeleteable: { type: Boolean, default: false }
 })
+const { $dayjs } = useNuxtApp()
+const config = useRuntimeConfig()
+const path = config.public.apiBase
 
 const showStates = ref({ activeId: null })
 
@@ -168,7 +194,9 @@ const toggleShow = (id) => {
     showStates.value.activeId = id
   }
 }
-
+const getLastSeen = (lastActiveTime) => {
+  return $dayjs(lastActiveTime).fromNow()
+}
 
 const emit = defineEmits([
   'confirm-delete',
@@ -185,8 +213,8 @@ const emit = defineEmits([
 const sortColumn = ref('')
 const sortDirection = ref('asc')
 const columns = [
-  { label: 'Durum', key: 'statusData' },
   { label: 'İsim', key: 'name' },
+  { label: 'Durum', key: 'statusData' },
   { label: 'Telefon', key: 'phone' },
   { label: 'Kaynak', key: 'source' },
   { label: 'İlgilenilen Konu', key: 'relatedTransaction' },

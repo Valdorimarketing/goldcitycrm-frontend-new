@@ -57,7 +57,7 @@
 
               <!-- Name and Title -->
               <div class="text-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+                <h2 class="text-xl xxl:text-2xl font-bold text-gray-900 dark:text-white">
                   {{ customer.name }} {{ customer.surname }}
                 </h2>
                 <p v-if="customer.title" class="text-sm text-gray-500 dark:text-gray-400 mt-1">
@@ -84,10 +84,43 @@
 
               <!-- Contact Info -->
               <div class="space-y-3 border-t border-gray-200 dark:border-gray-700 pt-4">
-                <div title="Atanan Sağlık Danışmanı" v-if="customer?.relevantUserData" class="flex items-center text-sm">
-                  <UserIcon class="h-5 w-5 text-gray-400 mr-3 flex-shrink-0" /> 
-                    {{ customer?.relevantUserData }} 
+                <div title="Müşteri ID"
+                  class="flex items-center text-sm">
+                  <FingerPrintIcon class="h-5 w-5 text-gray-400 mr-3 flex-shrink-0" />
+                  {{ customer?.id }}
                 </div>
+
+                <div title="Atanan Sağlık Danışmanı" v-if="customer?.relevantUserData"
+                  class="flex items-center text-sm">
+                  <UserIcon class="h-5 w-5 text-gray-400 mr-3 flex-shrink-0" />
+                  {{ customer?.relevantUserData }}
+                </div>
+
+                <!-- Phone Number - Click to reveal -->
+                <div v-if="customer.phone" class="flex items-center text-sm">
+                  <PhoneIcon class="h-5 w-5 text-gray-400 mr-3 flex-shrink-0" />
+                  <button v-if="!phoneRevealed && isUser" @click="revealPhone"
+                    class="text-indigo-600 dark:text-indigo-400 hover:underline">
+                    Telefonu Göster
+                  </button>
+                  <span v-else class="text-gray-700 dark:text-gray-300">
+                    {{ customer.phone }}
+                  </span>
+                </div>
+
+                <!-- Timer Display - Sadece engagement sahibi görür -->
+                <div v-if="customer.phone && activeEngagement && isEngagementOwner" class="flex items-center text-sm">
+                  <ClockIcon class="h-5 w-5 text-gray-400 mr-3 flex-shrink-0" />
+                  <div class="flex justify-between items-center flex-1">
+                    <span class="text-indigo-600 dark:text-indigo-400 font-medium">
+                      {{ formattedEngagementTime }}
+                    </span>
+                    <span class="text-xs text-gray-500 dark:text-gray-400 ml-2">
+                      ({{ activeEngagement.role === 'SALES' ? 'Satış' : 'Doktor' }})
+                    </span>
+                  </div>
+                </div>
+
                 <div v-if="customer.email" class="flex items-center text-sm">
                   <EnvelopeIcon class="h-5 w-5 text-gray-400 mr-3 flex-shrink-0" />
                   <a :href="`mailto:${customer.email}`"
@@ -95,12 +128,7 @@
                     {{ customer.email }}
                   </a>
                 </div>
-                <div v-if="customer.phone" class="flex items-center text-sm">
-                  <PhoneIcon class="h-5 w-5 text-gray-400 mr-3 flex-shrink-0" />
-                  <a :href="`tel:${customer.phone}`" class="text-indigo-600 dark:text-indigo-400 hover:underline">
-                    {{ customer.phone }}
-                  </a>
-                </div>
+
                 <div v-if="customer.gender" class="flex items-center text-sm">
                   <UserIcon class="h-5 w-5 text-gray-400 mr-3 flex-shrink-0" />
                   <span class="text-gray-700 dark:text-gray-300">{{ getGenderText(customer.gender) }}</span>
@@ -128,6 +156,10 @@
                 <div v-if="locationText" class="flex items-start text-sm">
                   <GlobeAltIcon class="h-5 w-5 text-gray-400 mr-3 flex-shrink-0 mt-0.5" />
                   <span class="text-gray-700 dark:text-gray-300">{{ locationText }}</span>
+                </div>
+                <div v-if="customer.message" class="flex items-start text-sm">
+                  <CursorArrowRaysIcon class="h-5 w-5 text-gray-400 mr-3 flex-shrink-0 mt-0.5" />
+                  <span class="text-gray-700 dark:text-gray-300">{{ customer.message }}</span>
                 </div>
               </div>
 
@@ -219,11 +251,12 @@
                     <p class="text-sm text-blue-100">Tüm aktiviteler ve değişiklikler</p>
                   </div>
                 </div>
-                <div class="relative"> 
-                    <button @click="refreshData" class="inline-flex items-center px-3 py-2 bg-white/20 hover:bg-white/30 text-white text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition">
-                      <ArrowPathIcon class="h-5 w-5 mr-2" />
-                      Yenile 
-                    </button>
+                <div class="relative">
+                  <button @click="refreshData"
+                    class="inline-flex items-center px-3 py-2 bg-white/20 hover:bg-white/30 text-white text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition">
+                    <ArrowPathIcon class="h-5 w-5 mr-2" />
+                    Yenile
+                  </button>
                 </div>
               </div>
             </div>
@@ -339,7 +372,8 @@
                               </p>
                             </div>
                           </div>
-                          <button v-if="item.requestData || item.responseData" class="py-1 dark:text-white text-xs" @click="toggleShow(item.id)">{{ showStates[item.id] ? 'Gizle' : 'Göster' }}</button>
+                          <button v-if="item.requestData || item.responseData" class="py-1 dark:text-white text-xs"
+                            @click="toggleShow(item.id)">{{ showStates[item.id] ? 'Gizle' : 'Göster' }}</button>
 
                         </div>
                         <div class="ml-4 text-right">
@@ -381,11 +415,10 @@
         </div>
       </div>
     </div>
- 
 
     <!-- Customer Notes Modal -->
     <CustomerNotesModal :show="showNotesModal" :customer="customer" @close="showNotesModal = false"
-      @customer-updated="fetchCustomer" />
+      @customer-updated="refreshData" />
 
     <!-- Doctor Assignment Modal -->
     <DoctorAssignmentModal :show="showDoctorModal" :customer="customer" @close="showDoctorModal = false"
@@ -398,7 +431,7 @@
     <!-- Customer Files Modal -->
     <CustomerFilesModal :show="showFilesModal" :customer="customer" @close="showFilesModal = false" />
 
-    <!-- Customer Files Modal -->
+    <!-- Operation Follow Up Modal -->
     <OperationFollowUpModal :show="showOperationFollowUp" :customer="customer" @close="showOperationFollowUp = false" />
   </div>
 </template>
@@ -424,18 +457,16 @@ import {
   XCircleIcon,
   ArrowPathIcon,
   ViewfinderCircleIcon,
-  CursorArrowRippleIcon
+  CursorArrowRippleIcon,
+  FingerPrintIcon,
+  CursorArrowRaysIcon
 } from '@heroicons/vue/24/outline'
-
-// definePageMeta({
-//   middleware: 'auth'
-// })
 
 const route = useRoute()
 const router = useRouter()
 
 // Permissions
-const { isDoctor } = usePermissions()
+const { userId, isDoctor, isUser } = usePermissions()
 
 // Reactive state
 const customer = ref(null)
@@ -452,9 +483,14 @@ const locations = ref({
 const history = ref([])
 const loadingHistory = ref(false)
 const showStates = ref({})
+const phoneRevealed = ref(false) // ✅ Telefon görünürlüğü
+
+// Engagement Timer
+const activeEngagement = ref(null)
+const engagementTimer = ref(0)
+let timerInterval = null
 
 // Modal states
- 
 const showNotesModal = ref(false)
 const showDoctorModal = ref(false)
 const showServicesModal = ref(false)
@@ -467,8 +503,6 @@ const locationText = computed(() => {
   if (!customer.value) return ''
 
   const parts = []
-
-  // Find location names from IDs
   const country = locations.value.countries.find(c => c.id === customer.value.country)
   const state = locations.value.states.find(s => s.id === customer.value.state)
   const city = locations.value.cities.find(c => c.id === customer.value.city)
@@ -481,18 +515,44 @@ const locationText = computed(() => {
   return parts.join(', ')
 })
 
-const toggleShow = (id) => {
-  showStates.value[id] = !showStates.value[id]
-}
- 
-
 const customerStatus = computed(() => {
   if (!customer.value || !customer.value.status) return null
   const status = statuses.value.find(s => s.id === customer.value.status)
   return status || null
 })
 
+
+const isEngagementOwner = computed(() => {
+  if (!activeEngagement.value || !userId) return false
+  return activeEngagement.value.userId === userId.value
+})
+
+// Format engagement time (elapsed since assignment)
+const formattedEngagementTime = computed(() => {
+  if (!engagementTimer.value) return '0 dk 0 sn'
+
+  const totalSeconds = engagementTimer.value
+  const days = Math.floor(totalSeconds / 86400)
+  const hours = Math.floor((totalSeconds % 86400) / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = totalSeconds % 60
+
+  if (days > 0) {
+    return `${days} gün ${hours} saat ${minutes} dk`
+  } else if (hours > 0) {
+    return `${hours} saat ${minutes} dk ${seconds} sn`
+  } else if (minutes > 0) {
+    return `${minutes} dk ${seconds} sn`
+  } else {
+    return `${seconds} sn`
+  }
+})
+
 // Methods
+const toggleShow = (id) => {
+  showStates.value[id] = !showStates.value[id]
+}
+
 const formatDate = (dateString) => {
   if (!dateString) return '-'
   return new Date(dateString).toLocaleDateString('tr-TR', {
@@ -542,11 +602,9 @@ const getGenderText = (gender) => {
 
 const getImageUrl = (imagePath) => {
   if (!imagePath) return ''
-  // If the path already starts with http/https, return as is
   if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
     return imagePath
   }
-  // Otherwise, construct the full URL with API base
   const config = useRuntimeConfig()
   const baseURL = config.public.apiBase || 'http://localhost:3001'
   return `${baseURL}/${imagePath}`
@@ -598,7 +656,7 @@ const handleClickOutside = (event) => {
     showActionsDropdown.value = false
   }
 }
- 
+
 const showNotes = () => {
   showNotesModal.value = true
 }
@@ -609,7 +667,7 @@ const showDoctorAssignment = () => {
 
 const handleDoctorAssigned = (assignment) => {
   console.log('Doctor assigned:', assignment)
-  // Optionally refresh customer data or show success message
+  refreshData()
 }
 
 const showServices = () => {
@@ -623,12 +681,54 @@ const showOperationFollowUpModal = () => {
 const handleServicesSaved = () => {
   console.log('Services saved successfully')
   showServicesModal.value = false
+  refreshData()
 }
 
 const showFiles = () => {
   showFilesModal.value = true
 }
 
+// ✅ Telefon numarasını göster - First Call tracking
+const revealPhone = async () => {
+  phoneRevealed.value = true
+
+  // Backend'e first call kaydı gönder
+  try {
+    const api = useApi()
+    await api(`/customers/${route.params.id}/view-phone`, {
+      method: 'POST'
+    })
+  } catch (error) {
+    console.error('Error registering phone view:', error)
+  }
+}
+
+// Timer functions
+const startEngagementTimer = () => {
+  if (!activeEngagement.value?.assignedAt) return
+
+  const calculateElapsedTime = () => {
+    const assignedTime = new Date(activeEngagement.value.assignedAt).getTime()
+    const currentTime = Date.now()
+    const elapsedSeconds = Math.floor((currentTime - assignedTime) / 1000)
+    engagementTimer.value = elapsedSeconds
+  }
+
+  // Calculate initial time
+  calculateElapsedTime()
+
+  // Update every second
+  timerInterval = setInterval(calculateElapsedTime, 1000)
+}
+
+const stopEngagementTimer = () => {
+  if (timerInterval) {
+    clearInterval(timerInterval)
+    timerInterval = null
+  }
+}
+
+// Data fetching functions
 const fetchLocations = async () => {
   try {
     const api = useApi()
@@ -645,7 +745,6 @@ const fetchLocations = async () => {
       cities: citiesRes
     }
 
-    // Map statuses with snake_case to camelCase conversion
     const rawStatuses = statusesRes.data || statusesRes || []
     statuses.value = rawStatuses.map(status => ({
       ...status,
@@ -669,8 +768,6 @@ const fetchCustomer = async () => {
     const api = useApi()
     const response = await api(`/customers/${route.params.id}`)
 
-    
-    
     // Enrich customer with status info
     if (response.status && statuses.value.length > 0) {
       const statusInfo = statuses.value.find(s => s.id === response.status)
@@ -680,14 +777,17 @@ const fetchCustomer = async () => {
       }
     }
 
-    // Check if user has permission to access this customer
-    // if (!canAccessCustomer(response)) {
-    //   error.value = 'Bu müşteriye erişim yetkiniz bulunmamaktadır.'
-    //   customer.value = null
-    //   return
-    // }
+    customer.value = response 
 
-    customer.value = response
+    // Set active engagement if exists
+    if (response.activeEngagement) {
+      activeEngagement.value = response.activeEngagement
+      startEngagementTimer()
+    } else {
+      stopEngagementTimer()
+      activeEngagement.value = null
+      engagementTimer.value = 0
+    }
   } catch (err) {
     console.error('Error fetching customer:', err)
     if (err?.data?.statusCode === 404 || err?.status === 404) {
@@ -705,7 +805,6 @@ const fetchCustomer = async () => {
 const fetchCustomerDynamicFields = async () => {
   try {
     loadingDynamicFields.value = true
-    // Dynamic fields come with customer data
     if (customer.value?.dynamicFieldValues) {
       customerDynamicFields.value = customer.value.dynamicFieldValues.map(field => ({
         id: field.id,
@@ -718,7 +817,6 @@ const fetchCustomerDynamicFields = async () => {
     }
   } catch (err) {
     console.error('Error fetching customer dynamic fields:', err)
-    // Don't show error for dynamic fields, just log it
   } finally {
     loadingDynamicFields.value = false
   }
@@ -732,13 +830,11 @@ const fetchCustomerHistory = async () => {
     const customerHistoriesStore = useCustomerHistoriesStore()
     const histories = await customerHistoriesStore.fetchCustomerHistories(customer.value.id)
 
-    // Sort by date descending (newest first)
-    history.value = histories
-      .sort((a, b) => {
-        const dateA = new Date(a.createdAt || a.created_at || a.updatesAt || a.updated_at || 0)
-        const dateB = new Date(b.createdAt || b.created_at || b.updatesAt || b.updated_at || 0)
-        return dateB - dateA
-      })
+    history.value = histories.sort((a, b) => {
+      const dateA = new Date(a.createdAt || a.created_at || a.updatesAt || a.updated_at || 0)
+      const dateB = new Date(b.createdAt || b.created_at || b.updatesAt || b.updated_at || 0)
+      return dateB - dateA
+    })
   } catch (error) {
     console.error('Error fetching customer history:', error)
     history.value = []
@@ -753,7 +849,7 @@ const refreshData = async () => {
   await fetchCustomerHistory()
 }
 
-// Load data on mount
+// Lifecycle hooks
 onMounted(async () => {
   document.addEventListener('click', handleClickOutside)
   await fetchLocations()
@@ -764,6 +860,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
+  stopEngagementTimer()
 })
 
 // Page title

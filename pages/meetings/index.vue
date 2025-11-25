@@ -118,7 +118,7 @@
               </td>
               <td class="table-cell">
                 <div class="text-sm text-gray-900 dark:text-gray-100">
-                  {{ meeting.customerData }}
+                  {{ meeting.customerData.name }} {{ meeting.customerData?.surname }}
                 </div>
               </td>
               <td class="table-cell">
@@ -158,13 +158,14 @@
                     title="Düzenle">
                     <PencilIcon class="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
                   </NuxtLink>
-                  <!-- <button
+                  <button
+                  v-if="isAdmin"
                     @click="confirmDelete(meeting)"
                     class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     title="Sil"
                   >
                     <TrashIcon class="h-4 w-4 text-red-600 dark:text-red-400" />
-                  </button> -->
+                  </button> 
                 </div>
               </td>
             </tr>
@@ -297,7 +298,7 @@
                 <div>
                   <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Müşteri</label>
                   <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{
-                    selectedMeeting.customerData }}</p>
+                    selectedMeeting.customerData.name }} {{ selectedMeeting.customerData.surname  }}</p>
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Durum</label>
@@ -308,26 +309,26 @@
                   </p>
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">🏥 Hastane</label>
+                  <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Hastane</label>
                   <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ selectedMeeting.hospital?.name || '-' }}
                   </p>
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">👨‍⚕️ Doktor</label>
+                  <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Doktor</label>
                   <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ selectedMeeting.doctor?.name || '-' }}</p>
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">⏰ Başlangıç Zamanı</label>
+                  <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Başlangıç Zamanı</label>
                   <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ formatDateTime(selectedMeeting.startTime)
                     }}</p>
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">⏰ Bitiş Zamanı</label>
+                  <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Bitiş Zamanı</label>
                   <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{ formatDateTime(selectedMeeting.endTime) }}
                   </p>
                 </div>
                 <div v-if="selectedMeeting.remindingAt">
-                  <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">🔔 Hatırlatma Zamanı</label>
+                  <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Hatırlatma Zamanı</label>
                   <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">{{
                     formatDateTime(selectedMeeting.remindingAt) }}</p>
                 </div>
@@ -381,6 +382,7 @@ definePageMeta({
 
 const { meetings, loading, error, meta, fetchMeetings, deleteMeeting } = useMeetings()
 const { statuses: meetingStatuses, fetchMeetingStatuses } = useMeetingStatuses()
+const { isAdmin } = usePermissions()
 
 // Filters
 const filters = ref({

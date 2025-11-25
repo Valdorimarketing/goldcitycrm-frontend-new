@@ -23,24 +23,18 @@
 
     <!-- Search and Filters -->
     <div class="card mb-6">
-      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Ara
           </label>
-          <input id="search" v-model="searchTerm" type="text" class="form-input"
-            placeholder="Müşteri adı veya açıklama..." />
-        </div>
-        <div>
-          <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Durum
-          </label>
-          <select id="status" v-model="statusFilter" class="form-input">
-            <option value="">Tüm Durumlar</option>
-            <option value="pending">Bekliyor</option>
-            <option value="completed">Tamamlandı</option>
-            <option value="cancelled">İptal</option>
-          </select>
+          <input
+            id="search"
+            v-model="searchTerm"
+            type="text"
+            class="form-input"
+            placeholder="Müşteri adı, açıklama veya miktar..."
+          />
         </div>
         <div>
           <label for="startDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -53,13 +47,13 @@
             Bitiş Tarihi
           </label>
           <input id="endDate" v-model="endDate" type="date" class="form-input" />
-        </div> 
+        </div>
       </div>
     </div>
 
     <!-- Stats Cards - Multi Currency -->
-    <div class="grid grid-cols-1 gap-5 sm:grid-cols-3 mb-6">
-      <!-- Toplam Satış (Para Birimine Göre) -->
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 mb-6">
+      <!-- Toplam Satış (Filtrelere Göre) -->
       <div class="card">
         <div class="flex items-center mb-3">
           <div class="flex-shrink-0">
@@ -67,23 +61,28 @@
           </div>
           <div class="ml-5 w-0 flex-1">
             <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
-              Toplam Satış
+              Toplam Satış (Filtrelere Göre)
             </dt>
           </div>
         </div>
         <div class="space-y-1">
-          <dd v-for="(amount, currency) in totalSalesByCurrency" :key="currency" 
-            class="text-base font-medium text-gray-900 dark:text-white">
+          <dd
+            v-for="(amount, currency) in totalSalesByCurrency"
+            :key="currency"
+            class="text-base font-medium text-gray-900 dark:text-white"
+          >
             {{ formatMoney(amount, currency) }}
           </dd>
-          <dd v-if="Object.keys(totalSalesByCurrency).length === 0" 
-            class="text-base font-medium text-gray-500 dark:text-gray-400">
+          <dd
+            v-if="Object.keys(totalSalesByCurrency).length === 0"
+            class="text-base font-medium text-gray-500 dark:text-gray-400"
+          >
             -
           </dd>
         </div>
       </div>
 
-      <!-- Bu Ay (Para Birimine Göre) -->
+      <!-- İçinde Bulunulan Aya Ait Satışlar -->
       <div class="card">
         <div class="flex items-center mb-3">
           <div class="flex-shrink-0">
@@ -91,41 +90,22 @@
           </div>
           <div class="ml-5 w-0 flex-1">
             <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
-              Bu Ay
+              {{ currentMonthTitle }}
             </dt>
           </div>
         </div>
         <div class="space-y-1">
-          <dd v-for="(amount, currency) in monthSalesByCurrency" :key="currency" 
-            class="text-base font-medium text-gray-900 dark:text-white">
+          <dd
+            v-for="(amount, currency) in monthSalesByCurrency"
+            :key="currency"
+            class="text-base font-medium text-gray-900 dark:text-white"
+          >
             {{ formatMoney(amount, currency) }}
           </dd>
-          <dd v-if="Object.keys(monthSalesByCurrency).length === 0" 
-            class="text-base font-medium text-gray-500 dark:text-gray-400">
-            -
-          </dd>
-        </div>
-      </div>
-
-      <!-- Ortalama Satış (Para Birimine Göre) -->
-      <div class="card">
-        <div class="flex items-center mb-3">
-          <div class="flex-shrink-0">
-            <CurrencyDollarIcon class="h-8 w-8 text-indigo-600" />
-          </div>
-          <div class="ml-5 w-0 flex-1">
-            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
-              Ortalama Satış
-            </dt>
-          </div>
-        </div>
-        <div class="space-y-1">
-          <dd v-for="(amount, currency) in averageSaleByCurrency" :key="currency" 
-            class="text-base font-medium text-gray-900 dark:text-white">
-            {{ formatMoney(amount, currency) }}
-          </dd>
-          <dd v-if="Object.keys(averageSaleByCurrency).length === 0" 
-            class="text-base font-medium text-gray-500 dark:text-gray-400">
+          <dd
+            v-if="Object.keys(monthSalesByCurrency).length === 0"
+            class="text-base font-medium text-gray-500 dark:text-gray-400"
+          >
             -
           </dd>
         </div>
@@ -146,7 +126,7 @@
               <th class="table-header">Müşteri</th>
               <th class="table-header">Açıklama</th>
               <th class="table-header">Miktar</th>
-              <th class="table-header">Tarih</th> 
+              <th class="table-header">Tarih</th>
               <th class="table-header">İşlemler</th>
             </tr>
           </thead>
@@ -160,8 +140,10 @@
                     </span>
                   </div>
                   <div class="ml-4">
-                    <NuxtLink :to="`/customers/show/${sale.customer.id}`"
-                      class="text-sm flex flex-col gap-1 font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer">
+                    <NuxtLink
+                      :to="`/customers/show/${sale.customer.id}`"
+                      class="text-sm flex flex-col gap-1 font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
+                    >
                       <span>{{ sale.customer.name }}</span>
                       <span class="text-xs dark:text-gray-400">ID: {{ sale.customer.id }}</span>
                     </NuxtLink>
@@ -180,11 +162,13 @@
                 <div class="text-sm text-gray-900 dark:text-gray-100">
                   {{ formatDate(sale.date) }}
                 </div>
-              </td> 
+              </td>
               <td class="table-cell">
-                <button @click="viewSaleDetails(sale)"
+                <button
+                  @click="viewSaleDetails(sale)"
                   class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300"
-                  title="Görüntüle">
+                  title="Görüntüle"
+                >
                   <EyeIcon class="h-5 w-5" />
                 </button>
               </td>
@@ -205,15 +189,23 @@
       </div>
 
       <!-- Pagination -->
-      <div v-if="pagination.totalPages > 1"
-        class="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 sm:px-6">
+      <div
+        v-if="pagination.totalPages > 1"
+        class="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 sm:px-6"
+      >
         <div class="flex flex-1 justify-between sm:hidden">
-          <button :disabled="pagination.page === 1" @click="changePage(pagination.page - 1)"
-            class="relative inline-flex items-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50">
+          <button
+            :disabled="pagination.page === 1"
+            @click="changePage(pagination.page - 1)"
+            class="relative inline-flex items-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
+          >
             Önceki
           </button>
-          <button :disabled="pagination.page === pagination.totalPages" @click="changePage(pagination.page + 1)"
-            class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50">
+          <button
+            :disabled="pagination.page === pagination.totalPages"
+            @click="changePage(pagination.page + 1)"
+            class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
+          >
             Sonraki
           </button>
         </div>
@@ -230,22 +222,33 @@
           </div>
           <div>
             <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm">
-              <button :disabled="pagination.page === 1" @click="changePage(pagination.page - 1)"
-                class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 dark:text-gray-500 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50">
+              <button
+                :disabled="pagination.page === 1"
+                @click="changePage(pagination.page - 1)"
+                class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 dark:text-gray-500 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
+              >
                 <ChevronLeftIcon class="h-5 w-5" />
               </button>
 
-              <button v-for="page in visiblePages" :key="page" @click="changePage(page)" :class="[
-                page === pagination.page
-                  ? 'bg-indigo-600 text-white'
-                  : 'text-gray-900 dark:text-gray-300 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700',
-                'relative inline-flex items-center px-4 py-2 text-sm font-semibold'
-              ]">
+              <button
+                v-for="page in visiblePages"
+                :key="page"
+                @click="changePage(page)"
+                :class="[
+                  page === pagination.page
+                    ? 'bg-indigo-600 text-white'
+                    : 'text-gray-900 dark:text-gray-300 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700',
+                  'relative inline-flex items-center px-4 py-2 text-sm font-semibold'
+                ]"
+              >
                 {{ page }}
               </button>
 
-              <button :disabled="pagination.page === pagination.totalPages" @click="changePage(pagination.page + 1)"
-                class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 dark:text-gray-500 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50">
+              <button
+                :disabled="pagination.page === pagination.totalPages"
+                @click="changePage(pagination.page + 1)"
+                class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 dark:text-gray-500 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
+              >
                 <ChevronRightIcon class="h-5 w-5" />
               </button>
             </nav>
@@ -277,7 +280,6 @@ const { userId, isAdmin } = usePermissions()
 
 // Search and filters
 const searchTerm = ref('')
-const statusFilter = ref('')
 const startDate = ref('')
 const endDate = ref('')
 
@@ -323,7 +325,6 @@ const loadSalesData = async () => {
     if (response?.data) {
       // Map response to expected format
       salesData.value = response.data.map(sale => {
-        // Her satış için toplam tutarı ve para birimini hesapla
         const totalAmount = calculateSaleAmount(sale.salesProducts)
         const currency = getSaleCurrency(sale.salesProducts)
 
@@ -380,9 +381,9 @@ const calculateSaleAmount = (products) => {
 const getSaleCurrency = (products) => {
   if (!products || !Array.isArray(products) || products.length === 0) return 'TRY'
   const firstProduct = products[0]
-  return firstProduct?.currency?.code || 
-         firstProduct?.productDetails?.currency?.code || 
-         'TRY'
+  return firstProduct?.currency?.code ||
+    firstProduct?.productDetails?.currency?.code ||
+    'TRY'
 }
 
 // Format money with currency
@@ -399,21 +400,33 @@ const formatMoney = (amount, currencyCode = 'TRY') => {
   }
 }
 
+// İçinde bulunulan ay başlığı (örn: "2025 Kasım Ayına Ait Satışlar")
+const currentMonthTitle = computed(() => {
+  const now = new Date()
+  const year = now.getFullYear()
+  const monthName = now.toLocaleDateString('tr-TR', { month: 'long' })
+  return `${year} ${monthName.charAt(0).toUpperCase() + monthName.slice(1)} Ayına Ait Satışlar`
+})
+
 // Computed properties - Para birimine göre gruplandırılmış
 const filteredSales = computed(() => {
   let filtered = salesData.value
 
   if (searchTerm.value) {
     const search = searchTerm.value.toLowerCase()
-    filtered = filtered.filter(sale =>
-      sale.customer?.name?.toLowerCase().includes(search) ||
-      sale.description?.toLowerCase().includes(search) ||
-      sale.customer?.company?.toLowerCase().includes(search)
-    )
-  }
+    filtered = filtered.filter(sale => {
+      const name = sale.customer?.name?.toLowerCase() || ''
+      const desc = sale.description?.toLowerCase() || ''
+      const company = sale.customer?.company?.toLowerCase() || ''
+      const amountStr = String(sale.amount ?? '').toLowerCase()
 
-  if (statusFilter.value) {
-    filtered = filtered.filter(sale => sale.status === statusFilter.value)
+      return (
+        name.includes(search) ||
+        desc.includes(search) ||
+        company.includes(search) ||
+        amountStr.includes(search)
+      )
+    })
   }
 
   // Date range filter
@@ -455,37 +468,21 @@ const totalSalesByCurrency = computed(() => {
 const monthSalesByCurrency = computed(() => {
   const now = new Date()
   const totals = {}
-  
+
   filteredSales.value
     .filter(sale => {
       const saleDate = new Date(sale.date)
-      return saleDate.getMonth() === now.getMonth() && 
-             saleDate.getFullYear() === now.getFullYear()
+      return (
+        saleDate.getMonth() === now.getMonth() &&
+        saleDate.getFullYear() === now.getFullYear()
+      )
     })
     .forEach(sale => {
       const currency = sale.currency || 'TRY'
       totals[currency] = (totals[currency] || 0) + sale.amount
     })
-  
-  return totals
-})
 
-// Ortalama satış - Para birimine göre
-const averageSaleByCurrency = computed(() => {
-  const averages = {}
-  const counts = {}
-  
-  filteredSales.value.forEach(sale => {
-    const currency = sale.currency || 'TRY'
-    averages[currency] = (averages[currency] || 0) + sale.amount
-    counts[currency] = (counts[currency] || 0) + 1
-  })
-  
-  Object.keys(averages).forEach(currency => {
-    averages[currency] = averages[currency] / (counts[currency] || 1)
-  })
-  
-  return averages
+  return totals
 })
 
 const visiblePages = computed(() => {
@@ -513,7 +510,6 @@ const visiblePages = computed(() => {
 // Methods
 const resetFilters = () => {
   searchTerm.value = ''
-  statusFilter.value = ''
   startDate.value = ''
   endDate.value = ''
 }

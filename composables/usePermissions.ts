@@ -50,7 +50,7 @@ export const usePermissions = () => {
         'Kişiler',
         'Dinamik Arama',
         'Hatırlatmalar',
-        'Havuz Verileri'  // <- eklendi
+        'Havuz Verileri'
       ]
       return allowedMenus.includes(menuName)
     }
@@ -73,11 +73,11 @@ export const usePermissions = () => {
     }
 
     // Doctor sadece is_doctor statuslu customerları görür
-    if (isDoctor.value) {
-      return {
-        isDoctor: true // Backend'de isDoctor=true query parametresi
-      }
-    }
+    // if (isDoctor.value) {
+    //   return {
+    //     isDoctor: true // Backend'de isDoctor=true query parametresi
+    //   }
+    // }
 
     // Pricing sadece is_pricing statuslu customerları görür
     if (isPricing.value) {

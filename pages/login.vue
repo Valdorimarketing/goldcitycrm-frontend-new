@@ -85,18 +85,7 @@
             <span v-else>Giriş Yap</span>
           </button>
         </form>
-
-        <!-- Test Account Info -->
-        <div class="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-          <h3 class="text-sm font-medium text-blue-900 dark:text-blue-200 mb-2">
-            🔐 Test Hesabı
-          </h3>
-          <div class="text-sm text-blue-700 dark:text-blue-300 space-y-1">
-            <p><strong>Email:</strong> jwt-test@example.com</p>
-            <p><strong>Şifre:</strong> test123</p>
-          </div>
-        </div>
-
+ 
         <!-- Register Link -->
         <div class="mt-8 text-center">
           <p class="text-sm text-gray-600 dark:text-gray-400">

@@ -37,7 +37,6 @@ export const useCustomerHistoriesStore = defineStore('customerHistories', () => 
         }
       })
       
-      console.log('Customer history API response:', response)
       
       if (Array.isArray(response)) {
         histories.value = response
