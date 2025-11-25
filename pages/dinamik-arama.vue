@@ -390,11 +390,6 @@ const loadCustomers = async () => {
     // 🔹 Hatırlatma statüsü filtreleme
     customers = customers.filter(c => remindableStatusIds.value.includes(c.status))
 
-    console.log(remindableStatusIds);
-    
-    console.log(customers);
-    
-
     // 🔹 Erişim kontrolü
     customers = customers.filter(c => canAccessCustomer(c))
 
