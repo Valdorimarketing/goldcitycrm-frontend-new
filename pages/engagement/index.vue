@@ -32,11 +32,11 @@
           <div class="mt-4 flex items-center space-x-4 text-xs">
             <span class="inline-flex items-center text-blue-600 dark:text-blue-400">
               <span class="h-2 w-2 rounded-full bg-blue-600 dark:bg-blue-400 mr-1.5"></span>
-              Sales: {{ kpiData.salesActive }}
+              Satışçı: {{ kpiData.salesActive }}
             </span>
             <span class="inline-flex items-center text-purple-600 dark:text-purple-400">
               <span class="h-2 w-2 rounded-full bg-purple-600 dark:bg-purple-400 mr-1.5"></span>
-              Doctor: {{ kpiData.doctorActive }}
+              Doktor: {{ kpiData.doctorActive }}
             </span>
           </div>
         </div>
@@ -739,7 +739,20 @@
 
 <script setup>
 import EngagementspeedChart from './EngagementspeedChart.vue'
-import SpeedChart from './SpeedChart.vue'
+
+import {
+  CalendarIcon,
+  PhoneIcon,
+  CheckCircleIcon,
+  BellIcon,
+  ArrowPathIcon,
+  ClockIcon,
+  ExclamationTriangleIcon,
+  EnvelopeIcon,
+  DocumentTextIcon,
+  SparklesIcon,
+  CalendarDaysIcon,
+} from '@heroicons/vue/24/outline';
 
 // Engagement API
 const {
@@ -986,6 +999,20 @@ const formatMinutes = (minutes) => {
   }
 }
 
+
+const iconComponents = {
+  'meeting': CalendarIcon,
+  'call': PhoneIcon,
+  'task': CheckCircleIcon,
+  'reminder': BellIcon,
+  'follow-up': ArrowPathIcon,
+  'appointment': ClockIcon,
+  'deadline': ExclamationTriangleIcon,
+  'email': EnvelopeIcon,
+  'note': DocumentTextIcon,
+  'event': SparklesIcon,
+  'default': CalendarDaysIcon,
+};
 
 
 let timerInterval = null

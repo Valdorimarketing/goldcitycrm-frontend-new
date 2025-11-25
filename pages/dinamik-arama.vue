@@ -31,7 +31,7 @@
             </option>
           </select>
         </div>
-        <div>
+        <div v-if="isAdmin">
           <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Atanan Kullanıcı
           </label>
@@ -95,20 +95,18 @@
               <th class="table-header text-gray-700 dark:text-gray-300"></th>
               <th class="table-header text-gray-700 dark:text-gray-300">İsim</th>
               <th class="table-header text-gray-700 dark:text-gray-300">E-posta</th>
-              <th class="table-header text-gray-700 dark:text-gray-300">Telefon</th>
+              <th class="table-header text-gray-700 dark:text-gray-300"  v-if="isAdmin">Telefon</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Durum</th>
               <th class="table-header text-gray-700 dark:text-gray-300">Hatırlatma Tarihi</th>
-              <th class="table-header text-gray-700 dark:text-gray-300">Kaynak</th>
-              <th class="table-header text-gray-700 dark:text-gray-300">Oluşturan</th>
-              <th class="table-header text-gray-700 dark:text-gray-300">Atanan</th>
-              <th class="table-header text-gray-700 dark:text-gray-300">Aktif</th>
+              <th class="table-header text-gray-700 dark:text-gray-300"  v-if="isAdmin">Kaynak</th>
+              <th class="table-header text-gray-700 dark:text-gray-300" v-if="isAdmin">Atanan</th> 
             </tr>
           </thead>
           <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
             <tr v-for="customer in customersData" :key="customer.id">
 
             
-                  <td class="table-cell">
+                <td class="table-cell">
                 <div class="relative inline-block text-left">
                   <!-- Trigger Button -->
                   <button type="button"
@@ -203,7 +201,7 @@
               <td class="table-cell">
                 <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.email || '-' }}</div>
               </td>
-              <td class="table-cell">
+              <td class="table-cell"  v-if="isAdmin">
                 <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.phone || '-' }}</div>
               </td>
               <td class="table-cell">
@@ -218,20 +216,12 @@
                 </div>
               </td>
               <td class="table-cell">
-                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.source || '-' }}</div>
-              </td>
-              <td class="table-cell">
-                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.user?.name || '-' }}</div>
-              </td>
-              <td class="table-cell">
+                <div class="text-sm text-gray-900 dark:text-gray-100" v-if="isAdmin">{{ customer.source || '-' }}</div>
+              </td> 
+              <td class="table-cell"  v-if="isAdmin">
                 <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.relevantUser?.name || '-' }}</div>
               </td>
-              <td class="table-cell">
-                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
-                  :class="customer.isActive ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'">
-                  {{ customer.isActive ? 'Aktif' : 'Pasif' }}
-                </span>
-              </td>
+         
             </tr>
 
             <!-- Empty State -->
@@ -283,6 +273,8 @@ import {
 } from '@heroicons/vue/24/outline'
 
 definePageMeta({})
+
+const { isAdmin } = usePermissions()
 
 const loading = ref(true)
 const customersData = ref([])
@@ -390,7 +382,6 @@ const loadCustomers = async () => {
         source: customer.source || '-',
         isActive: customer.isActive ?? true,
         remindingDate: customer.remindingDate || customer.reminding_date || null,
-        user: usersMap.value[userId] || customer.user,
         relevantUser: usersMap.value[relevantUserId] || customer.relevantUser
       }
     })
@@ -399,6 +390,10 @@ const loadCustomers = async () => {
     // 🔹 Hatırlatma statüsü filtreleme
     customers = customers.filter(c => remindableStatusIds.value.includes(c.status))
 
+    console.log(remindableStatusIds);
+    
+    console.log(customers);
+    
 
     // 🔹 Erişim kontrolü
     customers = customers.filter(c => canAccessCustomer(c))

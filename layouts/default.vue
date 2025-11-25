@@ -25,6 +25,16 @@
     <!-- Reminder Popup -->
     <ReminderPopup :is-open="reminderPopup" :reminder="currentReminder" :loading="reminderLoading"
       @dismiss="dismissReminder" @complete="completeReminder" />
+
+
+     <!-- Fixed User Stats Bar -->
+    <!-- <UserStatsBar
+      :user="authStore.user"
+      :user-stats="userStats"
+      :daily-leads="dailyLeadsCount"
+      :today-sales="todaySalesCount"
+    />
+       -->
   </div>
 </template>
 
@@ -63,6 +73,12 @@ const {
 
 const { isAdmin } = usePermissions()
 
+const authStore = useAuthStore()
+const userStats = ref(null)
+const dailyLeadsCount = ref(0)
+const todaySalesCount = ref(0)
+
+ 
 // Reminder Notification System - composable'ı inline olarak tanımlayalım
 const useReminderNotifications = () => {
   const config = useRuntimeConfig()
@@ -278,7 +294,7 @@ const completeReminder = async () => {
 
 onMounted(async () => {
 
-
+   
   // Request notification permission
   await requestNotificationPermission()
 

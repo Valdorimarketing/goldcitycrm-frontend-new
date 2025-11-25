@@ -6,20 +6,22 @@
       <thead class="bg-gray-50 dark:bg-gray-800">
         <tr>
           <th class="table-header text-gray-700 dark:text-gray-300"></th>
-          <th v-for="col in columns" :key="col.key" @click="sortBy(col.key)"
-            class="table-header cursor-pointer text-gray-700 dark:text-gray-300">
-            <div class="flex items-center gap-1">
-              {{ col.label }}
-              <span v-if="sortColumn === col.key">
-                <svg v-if="sortDirection === 'asc'" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M5 12l5-5 5 5H5z" />
-                </svg>
-                <svg v-else class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M5 8l5 5 5-5H5z" />
-                </svg>
-              </span>
-            </div>
-          </th>
+          <template v-for="col in columns" :key="col.key">
+            <th v-if="col.isVisible" @click="sortBy(col.key)"
+              class="table-header cursor-pointer text-gray-700 dark:text-gray-300">
+              <div class="flex items-center gap-1">
+                {{ col.label }}
+                <span v-if="sortColumn === col.key">
+                  <svg v-if="sortDirection === 'asc'" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M5 12l5-5 5 5H5z" />
+                  </svg>
+                  <svg v-else class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M5 8l5 5 5-5H5z" />
+                  </svg>
+                </span>
+              </div>
+            </th>
+          </template>
         </tr>
       </thead>
 
@@ -127,7 +129,7 @@
           </td>
 
 
-          <td class="table-cell">{{ customer.source || '-' }}</td>
+          <td class="table-cell" v-if="isAdmin">{{ customer.source || '-' }}</td>
           <td class="table-cell">{{ customer.relatedTransaction || '-' }}</td>
           <td class="table-cell">{{ customer.patient || '-' }}</td>
           <td class="table-cell">{{ customer.checkup_package || '-' }}</td>
@@ -141,7 +143,7 @@
                 <div v-else
                   class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
                   <span class="text-sm font-medium text-indigo-600 dark:text-indigo-300">
-                    {{ customer.relevantUserData?.name ? customer.relevantUserData?.name.charAt(0).toUpperCase() : 'A'}}
+                    {{ customer.relevantUserData?.name ? customer.relevantUserData?.name.charAt(0).toUpperCase() : 'A' }}
                   </span>
                 </div>
                 <div class="relative flex flex-col">
@@ -156,12 +158,7 @@
               </div>
             </NuxtLink>
           </td>
-          <td v-else class="table-cell">
-            <span class="text-sm text-gray-900 dark:text-gray-100">
-              {{ customer.relevantUserData ? customer.relevantUserData?.name : 'Atanmamış' }}
-            </span>
-          </td>
-          <td class="table-cell">{{ customer.isActive ? 'Aktif' : 'Pasif' }}</td>
+         
           <td class="table-cell">{{ formatDate(customer.createdAt) }}</td>
           <td class="table-cell">{{ formatDate(customer.updatesAt) }}</td>
 
@@ -185,6 +182,7 @@ import { ref, computed } from 'vue'
 
 const props = defineProps({
   isAdmin: { type: Boolean, default: false },
+  isUser: { type: Boolean, default: false },
   data: { type: Array, default: () => [] },
   isEditable: { type: Boolean, default: false },
   isDeleteable: { type: Boolean, default: false }
@@ -222,18 +220,17 @@ const emit = defineEmits([
 // Sıralama
 const sortColumn = ref('')
 const sortDirection = ref('asc')
-const columns = [
-  { label: 'İsim', key: 'name' },
-  { label: 'Durum', key: 'statusData' },
-  { label: 'Kaynak', key: 'source' },
-  { label: 'İlgilenilen Konu', key: 'relatedTransaction' },
-  { label: 'Hastalık', key: 'patient' },
-  { label: 'Checkup Paketi', key: 'checkup_package' },
-  { label: 'Atanan', key: 'relevantUserData' },
-  { label: 'Aktif', key: 'isActive' },
-  { label: 'Eklenme Tarihi', key: 'createdAt' },
-  { label: 'Güncellenme Tarihi', key: 'updatesAt' }
-]
+const columns = computed(() => [
+  { label: 'İsim', key: 'name', isVisible: props.isAdmin || props.isUser },
+  { label: 'Durum', key: 'statusData', isVisible: props.isAdmin || props.isUser },
+  { label: 'Kaynak', key: 'source', isVisible: props.isAdmin },
+  { label: 'İlgilenilen Konu', key: 'relatedTransaction', isVisible: props.isAdmin || props.isUser },
+  { label: 'Hastalık', key: 'patient', isVisible: props.isAdmin || props.isUser },
+  { label: 'Checkup Paketi', key: 'checkup_package', isVisible: props.isAdmin || props.isUser },
+  { label: 'Atanan', key: 'relevantUserData', isVisible: props.isAdmin },
+  { label: 'Eklenme Tarihi', key: 'createdAt', isVisible: props.isAdmin || props.isUser },
+  { label: 'Güncellenme Tarihi', key: 'updatesAt', isVisible: props.isAdmin || props.isUser }
+])
 
 const sortBy = (key) => {
   if (sortColumn.value === key) {

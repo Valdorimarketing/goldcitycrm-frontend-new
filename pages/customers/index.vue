@@ -107,7 +107,7 @@
     <!-- Customers Table -->
     <div v-else class="card">
 
-      <CustomerTable :isAdmin="isAdmin" :data="customers" :users-map="usersMap" :status-map="statusMap" @sort="handleSort"
+      <CustomerTable :isAdmin="isAdmin" :isUser="isUser" :data="customers" :users-map="usersMap" :status-map="statusMap" @sort="handleSort"
         :is-editable="isEditable" :is-deleteable="isDeleteable" @confirm-delete="confirmDelete"
         @show-history="showHistory" @show-notes="showNotes" @show-doctor="showDoctorAssignment"
         @show-services="showServices" @show-files="showFiles"></CustomerTable>
@@ -224,7 +224,7 @@ const authStore = useAuthStore()
 const api = useApi()
 
 // Permissions
-const { isAdmin, getCustomerFilters } = usePermissions()
+const { isAdmin, isUser, getCustomerFilters } = usePermissions()
 
 // Store
 const customersStore = useCustomersStore()
