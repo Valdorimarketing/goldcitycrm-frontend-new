@@ -317,26 +317,15 @@ const toggleShow = (id) => {
 // 🧩 ANA METOD: Müşteri, kullanıcı, statü ve filtreleri yükle
 // =====================================================
 
+
 const loadCustomers = async () => {
   loading.value = true
   try {
     const api = useApi()
     const { getCustomerFilters, canAccessCustomer } = usePermissions()
 
-    // 🔸 Filtre parametreleri hazırlanıyor
-    const baseFilters = getCustomerFilters()
-    const query = {
-      ...baseFilters,
-      search: searchTerm.value || undefined,
-      status: statusFilter.value || undefined,
-      relevantUser: relevantUserFilter.value || undefined,
-      dateFilter: dateFilter.value,
-      startDate: customStartDate.value || undefined,
-      endDate: customEndDate.value || undefined
-    }
-
     // ========================
-    // 🧠 Kullanıcıları yükle
+    // 🧠 Kullanıcıları yükle (sadece ilk seferinde)
     // ========================
     if (Object.keys(usersMap.value).length === 0) {
       const usersResponse = await api('/users')
@@ -347,7 +336,7 @@ const loadCustomers = async () => {
     }
 
     // ========================
-    // 🧠 Statüleri yükle
+    // 🧠 Statüleri yükle (sadece ilk seferinde)
     // ========================
     if (statusOptions.value.length === 0) {
       const statusResponse = await api('/statuses')
@@ -365,13 +354,29 @@ const loadCustomers = async () => {
     }
 
     // ========================
-    // 🧠 Müşterileri yükle (dinamik filtreli)
+    // 🔸 Backend'e gönderilecek filtreler
+    // ========================
+    const baseFilters = getCustomerFilters()
+    const query = {
+      ...baseFilters,
+      search: searchTerm.value || undefined,
+      status: statusFilter.value || undefined, // Tek status veya boş
+      relevantUser: relevantUserFilter.value || undefined,
+      dateFilter: dateFilter.value,
+      startDate: customStartDate.value || undefined,
+      endDate: customEndDate.value || undefined
+    }
+
+    // ========================
+    // 🧠 Müşterileri backend'den çek
     // ========================
     const response = await api('/customers', { query })
     let customers = Array.isArray(response) ? response : response.data || []
 
+    // ========================
+    // 🔄 Müşteri verilerini normalize et
+    // ========================
     customers = customers.map(customer => {
-      const userId = customer.userId || customer.user_id || customer.user
       const relevantUserId = customer.relevantUserId || customer.relevant_user_id || customer.relevantUser
 
       return {
@@ -385,22 +390,26 @@ const loadCustomers = async () => {
       }
     })
 
-    // ✅ DÜZELTME: "Tümü" seçilmemişse hatırlatma statüsü filtrele
-    // "Tümü" seçiliysa bu filtreyi atlayalım
-    if (dateFilter.value !== 'all') {
-      customers = customers.filter(c => remindableStatusIds.value.includes(c.status))
-    }
+    // ========================
+    // ✅ KRİTİK FİLTRELEME: Sadece remindable statusları göster
+    // ========================
+    customers = customers.filter(c => remindableStatusIds.value.includes(c.status))
 
+    // ========================
     // 🔹 Erişim kontrolü
+    // ========================
     customers = customers.filter(c => canAccessCustomer(c))
 
     customersData.value = customers
+
   } catch (error) {
     console.error('loadCustomers error:', error)
+    customersData.value = []
   } finally {
     loading.value = false
   }
 }
+
 
 // =====================================================
 // 🧠 Debounce ile filtreleri dinle ve API çağrısı yap
