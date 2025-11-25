@@ -210,6 +210,10 @@
               class="bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
               son görülme: {{ getLastSeen(user.lastActiveTime) }}
             </span>
+            <span :title="dayjs(user.createdAt).fromNow()"
+              class="bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
+              {{ user.createdAt ? 'Oluşturulma: ' + dayjs(user.createdAt).format('DD MMM YYYY') : 'Oluşturulma tarihi bilinmiyor' }}
+            </span>
           </div>
         </div>
       </div>
