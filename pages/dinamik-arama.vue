@@ -316,6 +316,7 @@ const toggleShow = (id) => {
 // =====================================================
 // 🧩 ANA METOD: Müşteri, kullanıcı, statü ve filtreleri yükle
 // =====================================================
+
 const loadCustomers = async () => {
   loading.value = true
   try {
@@ -333,7 +334,6 @@ const loadCustomers = async () => {
       startDate: customStartDate.value || undefined,
       endDate: customEndDate.value || undefined
     }
-
 
     // ========================
     // 🧠 Kullanıcıları yükle
@@ -364,7 +364,6 @@ const loadCustomers = async () => {
       }
     }
 
-
     // ========================
     // 🧠 Müşterileri yükle (dinamik filtreli)
     // ========================
@@ -386,9 +385,11 @@ const loadCustomers = async () => {
       }
     })
 
-
-    // 🔹 Hatırlatma statüsü filtreleme
-    customers = customers.filter(c => remindableStatusIds.value.includes(c.status))
+    // ✅ DÜZELTME: "Tümü" seçilmemişse hatırlatma statüsü filtrele
+    // "Tümü" seçiliysa bu filtreyi atlayalım
+    if (dateFilter.value !== 'all') {
+      customers = customers.filter(c => remindableStatusIds.value.includes(c.status))
+    }
 
     // 🔹 Erişim kontrolü
     customers = customers.filter(c => canAccessCustomer(c))
