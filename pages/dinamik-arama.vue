@@ -317,7 +317,7 @@ const toggleShow = (id) => {
 // 🧩 ANA METOD: Müşteri, kullanıcı, statü ve filtreleri yükle
 // =====================================================
 
-
+ 
 const loadCustomers = async () => {
   loading.value = true
   try {
@@ -358,12 +358,17 @@ const loadCustomers = async () => {
     // ========================
     const baseFilters = getCustomerFilters()
     
+    // ✅ KRİTİK: Eğer status seçilmemişse (Tüm Durumlar), remindable statusları gönder
+    const statusToSend = statusFilter.value 
+      ? statusFilter.value 
+      : remindableStatusIds.value.join(',')
+    
     const query = {
       ...baseFilters,
       search: searchTerm.value || undefined,
-      status: statusFilter.value || undefined,
+      status: statusToSend, // ✅ Her zaman remindable statuslar
       relevantUser: relevantUserFilter.value || undefined,
-      // ✅ DÜZELTME: 'all' ise dateFilter parametresini hiç gönderme
+      // ✅ Sadece 'all' değilse tarih parametrelerini gönder
       ...(dateFilter.value !== 'all' && {
         dateFilter: dateFilter.value,
         startDate: customStartDate.value || undefined,
@@ -394,10 +399,8 @@ const loadCustomers = async () => {
       }
     })
 
-    // ========================
-    // ✅ KRİTİK FİLTRELEME: Sadece remindable statusları göster
-    // ========================
-    customers = customers.filter(c => remindableStatusIds.value.includes(c.status))
+    // ✅ Artık frontend'de filtrelemeye gerek yok!
+    // Backend zaten sadece remindable statusları döndürüyor
 
     // ========================
     // 🔹 Erişim kontrolü
@@ -413,7 +416,6 @@ const loadCustomers = async () => {
     loading.value = false
   }
 }
-
 
 // =====================================================
 // 🧠 Debounce ile filtreleri dinle ve API çağrısı yap
