@@ -20,7 +20,11 @@
 
         <!-- Export Modal -->
         <CustomerExportModal
+          ref="exportModalRef"
           :isopen="showExportModal"
+          :filters="currentExportFilters"
+          :total-filtered="pagination.total"
+          :current-page-count="customers.length"
           @close="showExportModal = false"
           @export="handleExport"
         />
@@ -46,7 +50,7 @@
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Ara</label>
-          <input v-model="searchTerm" type="text" class="form-input" placeholder="İsim, email veya telefon..." />
+          <input v-model="searchTerm" type="text" class="form-input" placeholder="ID, İsim, email veya telefon..." />
         </div>
 
         <div>
@@ -266,7 +270,33 @@ const statusMap = ref({}) // Status ID to status object mapping
 const usersMap = ref({}) // User ID to user object mapping
 const userQuery = ref('')
 const showExportModal = ref(false)
+const exportModalRef = ref(null)
 let isInitialLoad = true
+
+// Export için aktif filtreleri hesapla
+const currentExportFilters = computed(() => {
+  const filters = {}
+  
+  if (searchTerm.value) {
+    filters.search = searchTerm.value
+  }
+  
+  if (statusFilter.value) {
+    filters.status = statusFilter.value
+    // Status adını da ekle (modal'da göstermek için)
+    const statusInfo = statusOptions.value.find(s => s.value === statusFilter.value)
+    if (statusInfo) {
+      filters.statusName = statusInfo.label
+    }
+  }
+  
+  if (relevantUserFilter.value) {
+    filters.relevantUser = relevantUserFilter.value.id
+    filters.userName = relevantUserFilter.value.name
+  }
+  
+  return filters
+})
 
 // Computed list of users for the filter
 const usersList = computed(() => {
@@ -352,22 +382,43 @@ const visiblePages = computed(() => {
 
 // Methods
 
-const handleExport = async ({ format, columns }) => {
-  const filters = getCustomerFilters()
+const handleExport = async ({ format, columns, scope }) => {
+  // Temel filtreleri al (kullanıcı bazlı kısıtlamalar dahil)
+  const baseFilters = getCustomerFilters()
 
-  const customFilters = { ...filters }
+  const exportFilters = { 
+    ...baseFilters,
+    format,
+    columns: columns.join(','),
+  }
+
+  // Arama filtresi
+  if (searchTerm.value) {
+    exportFilters.search = searchTerm.value
+  }
+
+  // Durum filtresi
+  if (statusFilter.value) {
+    exportFilters.status = statusFilter.value
+  }
+
+  // Admin ise ve kullanıcı filtresi seçilmişse
   if (authStore.user?.role === 'admin' && relevantUserFilter.value) {
-    customFilters.relevantUser = relevantUserFilter.value.id
+    exportFilters.relevantUser = relevantUserFilter.value.id
+  }
+
+  // Scope'a göre pagination ayarla
+  if (scope === 'currentPage') {
+    // Sadece mevcut sayfa
+    exportFilters.page = pagination.value.page
+    exportFilters.limit = pagination.value.limit
+  } else {
+    // Filtrelenmiş tüm kayıtlar (pagination yok)
+    exportFilters.exportAll = true
   }
 
   try {
-    const response = await customersStore.exportCustomers({
-      format,
-      columns: columns.join(','), // Sütunları virgülle ayırarak gönder
-      search: searchTerm.value || undefined,
-      status: statusFilter.value,
-      ...customFilters,
-    })
+    const response = await customersStore.exportCustomers(exportFilters)
 
     // Determine the correct MIME type
     const mimeType = format === 'excel' 
@@ -381,7 +432,11 @@ const handleExport = async ({ format, columns }) => {
     // Create a link to download the file
     const link = document.createElement('a')
     link.href = url
-    link.setAttribute('download', `customers_${new Date().getTime()}.${format === 'excel' ? 'xlsx' : 'csv'}`)
+    
+    // Dosya adına scope bilgisi ekle
+    const scopeText = scope === 'currentPage' ? `page${pagination.value.page}` : 'all'
+    link.setAttribute('download', `customers_${scopeText}_${new Date().getTime()}.${format === 'excel' ? 'xlsx' : 'csv'}`)
+    
     document.body.appendChild(link)
     link.click()
     
@@ -389,10 +444,21 @@ const handleExport = async ({ format, columns }) => {
     document.body.removeChild(link)
     window.URL.revokeObjectURL(url)
     
+    // Modal'daki loading'i kapat
+    if (exportModalRef.value) {
+      exportModalRef.value.resetExporting()
+    }
+    
     showExportModal.value = false
     useToast().showSuccess('Müşteriler başarıyla dışa aktarıldı')
   } catch (error) {
     console.error('Error exporting customers:', error)
+    
+    // Modal'daki loading'i kapat
+    if (exportModalRef.value) {
+      exportModalRef.value.resetExporting()
+    }
+    
     useToast().showError('Müşteriler dışa aktarılırken bir hata oluştu')
   }
 }

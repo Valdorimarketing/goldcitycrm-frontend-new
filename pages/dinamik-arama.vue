@@ -18,7 +18,7 @@
             Ara
           </label>
           <input id="search" v-model="searchTerm" type="text" class="form-input"
-            placeholder="İsim, email veya telefon ile ara..." />
+            placeholder="ID, İsim, email veya telefon ile ara..." />
         </div>
         <div>
           <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -366,8 +366,92 @@ definePageMeta({})
 const { isAdmin } = usePermissions()
 const authStore = useAuthStore()
 
+// =====================================================
+// 🗄️ LOCALSTORAGE CACHE SİSTEMİ
+// =====================================================
+const CACHE_KEY = 'dynamic_search_filters'
+const CACHE_VERSION = 1 // Cache yapısı değişirse artır
+
+/**
+ * Cache'den filtreleri yükle
+ */
+const loadFromCache = () => {
+  if (import.meta.server) return null
+  
+  try {
+    const cached = localStorage.getItem(CACHE_KEY)
+    if (!cached) return null
+    
+    const data = JSON.parse(cached)
+    
+    // Version kontrolü
+    if (data.version !== CACHE_VERSION) {
+      localStorage.removeItem(CACHE_KEY)
+      return null
+    }
+    
+    // Cache süresi kontrolü (24 saat)
+    const cacheAge = Date.now() - (data.timestamp || 0)
+    const maxAge = 24 * 60 * 60 * 1000 // 24 saat
+    if (cacheAge > maxAge) {
+      localStorage.removeItem(CACHE_KEY)
+      return null
+    }
+    
+    return data.filters
+  } catch (e) {
+    console.warn('Cache okuma hatası:', e)
+    localStorage.removeItem(CACHE_KEY)
+    return null
+  }
+}
+
+/**
+ * Filtreleri cache'e kaydet
+ */
+const saveToCache = () => {
+  if (import.meta.server) return
+  
+  try {
+    const filters = {
+      searchTerm: searchTerm.value,
+      statusFilter: statusFilter.value,
+      relevantUserFilter: relevantUserFilter.value,
+      dateFilter: dateFilter.value,
+      customStartDate: customStartDate.value,
+      customEndDate: customEndDate.value,
+      pagination: {
+        page: pagination.value.page,
+        limit: pagination.value.limit
+      }
+    }
+    
+    const cacheData = {
+      version: CACHE_VERSION,
+      timestamp: Date.now(),
+      filters
+    }
+    
+    localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData))
+  } catch (e) {
+    console.warn('Cache yazma hatası:', e)
+  }
+}
+
+/**
+ * Cache'i temizle
+ */
+const clearCache = () => {
+  if (import.meta.server) return
+  localStorage.removeItem(CACHE_KEY)
+}
+
+// =====================================================
+// 🔹 State Tanımlamaları
+// =====================================================
 const loading = ref(true)
 const customersData = ref([])
+const cacheLoaded = ref(false) // Cache yüklenme durumu
 
 // 🔹 Pagination
 const pagination = ref({
@@ -463,6 +547,10 @@ const toggleShow = (id) => {
 
 const loadCustomers = async () => {
   loading.value = true
+  
+  // 💾 Her yüklemede cache'e kaydet
+  saveToCache()
+  
   try {
     const api = useApi()
     const { getCustomerFilters, canAccessCustomer } = usePermissions()
@@ -505,12 +593,11 @@ const loadCustomers = async () => {
       ? statusFilter.value
       : remindableStatusIds.value.join(',')
 
-         // ✅ KRİTİK FIX: Admin değilse kendi user ID'sini ekle
+    // ✅ KRİTİK FIX: Admin değilse kendi user ID'sini ekle
     let relevantUserToSend = relevantUserFilter.value || undefined
     if (!isAdmin.value && !relevantUserToSend) {
-      relevantUserToSend = authStore.user?.id  // Kullanıcının kendi ID'si
+      relevantUserToSend = authStore.user?.id
     }
-
 
     const query = {
       ...baseFilters,
@@ -580,6 +667,9 @@ const loadCustomers = async () => {
 watchDebounced(
   [searchTerm, statusFilter, relevantUserFilter, dateFilter, customStartDate, customEndDate],
   () => {
+    // Cache yüklendikten sonra çalışsın
+    if (!cacheLoaded.value) return
+    
     pagination.value.page = 1 // Filtre değişince ilk sayfaya dön
     loadCustomers()
   },
@@ -589,8 +679,39 @@ watchDebounced(
 // =====================================================
 // 🏁 İlk sayfa yüklenirken veriyi çek
 // =====================================================
-onMounted(() => {
-  loadCustomers()
+onMounted(async () => {
+  // 💾 Cache'den filtreleri yükle
+  const cached = loadFromCache()
+  
+  if (cached) {
+    // Cache'deki değerleri uygula
+    searchTerm.value = cached.searchTerm || ''
+    statusFilter.value = cached.statusFilter || ''
+    relevantUserFilter.value = cached.relevantUserFilter || ''
+    dateFilter.value = cached.dateFilter || 'all'
+    customStartDate.value = cached.customStartDate || ''
+    customEndDate.value = cached.customEndDate || ''
+    
+    if (cached.pagination) {
+      pagination.value.page = cached.pagination.page || 1
+      pagination.value.limit = cached.pagination.limit || 10
+    }
+    
+    console.log('📦 Filtreler cache\'den yüklendi:', cached)
+  }
+  
+  // Cache yükleme tamamlandı
+  cacheLoaded.value = true
+  
+  // Müşterileri yükle
+  await loadCustomers()
+})
+
+// =====================================================
+// 🧹 Sayfa kapatılırken cache'e kaydet
+// =====================================================
+onBeforeUnmount(() => {
+  saveToCache()
 })
 
 // =====================================================
@@ -604,6 +725,10 @@ const resetFilters = () => {
   customStartDate.value = ''
   customEndDate.value = ''
   pagination.value.page = 1
+  
+  // 🗑️ Cache'i temizle
+  clearCache()
+  
   loadCustomers()
 }
 

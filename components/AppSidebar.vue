@@ -103,7 +103,6 @@
                 {{ authStore.user?.name?.charAt(0) || 'U' }}
               </span>
             </div>
-
           </div>
         </div>
         <transition name="fade">
@@ -147,12 +146,12 @@ import {
   MagnifyingGlassIcon,
   CircleStackIcon,
   FlagIcon,
-  ChartBarSquareIcon
+  ChartBarSquareIcon,
+  CurrencyDollarIcon,
 } from '@heroicons/vue/24/outline'
 
 const authStore = useAuthStore()
 const config = useRuntimeConfig()
-// Nuxt 3 auto-imports composables from ~/composables
 const { canViewMenu } = usePermissions()
 const sidebar = inject('sidebar')
 const { sidebarOpen, mobileSidebarOpen } = sidebar
@@ -166,10 +165,8 @@ const openGroups = ref({
 }) 
 
 const toggleGroup = (groupName) => {
-  // Eğer sidebar minimize ise, önce sidebar'ı büyüt
   if (!sidebarOpen.value) {
     sidebar.toggleSidebar()
-    // Grubu açık yap
     openGroups.value[groupName] = true
   } else {
     openGroups.value[groupName] = !openGroups.value[groupName]
@@ -190,10 +187,13 @@ const allNavigationItems = [
       { name: 'Hatırlatmalar', href: '/reminders', icon: BellIcon },
     ]
   },
+  // Doktor Dönüşü - Tek menü olarak (alt menüsüz)
+  { name: 'Doktor Dönüşü', href: '/doctor-review', icon: UserGroupIcon },
+  // Fiyatlandırmalar - Tek menü olarak (alt menüsüz)
+  { name: 'Fiyatlandırmalar', href: '/pricing', icon: CurrencyDollarIcon },
   { name: 'Satışlar', href: '/sales', icon: ShoppingBagIcon },
   { name: 'Randevusuz Satışlar', href: '/randevusuz-satislar', icon: ShoppingBagIcon },
   { name: 'Randevular', href: '/meetings', icon: CalendarIcon },
-  // { name: 'Ödemeler', href: '/payments', icon: CurrencyDollarIcon }, // Geçici olarak gizlendi
   {
     name: 'Tanımlamalar',
     type: 'group',
@@ -217,19 +217,15 @@ const allNavigationItems = [
 // Yetkilere göre filtrelenmiş menü
 const navigationItems = computed(() => {
   return allNavigationItems.filter(item => {
-    // Menü ana başlığı görülebilir mi kontrol et
     if (!canViewMenu(item.name)) return false
 
-    // Eğer grup ise, alt itemları da filtrele
     if (item.type === 'group' && item.items) {
       const filteredItems = item.items.filter(subItem => canViewMenu(subItem.name))
-      // Eğer hiç alt item kalmadıysa grubu gösterme
       if (filteredItems.length === 0) return false
     }
 
     return true
   }).map(item => {
-    // Grup itemlarını filtrele
     if (item.type === 'group' && item.items) {
       return {
         ...item,
@@ -241,7 +237,6 @@ const navigationItems = computed(() => {
 })
 
 const navigateTo = (path) => {
-  // Eğer sidebar minimize ise, tıklandığında büyüt
   if (!sidebarOpen.value) {
     sidebar.toggleSidebar()
   }

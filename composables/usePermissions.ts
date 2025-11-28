@@ -19,10 +19,7 @@ export const usePermissions = () => {
 
   // Menü görünürlük kuralları
   const canViewMenu = (menuName: string) => {
-    // Yeni Kişiler menüsü özel durumu: sadece user rolü görebilir
-    if (menuName === 'Yeni Kişiler') {
-      return isUser.value
-    }
+   
 
     // Admin diğer tüm menüleri görür
     if (isAdmin.value) return true
@@ -38,19 +35,41 @@ export const usePermissions = () => {
         'Hatırlatmalar',
         'Satışlar',
         'Randevular',
-        'Ödemeler'
+        'Ödemeler',
+        // Doktor Dönüşü - tek menü
+        'Doktor Dönüşü',
+        // Fiyatlandırmalar - tek menü
+        'Fiyatlandırmalar'
       ]
       return allowedMenus.includes(menuName)
     }
 
-    // Doctor ve Pricing sadece müşteriler ve kişiler menusunu görür
-    if (isDoctor.value || isPricing.value) {
+    // Doctor rolü için
+    if (isDoctor.value) {
       const allowedMenus = [
         'Müşteriler',
         'Kişiler',
+        'Yeni Kişiler',
         'Dinamik Arama',
         'Hatırlatmalar',
-        'Havuz Verileri'
+        'Havuz Verileri',
+        // Doktor Dönüşü - tek menü
+        'Doktor Dönüşü'
+      ]
+      return allowedMenus.includes(menuName)
+    }
+
+    // Pricing rolü için
+    if (isPricing.value) {
+      const allowedMenus = [
+        'Müşteriler',
+        'Kişiler',
+        'Yeni Kişiler',
+        'Dinamik Arama',
+        'Hatırlatmalar',
+        'Havuz Verileri',
+        // Fiyatlandırmalar - tek menü
+        'Fiyatlandırmalar'
       ]
       return allowedMenus.includes(menuName)
     }
@@ -68,21 +87,14 @@ export const usePermissions = () => {
     // User sadece kendine ait customerları görür (relevantUser field'ına göre)
     if (isUser.value) {
       return {
-        relevantUser: userId.value  // Backend'de field ismi camelCase: relevantUser
+        relevantUser: userId.value
       }
     }
-
-    // Doctor sadece is_doctor statuslu customerları görür
-    // if (isDoctor.value) {
-    //   return {
-    //     isDoctor: true // Backend'de isDoctor=true query parametresi
-    //   }
-    // }
 
     // Pricing sadece is_pricing statuslu customerları görür
     if (isPricing.value) {
       return {
-        isPricing: true // Backend'de isPricing=true query parametresi
+        isPricing: true
       }
     }
 
@@ -98,14 +110,9 @@ export const usePermissions = () => {
 
     // User sadece relevantUser field'ı kendine ait customerları görebilir
     if (isUser.value) {
-      // relevantUser field'ı obje veya ID olabilir, tüm varyasyonları kontrol et
       const relevantUserValue = customer.relevantUser || customer.relevent_user || customer.relevantUserId || customer.relevant_user_id
-
-      // Eğer obje ise id'sini al, değilse direkt kullan
       const customerUserId = typeof relevantUserValue === 'object' ? relevantUserValue?.id : relevantUserValue
-
       const hasAccess = customerUserId === userId.value || customerUserId === String(userId.value) || String(customerUserId) === String(userId.value)
-
       return hasAccess
     }
 
@@ -124,37 +131,31 @@ export const usePermissions = () => {
 
   // Dashboard istatistik filtreleme
   const getDashboardFilters = () => {
-    // Admin tüm dataları görür
     if (isAdmin.value) {
       return {}
     }
 
-    // User sadece kendine ait dataları görür
     if (isUser.value) {
       return {
         user_id: userId.value
       }
     }
 
-    // Doctor ve Pricing dashboard göremez
     return null
   }
 
   // Satışlar, randevular, ödemeler filtreleme
   const getRelatedDataFilters = () => {
-    // Admin tüm dataları görür
     if (isAdmin.value) {
       return {}
     }
 
-    // User sadece kendine ait customerlarla ilgili dataları görür
     if (isUser.value) {
       return {
         user_id: userId.value
       }
     }
 
-    // Doctor ve Pricing bu sayfaları göremez
     return null
   }
 

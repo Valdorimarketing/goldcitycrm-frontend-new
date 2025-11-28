@@ -90,26 +90,50 @@
                                 {{ product.product.description }}
                               </p>
                             </div>
+                            <!-- Ödeme Durumu Badge -->
+                            <div class="flex-shrink-0 ml-2">
+                              <span v-if="product.isPayCompleted"
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                                <CheckCircleIcon class="w-3.5 h-3.5 mr-1" />
+                                Ödendi
+                              </span>
+                              <span v-else-if="product.paidAmount > 0"
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                                <ClockIcon class="w-3.5 h-3.5 mr-1" />
+                                Kısmi Ödeme
+                              </span>
+                              <span v-else
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                                <XCircleIcon class="w-3.5 h-3.5 mr-1" />
+                                Ödenmedi
+                              </span>
+                            </div>
                           </div>
 
                           <!-- Price Info -->
-                          <div class="mt-3 grid grid-cols-3 gap-4 text-sm">
-                            <div>
-                              <span class="text-gray-500 dark:text-gray-400">Fiyat:</span>
-                              <span class="ml-1 font-medium text-gray-900 dark:text-white">
-                                {{ formatCurrency(product.price, product.product.currency.code) }}
+                          <div class="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+                            <div class="bg-white dark:bg-gray-800 rounded p-2">
+                              <span class="block text-xs text-gray-500 dark:text-gray-400">Fiyat</span>
+                              <span class="font-medium text-gray-900 dark:text-white">
+                                {{ formatCurrency(product.price, product.product.currency?.code) }}
                               </span>
                             </div>
-                            <div v-if="product.discount > 0">
-                              <span class="text-gray-500 dark:text-gray-400">İndirim:</span>
-                              <span class="ml-1 font-medium text-red-600 dark:text-red-400">
-                                {{ formatCurrency(product.discount, product.product.currency.code) }}
+                            <div class="bg-white dark:bg-gray-800 rounded p-2">
+                              <span class="block text-xs text-gray-500 dark:text-gray-400">Teklif</span>
+                              <span class="font-semibold text-blue-600 dark:text-blue-400">
+                                {{ formatCurrency(product.offer, product.product.currency?.code) }}
                               </span>
                             </div>
-                            <div>
-                              <span class="text-gray-500 dark:text-gray-400">Teklif:</span>
-                              <span class="ml-1 font-semibold text-green-600 dark:text-green-400">
-                                {{ formatCurrency(product.offer, product.product.currency.code) }}
+                            <div class="bg-white dark:bg-gray-800 rounded p-2">
+                              <span class="block text-xs text-gray-500 dark:text-gray-400">Alınan Tutar</span>
+                              <span class="font-semibold text-green-600 dark:text-green-400">
+                                {{ formatCurrency(product.paidAmount || 0, product.product.currency?.code) }}
+                              </span>
+                            </div>
+                            <div class="bg-white dark:bg-gray-800 rounded p-2">
+                              <span class="block text-xs text-gray-500 dark:text-gray-400">Kalan Para</span>
+                              <span class="font-semibold" :class="getRemainingAmount(product) > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'">
+                                {{ formatCurrency(getRemainingAmount(product), product.product.currency?.code) }}
                               </span>
                             </div>
                           </div>
@@ -123,16 +147,49 @@
                     </div>
                   </div>
 
-                  <!-- Total Amount -->
+                  <!-- Summary Section -->
                   <div v-if="selectedProductIds.length > 0 && currentCurrency"
-                    class="mt-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border-2 border-green-200 dark:border-green-800">
-                    <div class="flex items-center justify-between">
-                      <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Toplam Tutar ({{ selectedProductIds.length }} ürün):
-                      </span>
-                      <span class="text-lg font-bold text-green-600 dark:text-green-400">
-                        {{ formatCurrency(totalAmount, currentCurrency) }}
-                      </span>
+                    class="mt-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg border-2 border-green-200 dark:border-green-800">
+                    <h5 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">
+                      Seçili Ürünler Özeti ({{ selectedProductIds.length }} ürün)
+                    </h5>
+                    <div class="space-y-2">
+                      <div class="flex items-center justify-between text-sm">
+                        <span class="text-gray-600 dark:text-gray-400">Toplam Teklif:</span>
+                        <span class="font-medium text-gray-900 dark:text-white">
+                          {{ formatCurrency(totalOffer, currentCurrency) }}
+                        </span>
+                      </div>
+                      <div class="flex items-center justify-between text-sm">
+                        <span class="text-gray-600 dark:text-gray-400">Toplam Alınan:</span>
+                        <span class="font-semibold text-green-600 dark:text-green-400">
+                          {{ formatCurrency(totalPaid, currentCurrency) }}
+                        </span>
+                      </div>
+                      <div class="flex items-center justify-between text-sm pt-2 border-t border-green-200 dark:border-green-700">
+                        <span class="font-medium text-gray-700 dark:text-gray-300">Toplam Kalan:</span>
+                        <span class="text-lg font-bold" :class="totalRemaining > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'">
+                          {{ formatCurrency(totalRemaining, currentCurrency) }}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <!-- Ödeme Durumu Özeti -->
+                    <div class="mt-3 pt-3 border-t border-green-200 dark:border-green-700">
+                      <div class="flex flex-wrap gap-2">
+                        <span v-if="paymentSummary.completed > 0" class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-200">
+                          <CheckCircleIcon class="w-3 h-3 mr-1" />
+                          {{ paymentSummary.completed }} Ödendi
+                        </span>
+                        <span v-if="paymentSummary.partial > 0" class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-200">
+                          <ClockIcon class="w-3 h-3 mr-1" />
+                          {{ paymentSummary.partial }} Kısmi Ödeme
+                        </span>
+                        <span v-if="paymentSummary.unpaid > 0" class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-200">
+                          <XCircleIcon class="w-3 h-3 mr-1" />
+                          {{ paymentSummary.unpaid }} Ödenmedi
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -174,7 +231,9 @@ import {
   XMarkIcon,
   ShoppingBagIcon,
   InformationCircleIcon,
-  CheckCircleIcon
+  CheckCircleIcon,
+  ClockIcon,
+  XCircleIcon
 } from '@heroicons/vue/24/outline'
 import { useCustomer2Product } from '~/composables/useCustomer2Product'
 
@@ -199,11 +258,37 @@ const selectedProductIds = ref([])
 const selectAll = ref(false)
 const currentCurrency = ref(null)
 
-// Computed
-const totalAmount = computed(() => {
-  return products.value
-    .filter(p => selectedProductIds.value.includes(p.id))
-    .reduce((sum, p) => sum + p.offer, 0)
+// Computed - Seçili ürünlerin toplamları
+const selectedProducts = computed(() => {
+  return products.value.filter(p => selectedProductIds.value.includes(p.id))
+})
+
+const totalOffer = computed(() => {
+  return selectedProducts.value.reduce((sum, p) => {
+    const offer = parseFloat(p.offer) || 0
+    return sum + offer
+  }, 0)
+})
+
+const totalPaid = computed(() => {
+  return selectedProducts.value.reduce((sum, p) => {
+    const paidAmount = parseFloat(p.paidAmount) || 0
+    return sum + paidAmount
+  }, 0)
+})
+
+const totalRemaining = computed(() => {
+  return totalOffer.value - totalPaid.value
+})
+
+// Ödeme durumu özeti
+const paymentSummary = computed(() => {
+  const selected = selectedProducts.value
+  return {
+    completed: selected.filter(p => p.isPayCompleted).length,
+    partial: selected.filter(p => !p.isPayCompleted && (p.paidAmount || 0) > 0).length,
+    unpaid: selected.filter(p => !p.isPayCompleted && (p.paidAmount || 0) === 0).length
+  }
 })
 
 // Methods
@@ -211,7 +296,13 @@ const formatCurrency = (amount, currency) => {
   return new Intl.NumberFormat('tr-TR', {
     style: 'currency',
     currency: currency || 'TRY',
-  }).format(amount)
+  }).format(amount || 0)
+}
+
+const getRemainingAmount = (product) => {
+  const offer = parseFloat(product.offer) || 0
+  const paidAmount = parseFloat(product.paidAmount) || 0
+  return Math.max(0, offer - paidAmount)
 }
 
 const toggleSelectAll = () => {
@@ -228,11 +319,11 @@ const loadProducts = async () => {
   loading.value = true
   try {
     const data = await fetchUnsoldProducts(props.customer.id)
-    products.value = data || [] 
+    products.value = data || []
 
-    currentCurrency.value = products.value[0].product.currency.code
-
-
+    if (products.value.length > 0) {
+      currentCurrency.value = products.value[0].product.currency?.code || 'TRY'
+    }
 
     // Auto-select all products by default
     selectedProductIds.value = products.value.map(p => p.id)
@@ -251,17 +342,14 @@ const handleConvertToSale = async () => {
   converting.value = true
   try {
     // Get selected product names for title
-    const selectedProducts = products.value.filter(p =>
-      selectedProductIds.value.includes(p.id)
-    )
-    const productNames = selectedProducts.map(p => p.product.name).join(', ')
+    const productNames = selectedProducts.value.map(p => p.product.name).join(', ')
 
     const saleData = {
       customerId: props.customer.id,
       customer2ProductIds: selectedProductIds.value,
       userId: authStore.user?.id,
       title: `Satış - ${productNames}`,
-      description: `${props.customer.name} ${props.customer.surname} için ${selectedProducts.length} ürün satışa çevrildi`
+      description: `${props.customer.name} ${props.customer.surname} için ${selectedProducts.value.length} ürün satışa çevrildi. Toplam: ${formatCurrency(totalOffer.value, currentCurrency.value)}, Alınan: ${formatCurrency(totalPaid.value, currentCurrency.value)}, Kalan: ${formatCurrency(totalRemaining.value, currentCurrency.value)}`
     }
 
     const result = await convertToSale(saleData)
@@ -286,12 +374,12 @@ watch(() => props.show, (newValue) => {
     products.value = []
     selectedProductIds.value = []
     selectAll.value = false
+    currentCurrency.value = null
   }
 })
 
 // Watch selected items to update selectAll checkbox
 watch(() => selectedProductIds.value.length, (newLength) => {
   selectAll.value = newLength === products.value.length && newLength > 0
-
 })
 </script>

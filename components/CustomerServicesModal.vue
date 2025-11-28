@@ -37,67 +37,186 @@
 
                 <div class="space-y-2">
                   <div v-for="(service, index) in existingServices" :key="service.id"
-                    class="flex items-center justify-between p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <div class="flex-1">
-                      <div class="flex gap-2 justify-between items-center">
-                        <div class="font-medium text-gray-900 dark:text-white">{{ service.productName || 'Ürün' }}</div>
-                        <span class="text-gray-500 dark:text-gray-400 ml-2">
-                          {{ formatPrice(service.price) }} {{ service.product.currency?.code || 'TL' }}
-                        </span>
-                      </div>
+                    class="p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
+                    <div class="flex items-start justify-between">
+                      <div class="flex-1">
+                        <div class="flex gap-2 justify-between items-center">
+                          <div class="font-medium text-gray-900 dark:text-white">{{ service.productName || 'Ürün' }}</div>
+                          <div class="flex items-center gap-2">
+                            <span class="text-gray-500 dark:text-gray-400">
+                              {{ formatPrice(service.offer) }} {{ service.product.currency?.code || 'TL' }}
+                            </span>
+                            <!-- Ödeme Durumu Badge -->
+                            <span v-if="service.isPayCompleted"
+                              class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                              <CheckCircleIcon class="w-3 h-3 mr-1" />
+                              Ödendi
+                            </span>
+                            <span v-else-if="parseFloat(service.paidAmount) > 0"
+                              class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                              <ClockIcon class="w-3 h-3 mr-1" />
+                              Kısmi Ödeme
+                            </span>
+                            <span v-else
+                              class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                              <XCircleIcon class="w-3 h-3 mr-1" />
+                              Ödenmedi
+                            </span>
+                          </div>
+                        </div>
 
-                      <div class="grid grid-cols-3 gap-2 mt-2">
-                        <div>
-                          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
-                            Fiyat
-                          </label>
-                          <input v-model.number="service.price" type="number" class="form-input text-sm"
-                            :readonly="isSaleStatus" :disabled="isSaleStatus" @input="calculateExistingOffer(index)" />
+                        <div class="grid grid-cols-4 gap-2 mt-2">
+                          <div>
+                            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                              Fiyat
+                            </label>
+                            <input v-model.number="service.price" type="number" class="form-input text-sm"
+                              :readonly="isSaleStatus" :disabled="isSaleStatus" @input="calculateExistingOffer(index)" />
+                          </div>
+                          <div>
+                            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                              Teklif
+                            </label>
+                            <input v-model.number="service.offer" type="number" class="form-input text-sm"
+                              :readonly="isSaleStatus" :disabled="isSaleStatus" @input="calculateExistingRemaining(index)" />
+                          </div>
+                          <div>
+                            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                              Alınan Tutar
+                            </label>
+                            <input v-model.number="service.paidAmount" type="number" min="0" class="form-input text-sm"
+                              :readonly="isSaleStatus || service.isPayCompleted" 
+                              :disabled="isSaleStatus || service.isPayCompleted" 
+                              @input="calculateExistingRemaining(index)" />
+                          </div>
+                          <div>
+                            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                              Kalan Para
+                            </label>
+                            <input :value="calculateRemainingAmount(service)" type="number" class="form-input text-sm bg-gray-100 dark:bg-gray-700" readonly />
+                          </div>
                         </div>
-                        <div>
-                          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
-                            İndirim
-                          </label>
-                          <input v-model.number="service.discount" min="0" type="number" class="form-input text-sm"
-                            :readonly="isSaleStatus" :disabled="isSaleStatus" @input="calculateExistingOffer(index)" />
+                        
+                        <!-- Ödeme İşlemleri -->
+                        <div class="mt-3 flex items-center justify-between">
+                          <!-- Ödeme Tamamla Butonu -->
+                          <button 
+                            v-if="!service.isPayCompleted"
+                            @click="openPaymentCompleteConfirm(service, index)"
+                            class="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium transition-colors"
+                            :class="calculateRemainingAmount(service) > 0 
+                              ? 'bg-green-600 hover:bg-green-700 text-white' 
+                              : 'bg-green-100 hover:bg-green-200 text-green-800 dark:bg-green-900 dark:hover:bg-green-800 dark:text-green-200'"
+                          >
+                            <BanknotesIcon class="w-4 h-4 mr-1.5" />
+                            <span v-if="calculateRemainingAmount(service) > 0">
+                              Kalan {{ formatPrice(calculateRemainingAmount(service)) }} {{ service.product.currency?.code || 'TL' }} Alındı
+                            </span>
+                            <span v-else>
+                              Ödemeyi Tamamla
+                            </span>
+                          </button>
+                          
+                          <!-- Ödeme Tamamlandı Bilgisi -->
+                          <div v-else class="inline-flex items-center text-sm text-green-600 dark:text-green-400">
+                            <CheckCircleIcon class="w-4 h-4 mr-1" />
+                            Ödeme tamamlandı
+                          </div>
+                          
+                          <!-- Silme Butonu -->
+                          <button @click="deleteExistingService(service.id)"
+                            class="ml-3 text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
+                            <TrashIcon class="h-5 w-5" />
+                          </button>
                         </div>
-                        <div>
-                          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
-                            Teklif
-                          </label>
-                          <input v-model.number="service.offer" type="number" class="form-input text-sm" readonly />
+
+                        <div v-if="service.note" class="text-sm text-gray-600 dark:text-gray-300 mt-2">
+                          Not: {{ service.note }}
                         </div>
-                      </div>
-                      <div v-if="service.note" class="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                        Not: {{ service.note }}
                       </div>
                     </div>
-                    <button v-if="!isSaleStatus" @click="deleteExistingService(service.id)"
-                      class="ml-3 text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
-                      <TrashIcon class="h-5 w-5" />
-                    </button>
                   </div>
                 </div>
 
-                <!-- Toplam -->
-                <div class="mt-4 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                <!-- Ödeme Tamamlama Onay Modalı -->
+                <div v-if="showPaymentConfirm" class="fixed inset-0 z-[60] overflow-y-auto">
+                  <div class="flex min-h-screen items-center justify-center px-4">
+                    <div class="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-80" @click="closePaymentConfirm"></div>
+                    <div class="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6">
+                      <div class="flex items-center justify-center w-12 h-12 mx-auto mb-4 rounded-full bg-green-100 dark:bg-green-900">
+                        <BanknotesIcon class="w-6 h-6 text-green-600 dark:text-green-400" />
+                      </div>
+                      <h3 class="text-lg font-semibold text-center text-gray-900 dark:text-white mb-2">
+                        Ödeme Tamamlama
+                      </h3>
+                      <p class="text-sm text-center text-gray-600 dark:text-gray-400 mb-4">
+                        <strong>{{ pendingPaymentService?.productName }}</strong> için ödemeyi tamamlamak istediğinize emin misiniz?
+                      </p>
+                      
+                      <!-- Ödeme Özeti -->
+                      <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 mb-4 space-y-2">
+                        <div class="flex justify-between text-sm">
+                          <span class="text-gray-600 dark:text-gray-400">Toplam Teklif:</span>
+                          <span class="font-medium text-gray-900 dark:text-white">
+                            {{ formatPrice(pendingPaymentService?.offer) }} {{ pendingPaymentService?.product?.currency?.code || 'TL' }}
+                          </span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                          <span class="text-gray-600 dark:text-gray-400">Önceki Alınan:</span>
+                          <span class="font-medium text-gray-900 dark:text-white">
+                            {{ formatPrice(pendingPaymentService?.paidAmount) }} {{ pendingPaymentService?.product?.currency?.code || 'TL' }}
+                          </span>
+                        </div>
+                        <div class="flex justify-between text-sm pt-2 border-t border-gray-200 dark:border-gray-600">
+                          <span class="text-gray-600 dark:text-gray-400">Şimdi Alınan:</span>
+                          <span class="font-semibold text-green-600 dark:text-green-400">
+                            {{ formatPrice(calculateRemainingAmount(pendingPaymentService)) }} {{ pendingPaymentService?.product?.currency?.code || 'TL' }}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div class="flex gap-3">
+                        <button @click="closePaymentConfirm"
+                          class="flex-1 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-600 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-500">
+                          İptal
+                        </button>
+                        <button @click="confirmPaymentComplete" :disabled="completingPayment"
+                          class="flex-1 px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 disabled:opacity-50">
+                          {{ completingPayment ? 'İşleniyor...' : 'Ödemeyi Tamamla' }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Mevcut Hizmetler Toplamı -->
+                <div class="mt-4 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg space-y-2">
                   <div class="flex justify-between items-center">
-                    <span class="font-medium text-gray-900 dark:text-white">Mevcut Toplam Teklif:</span>
+                    <span class="font-medium text-gray-900 dark:text-white">Toplam Teklif:</span>
                     <span class="text-lg font-bold text-gray-900 dark:text-white">
                       {{ formatPrice(totalOfferExisting) }} {{ selectedCurrency?.code || 'TL' }}
                     </span>
                   </div>
+                  <div class="flex justify-between items-center">
+                    <span class="font-medium text-gray-900 dark:text-white">Toplam Alınan:</span>
+                    <span class="text-lg font-bold text-green-600 dark:text-green-400">
+                      {{ formatPrice(totalPaidExisting) }} {{ selectedCurrency?.code || 'TL' }}
+                    </span>
+                  </div>
+                  <div class="flex justify-between items-center border-t border-gray-300 dark:border-gray-600 pt-2">
+                    <span class="font-medium text-gray-900 dark:text-white">Toplam Kalan:</span>
+                    <span class="text-lg font-bold" :class="totalRemainingExisting > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'">
+                      {{ formatPrice(totalRemainingExisting) }} {{ selectedCurrency?.code || 'TL' }}
+                    </span>
+                  </div>
                 </div>
-
               </div>
 
               <!-- Yeni Hizmet Ekleme -->
               <div v-if="!isSaleStatus" class="mb-6 p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <h4 class="text-md font-medium text-gray-900 dark:text-white mb-3">Yeni Hizmet Ekle</h4>
 
-
                 <div class="mb-4">
-
                   <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Para Birimi
                   </label>
@@ -107,7 +226,9 @@
                     </option>
                   </select>
 
-                  <div v-if="existingServices.length" class="block text-sm font-medium text-red-700 dark:text-red-300 mb-2 mt-2">Mevcut hizmet varken para birimi değişikliği yapılamaz</div>
+                  <div v-if="existingServices.length" class="block text-sm font-medium text-red-700 dark:text-red-300 mb-2 mt-2">
+                    Mevcut hizmet varken para birimi değişikliği yapılamaz
+                  </div>
                 </div>
 
                 <!-- Ürün Seçimi -->
@@ -140,7 +261,6 @@
 
                 <!-- Seçili Ürün Bilgileri -->
                 <div v-if="selectedProduct" class="mb-4 p-3 bg-gray-50 dark:bg-gray-700 rounded">
-
                   <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Bu ürünü eklemeden önce son bir kez gözden geçirin.
                   </label>
@@ -151,7 +271,7 @@
                       selectedProduct.currency?.code || 'TL' }}</span>
                   </div>
 
-                  <div class="grid grid-cols-3 gap-3">
+                  <div class="grid grid-cols-4 gap-3">
                     <div>
                       <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Fiyat
@@ -161,16 +281,23 @@
                     </div>
                     <div>
                       <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        İndirim
+                        Teklif
                       </label>
-                      <input v-model.number="newService.discount" type="number" class="form-input text-sm"
-                        @input="calculateOffer" />
+                      <input v-model.number="newService.offer" type="number" class="form-input text-sm"
+                        @input="calculateRemaining" />
                     </div>
                     <div>
                       <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Teklif
+                        Alınan Tutar
                       </label>
-                      <input v-model.number="newService.offer" type="number" class="form-input text-sm" readonly />
+                      <input v-model.number="newService.paidAmount" type="number" min="0" class="form-input text-sm"
+                        @input="calculateRemaining" />
+                    </div>
+                    <div>
+                      <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Kalan Para
+                      </label>
+                      <input :value="newService.remainingAmount" type="number" class="form-input text-sm bg-gray-100 dark:bg-gray-600" readonly />
                     </div>
                   </div>
 
@@ -204,8 +331,9 @@
                       <div class="font-medium text-gray-900 dark:text-white">{{ service.productName }}</div>
                       <div class="text-sm text-gray-500 dark:text-gray-400">
                         Fiyat: {{ formatPrice(service.price) }} {{ service.currency?.code || 'TL' }} |
-                        İndirim: {{ formatPrice(service.discount) }} {{ service.currency?.code || 'TL' }} |
-                        Teklif: {{ formatPrice(service.offer) }} {{ service.currency?.code || 'TL' }}
+                        Teklif: {{ formatPrice(service.offer) }} {{ service.currency?.code || 'TL' }} |
+                        Alınan: {{ formatPrice(service.paidAmount) }} {{ service.currency?.code || 'TL' }} |
+                        Kalan: {{ formatPrice(service.offer - service.paidAmount) }} {{ service.currency?.code || 'TL' }}
                       </div>
                       <div v-if="service.note" class="text-sm text-gray-600 dark:text-gray-300 mt-1">
                         Not: {{ service.note }}
@@ -218,12 +346,24 @@
                   </div>
                 </div>
 
-                <!-- Toplam -->
-                <div class="mt-4 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                <!-- Eklenecek Hizmetler Toplamı -->
+                <div class="mt-4 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg space-y-2">
                   <div class="flex justify-between items-center">
                     <span class="font-medium text-gray-900 dark:text-white">Toplam Teklif:</span>
                     <span class="text-lg font-bold text-gray-900 dark:text-white">
                       {{ formatPrice(totalOffer) }} {{ selectedCurrency?.code || 'TL' }}
+                    </span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span class="font-medium text-gray-900 dark:text-white">Toplam Alınan:</span>
+                    <span class="text-lg font-bold text-green-600 dark:text-green-400">
+                      {{ formatPrice(totalPaid) }} {{ selectedCurrency?.code || 'TL' }}
+                    </span>
+                  </div>
+                  <div class="flex justify-between items-center border-t border-gray-300 dark:border-gray-600 pt-2">
+                    <span class="font-medium text-gray-900 dark:text-white">Toplam Kalan:</span>
+                    <span class="text-lg font-bold" :class="totalRemaining > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'">
+                      {{ formatPrice(totalRemaining) }} {{ selectedCurrency?.code || 'TL' }}
                     </span>
                   </div>
                 </div>
@@ -248,7 +388,7 @@
 </template>
 
 <script setup>
-import { XMarkIcon, TrashIcon, ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
+import { XMarkIcon, TrashIcon, ExclamationTriangleIcon, CheckCircleIcon, ClockIcon, XCircleIcon, BanknotesIcon } from '@heroicons/vue/24/outline'
 
 const props = defineProps({
   show: {
@@ -265,6 +405,7 @@ const emit = defineEmits(['close', 'saved'])
 
 const api = useApi()
 const authStore = useAuthStore()
+
 // State
 const products = ref([])
 const productSearch = ref('')
@@ -279,10 +420,17 @@ const isSaleStatus = ref(false)
 const currencies = ref([])
 const selectedCurrency = ref(null)
 
+// Ödeme Tamamlama State
+const showPaymentConfirm = ref(false)
+const pendingPaymentService = ref(null)
+const pendingPaymentIndex = ref(null)
+const completingPayment = ref(false)
+
 const newService = ref({
   price: 0,
-  discount: 0,
+  paidAmount: 0,
   offer: 0,
+  remainingAmount: 0,
   note: ''
 })
 
@@ -296,13 +444,42 @@ const filteredProducts = computed(() => {
     .slice(0, 10)
 })
 
+// Yeni Hizmetler Toplamları
 const totalOffer = computed(() => {
-  return services.value.reduce((sum, service) => sum + (service.offer || 0), 0)
+  return services.value.reduce((sum, service) => {
+    const offer = parseFloat(service.offer) || 0
+    return sum + offer
+  }, 0)
 })
 
+const totalPaid = computed(() => {
+  return services.value.reduce((sum, service) => {
+    const paidAmount = parseFloat(service.paidAmount) || 0
+    return sum + paidAmount
+  }, 0)
+})
+
+const totalRemaining = computed(() => {
+  return totalOffer.value - totalPaid.value
+})
+
+// Mevcut Hizmetler Toplamları
 const totalOfferExisting = computed(() => {
-  return existingServices.value
-    .reduce((sum, service) => sum + (service.offer || 0), 0)
+  return existingServices.value.reduce((sum, service) => {
+    const offer = parseFloat(service.offer) || 0
+    return sum + offer
+  }, 0)
+})
+
+const totalPaidExisting = computed(() => {
+  return existingServices.value.reduce((sum, service) => {
+    const paidAmount = parseFloat(service.paidAmount) || 0
+    return sum + paidAmount
+  }, 0)
+})
+
+const totalRemainingExisting = computed(() => {
+  return totalOfferExisting.value - totalPaidExisting.value
 })
 
 // --- Para Birimlerini Çek ---
@@ -318,7 +495,7 @@ const fetchCurrencies = async () => {
 // Methods
 const searchProducts = async () => {
   try {
-    if(!selectedCurrency.value) {
+    if (!selectedCurrency.value) {
       products.value = []
       return
     }
@@ -333,41 +510,61 @@ const searchProducts = async () => {
 const selectProduct = (product) => {
   selectedProduct.value = product
   productSearch.value = product.name
-  showProductDropdown.value = false 
+  showProductDropdown.value = false
 
   // Set default price from product
   newService.value.price = product.price || 0
-  newService.value.discount = 0
-  calculateOffer()
+  newService.value.offer = product.price || 0
+  newService.value.paidAmount = 0
+  calculateRemaining()
 }
 
 const calculateOffer = () => {
-  const price = newService.value.price || 0
-  const discount = newService.value.discount || 0
-  newService.value.offer = Math.max(0, price - discount)
+  // Fiyat değiştiğinde teklifi de güncelle (eğer teklif fiyattan büyükse)
+  if (newService.value.offer < newService.value.price) {
+    newService.value.offer = newService.value.price
+  }
+  calculateRemaining()
+}
+
+const calculateRemaining = () => {
+  const offer = newService.value.offer || 0
+  const paidAmount = newService.value.paidAmount || 0
+  newService.value.remainingAmount = Math.max(0, offer - paidAmount)
+}
+
+const calculateRemainingAmount = (service) => {
+  const offer = parseFloat(service.offer) || 0
+  const paidAmount = parseFloat(service.paidAmount) || 0
+  return Math.max(0, offer - paidAmount)
 }
 
 const addService = () => {
   if (!selectedProduct.value) return
+
+  const paidAmount = newService.value.paidAmount || 0
+  const offer = newService.value.offer || 0
+  const isPayCompleted = paidAmount >= offer && offer > 0
 
   services.value.push({
     product: selectedProduct.value.id,
     currency: selectedProduct.value.currency,
     productName: selectedProduct.value.name,
     price: newService.value.price,
-    discount: newService.value.discount,
-    offer: newService.value.offer,
+    paidAmount: paidAmount,
+    offer: offer,
+    isPayCompleted: isPayCompleted,
     note: newService.value.note
   })
-
 
   // Reset form
   selectedProduct.value = null
   productSearch.value = ''
   newService.value = {
     price: 0,
-    discount: 0,
+    paidAmount: 0,
     offer: 0,
+    remainingAmount: 0,
     note: ''
   }
 }
@@ -382,8 +579,9 @@ const cancelProductSelection = () => {
   services.value = []
   newService.value = {
     price: 0,
-    discount: 0,
+    paidAmount: 0,
     offer: 0,
+    remainingAmount: 0,
     note: ''
   }
 }
@@ -395,11 +593,12 @@ const saveServices = async () => {
   try {
     const payload = {
       items: services.value.map(service => ({
-        product: service.product, 
+        product: service.product,
         customer: props.customer.id,
         price: service.price,
-        discount: service.discount,
+        paidAmount: service.paidAmount,
         offer: service.offer,
+        isPayCompleted: service.isPayCompleted,
         note: service.note || undefined,
         user: authStore.user?.id,
       }))
@@ -427,16 +626,19 @@ const close = () => {
   productSearch.value = ''
   newService.value = {
     price: 0,
-    discount: 0,
+    paidAmount: 0,
     offer: 0,
+    remainingAmount: 0,
     note: ''
   }
   emit('close')
 }
 
 const checkCustomerStatus = async () => {
-  // status alanını kontrol et (backend'den status: 3 şeklinde geliyor)
   const statusId = props.customer?.status || props.customer?.statusId
+
+ 
+  
 
   if (!props.customer || !statusId) {
     isSaleStatus.value = false
@@ -444,7 +646,6 @@ const checkCustomerStatus = async () => {
   }
 
   try {
-    // Direkt API çağrısı yapalım
     const status = await api(`/statuses/${statusId}`)
 
     if (!status) {
@@ -453,8 +654,6 @@ const checkCustomerStatus = async () => {
     }
 
     customerStatus.value = status
-
-    // Backend camelCase olarak isSale döndürüyor
     isSaleStatus.value = status?.isSale === true
   } catch (error) {
     console.error('Error fetching customer status:', error)
@@ -467,32 +666,24 @@ const loadExistingServices = async () => {
     existingServices.value = []
     return
   }
- 
- 
 
   try {
-    // Use the correct endpoint format: /customer2product/customer/{customerId}
     const response = await api(`/customer2product/customer/${props.customer.id}`)
     const customerServices = Array.isArray(response) ? response : response.data || []
- 
 
-    // Map services with product names
     existingServices.value = await Promise.all(customerServices.map(async (service) => {
-
-      
       selectedCurrency.value = service.product?.currency || null;
 
-      // Check if product info is already included (nested object)
       if (service.product && typeof service.product === 'object') {
         return {
           ...service,
           productId: service.product.id,
-          productName: service.product.name || 'Ürün'
+          productName: service.product.name || 'Ürün',
+          paidAmount: service.paidAmount || 0,
+          isPayCompleted: service.isPayCompleted || false
         }
       }
- 
-  
-      // Otherwise try to fetch product info
+
       const productId = service.productId || service.product
       if (productId) {
         try {
@@ -500,25 +691,28 @@ const loadExistingServices = async () => {
           return {
             ...service,
             productId: productId,
-            productName: productResponse.name || 'Ürün'
+            productName: productResponse.name || 'Ürün',
+            paidAmount: service.paidAmount || 0,
+            isPayCompleted: service.isPayCompleted || false
           }
         } catch (error) {
           return {
             ...service,
             productId: productId,
-            productName: 'Ürün'
+            productName: 'Ürün',
+            paidAmount: service.paidAmount || 0,
+            isPayCompleted: service.isPayCompleted || false
           }
         }
       }
 
       return {
         ...service,
-        productName: 'Ürün'
+        productName: 'Ürün',
+        paidAmount: service.paidAmount || 0,
+        isPayCompleted: service.isPayCompleted || false
       }
     }))
-
-
-
   } catch (error) {
     console.error('Error loading existing services:', error)
     existingServices.value = []
@@ -526,11 +720,78 @@ const loadExistingServices = async () => {
 }
 
 const calculateExistingOffer = (index) => {
+  // Fiyat değiştiğinde teklifi kontrol et
+  const service = existingServices.value[index]
+  if (service && service.offer < service.price) {
+    service.offer = service.price
+  }
+  calculateExistingRemaining(index)
+}
+
+const calculateExistingRemaining = (index) => {
   const service = existingServices.value[index]
   if (service) {
-    const price = service.price || 0
-    const discount = service.discount || 0
-    service.offer = Math.max(0, price - discount)
+    // Kalan tutarı hesapla (readonly field için)
+    // isPayCompleted değilse ve paidAmount >= offer olursa otomatik işaretle
+    if (!service.isPayCompleted && service.paidAmount >= service.offer && service.offer > 0) {
+      service.isPayCompleted = true
+    }
+  }
+}
+
+const handlePaymentCompleteChange = (service, index) => {
+  if (service.isPayCompleted) {
+    // Ödeme tamamlandı olarak işaretlendiğinde, paidAmount'u offer'a eşitle
+    service.paidAmount = parseFloat(service.offer) || 0
+  }
+}
+
+// Ödeme Tamamlama Modalı Fonksiyonları
+const openPaymentCompleteConfirm = (service, index) => {
+  pendingPaymentService.value = service
+  pendingPaymentIndex.value = index
+  showPaymentConfirm.value = true
+}
+
+const closePaymentConfirm = () => {
+  showPaymentConfirm.value = false
+  pendingPaymentService.value = null
+  pendingPaymentIndex.value = null
+}
+
+const confirmPaymentComplete = async () => {
+  if (!pendingPaymentService.value) return
+
+  completingPayment.value = true
+  try {
+    const service = pendingPaymentService.value
+    const offer = parseFloat(service.offer) || 0
+    
+    // API'ye güncelleme gönder
+    await api(`/customer2product/${service.id}`, {
+      method: 'PUT',
+      body: {
+        product: service.productId || service.product?.id || service.product,
+        customer: props.customer.id,
+        price: parseFloat(service.price) || 0,
+        paidAmount: offer, // Teklif tutarı kadar ödeme alındı
+        offer: offer,
+        isPayCompleted: true,
+        note: service.note || undefined
+      }
+    })
+
+    // Local state güncelle
+    service.paidAmount = offer
+    service.isPayCompleted = true
+
+    closePaymentConfirm()
+    alert('Ödeme başarıyla tamamlandı!')
+  } catch (error) {
+    console.error('Error completing payment:', error)
+    alert('Ödeme tamamlanırken bir hata oluştu.')
+  } finally {
+    completingPayment.value = false
   }
 }
 
@@ -539,7 +800,6 @@ const updateExistingServices = async () => {
 
   updatingExisting.value = true
   try {
-    // Update each service individually
     const updatePromises = existingServices.value.map(service =>
       api(`/customer2product/${service.id}`, {
         method: 'PUT',
@@ -547,8 +807,9 @@ const updateExistingServices = async () => {
           product: service.productId || service.product?.id || service.product,
           customer: props.customer.id,
           price: service.price || 0,
-          discount: service.discount || 0,
+          paidAmount: service.paidAmount || 0,
           offer: service.offer || 0,
+          isPayCompleted: service.isPayCompleted || false,
           note: service.note || undefined
         }
       })
@@ -572,7 +833,6 @@ const deleteExistingService = async (serviceId) => {
       method: 'DELETE'
     })
 
-    // Remove from list
     existingServices.value = existingServices.value.filter(s => s.id !== serviceId)
   } catch (error) {
     console.error('Error deleting service:', error)
@@ -595,7 +855,6 @@ onMounted(() => {
 
 // Watch for customer change to load their services
 watch(() => props.customer, async (newCustomer, oldCustomer) => {
-  // Reset existing services when customer changes
   if (newCustomer?.id !== oldCustomer?.id) {
     existingServices.value = []
     isSaleStatus.value = false
@@ -611,7 +870,6 @@ watch(() => props.customer, async (newCustomer, oldCustomer) => {
 // Also load when modal opens
 watch(() => props.show, async (isOpen) => {
   if (isOpen && props.customer) {
-    // Reset services when modal opens
     services.value = []
     existingServices.value = []
     await checkCustomerStatus()
@@ -620,11 +878,10 @@ watch(() => props.show, async (isOpen) => {
 })
 
 watch(selectedCurrency, async (newCurrency, oldCurrency) => {
-  if(newCurrency?.id === oldCurrency?.id) return
+  if (newCurrency?.id === oldCurrency?.id) return
   cancelProductSelection()
   searchProducts()
 })
-
 
 // Close dropdown when clicking outside
 onMounted(() => {
