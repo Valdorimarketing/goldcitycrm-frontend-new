@@ -144,9 +144,9 @@
     </div>
 
     <!-- Main Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
       <!-- Toplam Satış -->
-      <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 p-6 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
+      <!-- <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 p-6 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
         <div class="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-white/10 blur-2xl group-hover:bg-white/20 transition-all duration-500"></div>
         <div class="relative">
           <div class="flex items-center justify-between mb-4">
@@ -166,7 +166,7 @@
             <span>{{ getStatsByCurrency(activeCurrency).salesCount }} satış</span>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- Kasaya Giren -->
       <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 p-6 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
