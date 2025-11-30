@@ -44,6 +44,105 @@
       </div>
     </div>
 
+    <!-- Grand Total Card (Genel Toplam) -->
+    <div class="mb-8">
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-800 via-slate-900 to-slate-800 p-6 shadow-2xl border border-slate-700">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-10">
+          <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.4\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+        </div>
+        
+        <div class="relative">
+          <!-- Header -->
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+              <div class="p-3 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl shadow-lg">
+                <GlobeAltIcon class="h-7 w-7 text-white" />
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-white">Genel Toplam (USD)</h3>
+                <p class="text-sm text-slate-400">Tüm para birimleri Dolar'a çevrildi</p>
+              </div>
+            </div>
+            
+            <!-- Exchange Rate Info -->
+            <div class="text-right">
+              <div class="flex items-center gap-2 text-xs text-slate-400">
+                <ArrowPathIcon class="h-4 w-4" :class="{ 'animate-spin': loadingRates }" />
+                <span>Kurlar: {{ formatRateDate(ratesLastUpdated) }}</span>
+              </div>
+              <button @click="refreshExchangeRates" :disabled="loadingRates"
+                class="mt-1 text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                Kurları Güncelle
+              </button>
+            </div>
+          </div>
+
+          <!-- Grand Total Stats -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <!-- Toplam Satış (USD) -->
+            <div class="bg-slate-800/50 rounded-xl p-5 backdrop-blur border border-slate-700/50">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="p-2 bg-blue-500/20 rounded-lg">
+                  <BanknotesIcon class="h-5 w-5 text-blue-400" />
+                </div>
+                <span class="text-sm text-slate-400">Toplam Satış</span>
+              </div>
+              <p class="text-2xl font-bold text-white">
+                {{ formatMoney(grandTotal.totalSalesInUsd, 'USD') }}
+              </p>
+            </div>
+
+            <!-- Kasaya Giren (USD) -->
+            <div class="bg-slate-800/50 rounded-xl p-5 backdrop-blur border border-slate-700/50">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="p-2 bg-emerald-500/20 rounded-lg">
+                  <WalletIcon class="h-5 w-5 text-emerald-400" />
+                </div>
+                <span class="text-sm text-slate-400">Kasaya Giren</span>
+              </div>
+              <p class="text-2xl font-bold text-emerald-400">
+                {{ formatMoney(grandTotal.totalPaidInUsd, 'USD') }}
+              </p>
+              <div class="mt-2 w-full bg-slate-700 rounded-full h-1.5">
+                <div class="bg-emerald-500 h-1.5 rounded-full transition-all duration-1000"
+                  :style="{ width: grandTotalPaidPercentage + '%' }"></div>
+              </div>
+            </div>
+
+            <!-- Beklenen (USD) -->
+            <div class="bg-slate-800/50 rounded-xl p-5 backdrop-blur border border-slate-700/50">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="p-2 bg-amber-500/20 rounded-lg">
+                  <ClockIcon class="h-5 w-5 text-amber-400" />
+                </div>
+                <span class="text-sm text-slate-400">Beklenen Ödeme</span>
+              </div>
+              <p class="text-2xl font-bold text-amber-400">
+                {{ formatMoney(grandTotal.totalRemainingInUsd, 'USD') }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Currency Breakdown -->
+          <div class="bg-slate-800/30 rounded-xl p-4 border border-slate-700/50">
+            <p class="text-xs text-slate-500 mb-3 font-medium uppercase tracking-wider">Para Birimi Dökümü</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div v-for="item in grandTotal.breakdown" :key="item.currency"
+                class="bg-slate-700/30 rounded-lg p-3 hover:bg-slate-700/50 transition-colors">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm font-medium text-white">{{ getCurrencyEmoji(item.currency) }} {{ item.currency }}</span>
+                  <span class="text-xs text-slate-400">1 {{ item.currency }} = ${{ item.rate?.toFixed(4) }}</span>
+                </div>
+                <p class="text-sm text-slate-300">{{ formatMoney(item.totalSales, item.currency) }}</p>
+                <p class="text-xs text-slate-500">= {{ formatMoney(item.totalSalesInUsd, 'USD') }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Main Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
       <!-- Toplam Satış -->
@@ -396,7 +495,7 @@
                 </span>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
-                <span v-if="sale.isPayCompleted" 
+                <span v-if="sale.isFullyPaid" 
                   class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300">
                   <CheckCircleIcon class="w-3.5 h-3.5 mr-1" />
                   Tamamlandı
@@ -522,13 +621,12 @@ import {
   EyeIcon,
   ArrowPathIcon,
   FunnelIcon,
-  MagnifyingGlassIcon
+  MagnifyingGlassIcon,
+  GlobeAltIcon
 } from '@heroicons/vue/24/outline'
 import { useApi } from '~/composables/useApi'
 
 // Animated Counter Component
-
-// AnimatedCounter Component
 const AnimatedCounter = {
   props: ['value', 'currency'],
   setup(props) {
@@ -572,7 +670,6 @@ const AnimatedCounter = {
   }
 }
 
-
 const api = useApi()
 const { userId, isAdmin } = usePermissions()
 
@@ -583,9 +680,27 @@ const searchTerm = ref('')
 const startDate = ref('')
 const endDate = ref('')
 const paymentFilter = ref('all')
-const activeCurrency = ref('TRY')
+const activeCurrency = ref('USD')  // Varsayılan USD
 const showDetailModal = ref(false)
 const selectedSale = ref(null)
+
+// Exchange Rates State
+const loadingRates = ref(false)
+const exchangeRates = ref({
+  USD: 1,
+  EUR: 1.09,
+  TRY: 0.029,
+  GBP: 1.27
+})
+const ratesLastUpdated = ref(null)
+
+// Grand Total State
+const grandTotal = ref({
+  totalSalesInUsd: 0,
+  totalPaidInUsd: 0,
+  totalRemainingInUsd: 0,
+  breakdown: []
+})
 
 const pagination = ref({
   total: 0,
@@ -594,21 +709,66 @@ const pagination = ref({
   totalPages: 0
 })
 
-// Available currencies
+// Available currencies - USD öncelikli
 const availableCurrencies = computed(() => {
-  const currencies = new Set(['TRY'])
+  const currencies = new Set(['USD'])  // USD varsayılan olarak ekle
   salesData.value.forEach(sale => {
     if (sale.currency) currencies.add(sale.currency)
   })
-  return Array.from(currencies)
+  // USD'yi başa al
+  const arr = Array.from(currencies)
+  const usdIndex = arr.indexOf('USD')
+  if (usdIndex > 0) {
+    arr.splice(usdIndex, 1)
+    arr.unshift('USD')
+  }
+  return arr
+})
+
+// Grand Total Paid Percentage
+const grandTotalPaidPercentage = computed(() => {
+  if (grandTotal.value.totalSalesInUsd === 0) return 0
+  return (grandTotal.value.totalPaidInUsd / grandTotal.value.totalSalesInUsd) * 100
 })
 
 // Load data on mount
 onMounted(async () => {
+  await loadExchangeRates()
   await loadSalesData()
 })
 
-// Fetch sales data
+/**
+ * Para birimi belirleme fonksiyonu
+ * Öncelik sırası:
+ * 1. salesProduct.currency.code (eğer varsa)
+ * 2. salesProduct.productDetails.currency.code (ürünün varsayılan para birimi)
+ * 3. 'TRY' (fallback)
+ */
+const getCurrencyFromProduct = (salesProduct) => {
+  // Önce salesProduct'ın kendi currency'sine bak
+  if (salesProduct.currency?.code) {
+    return salesProduct.currency.code
+  }
+  // Sonra spCurrency'e bak (join ile gelen)
+  if (salesProduct.spCurrency?.code) {
+    return salesProduct.spCurrency.code
+  }
+  // Sonra ürünün currency'sine bak
+  if (salesProduct.productDetails?.currency?.code) {
+    return salesProduct.productDetails.currency.code
+  }
+  // Son çare TRY
+  return 'TRY'
+}
+
+/**
+ * Satış verilerini API'den yükler ve işler
+ * 
+ * ÖNEMLİ: isPayCompleted kontrolü salesProducts seviyesinde yapılmalı
+ * - Tüm ürünlerin isPayCompleted=true ise satış tamamlanmış sayılır
+ * - En az bir ürün paidAmount > 0 ve isPayCompleted=false ise kısmi ödeme
+ * - Hiçbir ürün için ödeme alınmamışsa ödenmedi
+ */
 const loadSalesData = async () => {
   loading.value = true
   try {
@@ -626,11 +786,30 @@ const loadSalesData = async () => {
     if (response?.data) {
       salesData.value = response.data.map(sale => {
         const products = sale.salesProducts || []
-        const totalAmount = products.reduce((sum, p) => sum + (parseFloat(p.totalPrice) || parseFloat(p.offer) || 0), 0)
-        const paidAmount = products.reduce((sum, p) => sum + (parseFloat(p.paidAmount) || 0), 0)
+        
+        // Her ürün için değerleri hesapla
+        // totalPrice = satış tutarı (offer değeri)
+        // paidAmount = alınan tutar
+        const totalAmount = products.reduce((sum, p) => {
+          const price = parseFloat(p.totalPrice) || 0
+          return sum + price
+        }, 0)
+        
+        const paidAmount = products.reduce((sum, p) => {
+          const paid = parseFloat(p.paidAmount) || 0
+          return sum + paid
+        }, 0)
+        
         const remainingAmount = totalAmount - paidAmount
-        const isPayCompleted = products.every(p => p.isPayCompleted) && products.length > 0
-        const currency = products[0]?.currency?.code || products[0]?.productDetails?.currency?.code || 'TRY'
+        
+        // isFullyPaid: TÜM ürünlerin isPayCompleted=true olması gerekir
+        // Eğer hiç ürün yoksa tamamlanmamış sayılır
+        const isFullyPaid = products.length > 0 && products.every(p => p.isPayCompleted === true)
+        
+        // Para birimi: İlk ürünün para birimini al
+        const currency = products.length > 0 
+          ? getCurrencyFromProduct(products[0])
+          : 'TRY'
 
         return {
           id: sale.id,
@@ -641,11 +820,11 @@ const loadSalesData = async () => {
           totalAmount,
           paidAmount,
           remainingAmount,
-          isPayCompleted,
+          isFullyPaid, // isPayCompleted yerine isFullyPaid kullanıyoruz
           currency,
           description: sale.title || '-',
           date: sale.createdAt || new Date().toISOString(),
-          products
+          products // Detay modal için orijinal ürünleri tut
         }
       })
 
@@ -662,6 +841,9 @@ const loadSalesData = async () => {
       if (availableCurrencies.value.length > 0 && !availableCurrencies.value.includes(activeCurrency.value)) {
         activeCurrency.value = availableCurrencies.value[0]
       }
+
+      // Grand Total hesapla
+      calculateGrandTotal()
     }
   } catch (error) {
     console.error('Error loading sales data:', error)
@@ -671,16 +853,130 @@ const loadSalesData = async () => {
   }
 }
 
-// Get stats by currency
+// =====================================================
+// EXCHANGE RATE FONKSİYONLARI
+// =====================================================
+
+/**
+ * Döviz kurlarını backend'den yükler
+ */
+const loadExchangeRates = async () => {
+  loadingRates.value = true
+  try {
+    const response = await api('/exchange-rates')
+    if (response?.rates) {
+      exchangeRates.value = response.rates
+      ratesLastUpdated.value = response.lastUpdated ? new Date(response.lastUpdated) : new Date()
+    }
+  } catch (error) {
+    console.error('Error loading exchange rates:', error)
+    // Fallback değerler zaten tanımlı
+  } finally {
+    loadingRates.value = false
+  }
+}
+
+/**
+ * Döviz kurlarını manuel olarak yeniler
+ */
+const refreshExchangeRates = async () => {
+  loadingRates.value = true
+  try {
+    const response = await api('/exchange-rates/refresh', { method: 'POST' })
+    if (response?.data?.rates) {
+      exchangeRates.value = response.data.rates
+      ratesLastUpdated.value = response.data.lastUpdated ? new Date(response.data.lastUpdated) : new Date()
+    }
+    // Grand Total'ı yeniden hesapla
+    calculateGrandTotal()
+  } catch (error) {
+    console.error('Error refreshing exchange rates:', error)
+  } finally {
+    loadingRates.value = false
+  }
+}
+
+/**
+ * Genel toplamı hesaplar (Tüm para birimlerini USD'ye çevirir)
+ */
+const calculateGrandTotal = () => {
+  const rates = exchangeRates.value
+  let totalSalesInUsd = 0
+  let totalPaidInUsd = 0
+  let totalRemainingInUsd = 0
+  const breakdown = []
+
+  // Her para birimi için hesapla
+  for (const currency of availableCurrencies.value) {
+    const stats = getStatsByCurrency(currency)
+    const rate = rates[currency] || 1
+
+    const salesInUsd = stats.totalSales * rate
+    const paidInUsd = stats.totalPaid * rate
+    const remainingInUsd = stats.totalRemaining * rate
+
+    totalSalesInUsd += salesInUsd
+    totalPaidInUsd += paidInUsd
+    totalRemainingInUsd += remainingInUsd
+
+    breakdown.push({
+      currency,
+      totalSales: stats.totalSales,
+      totalPaid: stats.totalPaid,
+      totalRemaining: stats.totalRemaining,
+      rate,
+      totalSalesInUsd: salesInUsd,
+      totalPaidInUsd: paidInUsd,
+      totalRemainingInUsd: remainingInUsd
+    })
+  }
+
+  grandTotal.value = {
+    totalSalesInUsd,
+    totalPaidInUsd,
+    totalRemainingInUsd,
+    breakdown
+  }
+}
+
+/**
+ * Kur güncelleme tarihini formatlar
+ */
+const formatRateDate = (date) => {
+  if (!date) return 'Bilinmiyor'
+  const d = new Date(date)
+  return d.toLocaleDateString('tr-TR', {
+    day: '2-digit',
+    month: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+}
+
+/**
+ * Para birimine göre istatistikleri hesaplar
+ * 
+ * HESAPLAMA KURALLARI:
+ * - totalSales: Seçilen para birimindeki tüm satışların toplam tutarı
+ * - totalPaid: Kasaya giren para (paidAmount toplamı)
+ * - totalRemaining: Beklenen ödeme (totalSales - totalPaid)
+ * - completedCount: Tüm ürünleri tamamlanmış satış sayısı
+ * - partialCount: En az bir ödeme alınmış ama tamamlanmamış satış sayısı
+ * - unpaidCount: Hiç ödeme alınmamış satış sayısı
+ */
 const getStatsByCurrency = (currency) => {
   const sales = salesData.value.filter(s => s.currency === currency)
+  
+  // Toplam tutarlar
   const totalSales = sales.reduce((sum, s) => sum + s.totalAmount, 0)
   const totalPaid = sales.reduce((sum, s) => sum + s.paidAmount, 0)
-  const totalRemaining = sales.reduce((sum, s) => sum + s.remainingAmount, 0)
+  const totalRemaining = totalSales - totalPaid
   
-  const completedCount = sales.filter(s => s.isPayCompleted).length
-  const partialCount = sales.filter(s => !s.isPayCompleted && s.paidAmount > 0).length
-  const unpaidCount = sales.filter(s => !s.isPayCompleted && s.paidAmount === 0).length
+  // Durum sayıları
+  const completedCount = sales.filter(s => s.isFullyPaid).length
+  const partialCount = sales.filter(s => !s.isFullyPaid && s.paidAmount > 0).length
+  const unpaidCount = sales.filter(s => !s.isFullyPaid && s.paidAmount === 0).length
+  
   const salesCount = sales.length
   const pendingCount = partialCount + unpaidCount
 
@@ -700,7 +996,9 @@ const getStatsByCurrency = (currency) => {
   }
 }
 
-// Get monthly stats
+/**
+ * Bu ayki istatistikleri hesaplar
+ */
 const getMonthlyStats = (currency) => {
   const now = new Date()
   const sales = salesData.value.filter(s => {
@@ -724,7 +1022,10 @@ const currentMonthTitle = computed(() => {
   return `${now.getFullYear()} ${monthName.charAt(0).toUpperCase() + monthName.slice(1)}`
 })
 
-// Filtered sales
+/**
+ * Filtrelenmiş satışlar
+ * Sıralama: Tarih (yeniden eskiye)
+ */
 const filteredSales = computed(() => {
   let filtered = salesData.value
 
@@ -759,11 +1060,12 @@ const filteredSales = computed(() => {
   }
 
   // Payment status filter
+  // isFullyPaid kullanıyoruz (tüm ürünler için isPayCompleted kontrolü)
   if (paymentFilter.value !== 'all') {
     filtered = filtered.filter(sale => {
-      if (paymentFilter.value === 'completed') return sale.isPayCompleted
-      if (paymentFilter.value === 'partial') return !sale.isPayCompleted && sale.paidAmount > 0
-      if (paymentFilter.value === 'unpaid') return !sale.isPayCompleted && sale.paidAmount === 0
+      if (paymentFilter.value === 'completed') return sale.isFullyPaid
+      if (paymentFilter.value === 'partial') return !sale.isFullyPaid && sale.paidAmount > 0
+      if (paymentFilter.value === 'unpaid') return !sale.isFullyPaid && sale.paidAmount === 0
       return true
     })
   }
