@@ -130,6 +130,17 @@
 
 
           <td class="table-cell" v-if="isAdmin">{{ customer.source || '-' }}</td>
+          <td class="table-cell">
+            <template v-if="!customer.phone">-</template>
+            <template v-else-if="isAdmin">{{ customer.phone }}</template>
+            <template v-else>
+              <span class="inline-flex items-center">
+                <span>{{ customer.phone.substring(0, 5) }}</span>
+                <span class="blur-[3px] select-none pointer-events-none" aria-hidden="true">{{
+                  maskPhone(customer.phone.substring(5)) }}</span>
+              </span>
+            </template>
+          </td>
           <td class="table-cell">{{ customer.relatedTransaction || '-' }}</td>
           <td class="table-cell">{{ customer.patient || '-' }}</td>
           <td class="table-cell">{{ customer.checkup_package || '-' }}</td>
@@ -143,7 +154,8 @@
                 <div v-else
                   class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
                   <span class="text-sm font-medium text-indigo-600 dark:text-indigo-300">
-                    {{ customer.relevantUserData?.name ? customer.relevantUserData?.name.charAt(0).toUpperCase() : 'A' }}
+                    {{ customer.relevantUserData?.name ? customer.relevantUserData?.name.charAt(0).toUpperCase() : 'A'
+                    }}
                   </span>
                 </div>
                 <div class="relative flex flex-col">
@@ -158,7 +170,7 @@
               </div>
             </NuxtLink>
           </td>
-         
+
           <td class="table-cell">{{ formatDate(customer.createdAt) }}</td>
           <td class="table-cell">{{ formatDate(customer.updatesAt) }}</td>
 
@@ -215,8 +227,12 @@ const emit = defineEmits([
   'show-files'
 ])
 
-
-
+const maskPhone = (str) => {
+  if (!str) return ''
+  // Gerçek rakamlar yerine aynı uzunlukta rastgele rakamlar döndür
+  return str.replace(/[0-9]/g, () => Math.floor(Math.random() * 10).toString())
+            .replace(/[^0-9\s\-\+\(\)]/g, '•')
+}
 // Sıralama
 const sortColumn = ref('')
 const sortDirection = ref('asc')
@@ -224,6 +240,7 @@ const columns = computed(() => [
   { label: 'İsim', key: 'name', isVisible: props.isAdmin || props.isUser },
   { label: 'Durum', key: 'statusData', isVisible: props.isAdmin || props.isUser },
   { label: 'Kaynak', key: 'source', isVisible: props.isAdmin },
+  { label: 'Telefon', key: 'phone', isVisible: props.isAdmin || props.isUser },
   { label: 'İlgilenilen Konu', key: 'relatedTransaction', isVisible: props.isAdmin || props.isUser },
   { label: 'Hastalık', key: 'patient', isVisible: props.isAdmin || props.isUser },
   { label: 'Checkup Paketi', key: 'checkup_package', isVisible: props.isAdmin || props.isUser },

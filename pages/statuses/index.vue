@@ -59,6 +59,9 @@
             <thead class="bg-gray-50 dark:bg-gray-700">
               <tr>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  #
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   Sıra
                 </th>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -81,6 +84,9 @@
                 :key="status.id"
                 class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                  {{ status.id }}
+                </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
                   {{ status.order }}
                 </td>

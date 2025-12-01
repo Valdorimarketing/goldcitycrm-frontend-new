@@ -148,6 +148,8 @@ import {
   FlagIcon,
   ChartBarSquareIcon,
   CurrencyDollarIcon,
+  ClipboardDocumentListIcon,
+  DocumentTextIcon,
 } from '@heroicons/vue/24/outline'
 
 const authStore = useAuthStore()
@@ -189,6 +191,7 @@ const allNavigationItems = [
   },
   // Doktor Dönüşü - Tek menü olarak (alt menüsüz)
   { name: 'Doktor Dönüşü', href: '/doctor-review', icon: UserGroupIcon },
+  { name: 'Proforma', href: '/proforma', icon: DocumentTextIcon },
   // Fiyatlandırmalar - Tek menü olarak (alt menüsüz)
   { name: 'Fiyatlandırmalar', href: '/pricing', icon: CurrencyDollarIcon },
   { name: 'Satışlar', href: '/sales', icon: ShoppingBagIcon },
