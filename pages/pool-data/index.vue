@@ -19,6 +19,10 @@
         </p>
       </div>
       <div class="mt-4 sm:mt-0 flex gap-3">
+        <NuxtLink to="/whatconverts" class="btn-secondary flex items-center">
+          <PresentationChartLineIcon class="h-5 w-5 mr-2" />
+          WhatConverts
+        </NuxtLink>
         <button @click="reFreshList()" class="btn-secondary">
           Yenile
         </button>
@@ -408,7 +412,8 @@ import {
   TrashIcon,
   FolderIcon,
   XCircleIcon,
-  EllipsisHorizontalIcon
+  EllipsisHorizontalIcon,
+  PresentationChartLineIcon
 } from '@heroicons/vue/24/outline'
 
 import { useAuthStore } from '~/stores/auth'
