@@ -201,9 +201,18 @@
               <td class="table-cell">
                 <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.email || '-' }}</div>
               </td>
-              <td class="table-cell" v-if="isAdmin">
-                <div class="text-sm text-gray-900 dark:text-gray-100">{{ customer.phone || '-' }}</div>
-              </td>
+           
+                <td class="table-cell">
+                  <template v-if="!customer.phone">-</template>
+                  <template v-else-if="isAdmin">{{ customer.phone }}</template>
+                  <template v-else>
+                    <span class="inline-flex items-center">
+                      <span>{{ customer.phone.substring(0, 5) }}</span>
+                      <span class="blur-[3px] select-none pointer-events-none" aria-hidden="true">{{
+                        maskPhone(customer.phone.substring(5)) }}</span>
+                    </span>
+                  </template>
+                </td>
               <td class="table-cell">
                 <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
                   :class="getStatusClass(customer.status)">
@@ -539,6 +548,13 @@ const toggleShow = (id) => {
   } else {
     showStates.value.activeId = id
   }
+}
+
+const maskPhone = (str) => {
+  if (!str) return ''
+  // Gerçek rakamlar yerine aynı uzunlukta rastgele rakamlar döndür
+  return str.replace(/[0-9]/g, () => Math.floor(Math.random() * 10).toString())
+            .replace(/[^0-9\s\-\+\(\)]/g, '•')
 }
 
 // =====================================================

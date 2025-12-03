@@ -80,12 +80,22 @@
                     {{ customerStatus.name }}
                   </span>
                 </div>
+                <div v-if="customer.remindingDate" class="flex flex-col items-center justify-center"
+                  title="Hatırlatma Tarihi">
+                  <span class="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                    <PhoneIcon class="h-4 w-4 text-gray-400" />
+                    {{ formatDate(customer.remindingDate) }}
+                  </span>
+                  <span class="text-xs mt-1 px-2 py-0.5 rounded-full"
+                    :class="getRemainingTimeClass(customer.remindingDate)">
+                    {{ getRemainingTime(customer.remindingDate) }}
+                  </span>
+                </div>
               </div>
 
               <!-- Contact Info -->
               <div class="space-y-3 border-t border-gray-200 dark:border-gray-700 pt-4">
-                <div title="Müşteri ID"
-                  class="flex items-center text-sm">
+                <div title="Müşteri ID" class="flex items-center text-sm">
                   <FingerPrintIcon class="h-5 w-5 text-gray-400 mr-3 flex-shrink-0" />
                   {{ customer?.id }}
                 </div>
@@ -129,10 +139,7 @@
                   </a>
                 </div>
 
-                <div v-if="customerStatus.name == 'TEKRAR ARANACAK'" class="flex flex-col items-center justify-center w-full">
-                  <button @click="reInitRemindableDate()" class="border-2 border-gray-200 dark:border-slate-500 rounded-full px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-slate-600 dark:hover:bg-slate-700 text-sm">Tekrar Aranacak Tarihini Güncelle</button>
-                  <p class="text-xs mt-2">Mevcut tarih: {{ formatDate(customer.remindingDate) }}</p>
-                </div>
+
 
                 <div v-if="customer.gender" class="flex items-center text-sm">
                   <UserIcon class="h-5 w-5 text-gray-400 mr-3 flex-shrink-0" />
@@ -570,27 +577,58 @@ const formatDate = (dateString) => {
 }
 
 
-const reInitRemindableDate = async () => {
-  try {
-    const api = useApi()
+const getRemainingTime = (remindingDate) => {
+  if (!remindingDate) return ''
+  
+  const now = new Date()
+  const target = new Date(remindingDate)
+  const diff = target.getTime() - now.getTime()
+  
+  // Geçmiş tarih
+  if (diff < 0) {
+    const absDiff = Math.abs(diff)
+    const hours = Math.floor(absDiff / (1000 * 60 * 60))
+    const days = Math.floor(hours / 24)
     
-    const reminderDate = new Date()
-    reminderDate.setDate(reminderDate.getDate() + 2)
-    
-    await api(`/customers/${customer.value.id}`, {
-      method: 'PATCH',
-      body: {
-        remindingDate: reminderDate.toISOString()
-      }
-    })
-    
-    customer.value.remindingDate = reminderDate.toISOString()
-    alert('Tekrar aranacak tarihi güncellendi (2 gün sonra)')
-    
-  } catch (error) {
-    alert('Tarih güncellenirken bir hata oluştu')
+    if (days > 0) return `${days} gün gecikmiş`
+    if (hours > 0) return `${hours} saat gecikmiş`
+    return 'Az önce geçti'
+  }
+  
+  // Gelecek tarih
+  const minutes = Math.floor(diff / (1000 * 60))
+  const hours = Math.floor(diff / (1000 * 60 * 60))
+  const days = Math.floor(hours / 24)
+  
+  if (days > 0) return `${days} gün kaldı`
+  if (hours > 0) return `${hours} saat kaldı`
+  if (minutes > 0) return `${minutes} dakika kaldı`
+  return 'Şimdi'
+}
+
+const getRemainingTimeClass = (remindingDate) => {
+  if (!remindingDate) return ''
+  
+  const now = new Date()
+  const target = new Date(remindingDate)
+  const diff = target.getTime() - now.getTime()
+  const hours = diff / (1000 * 60 * 60)
+  
+  if (diff < 0) {
+    // Gecikmiş
+    return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+  } else if (hours <= 1) {
+    // 2 saat içinde
+    return 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400'
+  } else if (hours <= 24) {
+    // 24 saat içinde
+    return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+  } else {
+    // 24 saatten fazla
+    return 'bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400'
   }
 }
+
 
 const formatHistoryDate = (dateString) => {
   if (!dateString) return ''
@@ -787,7 +825,7 @@ const fetchLocations = async () => {
     console.error('Error fetching locations:', err)
   }
 }
- 
+
 
 const fetchCustomer = async () => {
   try {
@@ -806,7 +844,7 @@ const fetchCustomer = async () => {
       }
     }
 
-    customer.value = response 
+    customer.value = response
 
     // Set active engagement if exists
     if (response.activeEngagement) {
