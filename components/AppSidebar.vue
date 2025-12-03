@@ -150,6 +150,7 @@ import {
   CurrencyDollarIcon,
   ClipboardDocumentListIcon,
   DocumentTextIcon,
+  ShieldExclamationIcon,
 } from '@heroicons/vue/24/outline'
 
 const authStore = useAuthStore()
@@ -215,6 +216,7 @@ const allNavigationItems = [
     ]
   },
   { name: 'Fraud Alerts', href: '/fraud-alerts', icon: ExclamationTriangleIcon },
+  { name: 'Sheets Sync', href: '/sheets-sync', icon: ShieldExclamationIcon },
 ]
 
 // Yetkilere göre filtrelenmiş menü

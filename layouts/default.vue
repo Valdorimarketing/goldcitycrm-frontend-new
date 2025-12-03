@@ -1,5 +1,14 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <!-- Connection Status Overlay -->
+    <Connectionstatusoverlay 
+      ping-url="/health"
+      :ping-interval="15000"
+      :initial-delay="3000"
+      @connected="onConnected"
+      @disconnected="onDisconnected"
+    />
+
     <!-- Sidebar -->
     <AppSidebar />
 
@@ -25,16 +34,6 @@
     <!-- Reminder Popup -->
     <ReminderPopup :is-open="reminderPopup" :reminder="currentReminder" :loading="reminderLoading"
       @dismiss="dismissReminder" @complete="completeReminder" />
-
-
-     <!-- Fixed User Stats Bar -->
-    <!-- <UserStatsBar
-      :user="authStore.user"
-      :user-stats="userStats"
-      :daily-leads="dailyLeadsCount"
-      :today-sales="todaySalesCount"
-    />
-       -->
   </div>
 </template>
 
@@ -43,6 +42,16 @@ import { ref, provide, onMounted, onUnmounted } from 'vue'
 import { useFraudAlerts } from '~/composables/useFraudAlerts'
 import FraudAlertPopup from '~/components/FraudAlertPopup.vue'
 import ReminderPopup from '~/components/ReminderPopup.vue'
+import Connectionstatusoverlay from '~/components/Connectionstatusoverlay.vue'
+
+// Connection handlers
+const onConnected = () => {
+  console.log('✅ Bağlantı sağlandı')
+}
+
+const onDisconnected = () => {
+  console.log('❌ Bağlantı koptu')
+}
 
 // Sidebar state
 const sidebarOpen = ref(true)
@@ -103,9 +112,6 @@ const useReminderNotifications = () => {
       const today = new Date()
       const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
 
-
-
-      // Token'ı al
       const token = useCookie('auth-token').value || authStore.token
 
       const response = await $fetch('/customer-notes', {
@@ -131,31 +137,20 @@ const useReminderNotifications = () => {
 
   // Yaklaşan hatırlatmaları kontrol et
   const checkForDueReminders = async () => {
-
     const reminders = await getTodayReminders()
-
-
     const now = new Date()
     const currentTime = now.getTime()
-
 
     for (const reminder of reminders) {
       if (!reminder.remindingAt) continue
 
       const reminderTime = new Date(reminder.remindingAt).getTime()
       const timeDiff = reminderTime - currentTime
-      const timeDiffMinutes = Math.ceil(timeDiff / 60000)
 
-
-
-      // Session storage'da bu hatırlatmanın gösterilip gösterilmediğini kontrol et
       const sessionKey = `reminder_${reminder.id}_shown`
       const reminderShown = sessionStorage.getItem(sessionKey)
 
-      // Zamanı geçmiş veya 5 dakika içinde olan hatırlatmalar
       if (timeDiff <= 5 * 60 * 1000 && !reminderShown && !notifiedReminders.value.has(reminder.id)) {
-
-        // Müşteri bilgilerini al
         if (reminder.customer && !reminder.customerInfo) {
           try {
             const token = useCookie('auth-token').value || authStore.token
@@ -169,7 +164,6 @@ const useReminderNotifications = () => {
               name: customer.name,
               surname: customer.surname
             }
-
           } catch (error) {
             console.error('❌ Müşteri bilgileri alınamadı:', error)
           }
@@ -180,7 +174,6 @@ const useReminderNotifications = () => {
         notifiedReminders.value.add(reminder.id)
         sessionStorage.setItem(sessionKey, 'true')
 
-        // Browser notification göster
         if ('Notification' in window && Notification.permission === 'granted') {
           const customerName = reminder.customerInfo
             ? `${reminder.customerInfo.name} ${reminder.customerInfo.surname}`
@@ -195,12 +188,11 @@ const useReminderNotifications = () => {
           })
         }
 
-        break // Bir seferde sadece bir hatırlatma göster
+        break
       }
     }
   }
 
-  // Hatırlatmayı tamamlandı olarak işaretle
   const markAsCompleted = async () => {
     if (!currentReminder.value) return false
 
@@ -208,7 +200,6 @@ const useReminderNotifications = () => {
       loading.value = true
       const token = useCookie('auth-token').value || authStore.token
 
-      // API'yi direkt çağır
       await $fetch(`/customer-notes/${currentReminder.value.id}`, {
         baseURL: apiBase,
         method: 'PATCH',
@@ -232,13 +223,11 @@ const useReminderNotifications = () => {
     }
   }
 
-  // Popup'ı kapat (Sonra Hatırlat)
   const dismissPopup = () => {
     showPopup.value = false
     currentReminder.value = null
   }
 
-  // Bildirim izni iste
   const requestNotificationPermission = async () => {
     if ('Notification' in window && Notification.permission === 'default') {
       const permission = await Notification.requestPermission()
@@ -268,7 +257,6 @@ const {
   requestNotificationPermission
 } = useReminderNotifications()
 
-// Check for fraud alerts every 30 seconds
 let fraudAlertInterval = null
 let reminderInterval = null
 
@@ -293,31 +281,23 @@ const completeReminder = async () => {
 }
 
 onMounted(async () => {
-
-   
-  // Request notification permission
   await requestNotificationPermission()
-
   await checkForNewAlerts()
   await getUnreadCount()
   await checkForDueReminders()
 
-  // Set up interval to check every 30 seconds for fraud alerts
   if (isAdmin) {
     fraudAlertInterval = setInterval(async () => {
       await checkForNewAlerts()
     }, 30000)
   }
 
-  // Set up interval to check every 30 seconds for reminders
   reminderInterval = setInterval(async () => {
     await checkForDueReminders()
   }, 30000)
-
 })
 
 onUnmounted(() => {
-  // Clean up intervals
   if (fraudAlertInterval && isAdmin) {
     clearInterval(fraudAlertInterval)
     fraudAlertInterval = null
@@ -328,7 +308,6 @@ onUnmounted(() => {
   }
 })
 
-// Provide sidebar state to child components
 provide('sidebar', {
   sidebarOpen,
   mobileSidebarOpen,

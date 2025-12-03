@@ -39,6 +39,7 @@ export const usePermissions = () => {
         // Doktor Dönüşü - tek menü
         'Doktor Dönüşü',
         // Fiyatlandırmalar - tek menü
+        'Proforma',
         'Fiyatlandırmalar'
       ]
       return allowedMenus.includes(menuName)
@@ -69,6 +70,7 @@ export const usePermissions = () => {
         'Hatırlatmalar',
         'Havuz Verileri',
         // Fiyatlandırmalar - tek menü
+        'Proforma',
         'Fiyatlandırmalar'
       ]
       return allowedMenus.includes(menuName)

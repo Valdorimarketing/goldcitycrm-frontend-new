@@ -670,8 +670,7 @@ watchDebounced(
     // Cache yüklendikten sonra çalışsın
     if (!cacheLoaded.value) return
     
-    pagination.value.page = 1 // Filtre değişince ilk sayfaya dön
-    loadCustomers()
+    loadCustomers(pagination.value.page ? pagination.value.page : 1)
   },
   { debounce: 600 }
 )

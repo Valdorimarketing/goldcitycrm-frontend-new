@@ -129,6 +129,11 @@
                   </a>
                 </div>
 
+                <div v-if="customerStatus.name == 'TEKRAR ARANACAK'" class="flex flex-col items-center justify-center w-full">
+                  <button @click="reInitRemindableDate()" class="border-2 border-gray-200 dark:border-slate-500 rounded-full px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-slate-600 dark:hover:bg-slate-700 text-sm">Tekrar Aranacak Tarihini Güncelle</button>
+                  <p class="text-xs mt-2">Mevcut tarih: {{ formatDate(customer.remindingDate) }}</p>
+                </div>
+
                 <div v-if="customer.gender" class="flex items-center text-sm">
                   <UserIcon class="h-5 w-5 text-gray-400 mr-3 flex-shrink-0" />
                   <span class="text-gray-700 dark:text-gray-300">{{ getGenderText(customer.gender) }}</span>
@@ -564,6 +569,29 @@ const formatDate = (dateString) => {
   })
 }
 
+
+const reInitRemindableDate = async () => {
+  try {
+    const api = useApi()
+    
+    const reminderDate = new Date()
+    reminderDate.setDate(reminderDate.getDate() + 2)
+    
+    await api(`/customers/${customer.value.id}`, {
+      method: 'PATCH',
+      body: {
+        remindingDate: reminderDate.toISOString()
+      }
+    })
+    
+    customer.value.remindingDate = reminderDate.toISOString()
+    alert('Tekrar aranacak tarihi güncellendi (2 gün sonra)')
+    
+  } catch (error) {
+    alert('Tarih güncellenirken bir hata oluştu')
+  }
+}
+
 const formatHistoryDate = (dateString) => {
   if (!dateString) return ''
   const date = new Date(dateString)
@@ -636,7 +664,7 @@ const getActionIcon = (action) => {
 }
 
 const goBack = () => {
-  router.push('/customers')
+  router.back()
 }
 
 // Dropdown functions
@@ -759,6 +787,7 @@ const fetchLocations = async () => {
     console.error('Error fetching locations:', err)
   }
 }
+ 
 
 const fetchCustomer = async () => {
   try {
