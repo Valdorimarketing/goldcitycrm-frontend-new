@@ -509,12 +509,8 @@ import {
   BanknotesIcon,
   WalletIcon,
   ClockIcon,
-  CheckBadgeIcon,
   CalendarDaysIcon,
   ChartPieIcon,
-  ArrowTrendingUpIcon,
-  SparklesIcon,
-  ExclamationCircleIcon,
   CheckCircleIcon,
   XCircleIcon,
   ChevronLeftIcon,
@@ -526,50 +522,7 @@ import {
   GlobeAltIcon
 } from '@heroicons/vue/24/outline'
 import { useApi } from '~/composables/useApi'
-
-// Animated Counter Component
-const AnimatedCounter = {
-  props: ['value', 'currency'],
-  setup(props) {
-    const displayValue = ref(0)
-    
-    watch(() => props.value, (newVal) => {
-      // Sadece client-side'da çalıştır
-      if (import.meta.server) {
-        displayValue.value = newVal
-        return
-      }
-      
-      const duration = 1000
-      const steps = 60
-      const stepValue = (newVal - displayValue.value) / steps
-      let currentStep = 0
-      
-      const timer = setInterval(() => {
-        currentStep++
-        displayValue.value += stepValue
-        if (currentStep >= steps) {
-          displayValue.value = newVal
-          clearInterval(timer)
-        }
-      }, duration / steps)
-    }, { immediate: true })
-
-    const formatMoney = (amount, currencyCode = 'TRY') => {
-      const value = Number(amount || 0)
-      try {
-        return new Intl.NumberFormat('tr-TR', {
-          style: 'currency',
-          currency: currencyCode || 'TRY'
-        }).format(value)
-      } catch (e) {
-        return new Intl.NumberFormat('tr-TR').format(value) + ' ' + currencyCode
-      }
-    }
-
-    return () => h('span', formatMoney(displayValue.value, props.currency))
-  }
-}
+ 
 
 const api = useApi()
 const { userId, isAdmin } = usePermissions()

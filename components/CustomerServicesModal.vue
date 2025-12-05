@@ -53,20 +53,7 @@
               </div>
             </div>
 
-            <!-- Sale Status Warning -->
-            <div v-if="isSaleStatus" class="mx-6 mt-4">
-              <div class="flex items-center gap-3 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl">
-                <div class="h-10 w-10 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center flex-shrink-0">
-                  <ExclamationTriangleIcon class="h-5 w-5 text-amber-600 dark:text-amber-400" />
-                </div>
-                <div>
-                  <p class="font-medium text-amber-800 dark:text-amber-200">Satış Durumu</p>
-                  <p class="text-sm text-amber-600 dark:text-amber-400">
-                    Müşterinin durumu satış durumunda olduğundan değiştirilemez
-                  </p>
-                </div>
-              </div>
-            </div>
+          
 
             <!-- Modal Content -->
             <div class="flex-1 overflow-y-auto p-6 space-y-6">
@@ -246,7 +233,7 @@
               </div>
 
               <!-- Add New Service Section -->
-              <div v-if="!isSaleStatus" class="border border-gray-200 dark:border-gray-700 rounded-xl">
+              <div class="border border-gray-200 dark:border-gray-700 rounded-xl">
                 <div class="px-4 py-3 bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
                   <div class="flex items-center gap-2">
                     <div class="h-8 w-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
@@ -262,16 +249,13 @@
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Para Birimi</label>
                     <select 
                       v-model="selectedCurrency" 
-                      :disabled="existingServices.length > 0"
                       class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:opacity-50 transition-all appearance-none cursor-pointer"
                     >
                       <option v-for="currency in currencies" :key="currency.id" :value="currency">
                         {{ currency.name }} ({{ currency.code }})
                       </option>
                     </select>
-                    <p v-if="existingServices.length > 0" class="mt-1 text-xs text-amber-600 dark:text-amber-400">
-                      Mevcut hizmet varken para birimi değiştirilemez
-                    </p>
+                     
                   </div>
 
                   <!-- Product Search -->
@@ -472,7 +456,6 @@
                   İptal
                 </button>
                 <button 
-                  v-if="!isSaleStatus"
                   @click="saveServices" 
                   :disabled="services.length === 0 || saving"
                   class="px-6 py-2.5 bg-emerald-600 text-white font-medium rounded-xl hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
@@ -569,6 +552,9 @@ import {
   MagnifyingGlassIcon,
   ClipboardDocumentListIcon
 } from '@heroicons/vue/24/outline'
+
+
+const { isAdmin } = usePermissions()
 
 const props = defineProps({
   show: { type: Boolean, default: false },

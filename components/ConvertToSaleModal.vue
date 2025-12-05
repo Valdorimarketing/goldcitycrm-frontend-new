@@ -148,28 +148,43 @@
                   </div>
 
                   <!-- Summary Section -->
-                  <div v-if="selectedProductIds.length > 0 && currentCurrency"
+                  <div v-if="selectedProductIds.length > 0"
                     class="mt-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg border-2 border-green-200 dark:border-green-800">
-                    <h5 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">
-                      Seçili Ürünler Özeti ({{ selectedProductIds.length }} ürün)
-                    </h5>
+                    <div class="flex items-center justify-between mb-3">
+                      <h5 class="text-sm font-semibold text-gray-900 dark:text-white">
+                        Seçili Ürünler Özeti ({{ selectedProductIds.length }} ürün)
+                      </h5>
+                      <div class="flex items-center gap-2">
+                        <span class="text-xs text-gray-500 dark:text-gray-400">
+                          Güncel kur ile USD cinsinden
+                        </span>
+                        <span v-if="loadingRates" class="inline-flex items-center text-xs text-blue-600 dark:text-blue-400">
+                          <div class="animate-spin h-3 w-3 border-2 border-blue-600 border-t-transparent rounded-full mr-1"></div>
+                          Kurlar yükleniyor...
+                        </span>
+                        <span v-else-if="ratesLastUpdated" class="text-xs text-green-600 dark:text-green-400">
+                          ✓ {{ formatDate(ratesLastUpdated) }}
+                        </span>
+                      </div>
+                    </div>
+                    
                     <div class="space-y-2">
                       <div class="flex items-center justify-between text-sm">
                         <span class="text-gray-600 dark:text-gray-400">Toplam Teklif:</span>
                         <span class="font-medium text-gray-900 dark:text-white">
-                          {{ formatCurrency(totalOffer, currentCurrency) }}
+                          {{ formatCurrency(totalOfferUSD, 'USD') }}
                         </span>
                       </div>
                       <div class="flex items-center justify-between text-sm">
                         <span class="text-gray-600 dark:text-gray-400">Toplam Alınan:</span>
                         <span class="font-semibold text-green-600 dark:text-green-400">
-                          {{ formatCurrency(totalPaid, currentCurrency) }}
+                          {{ formatCurrency(totalPaidUSD, 'USD') }}
                         </span>
                       </div>
                       <div class="flex items-center justify-between text-sm pt-2 border-t border-green-200 dark:border-green-700">
                         <span class="font-medium text-gray-700 dark:text-gray-300">Toplam Kalan:</span>
-                        <span class="text-lg font-bold" :class="totalRemaining > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'">
-                          {{ formatCurrency(totalRemaining, currentCurrency) }}
+                        <span class="text-lg font-bold" :class="totalRemainingUSD > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'">
+                          {{ formatCurrency(totalRemainingUSD, 'USD') }}
                         </span>
                       </div>
                     </div>
@@ -236,6 +251,8 @@ import {
   XCircleIcon
 } from '@heroicons/vue/24/outline'
 import { useCustomer2Product } from '~/composables/useCustomer2Product'
+import { useApi } from '~/composables/useApi'
+const api = useApi()
 
 const props = defineProps({
   show: Boolean,
@@ -256,29 +273,56 @@ const converting = ref(false)
 const products = ref([])
 const selectedProductIds = ref([])
 const selectAll = ref(false)
-const currentCurrency = ref(null)
+const loadingRates = ref(false)
+const exchangeRates = ref({
+  USD: 1,
+  EUR: 1.1666,
+  TRY: 0.0236,
+  GBP: 1.334
+})
+const ratesLastUpdated = ref(null)
 
-// Computed - Seçili ürünlerin toplamları
+// Computed - Seçili ürünler
 const selectedProducts = computed(() => {
   return products.value.filter(p => selectedProductIds.value.includes(p.id))
 })
 
-const totalOffer = computed(() => {
+/**
+ * Para birimini USD'ye çevir
+ */
+const convertToUSD = (amount, currency) => {
+  if (!amount) return 0
+  if (!currency || currency === 'USD') return parseFloat(amount)
+  
+  const rate = exchangeRates.value[currency] || 1
+  return parseFloat(amount) * rate
+}
+
+/**
+ * USD cinsinden toplam teklif
+ */
+const totalOfferUSD = computed(() => {
   return selectedProducts.value.reduce((sum, p) => {
-    const offer = parseFloat(p.offer) || 0
-    return sum + offer
+    const offerUSD = convertToUSD(p.offer, p.product.currency?.code)
+    return sum + offerUSD
   }, 0)
 })
 
-const totalPaid = computed(() => {
+/**
+ * USD cinsinden toplam alınan
+ */
+const totalPaidUSD = computed(() => {
   return selectedProducts.value.reduce((sum, p) => {
-    const paidAmount = parseFloat(p.paidAmount) || 0
-    return sum + paidAmount
+    const paidUSD = convertToUSD(p.paidAmount, p.product.currency?.code)
+    return sum + paidUSD
   }, 0)
 })
 
-const totalRemaining = computed(() => {
-  return totalOffer.value - totalPaid.value
+/**
+ * USD cinsinden toplam kalan
+ */
+const totalRemainingUSD = computed(() => {
+  return totalOfferUSD.value - totalPaidUSD.value
 })
 
 // Ödeme durumu özeti
@@ -295,8 +339,28 @@ const paymentSummary = computed(() => {
 const formatCurrency = (amount, currency) => {
   return new Intl.NumberFormat('tr-TR', {
     style: 'currency',
-    currency: currency || 'TRY',
+    currency: currency || 'USD',
   }).format(amount || 0)
+}
+
+const formatDate = (date) => {
+  if (!date) return ''
+  const now = new Date()
+  const diff = now - date
+  const minutes = Math.floor(diff / 60000)
+  
+  if (minutes < 1) return 'Az önce'
+  if (minutes < 60) return `${minutes} dk önce`
+  
+  const hours = Math.floor(minutes / 60)
+  if (hours < 24) return `${hours} saat önce`
+  
+  return new Intl.DateTimeFormat('tr-TR', {
+    day: 'numeric',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit'
+  }).format(date)
 }
 
 const getRemainingAmount = (product) => {
@@ -313,6 +377,26 @@ const toggleSelectAll = () => {
   }
 }
 
+/**
+ * Döviz kurlarını backend'den yükle
+ */
+
+const loadExchangeRates = async () => {
+  loadingRates.value = true
+  try {
+    const response = await api('/exchange-rates')
+    if (response?.rates) {
+      exchangeRates.value = response.rates
+      ratesLastUpdated.value = response.lastUpdated ? new Date(response.lastUpdated) : new Date()
+    }
+  } catch (error) {
+    console.error('Error loading exchange rates:', error)
+    // Fallback değerler zaten tanımlı
+  } finally {
+    loadingRates.value = false
+  }
+}
+
 const loadProducts = async () => {
   if (!props.customer?.id) return
 
@@ -320,10 +404,6 @@ const loadProducts = async () => {
   try {
     const data = await fetchUnsoldProducts(props.customer.id)
     products.value = data || []
-
-    if (products.value.length > 0) {
-      currentCurrency.value = products.value[0].product.currency?.code || 'TRY'
-    }
 
     // Auto-select all products by default
     selectedProductIds.value = products.value.map(p => p.id)
@@ -349,7 +429,7 @@ const handleConvertToSale = async () => {
       customer2ProductIds: selectedProductIds.value,
       userId: authStore.user?.id,
       title: `Satış - ${productNames}`,
-      description: `${props.customer.name} ${props.customer.surname} için ${selectedProducts.value.length} ürün satışa çevrildi. Toplam: ${formatCurrency(totalOffer.value, currentCurrency.value)}, Alınan: ${formatCurrency(totalPaid.value, currentCurrency.value)}, Kalan: ${formatCurrency(totalRemaining.value, currentCurrency.value)}`
+      description: `${props.customer.name} ${props.customer.surname} için ${selectedProducts.value.length} ürün satışa çevrildi. Toplam: ${formatCurrency(totalOfferUSD.value, 'USD')}, Alınan: ${formatCurrency(totalPaidUSD.value, 'USD')}, Kalan: ${formatCurrency(totalRemainingUSD.value, 'USD')}`
     }
 
     const result = await convertToSale(saleData)
@@ -368,13 +448,13 @@ const handleConvertToSale = async () => {
 // Watch for modal open
 watch(() => props.show, (newValue) => {
   if (newValue) {
+    loadExchangeRates() // Önce kurları yükle
     loadProducts()
   } else {
     // Reset state
     products.value = []
     selectedProductIds.value = []
     selectAll.value = false
-    currentCurrency.value = null
   }
 })
 
