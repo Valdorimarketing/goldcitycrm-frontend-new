@@ -13,7 +13,7 @@
     <AppSidebar />
 
     <!-- Main Content -->
-    <div class="transition-all duration-300 ease-in-out" :class="[sidebarOpen ? 'lg:ml-64' : 'lg:ml-20']">
+    <div class="transition-all duration-300 ease-in-out" :class="[sidebarOpen ? 'lg:ml-72' : 'lg:ml-20']">
       <!-- Header -->
       <AppHeader />
 

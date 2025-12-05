@@ -666,10 +666,7 @@ onMounted(async () => {
 
   await loadCustomers(pagination.value.page)
   isInitialLoad = false
-
-  setInterval(() => {
-    loadCustomers(pagination.value.page)
-  }, 60000) // every 5 minutes
+ 
 })
 
 const confirmDelete = (customer) => {

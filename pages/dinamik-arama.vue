@@ -7,7 +7,7 @@
       enter-to-class="opacity-100 translate-y-0"
     >
       <div 
-        v-if="showCriticalAlert && userStats.total >= 70"
+        v-if="!isAdmin && showCriticalAlert && userStats.total >= 70"
         class="mb-6 relative overflow-hidden"
       >
         <div class="absolute inset-0 bg-gradient-to-r from-red-600 via-red-500 to-orange-500 animate-pulse"></div>

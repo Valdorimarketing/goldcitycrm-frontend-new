@@ -869,8 +869,7 @@ const calculateStats = async () => {
         revenueMonth[currency] = (revenueMonth[currency] || 0) + amount
       }
     })
-
-    console.log(allSales);
+ 
     
 
     totalRevenue.value = revenue as any
