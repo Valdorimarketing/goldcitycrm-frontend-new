@@ -640,7 +640,7 @@ const searchProducts = async () => {
       return
     }
     showProductDropdown.value = true
-    const response = await api('/products?currencyId=' + selectedCurrency.value.id)
+    const response = await api('/products?limit=50&currencyId=' + selectedCurrency.value.id)
     products.value = Array.isArray(response) ? response : response.data || []
   } catch (error) {
     console.error('Error loading products:', error)
