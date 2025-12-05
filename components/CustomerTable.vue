@@ -103,10 +103,10 @@
               :to="`/profile/${customer.relevantUserData?.id}`" 
               class="flex items-center gap-2 group/user"
             >
-              <div v-if="customer.relevantUserData.avatar" class="h-8 w-8 rounded-full overflow-hidden ring-2 ring-white dark:ring-gray-800 shadow">
+              <div v-if="customer.relevantUserData.avatar" class="h-7 w-7 rounded-full overflow-hidden ring-2 ring-white dark:ring-gray-800 shadow">
                 <img :src="path + customer.relevantUserData.avatar" alt="Avatar" class="h-full w-full object-cover" />
               </div>
-              <div v-else class="h-8 w-8 rounded-full bg-gradient-to-br from-gray-400 to-gray-500 flex items-center justify-center text-white text-xs font-medium shadow">
+              <div v-else class="h-7 w-7 rounded-full bg-gradient-to-br from-gray-400 to-gray-500 flex items-center justify-center text-white text-xs font-medium shadow">
                 {{ customer.relevantUserData?.name?.charAt(0) || 'A' }}
               </div>
               <div>

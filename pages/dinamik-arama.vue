@@ -606,9 +606,14 @@
                 <!-- Assigned User (Admin) -->
                 <td v-if="isAdmin" class="px-4 py-4">
                   <div v-if="customer.relevantUser" class="flex items-center gap-2">
-                    <div class="h-7 w-7 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center text-xs font-medium text-gray-600 dark:text-gray-300">
-                      {{ customer.relevantUser?.name?.charAt(0) || '?' }}
+
+                    <img v-if="customer.relevantUser?.avatar" :src="path + customer.relevantUser?.avatar" alt="Avatar" class="object-cover h-7 w-7 rounded-lg" />
+                    <div v-else class="h-7 w-7 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                      <span class="text-xs font-medium text-purple-600 dark:text-purple-400">
+                        {{ customer.relevantUser?.name?.charAt(0)?.toUpperCase() }}
+                      </span>
                     </div>
+                
                     <span class="text-sm text-gray-600 dark:text-gray-300">{{ customer.relevantUser?.name }}</span>
                   </div>
                   <span v-else class="text-sm text-gray-400">-</span>
@@ -799,9 +804,12 @@
           <!-- Card Footer -->
           <div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
             <div v-if="isAdmin && customer.relevantUser" class="flex items-center gap-2">
-              <div class="h-6 w-6 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center text-xs font-medium">
-                {{ customer.relevantUser?.name?.charAt(0) }}
-              </div>
+               <img v-if="customer.relevantUser?.avatar" :src="path + customer.relevantUser?.avatar" alt="Avatar" class="object-cover h-6 w-6 rounded-lg" />
+                <div v-else class="h-6 w-6 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                  <span class="text-xs font-medium text-purple-600 dark:text-purple-400">
+                    {{ customer.relevantUser?.name?.charAt(0)?.toUpperCase() }}
+                  </span>
+                </div>
               <span class="text-xs text-gray-500 dark:text-gray-400">{{ customer.relevantUser?.name }}</span>
             </div>
             <div v-else></div>

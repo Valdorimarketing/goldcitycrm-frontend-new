@@ -34,15 +34,7 @@
           >
             <ArrowPathIcon class="h-4 w-4" :class="{ 'animate-spin': isRefreshing }" />
             Yenile
-          </button>
-          <NuxtLink 
-            v-if="canAddCustomer"
-            to="/customers/create"
-            class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all text-sm font-medium shadow-lg shadow-indigo-500/25"
-          >
-            <PlusIcon class="h-4 w-4" />
-            Yeni Müşteri
-          </NuxtLink>
+          </button> 
         </div>
       </div>
     </div>

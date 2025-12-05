@@ -229,6 +229,8 @@ function unlock() {
 function handleKeydown(event) {
   if (props.isLocked && event.key === 'Enter') {
     unlock()
+    event.preventDefault()
+    return false;
   }
 }
 
