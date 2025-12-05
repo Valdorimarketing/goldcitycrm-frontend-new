@@ -390,7 +390,7 @@ const allNavigationItems = [
       { name: 'Dinamik Alanlar', href: '/dynamic-fields', icon: WrenchScrewdriverIcon },
     ]
   },
-  { name: 'Fraud Alerts', href: '/fraud-alerts', icon: ExclamationTriangleIcon, badge: 3 },
+  { name: 'Fraud Alerts', href: '/fraud-alerts', icon: ExclamationTriangleIcon },
   { name: 'Sheets Sync', href: '/sheets-sync', icon: ShieldExclamationIcon },
 ]
 

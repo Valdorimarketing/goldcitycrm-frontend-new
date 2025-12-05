@@ -168,21 +168,7 @@
                 </div>
               </div>
 
-              <!-- Quick Stats -->
-              <div class="grid grid-cols-3 gap-px bg-gray-100 dark:bg-slate-700">
-                <div class="bg-white dark:bg-slate-800 p-3 text-center">
-                  <p class="text-lg font-bold text-gray-900 dark:text-white">{{ userStats.customers }}</p>
-                  <p class="text-xs text-gray-500 dark:text-slate-400">Müşteri</p>
-                </div>
-                <div class="bg-white dark:bg-slate-800 p-3 text-center">
-                  <p class="text-lg font-bold text-gray-900 dark:text-white">{{ userStats.sales }}</p>
-                  <p class="text-xs text-gray-500 dark:text-slate-400">Satış</p>
-                </div>
-                <div class="bg-white dark:bg-slate-800 p-3 text-center">
-                  <p class="text-lg font-bold text-emerald-600 dark:text-emerald-400">{{ userStats.pending }}</p>
-                  <p class="text-xs text-gray-500 dark:text-slate-400">Bekleyen</p>
-                </div>
-              </div>
+        
 
               <!-- Menu Items -->
               <div class="p-2">
@@ -388,12 +374,7 @@ const path = config.public.apiBase
 
 const customersStore = useCustomersStore()
 
-// Mock stats - Replace with real data
-const userStats = ref({
-  customers: 156,
-  sales: 24,
-  pending: 8
-})
+ 
 
 
 // Page titles mapping - Sidebar ile aynı yapı
