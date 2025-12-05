@@ -673,8 +673,7 @@ const { getCustomerFilters, canAccessCustomer, getDashboardFilters, getRelatedDa
 
 // Loading states
 const loadingStats = ref(true)
-const loadingCustomers = ref(true)
-const loadingSales = ref(true)
+const loadingCustomers = ref(true) 
 const loadingMeetings = ref(true)
 const loadingReminders = ref(true)
 const loadingUnassignedCustomers = ref(true)

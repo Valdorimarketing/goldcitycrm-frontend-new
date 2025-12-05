@@ -155,14 +155,24 @@
                 </div>
 
                 <!-- Add Button -->
-                <button
-                  @click="addNote"
-                  :disabled="!newNote.note.trim() || addingNote"
-                  class="inline-flex items-center gap-2 px-4 py-2.5 bg-amber-600 text-white text-sm font-medium rounded-xl hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                >
-                  <PlusIcon class="h-4 w-4" />
-                  {{ addingNote ? 'Ekleniyor...' : 'Not Ekle' }}
-                </button>
+                <div class="flex gap-1">
+                  <button
+                    @click="showConvertToSaleModal = true"
+                    :disabled="isSaleStatus"
+                    class="inline-flex items-center gap-2 px-4 py-2.5 bg-green-600 text-white text-sm font-medium rounded-xl hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  >
+                    <CurrencyDollarIcon class="h-4 w-4" />
+                    Satışa Çevir
+                  </button>
+                  <button
+                    @click="addNote"
+                    :disabled="!newNote.note.trim() || addingNote"
+                    class="inline-flex items-center gap-2 px-4 py-2.5 bg-amber-600 text-white text-sm font-medium rounded-xl hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  >
+                    <PlusIcon class="h-4 w-4" />
+                    {{ addingNote ? 'Ekleniyor...' : 'Not Ekle' }}
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -346,7 +356,8 @@ import {
   DocumentDuplicateIcon,
   TagIcon,
   CalendarDaysIcon,
-  ExclamationTriangleIcon
+  ExclamationTriangleIcon,
+  CurrencyDollarIcon
 } from '@heroicons/vue/24/outline'
 import { useCustomer2Product } from '~/composables/useCustomer2Product'
 
