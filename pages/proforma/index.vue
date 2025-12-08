@@ -16,11 +16,23 @@
         </div>
 
         <!-- Action Button -->
-        <button @click="loadAllData"
-          class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-sm font-medium">
-          <ArrowPathIcon class="h-5 w-5" :class="{ 'animate-spin': loading }" />
-          Yenile
-        </button>
+        <div class="flex gap-3">
+          <NuxtLink to="/proforma/list"
+            class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-sm font-medium">
+            <DocumentTextIcon class="h-5 w-5" :class="{ 'animate-spin': loading }" />
+            Proforma Listesi
+          </NuxtLink>
+          <NuxtLink to="/proforma/create"
+            class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-sm font-medium">
+            <PlusIcon class="h-5 w-5" :class="{ 'animate-spin': loading }" />
+            Proforma Oluştur
+          </NuxtLink>
+          <button @click="loadAllData"
+            class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-sm font-medium">
+            <ArrowPathIcon class="h-5 w-5" :class="{ 'animate-spin': loading }" />
+            Yenile
+          </button>
+        </div>
       </div>
     </div>
 
@@ -420,6 +432,7 @@ import {
   DocumentDuplicateIcon,
   CalendarIcon,
   ArrowPathIcon,
+  PlusIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   UserIcon,
