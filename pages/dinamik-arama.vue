@@ -1040,15 +1040,16 @@ import {
   InformationCircleIcon,
   CheckCircleIcon,
   ChartBarIcon,
-  CalendarIcon,
-  FireIcon,
-  SparklesIcon
+  CalendarIcon
 } from '@heroicons/vue/24/outline'
 
 definePageMeta({})
 
 const { isAdmin, isEditable, isDeleteable } = usePermissions()
 const authStore = useAuthStore()
+ 
+const config = useRuntimeConfig()
+const path = config.public.apiBase
 
 // Alert visibility
 const showCriticalAlert = ref(true)

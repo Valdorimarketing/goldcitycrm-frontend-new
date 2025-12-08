@@ -586,7 +586,9 @@ import {
 definePageMeta({
   // middleware: 'auth'
 })
-
+ 
+const config = useRuntimeConfig()
+const path = config.public.apiBase
 const authStore = useAuthStore()
 
 const loading = ref(true)
