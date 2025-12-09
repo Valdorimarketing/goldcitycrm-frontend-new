@@ -15,7 +15,8 @@
       </div>
 
       <div class="flex gap-3 mt-4 sm:mt-0">
-        <button @click="resetFilters" class="btn-secondary flex items-center gap-2 hover:scale-105 transition-transform">
+        <button @click="resetFilters"
+          class="btn-secondary flex items-center gap-2 hover:scale-105 transition-transform">
           <FunnelIcon class="h-5 w-5" />
           Filtreleri Temizle
         </button>
@@ -30,15 +31,10 @@
     <!-- Currency Toggle -->
     <div class="flex justify-center mb-6">
       <div class="inline-flex rounded-xl bg-gray-100 dark:bg-gray-800 p-1 shadow-inner">
-        <button
-          v-for="curr in availableCurrencies"
-          :key="curr"
-          @click="activeCurrency = curr"
-          class="px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300"
-          :class="activeCurrency === curr 
-            ? 'bg-white dark:bg-gray-700 shadow-lg text-indigo-600 dark:text-indigo-400 scale-105' 
-            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'"
-        >
+        <button v-for="curr in availableCurrencies" :key="curr" @click="activeCurrency = curr"
+          class="px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300" :class="activeCurrency === curr
+            ? 'bg-white dark:bg-gray-700 shadow-lg text-indigo-600 dark:text-indigo-400 scale-105'
+            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'">
           {{ getCurrencyLabel(curr) }}
         </button>
       </div>
@@ -46,12 +42,15 @@
 
     <!-- Grand Total Card (Genel Toplam) -->
     <div class="mb-8">
-      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-800 via-slate-900 to-slate-800 p-6 shadow-2xl border border-slate-700">
+      <div
+        class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-800 via-slate-900 to-slate-800 p-6 shadow-2xl border border-slate-700">
         <!-- Background Pattern -->
         <div class="absolute inset-0 opacity-10">
-          <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.4\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+          <div class="absolute inset-0"
+            style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.4\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');">
+          </div>
         </div>
-        
+
         <div class="relative">
           <!-- Header -->
           <div class="flex items-center justify-between mb-6">
@@ -64,7 +63,7 @@
                 <p class="text-sm text-slate-400">Tüm para birimleri Dolar'a çevrildi</p>
               </div>
             </div>
-            
+
             <!-- Exchange Rate Info -->
             <div class="text-right">
               <div class="flex items-center gap-2 text-xs text-slate-400">
@@ -131,7 +130,8 @@
               <div v-for="item in grandTotal.breakdown" :key="item.currency"
                 class="bg-slate-700/30 rounded-lg p-3 hover:bg-slate-700/50 transition-colors">
                 <div class="flex items-center justify-between mb-2">
-                  <span class="text-sm font-medium text-white">{{ getCurrencyEmoji(item.currency) }} {{ item.currency }}</span>
+                  <span class="text-sm font-medium text-white">{{ getCurrencyEmoji(item.currency) }} {{ item.currency
+                  }}</span>
                   <span class="text-xs text-slate-400">1 {{ item.currency }} = ${{ item.rate?.toFixed(4) }}</span>
                 </div>
                 <p class="text-sm text-slate-300">{{ formatMoney(item.totalSales, item.currency) }}</p>
@@ -143,11 +143,12 @@
       </div>
     </div>
 
-    
+
     <!-- Monthly Stats Section -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
       <!-- Bu Ay Satış -->
-      <div class="col-span-1 lg:col-span-2 bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-100 dark:border-gray-700">
+      <div
+        class="col-span-1 lg:col-span-2 bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-100 dark:border-gray-700">
         <div class="flex items-center justify-between mb-6">
           <div class="flex items-center gap-3">
             <div class="p-2 bg-indigo-100 dark:bg-indigo-900/50 rounded-xl">
@@ -161,7 +162,7 @@
         </div>
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div v-for="curr in availableCurrencies" :key="'month-' + curr" 
+          <div v-for="curr in availableCurrencies" :key="'month-' + curr"
             class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
             @click="activeCurrency = curr">
             <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ getCurrencyLabel(curr) }} Satış</p>
@@ -242,8 +243,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
       <div v-for="curr in availableCurrencies" :key="'summary-' + curr"
         class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-5 border border-gray-100 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-600 transition-all duration-300 cursor-pointer"
-        :class="{ 'ring-2 ring-indigo-500': activeCurrency === curr }"
-        @click="activeCurrency = curr">
+        :class="{ 'ring-2 ring-indigo-500': activeCurrency === curr }" @click="activeCurrency = curr">
         <div class="flex items-center justify-between mb-4">
           <div class="flex items-center gap-2">
             <span class="text-2xl">{{ getCurrencyEmoji(curr) }}</span>
@@ -254,19 +254,22 @@
             {{ getStatsByCurrency(curr).salesCount }} satış
           </span>
         </div>
-        
+
         <div class="space-y-3">
           <div class="flex justify-between items-center">
             <span class="text-sm text-gray-500 dark:text-gray-400">Toplam</span>
-            <span class="font-bold text-gray-900 dark:text-white">{{ formatMoney(getStatsByCurrency(curr).totalSales, curr) }}</span>
+            <span class="font-bold text-gray-900 dark:text-white">{{ formatMoney(getStatsByCurrency(curr).totalSales,
+              curr) }}</span>
           </div>
           <div class="flex justify-between items-center">
             <span class="text-sm text-emerald-600 dark:text-emerald-400">Kasada</span>
-            <span class="font-semibold text-emerald-600 dark:text-emerald-400">{{ formatMoney(getStatsByCurrency(curr).totalPaid, curr) }}</span>
+            <span class="font-semibold text-emerald-600 dark:text-emerald-400">{{
+              formatMoney(getStatsByCurrency(curr).totalPaid, curr) }}</span>
           </div>
           <div class="flex justify-between items-center">
             <span class="text-sm text-amber-600 dark:text-amber-400">Beklenen</span>
-            <span class="font-semibold text-amber-600 dark:text-amber-400">{{ formatMoney(getStatsByCurrency(curr).totalRemaining, curr) }}</span>
+            <span class="font-semibold text-amber-600 dark:text-amber-400">{{
+              formatMoney(getStatsByCurrency(curr).totalRemaining, curr) }}</span>
           </div>
         </div>
       </div>
@@ -281,12 +284,7 @@
           </label>
           <div class="relative">
             <MagnifyingGlassIcon class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-            <input
-              v-model="searchTerm"
-              type="text"
-              class="form-input pl-10"
-              placeholder="Müşteri, açıklama..."
-            />
+            <input v-model="searchTerm" type="text" class="form-input pl-10" placeholder="Müşteri, açıklama..." />
           </div>
         </div>
         <div>
@@ -319,39 +317,50 @@
     <div v-if="loading" class="flex flex-col items-center justify-center py-16">
       <div class="relative">
         <div class="w-16 h-16 border-4 border-indigo-200 dark:border-indigo-900 rounded-full animate-spin"></div>
-        <div class="absolute top-0 left-0 w-16 h-16 border-4 border-transparent border-t-indigo-600 rounded-full animate-spin"></div>
+        <div
+          class="absolute top-0 left-0 w-16 h-16 border-4 border-transparent border-t-indigo-600 rounded-full animate-spin">
+        </div>
       </div>
       <p class="mt-4 text-gray-600 dark:text-gray-400 animate-pulse">Veriler yükleniyor...</p>
     </div>
 
     <!-- Sales Table -->
-    <div v-else class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
+    <div v-else
+      class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead class="bg-gray-50 dark:bg-gray-900/50">
             <tr>
-              <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+              <th
+                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                 Müşteri
               </th>
-              <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+              <th
+                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                 Açıklama
               </th>
-              <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+              <th
+                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                 Toplam
               </th>
-              <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+              <th
+                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                 Alınan
               </th>
-              <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+              <th
+                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                 Kalan
               </th>
-              <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+              <th
+                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                 Durum
               </th>
-              <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+              <th
+                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                 Tarih
               </th>
-              <th class="px-6 py-4 text-right text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+              <th
+                class="px-6 py-4 text-right text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                 İşlemler
               </th>
             </tr>
@@ -362,14 +371,14 @@
               :style="{ animationDelay: index * 50 + 'ms' }">
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center">
-                  <div class="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg">
+                  <div
+                    class="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg">
                     <span class="text-sm font-bold text-white">
                       {{ sale.customer?.name?.charAt(0)?.toUpperCase() || '?' }}
                     </span>
                   </div>
                   <div class="ml-4">
-                    <NuxtLink
-                      :to="`/customers/show/${sale.customer?.id}`"
+                    <NuxtLink :to="`/customers/show/${sale.customer?.id}`"
                       class="text-sm font-semibold text-gray-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
                       {{ sale.customer?.name || 'Bilinmeyen' }}
                     </NuxtLink>
@@ -391,12 +400,13 @@
                 </span>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
-                <span class="text-sm font-semibold" :class="sale.remainingAmount > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-gray-400'">
+                <span class="text-sm font-semibold"
+                  :class="sale.remainingAmount > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-gray-400'">
                   {{ formatMoney(sale.remainingAmount, sale.currency) }}
                 </span>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
-                <span v-if="sale.isFullyPaid" 
+                <span v-if="sale.isFullyPaid"
                   class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300">
                   <CheckCircleIcon class="w-3.5 h-3.5 mr-1" />
                   Tamamlandı
@@ -416,8 +426,7 @@
                 <p class="text-sm text-gray-900 dark:text-gray-100">{{ formatDate(sale.date) }}</p>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-right">
-                <button
-                  @click="viewSaleDetails(sale)"
+                <button @click="viewSaleDetails(sale)"
                   class="p-2 text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 rounded-lg transition-colors">
                   <EyeIcon class="h-5 w-5" />
                 </button>
@@ -443,19 +452,13 @@
       </div>
 
       <!-- Pagination -->
-      <div
-        v-if="pagination.totalPages > 1"
+      <div v-if="pagination.totalPages > 1"
         class="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 px-6 py-4">
         <div class="flex-1 flex justify-between sm:hidden">
-          <button
-            :disabled="pagination.page === 1"
-            @click="changePage(pagination.page - 1)"
-            class="btn-secondary">
+          <button :disabled="pagination.page === 1" @click="changePage(pagination.page - 1)" class="btn-secondary">
             Önceki
           </button>
-          <button
-            :disabled="pagination.page === pagination.totalPages"
-            @click="changePage(pagination.page + 1)"
+          <button :disabled="pagination.page === pagination.totalPages" @click="changePage(pagination.page + 1)"
             class="btn-secondary">
             Sonraki
           </button>
@@ -470,25 +473,18 @@
             sonuç
           </p>
           <nav class="isolate inline-flex -space-x-px rounded-lg shadow-sm">
-            <button
-              :disabled="pagination.page === 1"
-              @click="changePage(pagination.page - 1)"
+            <button :disabled="pagination.page === 1" @click="changePage(pagination.page - 1)"
               class="relative inline-flex items-center rounded-l-lg px-3 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 transition-colors">
               <ChevronLeftIcon class="h-5 w-5" />
             </button>
-            <button
-              v-for="page in visiblePages"
-              :key="page"
-              @click="changePage(page)"
+            <button v-for="page in visiblePages" :key="page" @click="changePage(page)"
               class="relative inline-flex items-center px-4 py-2 text-sm font-semibold transition-colors"
               :class="page === pagination.page
                 ? 'bg-indigo-600 text-white'
                 : 'text-gray-900 dark:text-gray-300 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'">
               {{ page }}
             </button>
-            <button
-              :disabled="pagination.page === pagination.totalPages"
-              @click="changePage(pagination.page + 1)"
+            <button :disabled="pagination.page === pagination.totalPages" @click="changePage(pagination.page + 1)"
               class="relative inline-flex items-center rounded-r-lg px-3 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 transition-colors">
               <ChevronRightIcon class="h-5 w-5" />
             </button>
@@ -522,7 +518,7 @@ import {
   GlobeAltIcon
 } from '@heroicons/vue/24/outline'
 import { useApi } from '~/composables/useApi'
- 
+
 
 const api = useApi()
 const { userId, isAdmin } = usePermissions()
@@ -616,13 +612,11 @@ const getCurrencyFromProduct = (salesProduct) => {
 }
 
 /**
- * Satış verilerini API'den yükler ve işler
+ * FRONTEND FIX - loadSalesData
  * 
- * ÖNEMLİ: isPayCompleted kontrolü salesProducts seviyesinde yapılmalı
- * - Tüm ürünlerin isPayCompleted=true ise satış tamamlanmış sayılır
- * - En az bir ürün paidAmount > 0 ve isPayCompleted=false ise kısmi ödeme
- * - Hiçbir ürün için ödeme alınmamışsa ödenmedi
+ * Backend henüz gruplama yapmıyor, frontend'de manual gruplama yapıyoruz
  */
+
 const loadSalesData = async () => {
   loading.value = true
   try {
@@ -638,56 +632,65 @@ const loadSalesData = async () => {
     const response = await api('/sales/user/details', { query })
 
     if (response?.data) {
-      salesData.value = response.data.map(sale => {
-        const products = sale.salesProducts || []
-        
-        // Her ürün için değerleri hesapla
-        // totalPrice = satış tutarı (offer değeri)
-        // paidAmount = alınan tutar
-        const totalAmount = products.reduce((sum, p) => {
-          const price = parseFloat(p.totalPrice) || 0
-          return sum + price
-        }, 0)
-        
-        const paidAmount = products.reduce((sum, p) => {
-          const paid = parseFloat(p.paidAmount) || 0
-          return sum + paid
-        }, 0)
-        
-        const remainingAmount = totalAmount - paidAmount
-        
-        // isFullyPaid: TÜM ürünlerin isPayCompleted=true olması gerekir
-        // Eğer hiç ürün yoksa tamamlanmamış sayılır
-        const isFullyPaid = products.length > 0 && products.every(p => p.isPayCompleted === true)
-        
-        // Para birimi: İlk ürünün para birimini al
-        const currency = products.length > 0 
-          ? getCurrencyFromProduct(products[0])
-          : 'TRY'
+      // Backend henüz gruplama yapmıyor, frontend'de gruplama yapıyoruz
+      const groupedSales = []
 
-        return {
-          id: sale.id,
-          customer: {
-            name: [sale.customerDetails?.name, sale.customerDetails?.surname].filter(Boolean).join(' ') || 'Bilinmeyen Müşteri',
-            id: sale.customer
-          },
-          totalAmount,
-          paidAmount,
-          remainingAmount,
-          isFullyPaid, // isPayCompleted yerine isFullyPaid kullanıyoruz
-          currency,
-          description: sale.title || '-',
-          date: sale.createdAt || new Date().toISOString(),
-          products // Detay modal için orijinal ürünleri tut
+      for (const sale of response.data) {
+        // Para birimlerine göre ürünleri grupla
+        const productsByCurrency = new Map()
+
+        for (const sp of sale.salesProducts || []) {
+          // Para birimi belirleme önceliği:
+          // 1. sp.currency.code (salesProduct'ın kendi currency'si)
+          // 2. sp.productDetails.currency.code (ürünün varsayılan currency'si)
+          // 3. 'TRY' (fallback)
+          const currency = sp.currency?.code ||
+            sp.productDetails?.currency?.code ||
+            'TRY'
+
+          if (!productsByCurrency.has(currency)) {
+            productsByCurrency.set(currency, [])
+          }
+          productsByCurrency.get(currency).push(sp)
         }
-      })
+
+        // Her para birimi için ayrı kayıt oluştur
+        for (const [currency, products] of productsByCurrency.entries()) {
+          const totalAmount = products.reduce((sum, p) => sum + (parseFloat(p.totalPrice) || 0), 0)
+          const paidAmount = products.reduce((sum, p) => sum + (parseFloat(p.paidAmount) || 0), 0)
+          const remainingAmount = totalAmount - paidAmount
+          const isFullyPaid = products.length > 0 && products.every(p => p.isPayCompleted === true)
+
+          groupedSales.push({
+            id: `${sale.id}-${currency}`, // Unique ID: "49-USD", "49-EUR"
+            originalId: sale.id, // Orijinal sale ID'si
+            customer: {
+              name: [sale.customerDetails?.name, sale.customerDetails?.surname]
+                .filter(Boolean)
+                .join(' ') || 'Bilinmeyen Müşteri',
+              id: sale.customer
+            },
+            totalAmount,
+            paidAmount,
+            remainingAmount,
+            isFullyPaid,
+            currency,
+            description: `${sale.title || '-'} (${currency})`, // Para birimini description'a ekle
+            date: sale.createdAt || new Date().toISOString(),
+            products // Bu para birimindeki ürünler
+          })
+        }
+      }
+
+      salesData.value = groupedSales
 
       if (response.meta) {
+        // Gruplama sonrası total değişti, basit pagination
         pagination.value = {
-          total: response.meta.total || 0,
+          total: groupedSales.length,
           page: response.meta.page || 1,
           limit: response.meta.limit || 10,
-          totalPages: Math.ceil((response.meta.total || 0) / (response.meta.limit || 10))
+          totalPages: Math.ceil(groupedSales.length / (response.meta.limit || 10))
         }
       }
 
@@ -706,6 +709,31 @@ const loadSalesData = async () => {
     loading.value = false
   }
 }
+
+/**
+ * SONUÇ:
+ * 
+ * Satış #49 (3 ürün: 2 USD + 1 EUR):
+ * ├── Satış #49-USD: $5.070,00 (CHECK-UP + SEZERYAN)
+ * └── Satış #49-EUR: €190,00 (ONLINE MUAYENE)
+ * 
+ * Currency toggle:
+ * - USD seçince → Sadece 49-USD görünür
+ * - EUR seçince → Sadece 49-EUR görünür
+ */
+
+/**
+ * SONUÇ:
+ * 
+ * Müşteri ID 3696 artık iki ayrı satır olarak görünecek:
+ * 1. Satış #48 (EUR): 2.500,00 EUR - Tamamlandı
+ * 2. Satış #48 (USD): 580,00 USD - Tamamlandı
+ * 
+ * Currency toggle ile:
+ * - EUR seçince → Sadece EUR satırı görünür
+ * - USD seçince → Sadece USD satırı görünür
+ * - Tümü seçince → İkisi de görünür
+ */
 
 // =====================================================
 // EXCHANGE RATE FONKSİYONLARI
@@ -820,17 +848,17 @@ const formatRateDate = (date) => {
  */
 const getStatsByCurrency = (currency) => {
   const sales = salesData.value.filter(s => s.currency === currency)
-  
+
   // Toplam tutarlar
   const totalSales = sales.reduce((sum, s) => sum + s.totalAmount, 0)
   const totalPaid = sales.reduce((sum, s) => sum + s.paidAmount, 0)
   const totalRemaining = totalSales - totalPaid
-  
+
   // Durum sayıları
   const completedCount = sales.filter(s => s.isFullyPaid).length
   const partialCount = sales.filter(s => !s.isFullyPaid && s.paidAmount > 0).length
   const unpaidCount = sales.filter(s => !s.isFullyPaid && s.paidAmount === 0).length
-  
+
   const salesCount = sales.length
   const pendingCount = partialCount + unpaidCount
 
@@ -857,8 +885,8 @@ const getMonthlyStats = (currency) => {
   const now = new Date()
   const sales = salesData.value.filter(s => {
     const saleDate = new Date(s.date)
-    return s.currency === currency && 
-      saleDate.getMonth() === now.getMonth() && 
+    return s.currency === currency &&
+      saleDate.getMonth() === now.getMonth() &&
       saleDate.getFullYear() === now.getFullYear()
   })
 
@@ -1010,6 +1038,7 @@ useHead({
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

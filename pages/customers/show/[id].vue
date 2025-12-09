@@ -965,18 +965,29 @@ const handleClickOutside = (event) => {
   if (!dropdown && showActionsDropdown.value) showActionsDropdown.value = false
 }
 
+let refreshDataInterval = null;
+
+const historyLiveStart = () => {
+  refreshDataInterval = setInterval(refreshData, 60000)
+}
+
+const historyLiveStop = () => {
+  clearInterval(refreshDataInterval)
+}
+
 onMounted(async () => {
   document.addEventListener('click', handleClickOutside)
   await fetchLocations()
   await fetchCustomer()
   await fetchCustomerDynamicFields()
   await fetchCustomerHistory()
-  setInterval(refreshData, 60000) // Refresh data every 5 minutes
+  historyLiveStart()
 })
 
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
   stopEngagementTimer()
+  historyLiveStop()
 })
 
 useHead({

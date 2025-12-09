@@ -231,6 +231,7 @@ export const useProformaStore = defineStore('proforma', () => {
     try {
       // PDF download için native fetch kullanıyoruz çünkü blob response gerekiyor
       const response: any = await fetch(`https://vcrmapi.mlpcare.com/proformas/${id}/pdf`);
+      // const response: any = await fetch(`http://localhost:3001/proformas/${id}/pdf`);
       if (!response.ok) throw new Error('Failed to generate PDF');
 
       const blob = await response.blob();
