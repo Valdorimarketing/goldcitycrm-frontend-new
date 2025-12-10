@@ -94,6 +94,7 @@
             <tr>
               <th>Proforma No</th>
               <th>Hasta</th>
+              <th>Oluşturan</th>
               <th>Tarih</th>
               <th>Tutar</th>
               <th>Para Birimi</th>
@@ -110,6 +111,19 @@
                 </NuxtLink>
               </td>
               <td>{{ proforma.patientName || '-' }}</td>
+              <td>
+                <div class="flex items-center gap-2">
+                  <div v-if="proforma.createdBy?.avatar" class="w-8 h-8 rounded-full overflow-hidden">
+                    <img :src="getAvatarUrl(proforma.createdBy.avatar)" alt="" class="w-full h-full object-cover" />
+                  </div>
+                  <div v-else class="w-8 h-8 rounded-full bg-cyan-100 dark:bg-cyan-900 flex items-center justify-center">
+                    <span class="text-sm font-medium text-cyan-600 dark:text-cyan-300">
+                      {{ proforma.createdBy?.name?.charAt(0).toUpperCase() || '?' }}
+                    </span>
+                  </div>
+                  <span class="text-sm">{{ proforma.createdBy?.name || 'Bilinmiyor' }}</span>
+                </div>
+              </td>
               <td>{{ formatDate(proforma.date) }}</td>
               <td class="font-medium">{{ formatCurrency(proforma.grandTotal) }}</td>
               <td>{{ proforma.currency }}</td>
@@ -123,7 +137,6 @@
                   <select 
                     v-model="statusChanges[proforma.id as any]" 
                     class="form-select-sm"
-                    @change="markStatusAsChanged(proforma.id as any)"
                   >
                     <option value="draft">Taslak</option>
                     <option value="sent">Gönderildi</option>
@@ -146,10 +159,14 @@
                   <NuxtLink :to="`/proforma/${proforma.id}/edit`" class="btn-icon" title="Düzenle">
                      <PencilSquareIcon class="w-5 h-5" />
                   </NuxtLink>
+                  
 
-                  <button @click="handleDownloadPDF(proforma)" class="btn-icon" title="PDF İndir">
+                  <button @click="handlePreview(proforma.id)" class="btn-icon" title="PDF İndir">
                     <DocumentIcon class="w-5 h-5" />
                   </button>
+                  <NuxtLink :to="`http://localhost:3001/proformas/${proforma.id}/preview`" target="_blank" class="btn-icon" title="İndir">
+                     <PrinterIcon class="w-5 h-5" />
+                  </NuxtLink>
 
                   <button @click="handleDelete(proforma)"
                     class="btn-icon text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20" title="Sil">
@@ -162,9 +179,33 @@
         </table>
       </div>
     </div>
+
+
+<!-- Preview Modal -->
+    <div v-if="showPreview" class="modal-overlay" @click="showPreview = false">
+      <div class="modal-content" @click.stop>
+        <div class="modal-header">
+          <div class="flex gap-2">
+            <h3 class="text-lg font-bold">Proforma Önizleme</h3> 
+          </div>
+          <button @click="showPreview = false" class="text-gray-500 hover:text-gray-700">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <iframe 
+            v-if="previewUrl" 
+            :src="previewUrl" 
+            class="w-full h-full border-0"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
-
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
 import { useProformaStore } from '~/stores/proforma';
@@ -175,11 +216,16 @@ import {
   PencilSquareIcon,
   DocumentIcon,
   TrashIcon,
-  CheckIcon
+  CheckIcon,
+  PrinterIcon
 } from '@heroicons/vue/24/outline'
 
 const proformaStore = useProformaStore();
 const { proformas, loading, error } = storeToRefs(proformaStore);
+
+const showPreview = ref(false);
+const previewUrl = ref('');
+const currentProformaId = ref<number | null>(null);
 
 const filters = ref({
   status: '',
@@ -213,8 +259,18 @@ const applyFilters = () => {
   });
 };
 
-const markStatusAsChanged = (proformaId: number) => {
-  // This ensures the button becomes enabled when status is changed
+ 
+const handlePreview = async (id: any) => {
+  currentProformaId.value = id;
+  previewUrl.value = `http://localhost:3001/proformas/${id}/preview`;
+  showPreview.value = true;
+};
+ 
+
+const getAvatarUrl = (avatarPath: string) => {
+  if (!avatarPath) return '';
+  if (avatarPath.startsWith('http')) return avatarPath;
+  return `http://localhost:3001/${avatarPath.replace(/^\//, '')}`;
 };
 
 const handleStatusChange = async (proforma: any) => {
@@ -233,9 +289,7 @@ const handleStatusChange = async (proforma: any) => {
     
     if (success) {
       console.log('Status updated successfully');
-      // Refresh list
       await applyFilters();
-      // Update local status change tracker with new status
       statusChanges.value[proforma.id as any] = newStatus;
     }
   } catch (error) {
@@ -272,16 +326,6 @@ const getStatusText = (status: string) => {
     cancelled: 'İptal',
   };
   return texts[status as keyof typeof texts] || status;
-};
-
-const handleDownloadPDF = async (proforma: any) => {
-  if (!proforma.id || !proforma.proformaNumber) return;
-
-  const success = await proformaStore.downloadPDF(proforma.id, proforma.proformaNumber);
-
-  if (success) {
-    console.log('PDF downloaded successfully');
-  }
 };
 
 const handleDelete = async (proforma: any) => {
@@ -387,5 +431,21 @@ const handleDelete = async (proforma: any) => {
 
 .spinner {
   @apply w-12 h-12 border-4 border-gray-200 dark:border-gray-700 border-t-cyan-600 rounded-full animate-spin mx-auto mb-4;
+}
+
+.modal-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4;
+}
+
+.modal-content {
+  @apply bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-6xl h-[90vh] flex flex-col;
+}
+
+.modal-header {
+  @apply flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-700;
+}
+
+.modal-body {
+  @apply flex-1 overflow-hidden;
 }
 </style>

@@ -550,7 +550,8 @@ const handleCancel = () => {
 
 const handlePreview = async () => {
   if (isEditMode.value) {
-    previewUrl.value = `https://vcrmapi.mlpcare.com/proformas/${route.params.id}/preview`;
+    // previewUrl.value = `https://vcrmapi.mlpcare.com/proformas/${route.params.id}/preview`;
+    previewUrl.value = `http://localhost:3001/proformas/${route.params.id}/preview`;
     showPreview.value = true;
   } else {
     alert('Önizleme için önce proformayı kaydetmelisiniz');
