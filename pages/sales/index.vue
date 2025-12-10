@@ -1,50 +1,131 @@
 <template>
-  <div class="min-h-screen">
-    <!-- Header -->
-    <div class="sm:flex sm:items-center sm:justify-between mb-8">
-      <div>
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-          <div class="p-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-lg">
-            <ChartBarIcon class="h-8 w-8 text-white" />
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <!-- Header with Actions -->
+    <div class="sticky top-0 z-40 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
+      <div class="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+              <div class="p-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-lg">
+                <ChartBarIcon class="h-7 w-7 text-white" />
+              </div>
+              Satış & Finans Yönetimi
+            </h1>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+              Kapsamlı satış analizi ve performans takibi
+            </p>
           </div>
-          Satış Finans Paneli
-        </h1>
-        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          Detaylı satış ve ödeme takibi
-        </p>
-      </div>
 
-      <div class="flex gap-3 mt-4 sm:mt-0">
-        <button @click="resetFilters"
-          class="btn-secondary flex items-center gap-2 hover:scale-105 transition-transform">
-          <FunnelIcon class="h-5 w-5" />
-          Filtreleri Temizle
-        </button>
-        <button @click="loadSalesData" :disabled="loading"
-          class="btn-primary flex items-center gap-2 hover:scale-105 transition-transform">
-          <ArrowPathIcon class="h-5 w-5" :class="{ 'animate-spin': loading }" />
-          Yenile
-        </button>
-      </div>
-    </div>
+          <div class="flex flex-wrap items-center gap-3">
+            <!-- Quick Date Filters -->
+            <div class="inline-flex rounded-lg bg-gray-100 dark:bg-gray-700 p-1">
+              <button v-for="preset in datePresets" :key="preset.value" @click="applyDatePreset(preset.value)"
+                class="px-3 py-1.5 text-xs font-medium rounded-md transition-all"
+                :class="activeDatePreset === preset.value
+                  ? 'bg-white dark:bg-gray-600 text-indigo-600 dark:text-indigo-400 shadow-sm'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'">
+                {{ preset.label }}
+              </button>
+            </div>
+ 
 
-    <!-- Currency Toggle -->
-    <div class="flex justify-center mb-6">
-      <div class="inline-flex rounded-xl bg-gray-100 dark:bg-gray-800 p-1 shadow-inner">
-        <button v-for="curr in availableCurrencies" :key="curr" @click="activeCurrency = curr"
-          class="px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300" :class="activeCurrency === curr
-            ? 'bg-white dark:bg-gray-700 shadow-lg text-indigo-600 dark:text-indigo-400 scale-105'
-            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'">
-          {{ getCurrencyLabel(curr) }}
-        </button>
+            <button @click="loadAllData" :disabled="loading"
+              class="btn-primary flex items-center gap-2 text-sm hover:scale-105 transition-transform">
+              <ArrowPathIcon class="h-4 w-4" :class="{ 'animate-spin': loading }" />
+              Yenile
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Grand Total Card (Genel Toplam) -->
-    <div class="mb-8">
+    <div class="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <!-- Key Metrics Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Total Sales Count -->
+        <div
+          class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-shadow">
+          <div class="flex items-center justify-between mb-4">
+            <div class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
+              <ShoppingBagIcon class="h-6 w-6 text-blue-600 dark:text-blue-400" />
+            </div>
+            <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Tüm Zamanlar</span>
+          </div>
+          <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-1">
+            {{ formatNumber(overallStats.totalSalesCount) }}
+          </h3>
+          <p class="text-sm text-gray-600 dark:text-gray-400">Toplam Satış</p>
+          <div class="mt-3 flex items-center text-xs">
+            <span class="text-green-600 dark:text-green-400 flex items-center">
+              <ArrowTrendingUpIcon class="h-3 w-3 mr-1" />
+              {{ overallStats.completedCount }} tamamlandı
+            </span>
+          </div>
+        </div>
+
+        <!-- Active Customers -->
+        <div
+          class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-shadow">
+          <div class="flex items-center justify-between mb-4">
+            <div class="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-xl">
+              <UsersIcon class="h-6 w-6 text-purple-600 dark:text-purple-400" />
+            </div>
+            <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Müşteriler</span>
+          </div>
+          <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-1">
+            {{ formatNumber(overallStats.uniqueCustomers) }}
+          </h3>
+          <p class="text-sm text-gray-600 dark:text-gray-400">Aktif Müşteri</p>
+          <div class="mt-3 flex items-center text-xs">
+            <span class="text-gray-600 dark:text-gray-400">
+              Ortalama {{ formatNumber(overallStats.avgSalesPerCustomer, 1) }} satış/müşteri
+            </span>
+          </div>
+        </div>
+
+        <!-- Average Sale Value -->
+        <div
+          class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-shadow">
+          <div class="flex items-center justify-between mb-4">
+            <div class="p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl">
+              <BanknotesIcon class="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Ortalama</span>
+          </div>
+          <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-1">
+            {{ formatMoney(overallStats.avgSaleValue, activeCurrency) }}
+          </h3>
+          <p class="text-sm text-gray-600 dark:text-gray-400">Satış Değeri</p>
+          <div class="mt-3 flex items-center text-xs">
+            <span class="text-gray-600 dark:text-gray-400">
+              {{ activeCurrency }} bazında
+            </span>
+          </div>
+        </div>
+
+        <!-- Conversion Rate -->
+        <div
+          class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-shadow">
+          <div class="flex items-center justify-between mb-4">
+            <div class="p-3 bg-amber-100 dark:bg-amber-900/30 rounded-xl">
+              <ChartPieIcon class="h-6 w-6 text-amber-600 dark:text-amber-400" />
+            </div>
+            <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Başarı</span>
+          </div>
+          <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-1">
+            {{ formatNumber(overallStats.conversionRate, 1) }}%
+          </h3>
+          <p class="text-sm text-gray-600 dark:text-gray-400">Tamamlanma Oranı</p>
+          <div class="mt-3 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+            <div class="bg-amber-500 h-1.5 rounded-full transition-all duration-1000"
+              :style="{ width: overallStats.conversionRate + '%' }"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grand Total Card (USD) -->
       <div
         class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-800 via-slate-900 to-slate-800 p-6 shadow-2xl border border-slate-700">
-        <!-- Background Pattern -->
         <div class="absolute inset-0 opacity-10">
           <div class="absolute inset-0"
             style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.4\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');">
@@ -52,7 +133,6 @@
         </div>
 
         <div class="relative">
-          <!-- Header -->
           <div class="flex items-center justify-between mb-6">
             <div class="flex items-center gap-3">
               <div class="p-3 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl shadow-lg">
@@ -64,7 +144,6 @@
               </div>
             </div>
 
-            <!-- Exchange Rate Info -->
             <div class="text-right">
               <div class="flex items-center gap-2 text-xs text-slate-400">
                 <ArrowPathIcon class="h-4 w-4" :class="{ 'animate-spin': loadingRates }" />
@@ -77,9 +156,7 @@
             </div>
           </div>
 
-          <!-- Grand Total Stats -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <!-- Toplam Satış (USD) -->
             <div class="bg-slate-800/50 rounded-xl p-5 backdrop-blur border border-slate-700/50">
               <div class="flex items-center gap-3 mb-3">
                 <div class="p-2 bg-blue-500/20 rounded-lg">
@@ -92,7 +169,6 @@
               </p>
             </div>
 
-            <!-- Kasaya Giren (USD) -->
             <div class="bg-slate-800/50 rounded-xl p-5 backdrop-blur border border-slate-700/50">
               <div class="flex items-center gap-3 mb-3">
                 <div class="p-2 bg-emerald-500/20 rounded-lg">
@@ -109,7 +185,6 @@
               </div>
             </div>
 
-            <!-- Beklenen (USD) -->
             <div class="bg-slate-800/50 rounded-xl p-5 backdrop-blur border border-slate-700/50">
               <div class="flex items-center gap-3 mb-3">
                 <div class="p-2 bg-amber-500/20 rounded-lg">
@@ -123,15 +198,16 @@
             </div>
           </div>
 
-          <!-- Currency Breakdown -->
           <div class="bg-slate-800/30 rounded-xl p-4 border border-slate-700/50">
             <p class="text-xs text-slate-500 mb-3 font-medium uppercase tracking-wider">Para Birimi Dökümü</p>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
               <div v-for="item in grandTotal.breakdown" :key="item.currency"
-                class="bg-slate-700/30 rounded-lg p-3 hover:bg-slate-700/50 transition-colors">
+                class="bg-slate-700/30 rounded-lg p-3 hover:bg-slate-700/50 transition-colors cursor-pointer"
+                @click="activeCurrency = item.currency">
                 <div class="flex items-center justify-between mb-2">
-                  <span class="text-sm font-medium text-white">{{ getCurrencyEmoji(item.currency) }} {{ item.currency
-                  }}</span>
+                  <span class="text-sm font-medium text-white">{{ getCurrencyEmoji(item.currency) }} {{
+                    item.currency
+                    }}</span>
                   <span class="text-xs text-slate-400">1 {{ item.currency }} = ${{ item.rate?.toFixed(4) }}</span>
                 </div>
                 <p class="text-sm text-slate-300">{{ formatMoney(item.totalSales, item.currency) }}</p>
@@ -141,354 +217,238 @@
           </div>
         </div>
       </div>
-    </div>
 
-
-    <!-- Monthly Stats Section -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-      <!-- Bu Ay Satış -->
-      <div
-        class="col-span-1 lg:col-span-2 bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-100 dark:border-gray-700">
-        <div class="flex items-center justify-between mb-6">
-          <div class="flex items-center gap-3">
-            <div class="p-2 bg-indigo-100 dark:bg-indigo-900/50 rounded-xl">
-              <CalendarDaysIcon class="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
-            </div>
-            <div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ currentMonthTitle }}</h3>
-              <p class="text-sm text-gray-500 dark:text-gray-400">Aylık performans özeti</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div v-for="curr in availableCurrencies" :key="'month-' + curr"
-            class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-            @click="activeCurrency = curr">
-            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ getCurrencyLabel(curr) }} Satış</p>
-            <p class="text-xl font-bold text-gray-900 dark:text-white">
-              {{ formatMoney(getMonthlyStats(curr).totalSales, curr) }}
-            </p>
-            <div class="flex items-center mt-2 text-xs">
-              <span class="text-emerald-600 dark:text-emerald-400">
-                {{ formatMoney(getMonthlyStats(curr).totalPaid, curr) }} kasada
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Ödeme Durumu Dağılımı -->
+      <!-- Advanced Filters -->
       <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-100 dark:border-gray-700">
-        <div class="flex items-center gap-3 mb-6">
-          <div class="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-xl">
-            <ChartPieIcon class="h-6 w-6 text-purple-600 dark:text-purple-400" />
+        <div class="flex items-center gap-3 mb-4">
+          <FunnelIcon class="h-5 w-5 text-gray-500 dark:text-gray-400" />
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Gelişmiş Filtreler</h3>
+          <button @click="resetAllFilters"
+            class="ml-auto text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium">
+            Tümünü Temizle
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
+          <!-- Search -->
+          <div class="lg:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Ara
+            </label>
+            <div class="relative">
+              <MagnifyingGlassIcon class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input v-model="searchTerm" type="text" class="form-input pl-10"
+                placeholder="Müşteri, ürün, açıklama..." />
+            </div>
           </div>
+
+          <!-- Currency -->
           <div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Ödeme Durumu</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">{{ activeCurrency }} bazında</p>
-          </div>
-        </div>
-
-        <div class="space-y-4">
-          <!-- Tamamlanan -->
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
-              <span class="text-sm text-gray-600 dark:text-gray-400">Tamamlanan</span>
-            </div>
-            <span class="text-sm font-semibold text-gray-900 dark:text-white">
-              {{ getStatsByCurrency(activeCurrency).completedCount }}
-            </span>
-          </div>
-          <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-            <div class="bg-emerald-500 h-2 rounded-full transition-all duration-1000"
-              :style="{ width: getStatsByCurrency(activeCurrency).completedPercentage + '%' }"></div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Para Birimi
+            </label>
+            <select v-model="activeCurrency" class="form-select">
+              <option value="">Tümü</option>
+              <option v-for="curr in availableCurrencies" :key="curr" :value="curr">
+                {{ getCurrencyEmoji(curr) }} {{ getCurrencyLabel(curr) }}
+              </option>
+            </select>
           </div>
 
-          <!-- Kısmi Ödeme -->
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <div class="w-3 h-3 rounded-full bg-amber-500"></div>
-              <span class="text-sm text-gray-600 dark:text-gray-400">Kısmi Ödeme</span>
-            </div>
-            <span class="text-sm font-semibold text-gray-900 dark:text-white">
-              {{ getStatsByCurrency(activeCurrency).partialCount }}
-            </span>
-          </div>
-          <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-            <div class="bg-amber-500 h-2 rounded-full transition-all duration-1000"
-              :style="{ width: getStatsByCurrency(activeCurrency).partialPercentage + '%' }"></div>
+          <!-- User -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Satış Temsilcisi
+            </label>
+            <select v-model="selectedUserId" class="form-select">
+              <option :value="null">Tüm Kullanıcılar</option>
+              <option v-for="user in usersList" :key="user.id" :value="user.id">
+                {{ user.name }}
+              </option>
+            </select>
           </div>
 
-          <!-- Ödenmedi -->
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <div class="w-3 h-3 rounded-full bg-red-500"></div>
-              <span class="text-sm text-gray-600 dark:text-gray-400">Ödenmedi</span>
-            </div>
-            <span class="text-sm font-semibold text-gray-900 dark:text-white">
-              {{ getStatsByCurrency(activeCurrency).unpaidCount }}
-            </span>
+          <!-- Payment Status -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Ödeme Durumu
+            </label>
+            <select v-model="paymentFilter" class="form-select">
+              <option value="all">Tümü</option>
+              <option value="completed">Tamamlanan</option>
+              <option value="partial">Kısmi Ödeme</option>
+              <option value="unpaid">Ödenmedi</option>
+            </select>
           </div>
-          <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-            <div class="bg-red-500 h-2 rounded-full transition-all duration-1000"
-              :style="{ width: getStatsByCurrency(activeCurrency).unpaidPercentage + '%' }"></div>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- All Currencies Summary -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-      <div v-for="curr in availableCurrencies" :key="'summary-' + curr"
-        class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-5 border border-gray-100 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-600 transition-all duration-300 cursor-pointer"
-        :class="{ 'ring-2 ring-indigo-500': activeCurrency === curr }" @click="activeCurrency = curr">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center gap-2">
-            <span class="text-2xl">{{ getCurrencyEmoji(curr) }}</span>
-            <span class="font-semibold text-gray-900 dark:text-white">{{ getCurrencyLabel(curr) }}</span>
+          <!-- Custom Date Range -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Başlangıç
+            </label>
+            <input v-model="startDate" type="date" class="form-input" />
           </div>
-          <span class="text-xs px-2 py-1 rounded-full"
-            :class="activeCurrency === curr ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300' : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'">
-            {{ getStatsByCurrency(curr).salesCount }} satış
-          </span>
-        </div>
 
-        <div class="space-y-3">
-          <div class="flex justify-between items-center">
-            <span class="text-sm text-gray-500 dark:text-gray-400">Toplam</span>
-            <span class="font-bold text-gray-900 dark:text-white">{{ formatMoney(getStatsByCurrency(curr).totalSales,
-              curr) }}</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="text-sm text-emerald-600 dark:text-emerald-400">Kasada</span>
-            <span class="font-semibold text-emerald-600 dark:text-emerald-400">{{
-              formatMoney(getStatsByCurrency(curr).totalPaid, curr) }}</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="text-sm text-amber-600 dark:text-amber-400">Beklenen</span>
-            <span class="font-semibold text-amber-600 dark:text-amber-400">{{
-              formatMoney(getStatsByCurrency(curr).totalRemaining, curr) }}</span>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Bitiş
+            </label>
+            <input v-model="endDate" type="date" class="form-input" />
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Search and Filters -->
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-6 border border-gray-100 dark:border-gray-700">
-      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Ara
-          </label>
-          <div class="relative">
-            <MagnifyingGlassIcon class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-            <input v-model="searchTerm" type="text" class="form-input pl-10" placeholder="Müşteri, açıklama..." />
-          </div>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Başlangıç Tarihi
-          </label>
-          <input v-model="startDate" type="date" class="form-input" />
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Bitiş Tarihi
-          </label>
-          <input v-model="endDate" type="date" class="form-input" />
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Ödeme Durumu
-          </label>
-          <select v-model="paymentFilter" class="form-select">
-            <option value="all">Tümü</option>
-            <option value="completed">Tamamlanan</option>
-            <option value="partial">Kısmi Ödeme</option>
-            <option value="unpaid">Ödenmedi</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <!-- Loading State -->
-    <div v-if="loading" class="flex flex-col items-center justify-center py-16">
-      <div class="relative">
-        <div class="w-16 h-16 border-4 border-indigo-200 dark:border-indigo-900 rounded-full animate-spin"></div>
-        <div
-          class="absolute top-0 left-0 w-16 h-16 border-4 border-transparent border-t-indigo-600 rounded-full animate-spin">
-        </div>
-      </div>
-      <p class="mt-4 text-gray-600 dark:text-gray-400 animate-pulse">Veriler yükleniyor...</p>
-    </div>
-
-    <!-- Sales Table -->
-    <div v-else
-      class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-          <thead class="bg-gray-50 dark:bg-gray-900/50">
-            <tr>
-              <th
-                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-                Müşteri
-              </th>
-              <th
-                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-                Açıklama
-              </th>
-              <th
-                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-                Toplam
-              </th>
-              <th
-                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-                Alınan
-              </th>
-              <th
-                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-                Kalan
-              </th>
-              <th
-                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-                Durum
-              </th>
-              <th
-                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-                Tarih
-              </th>
-              <th
-                class="px-6 py-4 text-right text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-                İşlemler
-              </th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-            <tr v-for="(sale, index) in filteredSales" :key="sale.id"
-              class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
-              :style="{ animationDelay: index * 50 + 'ms' }">
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="flex items-center">
-                  <div
-                    class="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg">
-                    <span class="text-sm font-bold text-white">
-                      {{ sale.customer?.name?.charAt(0)?.toUpperCase() || '?' }}
-                    </span>
-                  </div>
-                  <div class="ml-4">
-                    <NuxtLink :to="`/customers/show/${sale.customer?.id}`"
-                      class="text-sm font-semibold text-gray-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-                      {{ sale.customer?.name || 'Bilinmeyen' }}
-                    </NuxtLink>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">ID: {{ sale.customer?.id }}</p>
-                  </div>
-                </div>
-              </td>
-              <td class="px-6 py-4">
-                <p class="text-sm text-gray-900 dark:text-gray-100 truncate max-w-xs">{{ sale.description || '-' }}</p>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">
-                  {{ formatMoney(sale.totalAmount, sale.currency) }}
-                </span>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <span class="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
-                  {{ formatMoney(sale.paidAmount, sale.currency) }}
-                </span>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <span class="text-sm font-semibold"
-                  :class="sale.remainingAmount > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-gray-400'">
-                  {{ formatMoney(sale.remainingAmount, sale.currency) }}
-                </span>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <span v-if="sale.isFullyPaid"
-                  class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300">
-                  <CheckCircleIcon class="w-3.5 h-3.5 mr-1" />
-                  Tamamlandı
-                </span>
-                <span v-else-if="sale.paidAmount > 0"
-                  class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300">
-                  <ClockIcon class="w-3.5 h-3.5 mr-1" />
-                  Kısmi Ödeme
-                </span>
-                <span v-else
-                  class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300">
-                  <XCircleIcon class="w-3.5 h-3.5 mr-1" />
-                  Ödenmedi
-                </span>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <p class="text-sm text-gray-900 dark:text-gray-100">{{ formatDate(sale.date) }}</p>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-right">
-                <button @click="viewSaleDetails(sale)"
-                  class="p-2 text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 rounded-lg transition-colors">
-                  <EyeIcon class="h-5 w-5" />
-                </button>
-              </td>
-            </tr>
-
-            <!-- Empty State -->
-            <tr v-if="filteredSales.length === 0">
-              <td colspan="8" class="text-center py-16">
-                <div class="flex flex-col items-center">
-                  <div class="p-4 bg-gray-100 dark:bg-gray-700 rounded-full mb-4">
-                    <ShoppingBagIcon class="h-12 w-12 text-gray-400" />
-                  </div>
-                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Satış bulunamadı</h3>
-                  <p class="text-sm text-gray-500 dark:text-gray-400">
-                    {{ searchTerm ? 'Arama kriterlerinize uygun satış bulunamadı.' : 'Henüz satış kaydı eklenmemiş.' }}
-                  </p>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Pagination -->
-      <div v-if="pagination.totalPages > 1"
-        class="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 px-6 py-4">
-        <div class="flex-1 flex justify-between sm:hidden">
-          <button :disabled="pagination.page === 1" @click="changePage(pagination.page - 1)" class="btn-secondary">
-            Önceki
-          </button>
-          <button :disabled="pagination.page === pagination.totalPages" @click="changePage(pagination.page + 1)"
-            class="btn-secondary">
-            Sonraki
-          </button>
-        </div>
-        <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-          <p class="text-sm text-gray-700 dark:text-gray-300">
-            <span class="font-medium">{{ ((pagination.page - 1) * pagination.limit) + 1 }}</span>
-            -
-            <span class="font-medium">{{ Math.min(pagination.page * pagination.limit, pagination.total) }}</span>
-            arası, toplam
-            <span class="font-medium">{{ pagination.total }}</span>
-            sonuç
-          </p>
-          <nav class="isolate inline-flex -space-x-px rounded-lg shadow-sm">
-            <button :disabled="pagination.page === 1" @click="changePage(pagination.page - 1)"
-              class="relative inline-flex items-center rounded-l-lg px-3 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 transition-colors">
-              <ChevronLeftIcon class="h-5 w-5" />
-            </button>
-            <button v-for="page in visiblePages" :key="page" @click="changePage(page)"
-              class="relative inline-flex items-center px-4 py-2 text-sm font-semibold transition-colors"
-              :class="page === pagination.page
-                ? 'bg-indigo-600 text-white'
-                : 'text-gray-900 dark:text-gray-300 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'">
-              {{ page }}
-            </button>
-            <button :disabled="pagination.page === pagination.totalPages" @click="changePage(pagination.page + 1)"
-              class="relative inline-flex items-center rounded-r-lg px-3 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 transition-colors">
-              <ChevronRightIcon class="h-5 w-5" />
+      <!-- Tabs for Different Views -->
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700">
+        <div class="border-b border-gray-200 dark:border-gray-700">
+          <nav class="-mb-px flex space-x-8 px-6" aria-label="Tabs">
+            <button v-for="tab in tabs" :key="tab.id" @click="activeTab = tab.id"
+              class="py-4 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap"
+              :class="activeTab === tab.id
+                ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'">
+              <component :is="tab.icon" class="h-5 w-5 inline-block mr-2" />
+              {{ tab.name }}
             </button>
           </nav>
+        </div>
+
+        <div class="p-6">
+          <!-- Overview Tab -->
+          <div v-if="activeTab === 'overview'">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+              <!-- Payment Status Distribution -->
+              <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6">
+                <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Ödeme Durumu Dağılımı</h4>
+                <div class="space-y-4">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                      <span class="text-sm text-gray-600 dark:text-gray-400">Tamamlanan</span>
+                    </div>
+                    <span class="text-sm font-semibold text-gray-900 dark:text-white">
+                      {{ getStatsByCurrency(activeCurrency).completedCount }} ({{
+                        formatNumber(getStatsByCurrency(activeCurrency).completedPercentage, 1) }}%)
+                    </span>
+                  </div>
+                  <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                    <div class="bg-emerald-500 h-2 rounded-full transition-all duration-1000"
+                      :style="{ width: getStatsByCurrency(activeCurrency).completedPercentage + '%' }"></div>
+                  </div>
+
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+                      <span class="text-sm text-gray-600 dark:text-gray-400">Kısmi Ödeme</span>
+                    </div>
+                    <span class="text-sm font-semibold text-gray-900 dark:text-white">
+                      {{ getStatsByCurrency(activeCurrency).partialCount }} ({{
+                        formatNumber(getStatsByCurrency(activeCurrency).partialPercentage, 1) }}%)
+                    </span>
+                  </div>
+                  <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                    <div class="bg-amber-500 h-2 rounded-full transition-all duration-1000"
+                      :style="{ width: getStatsByCurrency(activeCurrency).partialPercentage + '%' }"></div>
+                  </div>
+
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                      <span class="text-sm text-gray-600 dark:text-gray-400">Ödenmedi</span>
+                    </div>
+                    <span class="text-sm font-semibold text-gray-900 dark:text-white">
+                      {{ getStatsByCurrency(activeCurrency).unpaidCount }} ({{
+                        formatNumber(getStatsByCurrency(activeCurrency).unpaidPercentage, 1) }}%)
+                    </span>
+                  </div>
+                  <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                    <div class="bg-red-500 h-2 rounded-full transition-all duration-1000"
+                      :style="{ width: getStatsByCurrency(activeCurrency).unpaidPercentage + '%' }"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Monthly Performance -->
+              <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6">
+                <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{{ currentMonthTitle }}</h4>
+                <div class="grid grid-cols-2 gap-4">
+                  <div v-for="curr in availableCurrencies.slice(0, 4)" :key="'month-' + curr"
+                    class="bg-white dark:bg-gray-600/50 rounded-lg p-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                    @click="activeCurrency = curr">
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ getCurrencyLabel(curr) }}</p>
+                    <p class="text-lg font-bold text-gray-900 dark:text-white">
+                      {{ formatMoney(getMonthlyStats(curr).totalSales, curr) }}
+                    </p>
+                    <div class="flex items-center mt-2 text-xs">
+                      <span class="text-emerald-600 dark:text-emerald-400">
+                        {{ getMonthlyStats(curr).count }} satış
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Currency Summary Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              <div v-for="curr in availableCurrencies" :key="'summary-' + curr"
+                class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-lg p-5 border border-gray-100 dark:border-gray-600 hover:border-indigo-300 dark:hover:border-indigo-500 transition-all duration-300 cursor-pointer hover:scale-105"
+                :class="{ 'ring-2 ring-indigo-500': activeCurrency === curr }" @click="activeCurrency = curr">
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center gap-2">
+                    <span class="text-2xl">{{ getCurrencyEmoji(curr) }}</span>
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ getCurrencyLabel(curr) }}</span>
+                  </div>
+                  <span class="text-xs px-2 py-1 rounded-full"
+                    :class="activeCurrency === curr ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300' : 'bg-gray-100 text-gray-600 dark:bg-gray-600 dark:text-gray-400'">
+                    {{ getStatsByCurrency(curr).salesCount }} satış
+                  </span>
+                </div>
+
+                <div class="space-y-3">
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-500 dark:text-gray-400">Toplam</span>
+                    <span class="font-bold text-gray-900 dark:text-white">{{
+                      formatMoney(getStatsByCurrency(curr).totalSales, curr) }}</span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm text-emerald-600 dark:text-emerald-400">Kasada</span>
+                    <span class="font-semibold text-emerald-600 dark:text-emerald-400">{{
+                      formatMoney(getStatsByCurrency(curr).totalPaid, curr) }}</span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm text-amber-600 dark:text-amber-400">Beklenen</span>
+                    <span class="font-semibold text-amber-600 dark:text-amber-400">{{
+                      formatMoney(getStatsByCurrency(curr).totalRemaining, curr) }}</span>
+                  </div>
+
+                  <div class="pt-3 border-t border-gray-200 dark:border-gray-600">
+                    <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                      <div class="bg-gradient-to-r from-emerald-500 to-green-600 h-2 rounded-full transition-all duration-1000"
+                        :style="{ width: getStatsByCurrency(curr).paidPercentage + '%' }"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sales List Tab -->
+          <div v-if="activeTab === 'sales'">
+            <SalesListTable :sales="filteredSales" :loading="loading" @view-detail="viewSaleDetails" />
+          </div>
+
+          <!-- User Performance Tab -->
+          <div v-if="activeTab === 'users'">
+            <UserPerformanceTable :users="userPerformanceData" :loading="loading" @select-user="selectUser" />
+          </div>
+
+          <!-- Products Tab -->
+          <div v-if="activeTab === 'products'">
+            <ProductsAnalysis :products="productsData" :loading="loading" />
+          </div>
+
+        
         </div>
       </div>
     </div>
@@ -509,33 +469,49 @@ import {
   ChartPieIcon,
   CheckCircleIcon,
   XCircleIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
   EyeIcon,
   ArrowPathIcon,
   FunnelIcon,
   MagnifyingGlassIcon,
-  GlobeAltIcon
+  GlobeAltIcon,
+  UsersIcon,
+  ArrowDownTrayIcon,
+  ArrowTrendingUpIcon,
+  TableCellsIcon,
+  UserGroupIcon,
+  CubeIcon,
+  DocumentChartBarIcon
 } from '@heroicons/vue/24/outline'
 import { useApi } from '~/composables/useApi'
-
 
 const api = useApi()
 const { userId, isAdmin } = usePermissions()
 
-// State
+// =====================================================
+// STATE
+// =====================================================
 const loading = ref(true)
+const loadingRates = ref(false)
 const salesData = ref([])
+const usersList = ref([])
+const userPerformanceData = ref([])
+const productsData = ref([]) 
+
+// Filters
 const searchTerm = ref('')
 const startDate = ref('')
 const endDate = ref('')
 const paymentFilter = ref('all')
-const activeCurrency = ref('USD')  // Varsayılan USD
+const activeCurrency = ref('USD')
+const selectedUserId = ref(null)
+const activeDatePreset = ref('all')
+const activeTab = ref('overview')
+
+// Modals
 const showDetailModal = ref(false)
 const selectedSale = ref(null)
 
-// Exchange Rates State
-const loadingRates = ref(false)
+// Exchange Rates
 const exchangeRates = ref({
   USD: 1,
   EUR: 1.09,
@@ -544,7 +520,7 @@ const exchangeRates = ref({
 })
 const ratesLastUpdated = ref(null)
 
-// Grand Total State
+// Grand Total
 const grandTotal = ref({
   totalSalesInUsd: 0,
   totalPaidInUsd: 0,
@@ -552,20 +528,48 @@ const grandTotal = ref({
   breakdown: []
 })
 
-const pagination = ref({
-  total: 0,
-  page: 1,
-  limit: 10,
-  totalPages: 0
+// Overall Statistics
+const overallStats = ref({
+  totalSalesCount: 0,
+  completedCount: 0,
+  partialCount: 0,
+  unpaidCount: 0,
+  uniqueCustomers: 0,
+  avgSalesPerCustomer: 0,
+  avgSaleValue: 0,
+  conversionRate: 0
 })
 
-// Available currencies - USD öncelikli
+// =====================================================
+// TABS CONFIGURATION
+// =====================================================
+const tabs = [
+  { id: 'overview', name: 'Genel Bakış', icon: ChartBarIcon },
+  { id: 'sales', name: 'Satış Listesi', icon: TableCellsIcon },
+  { id: 'users', name: 'Kullanıcı Performansı', icon: UserGroupIcon },
+  { id: 'products', name: 'Ürün Analizi', icon: CubeIcon }
+]
+
+// =====================================================
+// DATE PRESETS
+// =====================================================
+const datePresets = [
+  { label: 'Tümü', value: 'all' },
+  { label: 'Bugün', value: 'today' },
+  { label: 'Bu Hafta', value: 'week' },
+  { label: 'Bu Ay', value: 'month' },
+  { label: 'Son 3 Ay', value: 'quarter' },
+  { label: 'Bu Yıl', value: 'year' }
+]
+
+// =====================================================
+// COMPUTED
+// =====================================================
 const availableCurrencies = computed(() => {
-  const currencies = new Set(['USD'])  // USD varsayılan olarak ekle
+  const currencies = new Set(['USD'])
   salesData.value.forEach(sale => {
     if (sale.currency) currencies.add(sale.currency)
   })
-  // USD'yi başa al
   const arr = Array.from(currencies)
   const usdIndex = arr.indexOf('USD')
   if (usdIndex > 0) {
@@ -575,56 +579,101 @@ const availableCurrencies = computed(() => {
   return arr
 })
 
-// Grand Total Paid Percentage
 const grandTotalPaidPercentage = computed(() => {
   if (grandTotal.value.totalSalesInUsd === 0) return 0
   return (grandTotal.value.totalPaidInUsd / grandTotal.value.totalSalesInUsd) * 100
 })
 
-// Load data on mount
-onMounted(async () => {
-  await loadExchangeRates()
-  await loadSalesData()
+const currentMonthTitle = computed(() => {
+  const now = new Date()
+  const monthName = now.toLocaleDateString('tr-TR', { month: 'long' })
+  return `${now.getFullYear()} ${monthName.charAt(0).toUpperCase() + monthName.slice(1)}`
 })
 
-/**
- * Para birimi belirleme fonksiyonu
- * Öncelik sırası:
- * 1. salesProduct.currency.code (eğer varsa)
- * 2. salesProduct.productDetails.currency.code (ürünün varsayılan para birimi)
- * 3. 'TRY' (fallback)
- */
-const getCurrencyFromProduct = (salesProduct) => {
-  // Önce salesProduct'ın kendi currency'sine bak
-  if (salesProduct.currency?.code) {
-    return salesProduct.currency.code
-  }
-  // Sonra spCurrency'e bak (join ile gelen)
-  if (salesProduct.spCurrency?.code) {
-    return salesProduct.spCurrency.code
-  }
-  // Sonra ürünün currency'sine bak
-  if (salesProduct.productDetails?.currency?.code) {
-    return salesProduct.productDetails.currency.code
-  }
-  // Son çare TRY
-  return 'TRY'
-}
+const filteredSales = computed(() => {
+  let filtered = salesData.value
 
-/**
- * FRONTEND FIX - loadSalesData
- * 
- * Backend henüz gruplama yapmıyor, frontend'de manual gruplama yapıyoruz
- */
+  if (activeCurrency.value) {
+    filtered = filtered.filter(s => s.currency === activeCurrency.value)
+  }
 
-const loadSalesData = async () => {
+  if (selectedUserId.value) {
+    filtered = filtered.filter(s => s.user === selectedUserId.value)
+  }
+
+  if (searchTerm.value) {
+    const search = searchTerm.value.toLowerCase()
+    filtered = filtered.filter(sale => {
+      const name = sale.customer?.name?.toLowerCase() || ''
+      const desc = sale.description?.toLowerCase() || ''
+      const title = sale.title?.toLowerCase() || ''
+      return name.includes(search) || desc.includes(search) || title.includes(search)
+    })
+  }
+
+  if (startDate.value || endDate.value) {
+    filtered = filtered.filter(sale => {
+      const saleDate = new Date(sale.date)
+      const start = startDate.value ? new Date(startDate.value) : null
+      const end = endDate.value ? new Date(endDate.value) : null
+      if (start) start.setHours(0, 0, 0, 0)
+      if (end) end.setHours(23, 59, 59, 999)
+      if (start && end) return saleDate >= start && saleDate <= end
+      if (start) return saleDate >= start
+      if (end) return saleDate <= end
+      return true
+    })
+  }
+
+  if (paymentFilter.value !== 'all') {
+    filtered = filtered.filter(sale => {
+      if (paymentFilter.value === 'completed') return sale.isFullyPaid
+      if (paymentFilter.value === 'partial') return !sale.isFullyPaid && sale.paidAmount > 0
+      if (paymentFilter.value === 'unpaid') return !sale.isFullyPaid && sale.paidAmount === 0
+      return true
+    })
+  }
+
+  return filtered
+})
+
+// =====================================================
+// LIFECYCLE
+// =====================================================
+onMounted(async () => {
+  await loadAllData()
+})
+
+// =====================================================
+// METHODS
+// =====================================================
+const loadAllData = async () => {
   loading.value = true
   try {
-    const query = {
-      page: pagination.value.page,
-      limit: pagination.value.limit
-    }
+    // İlk aşama: Temel verileri paralel yükle
+    await Promise.all([
+      loadExchangeRates(),
+      loadSalesData(),
+      loadUsersList()
+    ])
+    
+    // İkinci aşama: Satış verilerine bağımlı hesaplamaları yap
+    // Bu fonksiyonlar salesData.value üzerinden hesaplama yaptığı için
+    // loadSalesData tamamlandıktan sonra çalışmalı
+    await Promise.all([
+      loadUserPerformance(),
+      loadProductsData()
+    ])
+  } catch (error) {
+    console.error('Error loading data:', error)
+  } finally {
+    loading.value = false
+  }
+}
 
+const loadSalesData = async () => {
+  try {
+    const query = { limit: 1000 }
     if (!isAdmin.value && userId.value) {
       query.user = userId.value
     }
@@ -632,18 +681,12 @@ const loadSalesData = async () => {
     const response = await api('/sales/user/details', { query })
 
     if (response?.data) {
-      // Backend henüz gruplama yapmıyor, frontend'de gruplama yapıyoruz
       const groupedSales = []
 
       for (const sale of response.data) {
-        // Para birimlerine göre ürünleri grupla
         const productsByCurrency = new Map()
 
         for (const sp of sale.salesProducts || []) {
-          // Para birimi belirleme önceliği:
-          // 1. sp.currency.code (salesProduct'ın kendi currency'si)
-          // 2. sp.productDetails.currency.code (ürünün varsayılan currency'si)
-          // 3. 'TRY' (fallback)
           const currency = sp.currency?.code ||
             sp.productDetails?.currency?.code ||
             'TRY'
@@ -654,7 +697,6 @@ const loadSalesData = async () => {
           productsByCurrency.get(currency).push(sp)
         }
 
-        // Her para birimi için ayrı kayıt oluştur
         for (const [currency, products] of productsByCurrency.entries()) {
           const totalAmount = products.reduce((sum, p) => sum + (parseFloat(p.totalPrice) || 0), 0)
           const paidAmount = products.reduce((sum, p) => sum + (parseFloat(p.paidAmount) || 0), 0)
@@ -662,86 +704,148 @@ const loadSalesData = async () => {
           const isFullyPaid = products.length > 0 && products.every(p => p.isPayCompleted === true)
 
           groupedSales.push({
-            id: `${sale.id}-${currency}`, // Unique ID: "49-USD", "49-EUR"
-            originalId: sale.id, // Orijinal sale ID'si
+            id: `${sale.id}-${currency}`,
+            originalId: sale.id,
             customer: {
               name: [sale.customerDetails?.name, sale.customerDetails?.surname]
                 .filter(Boolean)
                 .join(' ') || 'Bilinmeyen Müşteri',
               id: sale.customer
             },
+            user: sale.user,
+            userName: sale.userDetails?.name || 'Bilinmeyen',
             totalAmount,
             paidAmount,
             remainingAmount,
             isFullyPaid,
             currency,
-            description: `${sale.title || '-'} (${currency})`, // Para birimini description'a ekle
+            description: `${sale.title || '-'} (${currency})`,
+            title: sale.title,
             date: sale.createdAt || new Date().toISOString(),
-            products // Bu para birimindeki ürünler
+            products
           })
         }
       }
 
       salesData.value = groupedSales
-
-      if (response.meta) {
-        // Gruplama sonrası total değişti, basit pagination
-        pagination.value = {
-          total: groupedSales.length,
-          page: response.meta.page || 1,
-          limit: response.meta.limit || 10,
-          totalPages: Math.ceil(groupedSales.length / (response.meta.limit || 10))
-        }
-      }
-
-      // Set default currency if available
-      if (availableCurrencies.value.length > 0 && !availableCurrencies.value.includes(activeCurrency.value)) {
-        activeCurrency.value = availableCurrencies.value[0]
-      }
-
-      // Grand Total hesapla
+      calculateOverallStats()
       calculateGrandTotal()
+      
+      // Satış verisi güncellendiğinde kullanıcı ve ürün analizlerini de güncelle
+      await Promise.all([
+        loadUserPerformance(),
+        loadProductsData()
+      ])
     }
   } catch (error) {
     console.error('Error loading sales data:', error)
     salesData.value = []
-  } finally {
-    loading.value = false
   }
 }
 
-/**
- * SONUÇ:
- * 
- * Satış #49 (3 ürün: 2 USD + 1 EUR):
- * ├── Satış #49-USD: $5.070,00 (CHECK-UP + SEZERYAN)
- * └── Satış #49-EUR: €190,00 (ONLINE MUAYENE)
- * 
- * Currency toggle:
- * - USD seçince → Sadece 49-USD görünür
- * - EUR seçince → Sadece 49-EUR görünür
- */
+const loadUsersList = async () => {
+  try {
+    const response = await api('/users')
+    if (response) {
+      usersList.value = response
+    }
+  } catch (error) {
+    console.error('Error loading users:', error)
+  }
+}
 
-/**
- * SONUÇ:
- * 
- * Müşteri ID 3696 artık iki ayrı satır olarak görünecek:
- * 1. Satış #48 (EUR): 2.500,00 EUR - Tamamlandı
- * 2. Satış #48 (USD): 580,00 USD - Tamamlandı
- * 
- * Currency toggle ile:
- * - EUR seçince → Sadece EUR satırı görünür
- * - USD seçince → Sadece USD satırı görünür
- * - Tümü seçince → İkisi de görünür
- */
+const loadUserPerformance = async () => {
+  try {
+    // Eğer satış verisi yoksa boş döndür
+    if (!salesData.value || salesData.value.length === 0) {
+      userPerformanceData.value = []
+      return
+    }
 
-// =====================================================
-// EXCHANGE RATE FONKSİYONLARI
-// =====================================================
+    const usersMap = new Map()
 
-/**
- * Döviz kurlarını backend'den yükler
- */
+    salesData.value.forEach(sale => {
+      if (!sale.user) return
+
+      if (!usersMap.has(sale.user)) {
+        usersMap.set(sale.user, {
+          userId: sale.user,
+          userName: sale.userName,
+          salesByCurrency: {},
+          totalSales: 0,
+          completedSales: 0,
+          partialSales: 0,
+          unpaidSales: 0
+        })
+      }
+
+      const user = usersMap.get(sale.user)
+      const curr = sale.currency
+
+      if (!user.salesByCurrency[curr]) {
+        user.salesByCurrency[curr] = {
+          count: 0,
+          totalAmount: 0,
+          paidAmount: 0,
+          remainingAmount: 0
+        }
+      }
+
+      user.salesByCurrency[curr].count++
+      user.salesByCurrency[curr].totalAmount += sale.totalAmount
+      user.salesByCurrency[curr].paidAmount += sale.paidAmount
+      user.salesByCurrency[curr].remainingAmount += sale.remainingAmount
+
+      user.totalSales++
+      if (sale.isFullyPaid) user.completedSales++
+      else if (sale.paidAmount > 0) user.partialSales++
+      else user.unpaidSales++
+    })
+
+    userPerformanceData.value = Array.from(usersMap.values())
+  } catch (error) {
+    console.error('Error calculating user performance:', error)
+  }
+}
+
+const loadProductsData = async () => {
+  try {
+    // Eğer satış verisi yoksa boş döndür
+    if (!salesData.value || salesData.value.length === 0) {
+      productsData.value = []
+      return
+    }
+
+    const productsMap = new Map()
+
+    salesData.value.forEach(sale => {
+      sale.products?.forEach(product => {
+        const productId = product.product
+        const productName = product.productDetails?.name || 'Bilinmeyen Ürün'
+
+        if (!productsMap.has(productId)) {
+          productsMap.set(productId, {
+            id: productId,
+            name: productName,
+            salesCount: 0,
+            totalRevenue: 0,
+            currency: sale.currency
+          })
+        }
+
+        const prod = productsMap.get(productId)
+        prod.salesCount++
+        prod.totalRevenue += parseFloat(product.totalPrice) || 0
+      })
+    })
+
+    productsData.value = Array.from(productsMap.values())
+      .sort((a, b) => b.totalRevenue - a.totalRevenue)
+  } catch (error) {
+    console.error('Error calculating products data:', error)
+  }
+}
+
 const loadExchangeRates = async () => {
   loadingRates.value = true
   try {
@@ -752,15 +856,11 @@ const loadExchangeRates = async () => {
     }
   } catch (error) {
     console.error('Error loading exchange rates:', error)
-    // Fallback değerler zaten tanımlı
   } finally {
     loadingRates.value = false
   }
 }
 
-/**
- * Döviz kurlarını manuel olarak yeniler
- */
 const refreshExchangeRates = async () => {
   loadingRates.value = true
   try {
@@ -769,7 +869,6 @@ const refreshExchangeRates = async () => {
       exchangeRates.value = response.data.rates
       ratesLastUpdated.value = response.data.lastUpdated ? new Date(response.data.lastUpdated) : new Date()
     }
-    // Grand Total'ı yeniden hesapla
     calculateGrandTotal()
   } catch (error) {
     console.error('Error refreshing exchange rates:', error)
@@ -778,9 +877,31 @@ const refreshExchangeRates = async () => {
   }
 }
 
-/**
- * Genel toplamı hesaplar (Tüm para birimlerini USD'ye çevirir)
- */
+const calculateOverallStats = () => {
+  const total = salesData.value.length
+  const completed = salesData.value.filter(s => s.isFullyPaid).length
+  const partial = salesData.value.filter(s => !s.isFullyPaid && s.paidAmount > 0).length
+  const unpaid = salesData.value.filter(s => !s.isFullyPaid && s.paidAmount === 0).length
+
+  const uniqueCustomers = new Set(salesData.value.map(s => s.customer?.id).filter(Boolean)).size
+
+  const currencySales = salesData.value.filter(s => s.currency === activeCurrency.value)
+  const avgValue = currencySales.length > 0
+    ? currencySales.reduce((sum, s) => sum + s.totalAmount, 0) / currencySales.length
+    : 0
+
+  overallStats.value = {
+    totalSalesCount: total,
+    completedCount: completed,
+    partialCount: partial,
+    unpaidCount: unpaid,
+    uniqueCustomers,
+    avgSalesPerCustomer: uniqueCustomers > 0 ? total / uniqueCustomers : 0,
+    avgSaleValue: avgValue,
+    conversionRate: total > 0 ? (completed / total) * 100 : 0
+  }
+}
+
 const calculateGrandTotal = () => {
   const rates = exchangeRates.value
   let totalSalesInUsd = 0
@@ -788,7 +909,6 @@ const calculateGrandTotal = () => {
   let totalRemainingInUsd = 0
   const breakdown = []
 
-  // Her para birimi için hesapla
   for (const currency of availableCurrencies.value) {
     const stats = getStatsByCurrency(currency)
     const rate = rates[currency] || 1
@@ -821,46 +941,18 @@ const calculateGrandTotal = () => {
   }
 }
 
-/**
- * Kur güncelleme tarihini formatlar
- */
-const formatRateDate = (date) => {
-  if (!date) return 'Bilinmiyor'
-  const d = new Date(date)
-  return d.toLocaleDateString('tr-TR', {
-    day: '2-digit',
-    month: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit'
-  })
-}
-
-/**
- * Para birimine göre istatistikleri hesaplar
- * 
- * HESAPLAMA KURALLARI:
- * - totalSales: Seçilen para birimindeki tüm satışların toplam tutarı
- * - totalPaid: Kasaya giren para (paidAmount toplamı)
- * - totalRemaining: Beklenen ödeme (totalSales - totalPaid)
- * - completedCount: Tüm ürünleri tamamlanmış satış sayısı
- * - partialCount: En az bir ödeme alınmış ama tamamlanmamış satış sayısı
- * - unpaidCount: Hiç ödeme alınmamış satış sayısı
- */
 const getStatsByCurrency = (currency) => {
   const sales = salesData.value.filter(s => s.currency === currency)
 
-  // Toplam tutarlar
   const totalSales = sales.reduce((sum, s) => sum + s.totalAmount, 0)
   const totalPaid = sales.reduce((sum, s) => sum + s.paidAmount, 0)
   const totalRemaining = totalSales - totalPaid
 
-  // Durum sayıları
   const completedCount = sales.filter(s => s.isFullyPaid).length
   const partialCount = sales.filter(s => !s.isFullyPaid && s.paidAmount > 0).length
   const unpaidCount = sales.filter(s => !s.isFullyPaid && s.paidAmount === 0).length
 
   const salesCount = sales.length
-  const pendingCount = partialCount + unpaidCount
 
   return {
     totalSales,
@@ -870,7 +962,6 @@ const getStatsByCurrency = (currency) => {
     completedCount,
     partialCount,
     unpaidCount,
-    pendingCount,
     paidPercentage: totalSales > 0 ? (totalPaid / totalSales) * 100 : 0,
     completedPercentage: salesCount > 0 ? (completedCount / salesCount) * 100 : 0,
     partialPercentage: salesCount > 0 ? (partialCount / salesCount) * 100 : 0,
@@ -878,9 +969,6 @@ const getStatsByCurrency = (currency) => {
   }
 }
 
-/**
- * Bu ayki istatistikleri hesaplar
- */
 const getMonthlyStats = (currency) => {
   const now = new Date()
   const sales = salesData.value.filter(s => {
@@ -897,124 +985,58 @@ const getMonthlyStats = (currency) => {
   }
 }
 
-// Current month title
-const currentMonthTitle = computed(() => {
+// Filter Functions
+const applyDatePreset = (preset) => {
+  activeDatePreset.value = preset
   const now = new Date()
-  const monthName = now.toLocaleDateString('tr-TR', { month: 'long' })
-  return `${now.getFullYear()} ${monthName.charAt(0).toUpperCase() + monthName.slice(1)}`
-})
 
-/**
- * Filtrelenmiş satışlar
- * Sıralama: Tarih (yeniden eskiye)
- */
-const filteredSales = computed(() => {
-  let filtered = salesData.value
-
-  // Currency filter
-  if (activeCurrency.value) {
-    filtered = filtered.filter(s => s.currency === activeCurrency.value)
-  }
-
-  // Search filter
-  if (searchTerm.value) {
-    const search = searchTerm.value.toLowerCase()
-    filtered = filtered.filter(sale => {
-      const name = sale.customer?.name?.toLowerCase() || ''
-      const desc = sale.description?.toLowerCase() || ''
-      return name.includes(search) || desc.includes(search)
-    })
-  }
-
-  // Date filter
-  if (startDate.value || endDate.value) {
-    filtered = filtered.filter(sale => {
-      const saleDate = new Date(sale.date)
-      const start = startDate.value ? new Date(startDate.value) : null
-      const end = endDate.value ? new Date(endDate.value) : null
-      if (start) start.setHours(0, 0, 0, 0)
-      if (end) end.setHours(23, 59, 59, 999)
-      if (start && end) return saleDate >= start && saleDate <= end
-      if (start) return saleDate >= start
-      if (end) return saleDate <= end
-      return true
-    })
-  }
-
-  // Payment status filter
-  // isFullyPaid kullanıyoruz (tüm ürünler için isPayCompleted kontrolü)
-  if (paymentFilter.value !== 'all') {
-    filtered = filtered.filter(sale => {
-      if (paymentFilter.value === 'completed') return sale.isFullyPaid
-      if (paymentFilter.value === 'partial') return !sale.isFullyPaid && sale.paidAmount > 0
-      if (paymentFilter.value === 'unpaid') return !sale.isFullyPaid && sale.paidAmount === 0
-      return true
-    })
-  }
-
-  return filtered
-})
-
-// Visible pages for pagination
-const visiblePages = computed(() => {
-  const pages = []
-  const total = pagination.value.totalPages
-  const current = pagination.value.page
-
-  if (total <= 7) {
-    for (let i = 1; i <= total; i++) pages.push(i)
-  } else {
-    if (current <= 4) {
-      pages.push(1, 2, 3, 4, 5)
-    } else if (current >= total - 3) {
-      pages.push(total - 4, total - 3, total - 2, total - 1, total)
-    } else {
-      pages.push(current - 1, current, current + 1)
-    }
-  }
-  return pages
-})
-
-// Helpers
-const formatMoney = (amount, currencyCode = 'TRY') => {
-  const value = Number(amount || 0)
-  try {
-    return new Intl.NumberFormat('tr-TR', {
-      style: 'currency',
-      currency: currencyCode || 'TRY'
-    }).format(value)
-  } catch (e) {
-    return new Intl.NumberFormat('tr-TR').format(value) + ' ' + currencyCode
+  switch (preset) {
+    case 'all':
+      startDate.value = ''
+      endDate.value = ''
+      break
+    case 'today':
+      startDate.value = now.toISOString().split('T')[0]
+      endDate.value = now.toISOString().split('T')[0]
+      break
+    case 'week':
+      const weekStart = new Date(now)
+      weekStart.setDate(now.getDate() - now.getDay())
+      startDate.value = weekStart.toISOString().split('T')[0]
+      endDate.value = now.toISOString().split('T')[0]
+      break
+    case 'month':
+      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
+      startDate.value = monthStart.toISOString().split('T')[0]
+      endDate.value = now.toISOString().split('T')[0]
+      break
+    case 'quarter':
+      const quarterStart = new Date(now)
+      quarterStart.setMonth(now.getMonth() - 3)
+      startDate.value = quarterStart.toISOString().split('T')[0]
+      endDate.value = now.toISOString().split('T')[0]
+      break
+    case 'year':
+      const yearStart = new Date(now.getFullYear(), 0, 1)
+      startDate.value = yearStart.toISOString().split('T')[0]
+      endDate.value = now.toISOString().split('T')[0]
+      break
   }
 }
 
-const formatDate = (dateString) => {
-  if (!dateString) return '-'
-  return new Date(dateString).toLocaleDateString('tr-TR')
-}
-
-const getCurrencyLabel = (code) => {
-  const labels = { TRY: 'Türk Lirası', EUR: 'Euro', USD: 'Dolar', GBP: 'Sterlin' }
-  return labels[code] || code
-}
-
-const getCurrencyEmoji = (code) => {
-  const emojis = { TRY: '🇹🇷', EUR: '🇪🇺', USD: '🇺🇸', GBP: '🇬🇧' }
-  return emojis[code] || '💰'
-}
-
-const resetFilters = () => {
+const resetAllFilters = () => {
   searchTerm.value = ''
   startDate.value = ''
   endDate.value = ''
   paymentFilter.value = 'all'
+  activeCurrency.value = ''
+  selectedUserId.value = null
+  activeDatePreset.value = 'all'
 }
 
-const changePage = (page) => {
-  if (page >= 1 && page <= pagination.value.totalPages) {
-    pagination.value.page = page
-    loadSalesData()
-  }
+const selectUser = (userId) => {
+  selectedUserId.value = userId
+  activeTab.value = 'sales'
 }
 
 const viewSaleDetails = (sale) => {
@@ -1027,8 +1049,53 @@ const closeDetailModal = () => {
   selectedSale.value = null
 }
 
+ 
+
+// Helper Functions
+const formatMoney = (amount, currencyCode = 'TRY') => {
+  const value = Number(amount || 0)
+  try {
+    return new Intl.NumberFormat('tr-TR', {
+      style: 'currency',
+      currency: currencyCode || 'TRY'
+    }).format(value)
+  } catch (e) {
+    return new Intl.NumberFormat('tr-TR').format(value) + ' ' + currencyCode
+  }
+}
+
+const formatNumber = (number, decimals = 0) => {
+  return Number(number || 0).toFixed(decimals)
+}
+
+const formatDate = (dateString) => {
+  if (!dateString) return '-'
+  return new Date(dateString).toLocaleDateString('tr-TR')
+}
+
+const formatRateDate = (date) => {
+  if (!date) return 'Bilinmiyor'
+  const d = new Date(date)
+  return d.toLocaleDateString('tr-TR', {
+    day: '2-digit',
+    month: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+}
+
+const getCurrencyLabel = (code) => {
+  const labels = { TRY: 'Türk Lirası', EUR: 'Euro', USD: 'Dolar', GBP: 'Sterlin' }
+  return labels[code] || code
+}
+
+const getCurrencyEmoji = (code) => {
+  const emojis = { TRY: '🇹🇷', EUR: '🇪🇺', USD: '🇺🇸', GBP: '🇬🇧' }
+  return emojis[code] || '💰'
+}
+
 useHead({
-  title: 'Satış Finans Paneli - Valdori CRM'
+  title: 'Satış & Finans Yönetimi - Valdori CRM'
 })
 </script>
 
@@ -1043,10 +1110,5 @@ useHead({
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-tbody tr {
-  animation: fadeInUp 0.5s ease-out forwards;
-  opacity: 0;
 }
 </style>

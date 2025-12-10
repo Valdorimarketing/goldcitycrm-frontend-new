@@ -38,7 +38,7 @@
 
         <div class="flex gap-3">
 
-          <NuxtLink :to="`https://vcrm.mlpcare.com/proformas/${proforma.id}/preview`" target="_blank" class="btn-primary"
+          <NuxtLink :to="`https://vcrmapi.mlpcare.com/proformas/${proforma.id}/preview`" target="_blank" class="btn-primary"
             title="İndir">
             <PrinterIcon class="w-5 h-5 mr-2" />
             PDF İndir
