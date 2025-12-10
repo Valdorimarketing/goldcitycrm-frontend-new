@@ -12,6 +12,7 @@ export interface TreatmentItem {
 export interface Proforma {
   id?: number;
   proformaNumber?: string;
+  createdBy: any;
   date: string;
   patientId?: number;
   saleId?: number;
