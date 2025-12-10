@@ -283,7 +283,7 @@
                       {{ customer.relevantUser?.name?.charAt(0)?.toUpperCase() }}
                     </span>
                   </div>
-                  <span class="text-sm text-gray-600 dark:text-gray-300">
+                  <span class="text-sm text-gray-600 dark:text-gray-300 flex-1">
                     {{ customer.relevantUser?.name }}
                   </span>
                 </div>
@@ -590,6 +590,7 @@ definePageMeta({
 const config = useRuntimeConfig()
 const path = config.public.apiBase
 const authStore = useAuthStore()
+const { isAdmin } = usePermissions()
 
 const loading = ref(true)
 const pagination = ref({

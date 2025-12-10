@@ -33,7 +33,7 @@
       <!-- Date & Currency -->
       <div class="form-section">
         <div class="section-header">
-          <h2 class="section-title">Temel Bilgiler</h2>
+          <h2 class="section-title">TEMEL BİLGİLER</h2>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -56,38 +56,88 @@
       <!-- GENERAL INFORMATION Section -->
       <div class="form-section">
         <div class="section-header">
-          <h2 class="section-title">GENERAL INFORMATION</h2>
+          <h2 class="section-title">GENEL BİLGİLER</h2>
           <p class="section-description">Hasta ve doktor bilgileri</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label class="form-label">Patient Name</label>
+            <label class="form-label">Hasta Adı</label>
             <input v-model="formData.patientName" type="text" class="form-input" placeholder="MAİSON NURİ SALİH" />
           </div>
 
           <div>
-            <label class="form-label">Hospital</label>
+            <label class="form-label">Hastane</label>
             <input v-model="formData.hospital" type="text" class="form-input" placeholder="Liv Hospital Vadi istanbul" />
           </div>
 
-          <div>
-            <label class="form-label">Physician's Name</label>
-            <input v-model="formData.physicianName" type="text" class="form-input" placeholder="Prof. MD. Çağatay Öztürk" />
+           <div class="relative">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Hastane
+            </label>
+            <input
+              v-model="hospitalSearch"
+              type="text"
+              class="form-input"
+              placeholder="Hastane adi yazin..."
+              @focus="showHospitalDropdown = true"
+              @blur="hideHospitalDropdown"
+            />
+            <div v-if="showHospitalDropdown && filteredHospitals.length > 0" class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 shadow-lg rounded-md border border-gray-200 dark:border-gray-700 max-h-60 overflow-auto">
+              <button
+                v-for="hospital in filteredHospitals"
+                :key="hospital.id"
+                type="button"
+                @mousedown.prevent="selectHospital(hospital)"
+                class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-gray-100"
+              >
+                {{ hospital.name }}
+              </button>
+            </div>
           </div>
 
+        <div class="relative">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Doktor
+            </label>
+            <input
+              v-model="doctorSearch"
+              type="text"
+              class="form-input"
+              :disabled="!hospitalId"
+              placeholder="Doktor adi yazin..."
+              @focus="showDoctorDropdown = true"
+              @blur="hideDoctorDropdown"
+            />
+            <div v-if="showDoctorDropdown && filteredDoctorsForSearch.length > 0" class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 shadow-lg rounded-md border border-gray-200 dark:border-gray-700 max-h-60 overflow-auto">
+              <button
+                v-for="doctor in filteredDoctorsForSearch"
+                :key="doctor.id"
+                type="button"
+                @mousedown.prevent="selectDoctor(doctor)"
+                class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-gray-100"
+              >
+                {{ doctor.name }}
+              </button>
+            </div>
+            <p v-if="formData.hospitalId" class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              {{ filteredDoctors.length }} doktor mevcut
+            </p>
+          </div>
+
+
           <div>
-            <label class="form-label">Physician's Department</label>
+            <label class="form-label">Doktor Departmanı</label>
             <input v-model="formData.physicianDepartment" type="text" class="form-input" placeholder="Orthopedic Surgery" />
           </div>
 
           <div>
-            <label class="form-label">Age</label>
+            <label class="form-label">Yaş</label>
             <input v-model="formData.age" type="text" class="form-input" placeholder="79 years" />
           </div>
 
           <div>
-            <label class="form-label">Country</label>
+            <label class="form-label">Ülke</label>
             <input v-model="formData.country" type="text" class="form-input" placeholder="Iraq" />
           </div>
 
@@ -98,11 +148,11 @@
         </div>
       </div>
 
-      <!-- PHYSICIAN'S OPINION (Optional) -->
+      <!-- Doctor's OPINION (Optional) -->
       <div class="form-section">
         <div class="section-header">
-          <h2 class="section-title">PHYSICIAN'S OPINION</h2>
-          <p class="section-description">Doktor görüşü (opsiyonel)</p>
+          <h2 class="section-title">DOKTOR GÖRÜŞÜ</h2>
+          <p class="section-description">Bu alan opsiyonel</p>
         </div>
 
         <div>
@@ -110,7 +160,7 @@
             v-model="formData.physicianOpinion"
             class="form-textarea"
             rows="6"
-            placeholder="Following your doctor's evaluation, your symptoms have been identified as..."
+            placeholder="Doktorunuzun değerlendirmesinin ardından, belirtileriniz şu şekilde tanımlanmıştır..."
           ></textarea>
         </div>
       </div>
@@ -120,7 +170,7 @@
         <div class="section-header">
           <div class="flex justify-between items-center">
             <div>
-              <h2 class="section-title">RECOMMENDED TREATMENT & ESTIMATED COST DETAILS</h2>
+              <h2 class="section-title">ÖNERİLEN TEDAVİ VE TAHMİNİ MALİYET BİLGİLERİ</h2>
               <p class="section-description">Tedavi prosedürleri ve maliyet detayları</p>
             </div>
             
@@ -209,7 +259,7 @@
         <!-- Grand Total -->
         <div class="grand-total-section">
           <div class="grand-total-row">
-            <span class="grand-total-label">GRAND TOTAL:</span>
+            <span class="grand-total-label">GENEL TOPLAM:</span>
             <div class="flex items-center gap-3">
               <input
                 v-model.number="formData.grandTotal"
@@ -228,7 +278,7 @@
       <!-- Services Included (Optional) -->
       <div class="form-section">
         <div class="section-header">
-          <h2 class="section-title">Services Included in the Treatment Plan</h2>
+          <h2 class="section-title">Tedavi Planına Dahil Olan Hizmetler</h2>
           <p class="section-description">Dahil edilen servisler (opsiyonel)</p>
         </div>
 
@@ -252,8 +302,8 @@ Anesthesia Services
         <div class="section-header">
           <div class="flex justify-between items-center">
             <div>
-              <h2 class="section-title">BANK ACCOUNT INFORMATION – {{ formData.currency }}</h2>
-              <p class="section-description">Banka hesap bilgileri</p>
+              <h2 class="section-title">BANKA HESAP BİLGİLERİ – {{ formData.currency }}</h2>
+              <p class="section-description">Eksiksiz ve doğru giriniz</p>
             </div>
             
             <button
@@ -276,7 +326,7 @@ Anesthesia Services
 
         <div class="bank-info-grid">
           <div>
-            <label class="form-label">Bank</label>
+            <label class="form-label">Banka</label>
             <input
               v-model="formData.bankName"
               type="text"
@@ -287,7 +337,7 @@ Anesthesia Services
           </div>
 
           <div>
-            <label class="form-label">Receiver Name</label>
+            <label class="form-label">Alıcı Adı</label>
             <input
               v-model="formData.receiverName"
               type="text"
@@ -298,7 +348,7 @@ Anesthesia Services
           </div>
 
           <div>
-            <label class="form-label">Branch Name</label>
+            <label class="form-label">Şube Adı</label>
             <input
               v-model="formData.branchName"
               type="text"
@@ -309,7 +359,7 @@ Anesthesia Services
           </div>
 
           <div>
-            <label class="form-label">Branch Code</label>
+            <label class="form-label">Şube Kodu</label>
             <input
               v-model="formData.branchCode"
               type="text"
@@ -320,7 +370,7 @@ Anesthesia Services
           </div>
 
           <div>
-            <label class="form-label">Currency</label>
+            <label class="form-label">Para Birimi</label>
             <input
               v-model="formData.bankCurrency"
               type="text"
@@ -357,8 +407,7 @@ Anesthesia Services
       <!-- Hospital Contact Information -->
       <div class="form-section">
         <div class="section-header">
-          <h2 class="section-title">Hospital Contact Information</h2>
-          <p class="section-description">İletişim bilgileri (footer için)</p>
+          <h2 class="section-title">Hastane İletişim Bilgileri (Opsiyonel)</h2>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -372,12 +421,12 @@ Anesthesia Services
           </div>
 
           <div>
-            <label class="form-label">Hospital Phone</label>
+            <label class="form-label">Hastane Telefon</label>
             <input v-model="formData.hospitalPhone" type="tel" class="form-input" />
           </div>
 
           <div>
-            <label class="form-label">Hospital Email</label>
+            <label class="form-label">Hastane Email</label>
             <input v-model="formData.hospitalEmail" type="email" class="form-input" />
           </div>
         </div>
@@ -411,12 +460,21 @@ import { useProformaStore } from '~/stores/proforma';
 const route = useRoute();
 const router = useRouter();
 const proformaStore = useProformaStore();
+const { hospitals, fetchHospitals } = useHospitals()
+const { fetchDoctors } = useDoctors()
 
 const loading = ref(false);
 const showPreview = ref(false);
 const previewUrl = ref('');
 const bankFieldsUnlocked = ref(false);
 const servicesText = ref('');
+const doctorSearch = ref('')
+
+const hospitalSearch = ref('')
+const showHospitalDropdown = ref(false)
+const hospitalDoctors = ref([])
+const showDoctorDropdown = ref(false)
+const hospitalId = ref(null)
 
 const isEditMode = computed(() => !!route.params.id);
 
@@ -473,7 +531,41 @@ onMounted(async () => {
     }
     loading.value = false;
   }
-});
+
+  try {
+    await Promise.all([
+      fetchHospitals({ limit: 1000 }),
+      fetchDoctors({ limit: 1000 }),
+    ])
+  } catch (err) {
+    console.error('Failed to initialize form:', err)
+  }
+})
+
+const selectDoctor = (doctor:any) => {
+  formData.value.doctorId = doctor.id
+  doctorSearch.value = doctor.name
+  showDoctorDropdown.value = false
+}
+
+// Computed - Doctors from selected hospital (fetched from API)
+const filteredDoctors = computed(() => {
+  return hospitalDoctors.value
+})
+
+// Computed - Filter doctors by search term
+const filteredDoctorsForSearch = computed(() => {
+  const baseDoctors = filteredDoctors.value as any
+
+  if (!doctorSearch.value) {
+    return baseDoctors
+  }
+
+  const search = doctorSearch.value.toLowerCase()
+  return baseDoctors.filter((doctor:any) =>
+    doctor.name.toLowerCase().includes(search)
+  )
+}) as any
 
 const addTreatmentItem = () => {
   formData.value.treatmentItems.push({
@@ -484,6 +576,35 @@ const addTreatmentItem = () => {
     notes: '',
   });
 };
+
+// Computed - Filter hospitals by search
+const filteredHospitals = computed(() => {
+  if (!hospitalSearch.value) {
+    return hospitals.value
+  }
+  const search = hospitalSearch.value.toLowerCase()
+  return hospitals.value.filter(hospital =>
+    hospital.name.toLowerCase().includes(search)
+  )
+})
+
+const selectHospital = async (hospital:any) => {
+  formData.value.hospital = hospital.name
+  hospitalId.value = hospital.id
+  hospitalSearch.value = hospital.name
+  showHospitalDropdown.value = false
+  // Fetch doctors for the selected hospital
+  try {
+    const $api = useApi()
+    const response = await $api(`/hospitals/${hospital.id}/doctors`) as any
+    hospitalDoctors.value = Array.isArray(response) ? response : (response.data || [])
+    console.log(`Loaded ${hospitalDoctors.value.length} doctors for hospital ${hospital.name}`)
+  } catch (err) {
+    console.error('Failed to fetch hospital doctors:', err)
+    hospitalDoctors.value = []
+  }
+}
+
 
 const removeTreatmentItem = (index: number) => {
   formData.value.treatmentItems.splice(index, 1);
@@ -539,6 +660,20 @@ const handleCancel = () => {
   }
 };
 
+
+const hideHospitalDropdown = () => {
+  setTimeout(() => {
+    showHospitalDropdown.value = false
+  }, 200)
+}
+
+const hideDoctorDropdown = () => {
+  setTimeout(() => {
+    showDoctorDropdown.value = false
+  }, 200)
+}
+
+
  
 </script>
 
@@ -553,6 +688,8 @@ const handleCancel = () => {
 
 .form-container {
   @apply space-y-6;
+  @apply max-w-[1000px];
+  @apply mx-auto
 }
 
 .form-section {

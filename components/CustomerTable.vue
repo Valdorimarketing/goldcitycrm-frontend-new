@@ -66,19 +66,21 @@
             <span class="text-sm text-gray-600 dark:text-gray-300">{{ customer.source || '-' }}</span>
           </td>
 
-          <!-- Phone -->
-          <td class="px-4 py-4">
-            <template v-if="!customer.phone">
-              <span class="text-sm text-gray-400">-</span>
-            </template>
-            <template v-else-if="isAdmin">
-              <span class="text-sm text-gray-600 dark:text-gray-300">{{ customer.phone }}</span>
-            </template>
-            <template v-else>
-              <span class="text-sm text-gray-600 dark:text-gray-300">
-                {{ customer.phone.substring(0, 5) }}<span class="blur-[3px] select-none">{{ maskPhone(customer.phone.substring(5)) }}</span>
-              </span>
-            </template>
+          <!-- Contact -->
+          <td class="px-6 py-4">
+            <div class="space-y-1">
+              <div v-if="customer.phone" class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+                <PhoneIcon class="h-4 w-4 text-gray-400" />
+                <div class="space-y-1">
+                  <p class="text-sm text-gray-600 dark:text-gray-300">{{ customer.email || '-' }}</p>
+                  <p v-if="customer.phone" class="text-xs text-gray-500 dark:text-gray-400">
+                    <template v-if="isAdmin">{{ customer.phone }}</template>
+                    <template v-else>{{ customer.phone.substring(0, 5) }}****</template>
+                  </p>
+                </div>
+              </div>
+              <span v-if="!customer.email && !customer.phone" class="text-sm text-gray-400">-</span>
+            </div>
           </td>
 
           <!-- Related Transaction -->
@@ -109,7 +111,7 @@
               <div v-else class="h-7 w-7 rounded-full bg-gradient-to-br from-gray-400 to-gray-500 flex items-center justify-center text-white text-xs font-medium shadow">
                 {{ customer.relevantUserData?.name?.charAt(0) || 'A' }}
               </div>
-              <div>
+              <div class="flex-1">
                 <p class="text-sm text-gray-700 dark:text-gray-300 group-hover/user:text-indigo-600 dark:group-hover/user:text-indigo-400 transition-colors">
                   {{ customer.relevantUserData?.name }}
                 </p>

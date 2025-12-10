@@ -38,11 +38,17 @@
 
         <div class="flex gap-3">
 
-          <NuxtLink :to="`http://localhost:3001/proformas/${proforma.id}/preview`" target="_blank" class="btn-primary"
+          <NuxtLink :to="`https://vcrm.mlpcare.com/proformas/${proforma.id}/preview`" target="_blank" class="btn-primary"
             title="İndir">
             <PrinterIcon class="w-5 h-5 mr-2" />
             PDF İndir
           </NuxtLink>
+<!-- 
+          <NuxtLink :to="`http://localhost:3001/proformas/${proforma.id}/preview`" target="_blank" class="btn-primary"
+            title="İndir">
+            <PrinterIcon class="w-5 h-5 mr-2" />
+            PDF İndir
+          </NuxtLink> -->
 
           <NuxtLink :to="`/proforma/${proforma.id}/edit`" class="btn-secondary">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

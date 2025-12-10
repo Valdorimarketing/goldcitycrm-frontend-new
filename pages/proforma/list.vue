@@ -161,12 +161,15 @@
                   </NuxtLink>
                   
 
-                  <button @click="handlePreview(proforma.id)" class="btn-icon" title="PDF İndir">
+                  <button @click="handlePreview(proforma.id)" class="btn-icon" title="Önizleme">
                     <DocumentIcon class="w-5 h-5" />
                   </button>
-                  <NuxtLink :to="`http://localhost:3001/proformas/${proforma.id}/preview`" target="_blank" class="btn-icon" title="İndir">
+                  <NuxtLink :to="`https://vcrm.mlpcare.com/proformas/${proforma.id}/preview`" target="_blank" class="btn-icon" title="İndir">
                      <PrinterIcon class="w-5 h-5" />
                   </NuxtLink>
+                  <!-- <NuxtLink :to="`http://localhost:3001/proformas/${proforma.id}/preview`" target="_blank" class="btn-icon" title="İndir">
+                     <PrinterIcon class="w-5 h-5" />
+                  </NuxtLink> -->
 
                   <button @click="handleDelete(proforma)"
                     class="btn-icon text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20" title="Sil">
@@ -262,7 +265,8 @@ const applyFilters = () => {
  
 const handlePreview = async (id: any) => {
   currentProformaId.value = id;
-  previewUrl.value = `http://localhost:3001/proformas/${id}/preview`;
+  // previewUrl.value = `http://localhost:3001/proformas/${id}/preview`;
+  previewUrl.value = `https://vcrm.mlpcare.com/proformas/${id}/preview`;
   showPreview.value = true;
 };
  
@@ -270,7 +274,8 @@ const handlePreview = async (id: any) => {
 const getAvatarUrl = (avatarPath: string) => {
   if (!avatarPath) return '';
   if (avatarPath.startsWith('http')) return avatarPath;
-  return `http://localhost:3001/${avatarPath.replace(/^\//, '')}`;
+  // return `http://localhost:3001/${avatarPath.replace(/^\//, '')}`;
+  return `https://vcrm.mlpcare.com/${avatarPath.replace(/^\//, '')}`;
 };
 
 const handleStatusChange = async (proforma: any) => {
