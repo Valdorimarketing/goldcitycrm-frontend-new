@@ -158,17 +158,17 @@
                 Durum <span class="text-red-500">*</span>
               </label>
               <select
-                v-model="form.meetingStatus"
+                v-model="form.meetingStatusId"
                 required
                 class="form-input"
-                :class="{ 'border-red-500': errors.meetingStatus }"
+                :class="{ 'border-red-500': errors.meetingStatusId }"
               >
                 <option value="">Durum seçin...</option>
                 <option v-for="status in meetingStatuses" :key="status.id" :value="status.id">
                   {{ status.name }}
                 </option>
               </select>
-              <p v-if="errors.meetingStatus" class="mt-1 text-sm text-red-600">{{ errors.meetingStatus }}</p>
+              <p v-if="errors.meetingStatusId" class="mt-1 text-sm text-red-600">{{ errors.meetingStatusId }}</p>
             </div>
 
             <!-- Açıklama -->
@@ -236,7 +236,7 @@ const { statuses: meetingStatuses, fetchMeetingStatuses } = useMeetingStatuses()
 const { branches, fetchBranches } = useBranches()
 const { customers, fetchCustomers } = useCustomers()
 
-// Form state
+// ✅ DÜZELTİLDİ: meetingStatus → meetingStatusId
 const form = ref({
   customer: '',
   hospitalId: '',
@@ -244,7 +244,7 @@ const form = ref({
   branchId: '',
   startTime: '',
   endTime: '',
-  meetingStatus: '',
+  meetingStatusId: '',  // ✅ DEĞİŞTİ
   description: ''
 })
  
@@ -342,7 +342,6 @@ watch(customerSearch, (newValue) => {
   }, 300)
 })
 
-
 const branchTimeout = ref<number | null>(null)
 watch(branchSearch, (newValue) => {
   if (branchTimeout.value) {
@@ -404,7 +403,7 @@ const selectDoctor = async (doctor: any) => {
   showDoctorDropdown.value = false
   branches.value = [];
 
-    try {
+  try {
     const $api = useApi()
     const response = await $api(`/branches`) as any
     branches.value = Array.isArray(response) ? response : (response.data || [])
@@ -451,6 +450,7 @@ const showBranchDropdownList = () => {
   }
 }
 
+// ✅ DÜZELTİLDİ: meetingStatus → meetingStatusId
 const validateForm = () => {
   errors.value = {}
 
@@ -462,8 +462,8 @@ const validateForm = () => {
     errors.value.startTime = 'Başlangıç zamanı zorunludur'
   }
 
-  if (!form.value.meetingStatus) {
-    errors.value.meetingStatus = 'Durum seçimi zorunludur'
+  if (!form.value.meetingStatusId) {  // ✅ DEĞİŞTİ
+    errors.value.meetingStatusId = 'Durum seçimi zorunludur'  // ✅ DEĞİŞTİ
   }
 
   if (form.value.startTime && form.value.endTime) {
@@ -478,6 +478,7 @@ const validateForm = () => {
   return Object.keys(errors.value).length === 0
 }
 
+// ✅ DÜZELTİLDİ: meetingStatus → meetingStatusId
 const handleSubmit = async () => {
   if (!validateForm()) {
     return
@@ -489,7 +490,7 @@ const handleSubmit = async () => {
     const data: any = {
       customer: parseInt(form.value.customer),
       user: authStore.user?.id || 1,
-      meetingStatus: parseInt(form.value.meetingStatus),
+      meetingStatusId: parseInt(form.value.meetingStatusId),  // ✅ DEĞİŞTİ
       startTime: new Date(form.value.startTime).toISOString()
     }
 
@@ -529,6 +530,7 @@ const closeModal = () => {
   emit('update:modelValue', false)
 }
 
+// ✅ DÜZELTİLDİ: meetingStatus → meetingStatusId
 const resetForm = () => {
   form.value = {
     customer: '',
@@ -537,7 +539,7 @@ const resetForm = () => {
     branchId: '',
     startTime: '',
     endTime: '',
-    meetingStatus: '',
+    meetingStatusId: '',  // ✅ DEĞİŞTİ
     description: ''
   }
   customerSearch.value = ''
