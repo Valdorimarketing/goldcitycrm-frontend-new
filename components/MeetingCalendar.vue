@@ -58,13 +58,16 @@ const getEventTitle = (meeting) => {
 const events = computed(() => {
   const now = new Date()
 
+  
+
   return props.meetings.map(meeting => {
-    const status = props.statuses.find(s => s.id === meeting.meetingStatusId) 
+     
+
     let color = '#3B82F6' // default: Randevu Verildi 
     
  
 
-    switch (status.id) {
+    switch (meeting.meetingStatusId) {
       case 1:
         color = '#3B82F6'
         break
