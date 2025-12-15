@@ -99,7 +99,7 @@
                     </div>
                     <div>
                       <p class="text-sm font-medium text-amber-800 dark:text-amber-200">
-                        {{ reminderDays }} gün sonra aranacak
+                        {{ reminderDays }} gün sonra aranacak.
                       </p>
                       <p v-if="reminderDate" class="text-xs text-amber-600 dark:text-amber-400">
                         {{ reminderDate }}
@@ -206,9 +206,14 @@
                         <p class="text-sm font-medium text-gray-900 dark:text-white">
                           {{ note.userInfo?.name || 'Sistem' }}
                         </p>
+                        <div class="flex gap-2">
+                          <p class="text-xs text-gray-500 dark:text-gray-400">
+                          {{ formatHistoryDate(note.createdAt) }}
+                        </p>
                         <p class="text-xs text-gray-500 dark:text-gray-400">
                           {{ formatDate(note.createdAt) }}
                         </p>
+                        </div>
                       </div>
                     </div>
 
@@ -275,7 +280,7 @@
 
                   <!-- View Mode -->
                   <div v-else>
-                    <p class="text-sm text-gray-700 dark:text-gray-200 whitespace-pre-wrap leading-relaxed">
+                    <p class="text-md text-gray-700 dark:text-gray-200 whitespace-pre-wrap leading-relaxed">
                       {{ note.note }}
                     </p>
 
@@ -375,8 +380,7 @@ const customerNotesStore = useCustomerNotesStore()
 const authStore = useAuthStore()
 const customersStore = useCustomersStore()
 const { statuses: availableStatuses, fetchStatuses } = useStatuses()
-const { showSuccess, showError } = useToast()
-const { fetchUnsoldProducts } = useCustomer2Product()
+const { showSuccess, showError } = useToast()  
 
 // State
 const loading = ref(false)
@@ -430,6 +434,13 @@ const fetchNotes = async () => {
     loading.value = false
   }
 }
+
+
+const formatHistoryDate = (dateString) => {
+  if (!dateString) return ''
+  return new Date(dateString).toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' })
+}
+
 
 const addNote = async () => {
   if (!newNote.note.trim() || !props.customer?.id) return
@@ -559,27 +570,7 @@ const handleSaleConverted = async (saleResult) => {
 }
 
 const formatDate = (dateString) => {
-  if (!dateString) return ''
-  const date = new Date(dateString)
-  const now = new Date()
-  const diff = now - date
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-  
-  if (days === 0) {
-    const hours = Math.floor(diff / (1000 * 60 * 60))
-    if (hours === 0) {
-      const minutes = Math.floor(diff / (1000 * 60))
-      if (minutes === 0) return 'Az önce'
-      return `${minutes} dakika önce`
-    }
-    return `${hours} saat önce`
-  } else if (days === 1) {
-    return 'Dün'
-  } else if (days < 7) {
-    return `${days} gün önce`
-  } else {
-    return date.toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' })
-  }
+  return $dayjs(dateString).fromNow();
 }
 
 const formatDateTime = (dateString) => {

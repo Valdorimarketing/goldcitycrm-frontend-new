@@ -5,11 +5,8 @@
         <tr class="bg-gray-50 dark:bg-gray-900/50">
           <th class="w-12 px-4 py-3"></th>
           <template v-for="col in columns" :key="col.key">
-            <th 
-              v-if="col.isVisible" 
-              @click="sortBy(col.key)"
-              class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
-            >
+            <th v-if="col.isVisible" @click="sortBy(col.key)"
+              class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
               <div class="flex items-center gap-1.5">
                 {{ col.label }}
                 <span v-if="sortColumn === col.key" class="text-indigo-600 dark:text-indigo-400">
@@ -23,17 +20,12 @@
       </thead>
 
       <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
-        <tr 
-          v-for="customer in filteredAndSorted" 
-          :key="customer.id"
-          class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group"
-        >
+        <tr v-for="customer in filteredAndSorted" :key="customer.id"
+          class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
           <!-- Actions -->
           <td class="px-4 py-4">
-            <button 
-              @click="toggleShow(customer.id)"
-              class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all"
-            >
+            <button @click="toggleShow(customer.id)"
+              class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all">
               <EllipsisHorizontalIcon class="h-5 w-5" />
             </button>
           </td>
@@ -41,17 +33,27 @@
           <!-- Customer Info -->
           <td class="px-4 py-4">
             <div class="flex items-center gap-3">
-              <div class="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white font-semibold text-sm shadow-sm">
-                {{ customer.name.charAt(0).toUpperCase() }}
+              <div class="relative">
+                <div
+                  class="h-11 w-11 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-sm">
+                  <span class="text-sm font-bold text-white">
+                    {{ customer.name?.charAt(0)?.toUpperCase() || '?' }}
+                  </span>
+                </div>
+                <!-- Active indicator -->
+                <div :class="[
+                  'absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-gray-800',
+                  customer.isActive ? 'bg-emerald-500' : 'bg-gray-400'
+                ]"></div>
               </div>
               <div>
-                <NuxtLink 
-                  :to="`/customers/show/${customer.id}`"
-                  class="font-medium text-gray-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
-                >
+                <NuxtLink :to="`/customers/show/${customer.id}`"
+                  class="font-medium text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                   {{ customer.name }}
                 </NuxtLink>
-                <p class="text-xs text-gray-500 dark:text-gray-400">ID: {{ customer.id }}</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                  ID: {{ customer.id }}
+                </p>
               </div>
             </div>
           </td>
@@ -100,23 +102,25 @@
 
           <!-- Assigned User (Admin) -->
           <td v-if="isAdmin" class="px-4 py-4">
-            <NuxtLink 
-              v-if="customer.relevantUserData"
-              :to="`/profile/${customer.relevantUserData?.id}`" 
-              class="flex items-center gap-2 group/user"
-            >
-              <div v-if="customer.relevantUserData.avatar" class="h-7 w-7 rounded-full overflow-hidden ring-2 ring-white dark:ring-gray-800 shadow">
+            <NuxtLink v-if="customer.relevantUserData" :to="`/profile/${customer.relevantUserData?.id}`"
+              class="flex items-center gap-2 group/user">
+              <div v-if="customer.relevantUserData.avatar"
+                class="h-7 w-7 rounded-full overflow-hidden ring-2 ring-white dark:ring-gray-800 shadow">
                 <img :src="path + customer.relevantUserData.avatar" alt="Avatar" class="h-full w-full object-cover" />
               </div>
-              <div v-else class="h-7 w-7 rounded-full bg-gradient-to-br from-gray-400 to-gray-500 flex items-center justify-center text-white text-xs font-medium shadow">
+              <div v-else
+                class="h-7 w-7 rounded-full bg-gradient-to-br from-gray-400 to-gray-500 flex items-center justify-center text-white text-xs font-medium shadow">
                 {{ customer.relevantUserData?.name?.charAt(0) || 'A' }}
               </div>
               <div class="flex-1">
-                <p class="text-sm text-gray-700 dark:text-gray-300 group-hover/user:text-indigo-600 dark:group-hover/user:text-indigo-400 transition-colors">
+                <p
+                  class="text-sm text-gray-700 dark:text-gray-300 group-hover/user:text-indigo-600 dark:group-hover/user:text-indigo-400 transition-colors">
                   {{ customer.relevantUserData?.name }}
                 </p>
-                <p v-if="customer.relevantUserData?.lastActiveTime" class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                  <span class="w-1.5 h-1.5 rounded-full" :class="isOnline(customer.relevantUserData?.lastActiveTime) ? 'bg-emerald-500' : 'bg-gray-400'"></span>
+                <p v-if="customer.relevantUserData?.lastActiveTime"
+                  class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full"
+                    :class="isOnline(customer.relevantUserData?.lastActiveTime) ? 'bg-emerald-500' : 'bg-gray-400'"></span>
                   {{ getLastSeen(customer.relevantUserData?.lastActiveTime) }}
                 </p>
               </div>
@@ -152,118 +156,84 @@
 
     <!-- Action Modal -->
     <Teleport to="body">
-      <Transition
-        enter-active-class="transition-all duration-300"
-        enter-from-class="opacity-0"
-        enter-to-class="opacity-100"
-        leave-active-class="transition-all duration-200"
-        leave-from-class="opacity-100"
-        leave-to-class="opacity-0"
-      >
-        <div 
-          v-if="showStates.activeId"
+      <Transition enter-active-class="transition-all duration-300" enter-from-class="opacity-0"
+        enter-to-class="opacity-100" leave-active-class="transition-all duration-200" leave-from-class="opacity-100"
+        leave-to-class="opacity-0">
+        <div v-if="showStates.activeId"
           class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-          @click.self="showStates.activeId = null"
-        >
-          <Transition
-            enter-active-class="transition-all duration-300"
-            enter-from-class="opacity-0 scale-95"
-            enter-to-class="opacity-100 scale-100"
-            leave-active-class="transition-all duration-200"
-            leave-from-class="opacity-100 scale-100"
-            leave-to-class="opacity-0 scale-95"
-          >
-            <div 
-              v-if="showStates.activeId"
-              class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden"
-            >
+          @click.self="showStates.activeId = null">
+          <Transition enter-active-class="transition-all duration-300" enter-from-class="opacity-0 scale-95"
+            enter-to-class="opacity-100 scale-100" leave-active-class="transition-all duration-200"
+            leave-from-class="opacity-100 scale-100" leave-to-class="opacity-0 scale-95">
+            <div v-if="showStates.activeId"
+              class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
               <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-700">
                 <h3 class="font-semibold text-gray-900 dark:text-white">İşlemler</h3>
-                <button 
-                  @click="showStates.activeId = null"
-                  class="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
-                >
+                <button @click="showStates.activeId = null"
+                  class="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
                   <XMarkIcon class="h-5 w-5" />
                 </button>
               </div>
 
               <div class="p-4 grid grid-cols-3 gap-2">
-                <NuxtLink 
-                  :to="`/customers/show/${showStates.activeId}`"
-                  class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
-                >
+                <NuxtLink :to="`/customers/show/${showStates.activeId}`"
+                  class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">
                   <div class="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg">
                     <EyeIcon class="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
                   </div>
                   <span class="text-xs text-gray-600 dark:text-gray-300">Görüntüle</span>
                 </NuxtLink>
 
-                <button 
-                  @click="emitAction('show-history')"
-                  class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
-                >
+                <button @click="emitAction('show-history')"
+                  class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">
                   <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
                     <ClockIcon class="h-5 w-5 text-blue-600 dark:text-blue-400" />
                   </div>
                   <span class="text-xs text-gray-600 dark:text-gray-300">Geçmiş</span>
                 </button>
 
-                <button 
-                  @click="emitAction('show-notes')"
-                  class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
-                >
+                <button @click="emitAction('show-notes')"
+                  class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">
                   <div class="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
                     <DocumentTextIcon class="h-5 w-5 text-amber-600 dark:text-amber-400" />
                   </div>
                   <span class="text-xs text-gray-600 dark:text-gray-300">Notlar</span>
                 </button>
 
-                <button 
-                  @click="emitAction('show-doctor')"
-                  class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
-                >
+                <button @click="emitAction('show-doctor')"
+                  class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">
                   <div class="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
                     <UsersIcon class="h-5 w-5 text-purple-600 dark:text-purple-400" />
                   </div>
                   <span class="text-xs text-gray-600 dark:text-gray-300">Doktor</span>
                 </button>
 
-                <button 
-                  @click="emitAction('show-services')"
-                  class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
-                >
+                <button @click="emitAction('show-services')"
+                  class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">
                   <div class="p-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg">
                     <ShoppingBagIcon class="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                   </div>
                   <span class="text-xs text-gray-600 dark:text-gray-300">Hizmetler</span>
                 </button>
 
-                <button 
-                  @click="emitAction('show-files')"
-                  class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
-                >
+                <button @click="emitAction('show-files')"
+                  class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">
                   <div class="p-2 bg-cyan-100 dark:bg-cyan-900/30 rounded-lg">
                     <FolderIcon class="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
                   </div>
                   <span class="text-xs text-gray-600 dark:text-gray-300">Dosyalar</span>
                 </button>
 
-                <NuxtLink 
-                  v-if="isEditable"
-                  :to="`/customers/edit/${showStates.activeId}`"
-                  class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
-                >
+                <NuxtLink v-if="isEditable" :to="`/customers/edit/${showStates.activeId}`"
+                  class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">
                   <div class="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
                     <PencilIcon class="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
                   </div>
                   <span class="text-xs text-gray-600 dark:text-gray-300">Düzenle</span>
                 </NuxtLink>
 
-                <button 
-                  v-if="isDeleteable"
-                  @click="emitAction('confirm-delete')"
-                  class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/30 transition-all"
-                >
+                <button v-if="isDeleteable" @click="emitAction('confirm-delete')"
+                  class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/30 transition-all">
                   <div class="p-2 bg-red-100 dark:bg-red-900/30 rounded-lg">
                     <TrashIcon class="h-5 w-5 text-red-600 dark:text-red-400" />
                   </div>
@@ -279,16 +249,16 @@
 </template>
 
 <script setup>
-import { 
-  ClockIcon, 
-  DocumentTextIcon, 
-  EllipsisHorizontalIcon, 
-  EyeIcon, 
-  FolderIcon, 
-  PencilIcon, 
-  ShoppingBagIcon, 
-  TrashIcon, 
-  UsersIcon, 
+import {
+  ClockIcon,
+  DocumentTextIcon,
+  EllipsisHorizontalIcon,
+  EyeIcon,
+  FolderIcon,
+  PencilIcon,
+  ShoppingBagIcon,
+  TrashIcon,
+  UsersIcon,
   XMarkIcon,
   ChevronUpIcon,
   ChevronDownIcon
@@ -355,7 +325,7 @@ const isOnline = (lastActiveTime) => {
 const maskPhone = (str) => {
   if (!str) return ''
   return str.replace(/[0-9]/g, () => Math.floor(Math.random() * 10).toString())
-            .replace(/[^0-9\s\-\+\(\)]/g, '•')
+    .replace(/[^0-9\s\-\+\(\)]/g, '•')
 }
 
 const sortBy = (key) => {

@@ -237,7 +237,7 @@
                     <CalendarIcon class="h-4 w-4 text-amber-600 dark:text-amber-400" />
                   </div>
                   <span class="text-sm text-gray-700 dark:text-gray-300">{{ formatBirthDate(customer.birth_date)
-                    }}</span>
+                  }}</span>
                 </div>
 
                 <!-- Location -->
@@ -485,11 +485,11 @@
                       class="bg-gray-50 dark:bg-gray-700/50 rounded-2xl p-4 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                       <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
                         <div class="flex-1">
-                          <p class="text-sm font-semibold text-gray-900 dark:text-white">
+                          <p class="text-sm font-semibold text-gray-600 dark:text-gray-400">
                             {{ item.action || 'İşlem' }}
                           </p>
                           <p v-if="item.description"
-                            class="mt-1 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                            class="mt-1 text-md text-gray-900  dark:text-white leading-relaxed">
                             {{ item.description }}
                           </p>
 
@@ -524,9 +524,14 @@
                           <p class="text-xs font-medium text-gray-900 dark:text-white">
                             {{ formatHistoryDate(item.createdAt || item.updatesAt) }}
                           </p>
-                          <p class="text-xs text-gray-500 dark:text-gray-400">
-                            {{ formatTime(item.createdAt || item.updatesAt) }}
-                          </p>
+                          <div class="flex gap-2">
+                            <p class="text-xs text-gray-500 dark:text-gray-400">
+                              {{ formatHistoryPass(item.createdAt) }}
+                            </p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">
+                              {{ formatTime(item.createdAt) }}
+                            </p>
+                          </div>
                           <p v-if="item.user || item.userInfo"
                             class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
                             <UserIcon class="h-3 w-3" />
@@ -616,7 +621,7 @@ import {
 const route = useRoute()
 const router = useRouter()
 const { userId, isDoctor, isUser } = usePermissions()
-
+const { $dayjs } = useNuxtApp()
 // State
 const customer = ref(null)
 const loading = ref(true)
@@ -680,6 +685,10 @@ const formattedEngagementTime = computed(() => {
   if (minutes > 0) return `${minutes} dk ${seconds} sn`
   return `${seconds} sn`
 })
+
+const formatHistoryPass = (stringData) => {
+  return $dayjs(stringData).fromNow();
+}
 
 // ref tanımla
 const phoneCopied = ref(false)

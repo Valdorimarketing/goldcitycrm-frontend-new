@@ -1267,17 +1267,7 @@ const getCustomerById = (id) => {
   return customersData.value.find(c => c.id === id)
 }
 
-// ... rest of the script remains the same as original ...
-// (tüm mevcut script logic'i aynen kalacak)
-
-// CACHE_KEY, loadFromCache, saveToCache, clearCache
-// State tanımlamaları
-// Pagination computed & methods
-// loadCustomers, resetFilters, handleDateFilterChange
-// Modal handlers
-// formatDateTime, getStatusClass, getStatusText
-// getRemainingTime, getRemainingTimeClass
-// watchDebounced, onMounted, onBeforeUnmount
+ 
 
 const CACHE_KEY = 'dynamic_search_filters'
 const CACHE_VERSION = 1
