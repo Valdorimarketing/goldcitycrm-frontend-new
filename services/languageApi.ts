@@ -8,13 +8,15 @@ const getBaseURL = (): string => {
   try {
     if (import.meta.client && typeof useRuntimeConfig === 'function') {
       const config = useRuntimeConfig();
-      return config.public.apiBaseUrl as string || 'http://localhost:3001';
+      // return config.public.apiBaseUrl as string || 'http://localhost:3001';
+      return config.public.apiBaseUrl as string || 'https://vcrmapi.mlpcare.com';
     }
   } catch (e) {
     // Silent fallback
   }
 
-  return 'http://localhost:3001';
+  // return 'http://localhost:3001';
+  return 'https://vcrmapi.mlpcare.com';
 };
 
 /**

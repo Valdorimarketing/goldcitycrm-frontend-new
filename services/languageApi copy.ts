@@ -11,7 +11,8 @@ import type {
 // API fetch helper with auth
 const apiFetch = async <T>(url: string, options: any = {}): Promise<T> => {
   const config = useRuntimeConfig()
-  const baseURL = config.public.apiBase || 'http://localhost:3001'
+  // const baseURL = config.public.apiBase || 'http://localhost:3001'
+   const baseURL = config.public.apiBase || 'https://vcrmapi.mlpcare.com'
   
   // Get token from localStorage (client-side only)
   let token: string | null = null
