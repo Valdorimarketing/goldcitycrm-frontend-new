@@ -99,6 +99,7 @@
               <th>Tutar</th>
               <th>Para Birimi</th>
               <th>Durum</th>
+              <th>İndirme Onayı</th>
               <th>Durum Değiştir</th>
               <th>İşlemler</th>
             </tr>
@@ -134,6 +135,24 @@
               </td>
               <td>
                 <div class="flex items-center gap-2">
+                  <span :class="proforma.downloadApproved ? 'badge badge-green' : 'badge badge-red'">
+                    {{ proforma.downloadApproved ? '✓ Onaylandı' : '✗ Onay Bekliyor' }}
+                  </span>
+                  <!-- ✅ Admin/Doctor için onay toggle butonu -->
+                  <button
+                    v-if="canApproveDownload"
+                    @click="handleToggleApproval(proforma)"
+                    class="btn-icon-sm"
+                    :class="proforma.downloadApproved ? 'text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20' : 'text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20'"
+                    :title="proforma.downloadApproved ? 'İndirme İznini İptal Et' : 'İndirme İznini Onayla'"
+                  >
+                    <CheckIcon v-if="!proforma.downloadApproved" class="w-5 h-5" />
+                    <XMarkIcon v-else class="w-5 h-5" />
+                  </button>
+                </div>
+              </td>
+              <td>
+                <div class="flex items-center gap-2">
                   <select 
                     v-model="statusChanges[proforma.id as any]" 
                     class="form-select-sm"
@@ -160,18 +179,27 @@
                      <PencilSquareIcon class="w-5 h-5" />
                   </NuxtLink>
                   
-
-                  <button @click="handlePreview(proforma.id)" class="btn-icon" title="Önizleme">
+                  <!-- ✅ İndirme onayı varsa veya admin/doctor ise göster -->
+                  <button 
+                    v-if="proforma.downloadApproved || canApproveDownload" 
+                    @click="handlePreview(proforma.id)" 
+                    class="btn-icon" 
+                    title="Önizleme"
+                  >
                     <DocumentIcon class="w-5 h-5" />
                   </button>
-                  <NuxtLink :to="`https://vcrmapi.mlpcare.com/proformas/${proforma.id}/preview`" target="_blank" class="btn-icon" title="İndir">
+                  
+                  <NuxtLink 
+                    v-if="proforma.downloadApproved || canApproveDownload" 
+                    :to="`${downloadPath}/proformas/${proforma.id}/preview/${uuid}`" 
+                    target="_blank" 
+                    class="btn-icon" 
+                    title="İndir"
+                  >
                      <PrinterIcon class="w-5 h-5" />
                   </NuxtLink>
-                  <!-- <NuxtLink :to="`http://localhost:3001/proformas/${proforma.id}/preview`" target="_blank" class="btn-icon" title="İndir">
-                     <PrinterIcon class="w-5 h-5" />
-                  </NuxtLink> -->
 
-                  <button @click="handleDelete(proforma)"
+                  <button @click="handleDelete(proforma)" v-if="isAdmin"
                     class="btn-icon text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20" title="Sil">
                     <TrashIcon class="w-5 h-5" />
                   </button>
@@ -184,7 +212,7 @@
     </div>
 
 
-<!-- Preview Modal -->
+    <!-- Preview Modal -->
     <div v-if="showPreview" class="modal-overlay" @click="showPreview = false">
       <div class="modal-content" @click.stop>
         <div class="modal-header">
@@ -209,8 +237,9 @@
 
   </div>
 </template>
+
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import { useProformaStore } from '~/stores/proforma';
 
 import {
@@ -220,15 +249,32 @@ import {
   DocumentIcon,
   TrashIcon,
   CheckIcon,
-  PrinterIcon
+  PrinterIcon,
+  XMarkIcon
 } from '@heroicons/vue/24/outline'
 
+const authStore = useAuthStore()
 const proformaStore = useProformaStore();
 const { proformas, loading, error } = storeToRefs(proformaStore);
+// const downloadPath = 'https://vcrmapi.mlpcare.com';
+const downloadPath = 'http://localhost:3001';
+
+const $api = useApi()
 
 const showPreview = ref(false);
 const previewUrl = ref('');
 const currentProformaId = ref<number | null>(null);
+
+// ✅ Admin ve Doctor kontrolleri
+const isAdmin = computed(() => authStore.user?.role === 'admin')
+const canApproveDownload = computed(() => {
+  if (!authStore.user) return false
+  const role = authStore.user.role?.toLowerCase()
+  return role === 'admin' || role === 'doctor'
+})
+
+const uuid = authStore.user?.id;
+
 
 const filters = ref({
   status: '',
@@ -262,20 +308,47 @@ const applyFilters = () => {
   });
 };
 
- 
+// ✅ İndirme onayı toggle fonksiyonu
+const handleToggleApproval = async (proforma: any) => {
+  const action = proforma.downloadApproved ? 'iptal etmek' : 'onaylamak'
+  
+  if (!confirm(`${proforma.proformaNumber} için indirme iznini ${action} istediğinizden emin misiniz?`)) {
+    return
+  }
+  
+  try {
+    const endpoint = proforma.downloadApproved 
+      ? `/proformas/${proforma.id}/revoke-download`
+      : `/proformas/${proforma.id}/approve-download`
+    
+    await $api(endpoint, {
+      method: 'PATCH'
+    })
+    
+    // Liste yenile
+    await applyFilters()
+    
+    const message = proforma.downloadApproved 
+      ? 'İndirme izni başarıyla iptal edildi'
+      : 'İndirme izni başarıyla onaylandı'
+    
+    alert(message)
+  } catch (err) {
+    console.error('Failed to toggle download approval:', err)
+    alert('İşlem sırasında bir hata oluştu')
+  }
+}
+
 const handlePreview = async (id: any) => {
   currentProformaId.value = id;
-  // previewUrl.value = `http://localhost:3001/proformas/${id}/preview`;
-  previewUrl.value = `https://vcrmapi.mlpcare.com/proformas/${id}/preview`;
+  previewUrl.value = `${downloadPath}/proformas/${id}/preview`;
   showPreview.value = true;
 };
- 
 
 const getAvatarUrl = (avatarPath: string) => {
   if (!avatarPath) return '';
   if (avatarPath.startsWith('http')) return avatarPath;
-  // return `http://localhost:3001/${avatarPath.replace(/^\//, '')}`;
-  return `https://vcrmapi.mlpcare.com/${avatarPath.replace(/^\//, '')}`;
+  return `${downloadPath}/${avatarPath.replace(/^\//, '')}`;
 };
 
 const handleStatusChange = async (proforma: any) => {

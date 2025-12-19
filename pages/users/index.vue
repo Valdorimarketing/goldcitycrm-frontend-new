@@ -1,245 +1,324 @@
 <template>
   <div>
     <!-- Header -->
-    <div class="sm:flex sm:items-center sm:justify-between mb-6">
-      <div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Kullanıcılar</h1>
-        <p class="mt-2 text-sm text-gray-700 dark:text-gray-300">
-          Sistem kullanıcılarını buradan yönetebilirsiniz.
-        </p>
-      </div>
-      <div class="mt-4 sm:mt-0 flex gap-2 flex-wrap">
-        <button @click="openModal"
-          class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
-          <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
-          Yeni Kullanıcı
-        </button>
-        <div class="relative">
-          <button @click="loadUsers"
-            class="inline-flex items-center px-3 py-2 bg-white/20 hover:bg-white/30 text-white text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition">
-            <ArrowPathIcon class="h-5 w-5 mr-2" />
-            Yenile
+    <div class="mb-8">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div class="flex items-center gap-4">
+          <div class="p-3 bg-gradient-to-br from-violet-500 to-purple-600 rounded-2xl shadow-lg shadow-violet-500/25">
+            <UsersIcon class="h-7 w-7 text-white" />
+          </div>
+          <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+              {{ t('users.title', 'Kullanıcılar') }}
+            </h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+              {{ t('users.subtitle', 'Sistem kullanıcılarını buradan yönetebilirsiniz.') }}
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            @click="loadUsers"
+            class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 transition-all text-sm font-medium border border-gray-200 dark:border-gray-600"
+          >
+            <ArrowPathIcon class="h-5 w-5" />
+            {{ t('users.actions.refresh', 'Yenile') }}
+          </button>
+          <button
+            @click="openModal"
+            class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-violet-600 to-purple-600 text-white rounded-xl hover:from-violet-700 hover:to-purple-700 transition-all text-sm font-medium shadow-lg shadow-violet-500/25"
+          >
+            <PlusIcon class="h-5 w-5" />
+            {{ t('users.actions.new_user', 'Yeni Kullanıcı') }}
           </button>
         </div>
       </div>
     </div>
 
-    <!-- Online/Offline Stats & Filter -->
-    <div class="mb-4 flex flex-wrap gap-2">
-      <!-- Tümü -->
-      <button @click="onlineFilter = null" class="px-4 py-2 rounded-md text-sm font-medium border transition" :class="[
-        onlineFilter === null
-          ? 'bg-indigo-600 text-white border-indigo-600'
-          : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:bg-indigo-50 dark:hover:bg-gray-700'
-      ]">
-        Tümü ({{ usersStore.users.value?.length }})
-      </button>
+    <!-- Online/Offline Filter -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6">
+      <div class="flex flex-wrap gap-2">
+        <!-- Tümü -->
+        <button
+          @click="onlineFilter = null"
+          :class="[
+            'px-4 py-2.5 rounded-xl text-sm font-medium transition-all',
+            onlineFilter === null
+              ? 'bg-violet-600 text-white shadow-lg shadow-violet-500/25'
+              : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+          ]"
+        >
+          {{ t('users.filters.all', 'Tümü') }} ({{ usersStore.users.value?.length || 0 }})
+        </button>
 
-      <!-- Çevrimiçi -->
-      <button @click="onlineFilter = 'online'" class="px-4 py-2 rounded-md text-sm font-medium border transition"
-        :class="[
-          onlineFilter === 'online'
-            ? 'bg-green-600 text-white border-green-600'
-            : 'bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-300 border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-800/40'
-        ]">
-        <span class="flex items-center gap-1.5">
+        <!-- Çevrimiçi -->
+        <button
+          @click="onlineFilter = 'online'"
+          :class="[
+            'px-4 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center gap-2',
+            onlineFilter === 'online'
+              ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/25'
+              : 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/30'
+          ]"
+        >
           <span class="relative flex h-2 w-2">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
           </span>
-          Çevrimiçi ({{ onlineCount }})
-        </span>
-      </button>
+          {{ t('users.filters.online', 'Çevrimiçi') }} ({{ onlineCount }})
+        </button>
 
-      <!-- Çevrimdışı -->
-      <button @click="onlineFilter = 'offline'" class="px-4 py-2 rounded-md text-sm font-medium border transition"
-        :class="[
-          onlineFilter === 'offline'
-            ? 'bg-gray-600 text-white border-gray-600'
-            : 'bg-gray-50 text-gray-700 dark:bg-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'
-        ]">
-        Çevrimdışı ({{ offlineCount }})
-      </button>
+        <!-- Çevrimdışı -->
+        <button
+          @click="onlineFilter = 'offline'"
+          :class="[
+            'px-4 py-2.5 rounded-xl text-sm font-medium transition-all',
+            onlineFilter === 'offline'
+              ? 'bg-gray-600 text-white shadow-lg'
+              : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'
+          ]"
+        >
+          {{ t('users.filters.offline', 'Çevrimdışı') }} ({{ offlineCount }})
+        </button>
+      </div>
     </div>
 
-    <!-- Role Tabs / Statistics -->
-    <div v-if="roleStats?.length" class="mt-6 flex flex-wrap gap-2 mb-4">
-      <button @click="activeRole = null" class="px-4 py-2 rounded-md text-sm font-medium border transition" :class="[
-        !activeRole
-          ? 'bg-indigo-600 text-white border-indigo-600'
-          : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:bg-indigo-50 dark:hover:bg-gray-700'
-      ]">
-        Tüm Roller ({{ filteredByOnlineUsers?.length }})
-      </button>
+    <!-- Role Tabs -->
+    <div v-if="roleStats?.length" class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6">
+      <div class="flex flex-wrap gap-2">
+        <button
+          @click="activeRole = null"
+          :class="[
+            'px-4 py-2.5 rounded-xl text-sm font-medium transition-all',
+            !activeRole
+              ? 'bg-violet-600 text-white shadow-lg shadow-violet-500/25'
+              : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+          ]"
+        >
+          {{ t('users.filters.all_roles', 'Tüm Roller') }} ({{ filteredByOnlineUsers?.length || 0 }})
+        </button>
 
-      <button v-for="stat in roleStats" :key="stat.role" @click="activeRole = stat.role"
-        class="px-4 py-2 rounded-md text-sm font-medium border transition" :class="[
-          activeRole === stat.role
-            ? getRoleColorClass(stat.role, true)
-            : getRoleColorClass(stat.role, false)
-        ]">
-        {{ getRoleText(stat.role) }} ({{ stat.count }})
-      </button>
+        <button
+          v-for="stat in roleStats"
+          :key="stat.role"
+          @click="activeRole = stat.role"
+          :class="[
+            'px-4 py-2.5 rounded-xl text-sm font-medium transition-all',
+            activeRole === stat.role
+              ? getRoleColorClass(stat.role, true)
+              : getRoleColorClass(stat.role, false)
+          ]"
+        >
+          {{ getRoleText(stat.role) }} ({{ stat.count }})
+        </button>
+      </div>
     </div>
 
-
-
-    <!-- Users List -->
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2  xl:grid-cols-3">
-      <div v-for="user in filteredUsers" :key="user.id" class="card border-l-4 p-3 rounded-lg shadow-sm transition"
-        :class="[
-          user.role === 'admin'
-            ? 'border-red-500 hover:bg-red-50 dark:hover:bg-red-900/20'
-            : user.role === 'doctor'
-              ? 'border-green-500 hover:bg-green-50 dark:hover:bg-green-900/20'
-              : user.role === 'pricing'
-                ? 'border-yellow-500 hover:bg-yellow-50 dark:hover:bg-yellow-900/20'
-                : user.role === 'user'
-                  ? 'border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20'
-                  : 'border-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/40'
-        ]">
-
-        <div class="flex flex-col space-y-3">
-          <div class="flex items-center justify-between">
-            <div>
-              <div class="flex gap-2">
-                <div class="relative w-16 h-16">
-                  <div
-                    class="relative rounded-full w-full h-full overflow-hidden bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600">
-                    <img v-if="user.avatar" :src="path + user.avatar" alt="Avatar" class="object-cover w-full h-full" />
-                    <div v-else
-                      class="flex items-center justify-center w-full h-full text-gray-400 dark:text-gray-500 text-sm">
-                      Yok
-                    </div>
-                  </div>
-
-                  <!-- Online indicator with pulse animation -->
-                  <span v-if="isUserOnline(user)" class="absolute bottom-0 right-0 block">
-                    <span class="relative flex h-4 w-4">
-                      <span
-                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                      <span
-                        class="relative inline-flex rounded-full h-4 w-4 bg-green-500 border-2 border-white dark:border-gray-800"></span>
-                    </span>
-                  </span>
+    <!-- Users Grid -->
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+      <div
+        v-for="user in filteredUsers"
+        :key="user.id"
+        class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border-l-4 p-5 transition-all hover:shadow-md"
+        :class="getRoleBorderClass(user.role)"
+      >
+        <!-- User Header -->
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <!-- Avatar with Online Indicator -->
+            <div class="relative">
+              <div class="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-700 ring-2 ring-gray-200 dark:ring-gray-600">
+                <img
+                  v-if="user.avatar"
+                  :src="path + user.avatar"
+                  alt="Avatar"
+                  class="w-full h-full object-cover"
+                />
+                <div
+                  v-else
+                  class="w-full h-full flex items-center justify-center text-xs text-gray-400"
+                >
+                  {{ t('users.card.no_avatar', 'Yok') }}
                 </div>
-
-
-                <div class="flex flex-col items-start gap-2 mt-1 text-xs text-gray-500 dark:text-gray-400 ">
-
-
-                  <div class="flex items-center justify-between gap-2">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white truncate">
-                      {{ user.name || 'İsimsiz Kullanıcı' }}
-                    </h3>
-                    <span :class="getRoleBadgeClass(user.role)">
-                      {{ getRoleText(user.role) }}
-                    </span>
-                  </div>
-
-
-                  <span v-if="user?.userGroup?.name" title="Grup Bilgisi"
-                    class="flex items-center gap-1 px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700">
-                    {{ user.userGroup.name }}
-                  </span>
-
-                  <span v-else title="Grup Bilgisi"
-                    class="flex items-center gap-1 px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700">
-                    bulunamadı
-                  </span>
-
-                  <span v-if="user?.userTeam?.name" title="Takım Bilgisi"
-                    class="flex items-center gap-1 px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700">
-                    {{ user.userTeam.name }}
-                  </span>
-
-                  <span v-else title="Takım Bilgisi"
-                    class="flex items-center gap-1 px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700">
-                    bulunamadı
-                  </span>
-
-                </div>
-
               </div>
+              <!-- Online Pulse -->
+              <span v-if="isUserOnline(user)" class="absolute -bottom-1 -right-1">
+                <span class="relative flex h-4 w-4">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 ring-2 ring-white dark:ring-gray-800"></span>
+                </span>
+              </span>
             </div>
-            <div class="flex items-end space-y-1 flex-col">
-              <span
-                :class="user.isActive ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'"
-                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
-                {{ user.isActive ? 'Aktif' : 'Pasif' }}
-              </span>
 
-              <span :class="getLastActiveClass(user.lastActiveTime)"
-                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
-                {{ getLastActiveText(user.lastActiveTime) }}
+            <!-- Name & Role -->
+            <div class="flex-1 min-w-0">
+              <h3 class="text-base font-semibold text-gray-900 dark:text-white truncate mb-1">
+                {{ user.name || t('users.card.unnamed_user', 'İsimsiz Kullanıcı') }}
+              </h3>
+              <span :class="getRoleBadgeClass(user.role)">
+                {{ getRoleText(user.role) }}
               </span>
-
             </div>
           </div>
-          <div class="flex items-center space-x-2">
-            <button @click="openEditModal(user)"
-              class="flex-1 px-3 py-1.5 text-xs font-medium rounded transition-colors bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-300 dark:hover:bg-blue-800">
-              Düzenle
-            </button>
-            <button @click="toggleUserStatus(user)" :disabled="toggleLoading[user.id]"
-              class="flex-1 px-3 py-1.5 text-xs font-medium rounded transition-colors disabled:opacity-50"
-              :class="user.isActive
-                ? 'bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900 dark:text-red-300 dark:hover:bg-red-800'
-                : 'bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900 dark:text-green-300 dark:hover:bg-green-800'">
-              <span v-if="toggleLoading[user.id]" class="flex items-center justify-center">
-                <svg class="animate-spin -ml-1 mr-1 h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none"
-                  viewBox="0 0 24 24">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                  <path class="opacity-75" fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                  </path>
-                </svg>
-                İşleniyor...
-              </span>
-              <span v-else>
-                {{ user.isActive ? 'Deaktif Et' : 'Aktif Et' }}
-              </span>
-            </button>
-            <NuxtLink :to="`/profile/${user.id}`"
-              class="flex-1 px-3 py-1.5 text-xs text-center font-medium rounded transition-colors bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-300 dark:hover:bg-blue-800">
-              Profil
-            </NuxtLink>
-          </div>
-          <div class="w-full relative flex justify-center">
+
+          <!-- Status Badges -->
+          <div class="flex flex-col items-end gap-1.5">
             <span
-              class="bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
-              son görülme: {{ getLastSeen(user.lastActiveTime) }}
+              :class="[
+                'inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium',
+                user.isActive
+                  ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'
+                  : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300'
+              ]"
+            >
+              {{ user.isActive ? t('users.status.active', 'Aktif') : t('users.status.inactive', 'Pasif') }}
             </span>
-            <span :title="dayjs(user.createdAt).fromNow()"
-              class="bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
-              {{ user.createdAt ? 'Oluşturulma: ' + dayjs(user.createdAt).format('DD MMM YYYY') : 'Oluşturulma tarihi bilinmiyor' }}
+            <span :class="getLastActiveClass(user.lastActiveTime)">
+              {{ getLastActiveText(user.lastActiveTime) }}
             </span>
           </div>
+        </div>
+
+        <!-- Group & Team Info -->
+        <div class="flex flex-wrap gap-2 mb-4">
+          <span
+            v-if="user?.userGroup?.name"
+            class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300"
+          >
+            <UserGroupIcon class="h-3.5 w-3.5 mr-1.5" />
+            {{ user.userGroup.name }}
+          </span>
+          <span
+            v-else
+            class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
+          >
+            <UserGroupIcon class="h-3.5 w-3.5 mr-1.5" />
+            {{ t('users.card.group_not_found', 'bulunamadı') }}
+          </span>
+
+          <span
+            v-if="user?.userTeam?.name"
+            class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300"
+          >
+            <UsersIcon class="h-3.5 w-3.5 mr-1.5" />
+            {{ user.userTeam.name }}
+          </span>
+          <span
+            v-else
+            class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
+          >
+            <UsersIcon class="h-3.5 w-3.5 mr-1.5" />
+            {{ t('users.card.team_not_found', 'bulunamadı') }}
+          </span>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-2 mb-4">
+          <button
+            @click="openEditModal(user)"
+            class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium rounded-xl transition-colors bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-300 dark:hover:bg-blue-900/30"
+          >
+            <PencilIcon class="h-3.5 w-3.5" />
+            {{ t('users.actions.edit', 'Düzenle') }}
+          </button>
+          <button
+            @click="toggleUserStatus(user)"
+            :disabled="toggleLoading[user.id]"
+            class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium rounded-xl transition-colors disabled:opacity-50"
+            :class="[
+              user.isActive
+                ? 'bg-red-50 text-red-700 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-300 dark:hover:bg-red-900/30'
+                : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-900/20 dark:text-emerald-300 dark:hover:bg-emerald-900/30'
+            ]"
+          >
+            <span v-if="toggleLoading[user.id]" class="flex items-center gap-1">
+              <svg class="animate-spin h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              {{ t('users.actions.processing', 'İşleniyor...') }}
+            </span>
+            <span v-else class="flex items-center gap-1">
+              <component :is="user.isActive ? XMarkIcon : CheckIcon" class="h-3.5 w-3.5" />
+              {{ user.isActive ? t('users.actions.deactivate', 'Deaktif Et') : t('users.actions.activate', 'Aktif Et') }}
+            </span>
+          </button>
+          <NuxtLink
+            :to="`/profile/${user.id}`"
+            class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium rounded-xl transition-colors bg-violet-50 text-violet-700 hover:bg-violet-100 dark:bg-violet-900/20 dark:text-violet-300 dark:hover:bg-violet-900/30"
+          >
+            <UserIcon class="h-3.5 w-3.5" />
+            {{ t('users.actions.profile', 'Profil') }}
+          </NuxtLink>
+        </div>
+
+        <!-- Footer Info -->
+        <div class="flex flex-wrap gap-2 pt-3 border-t border-gray-100 dark:border-gray-700">
+          <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+            <ClockIcon class="h-3.5 w-3.5 mr-1.5" />
+            {{ t('users.card.last_seen', 'son görülme') }}: {{ getLastSeen(user.lastActiveTime) }}
+          </span>
+          <span
+            :title="dayjs(user.createdAt).fromNow()"
+            class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
+          >
+            <CalendarIcon class="h-3.5 w-3.5 mr-1.5" />
+            {{ user.createdAt ? t('users.card.created', 'Oluşturulma') + ': ' + dayjs(user.createdAt).format('DD MMM YYYY') : t('users.card.created_unknown', 'Oluşturulma tarihi bilinmiyor') }}
+          </span>
         </div>
       </div>
     </div>
 
     <!-- Empty State -->
-    <div v-if="filteredUsers?.length === 0" class="text-center py-12">
-      <p class="text-gray-500 dark:text-gray-400">Kullanıcı bulunamadı</p>
+    <div v-if="filteredUsers?.length === 0" class="flex flex-col items-center justify-center py-16">
+      <div class="w-16 h-16 rounded-2xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-4">
+        <UsersIcon class="h-8 w-8 text-gray-400" />
+      </div>
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+        {{ t('users.empty.title', 'Kullanıcı bulunamadı') }}
+      </h3>
+      <p class="text-sm text-gray-500 dark:text-gray-400">
+        {{ t('users.empty.message', 'Seçtiğiniz filtrelere uygun kullanıcı bulunamadı.') }}
+      </p>
     </div>
 
     <!-- Create/Edit User Modal -->
-    <UserCreateModal :is-open="showCreateModal" :user="selectedUser" @close="closeModal" @created="handleUserCreated"
-      @updated="handleUserUpdated" />
+    <UserCreateModal
+      :is-open="showCreateModal"
+      :user="selectedUser"
+      @close="closeModal"
+      @created="handleUserCreated"
+      @updated="handleUserUpdated"
+    />
   </div>
 </template>
 
-
-
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { ArrowPathIcon,PlusIcon } from '@heroicons/vue/24/outline'
+import {
+  ArrowPathIcon,
+  PlusIcon,
+  UsersIcon,
+  UserGroupIcon,
+  UserIcon,
+  PencilIcon,
+  XMarkIcon,
+  CheckIcon,
+  ClockIcon,
+  CalendarIcon
+} from '@heroicons/vue/24/outline'
 import { useUsersStore } from '~/stores/users'
+import { useLanguage } from '~/composables/useLanguage'
 import UserCreateModal from '~/components/UserCreateModal.vue'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import 'dayjs/locale/tr'
+
 dayjs.extend(relativeTime)
+dayjs.locale('tr')
+
+const { t } = useLanguage()
 
 definePageMeta({
   // middleware: 'auth' // Temporarily disabled
@@ -254,7 +333,7 @@ const usersStore = useUsersStore()
 const showCreateModal = ref(false)
 const selectedUser = ref(null)
 const activeRole = ref(null)
-const onlineFilter = ref(null) // null = tümü, 'online' = çevrimiçi, 'offline' = çevrimdışı
+const onlineFilter = ref(null)
 const path = config.public.apiBase
 
 // Loading state for toggle buttons
@@ -269,42 +348,39 @@ const isUserOnline = (user) => {
 
 // Count online users
 const onlineCount = computed(() => {
-  return usersStore.users.value?.filter(user => isUserOnline(user))?.length
+  return usersStore.users.value?.filter(user => isUserOnline(user))?.length || 0
 })
 
 // Count offline users
 const offlineCount = computed(() => {
-  return usersStore.users.value?.filter(user => !isUserOnline(user))?.length
+  return usersStore.users.value?.filter(user => !isUserOnline(user))?.length || 0
 })
 
 const getLastActiveClass = (lastActiveTime) => {
-  if (!lastActiveTime) return 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'
+  if (!lastActiveTime) return 'inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
 
   const diffSeconds = dayjs().diff(dayjs(lastActiveTime), 'second')
   const diffHours = dayjs().diff(dayjs(lastActiveTime), 'hour')
 
   if (diffSeconds < 60) {
-    // 1 dakikadan kısa
-    return 'bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-200'
+    return 'inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300'
   } else if (diffHours >= 1) {
-    // 1 dakikadan uzun
-    return 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'
+    return 'inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
   } else {
-    // 1 dakikadan uzun ama 1 saatten kısa
-    return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
+    return 'inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300'
   }
 }
 
 const getLastActiveText = (lastActiveTime) => {
-  if (!lastActiveTime) return 'Çevrimdışı'
+  if (!lastActiveTime) return t('users.status.offline', 'Çevrimdışı')
 
   const diffSeconds = dayjs().diff(dayjs(lastActiveTime), 'second')
   const diffHours = dayjs().diff(dayjs(lastActiveTime), 'hour')
 
   if (diffSeconds < 60) {
-    return 'Çevrimiçi'
+    return t('users.status.online', 'Çevrimiçi')
   } else if (diffHours >= 1) {
-    return 'Çevrimdışı'
+    return t('users.status.offline', 'Çevrimdışı')
   } else {
     return dayjs(lastActiveTime).fromNow()
   }
@@ -318,7 +394,6 @@ const getLastSeen = (lastActiveTime) => {
 const loadUsers = async () => {
   try {
     const api = useApi()
-
     const response = await api('/users')
 
     if (Array.isArray(response)) {
@@ -328,17 +403,7 @@ const loadUsers = async () => {
     }
   } catch (error) {
     console.error('Failed to load users:', error)
-    // Fallback to demo data
-    usersStore.users.value = [
-      {
-        id: 999,
-        name: 'Demo User',
-        email: 'demo@example.com',
-        role: 'admin',
-        isActive: true,
-        createdAt: '2024-01-01T00:00:00Z'
-      }
-    ]
+    usersStore.users.value = []
   }
 }
 
@@ -355,7 +420,7 @@ const filteredByOnlineUsers = computed(() => {
   return all
 })
 
-// Then calculate role stats based on online/offline filter
+// Calculate role stats
 const roleStats = computed(() => {
   const users = filteredByOnlineUsers.value
   const counts = {}
@@ -371,57 +436,52 @@ const roleStats = computed(() => {
   }))
 })
 
-// Finally filter by role
+// Filter by role
 const filteredUsers = computed(() => {
   const users = filteredByOnlineUsers.value
   if (!activeRole.value) return users
   return users?.filter(user => user.role === activeRole.value)
 })
 
-
-
-// Role göre renk sınıfı
+// Role color class
 const getRoleColorClass = (role, isActive) => {
-  const base = 'border transition-colors'
-
   const colorMap = {
     admin: {
-      active: 'bg-red-600 text-white border-red-600',
-      inactive:
-        'bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-300 border-red-200 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-800/40'
+      active: 'bg-red-600 text-white shadow-lg shadow-red-500/25',
+      inactive: 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-900/30'
     },
     doctor: {
-      active: 'bg-green-600 text-white border-green-600',
-      inactive:
-        'bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-300 border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-800/40'
+      active: 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/25',
+      inactive: 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/30'
     },
     pricing: {
-      active: 'bg-yellow-500 text-white border-yellow-500',
-      inactive:
-        'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800 hover:bg-yellow-100 dark:hover:bg-yellow-800/40'
+      active: 'bg-yellow-500 text-white shadow-lg shadow-yellow-500/25',
+      inactive: 'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-300 hover:bg-yellow-100 dark:hover:bg-yellow-900/30'
     },
     user: {
-      active: 'bg-blue-600 text-white border-blue-600',
-      inactive:
-        'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-800/40'
+      active: 'bg-blue-600 text-white shadow-lg shadow-blue-500/25',
+      inactive: 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/30'
     },
     default: {
-      active: 'bg-gray-600 text-white border-gray-600',
-      inactive:
-        'bg-gray-50 text-gray-700 dark:bg-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'
+      active: 'bg-gray-600 text-white shadow-lg',
+      inactive: 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
     }
   }
 
   const selected = colorMap[role] || colorMap.default
-  return `${base} ${isActive ? selected.active : selected.inactive}`
+  return isActive ? selected.active : selected.inactive
 }
 
-// Load data on mount
-onMounted(() => {
-  loadUsers()
-  setInterval(loadUsers, 30000)
-})
-
+const getRoleBorderClass = (role) => {
+  const borderMap = {
+    admin: 'border-red-500 hover:shadow-red-500/10',
+    doctor: 'border-emerald-500 hover:shadow-emerald-500/10',
+    pricing: 'border-yellow-500 hover:shadow-yellow-500/10',
+    user: 'border-blue-500 hover:shadow-blue-500/10',
+    default: 'border-gray-400'
+  }
+  return borderMap[role] || borderMap.default
+}
 
 // Modal functions
 const openModal = () => {
@@ -439,84 +499,65 @@ const closeModal = () => {
   selectedUser.value = null
 }
 
-// Handle user creation
 const handleUserCreated = (newUser) => {
-  console.log('New user created:', newUser)
-  // Add to store manually since we're not using store methods
   usersStore.users.value.unshift(newUser)
 }
 
-// Handle user update
 const handleUserUpdated = () => {
   loadUsers()
 }
 
-// Data is loaded above in script setup
-
-
-
 const toggleUserStatus = async (user) => {
-  // Set loading state
   toggleLoading.value[user.id] = true
 
-  // Always update local state first for immediate UI feedback
   const index = usersStore.users.value.findIndex(u => u.id === user.id)
   const oldStatus = user.isActive
 
   if (index !== -1) {
     usersStore.users.value[index].isActive = !usersStore.users.value[index].isActive
-    console.log(`User ${user.name} is now ${usersStore.users.value[index].isActive ? 'active' : 'inactive'}`)
   }
 
-  // Try to sync with API in background
   try {
     const api = useApi()
-
-    const response = await api(`/users/${user.id}`, {
+    await api(`/users/${user.id}`, {
       method: 'PATCH',
       body: { isActive: !oldStatus }
     })
-
-    console.log('PATCH response:', response)
-
-    console.log('Successfully synced with API')
   } catch (error) {
-    console.error('Error syncing with API (using demo mode):', error)
-    // Local state is already updated, so no need to revert
+    console.error('Error syncing with API:', error)
   } finally {
-    // Clear loading state
     toggleLoading.value[user.id] = false
   }
 }
 
 const getRoleText = (role) => {
-  switch (role) {
-    case 'admin':
-      return 'Admin'
-    case 'user':
-      return 'Kullanıcı'
-    case 'doctor':
-      return 'Doktor'
-    case 'pricing':
-      return 'Fiyatlama'
-    default:
-      return 'Bilinmiyor'
+  const roleMap = {
+    admin: t('users.roles.admin', 'Admin'),
+    user: t('users.roles.user', 'Kullanıcı'),
+    doctor: t('users.roles.doctor', 'Doktor'),
+    pricing: t('users.roles.pricing', 'Fiyatlama'),
+    default: t('users.roles.unknown', 'Bilinmiyor')
   }
+  return roleMap[role] || roleMap.default
 }
 
 const getRoleBadgeClass = (role) => {
-  const baseClass = 'px-2 py-1 text-xs rounded-full font-medium'
-
+  const baseClass = 'inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium'
   const roleColors = {
-    admin: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300',
-    doctor: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300',
-    pricing: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300',
-    user: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
-    default: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
+    admin: 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300',
+    doctor: 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300',
+    pricing: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300',
+    user: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300',
+    default: 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
   }
-
   return `${baseClass} ${roleColors[role] || roleColors.default}`
 }
+
+// Load data on mount
+onMounted(() => {
+  loadUsers()
+  setInterval(loadUsers, 30000)
+})
 
 // Page head
 useHead({

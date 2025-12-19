@@ -8,7 +8,7 @@
           <div class="sm:flex sm:items-start">
             <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
               <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-white mb-4">
-                Doktor Görüşüne Gönder - {{ customer?.name }}
+                {{ t('doctor_modal.title', 'Doktor Görüşüne Gönder') }} - {{ customer?.name }}
               </h3>
 
               <div v-if="loading" class="flex justify-center py-12">
@@ -18,16 +18,18 @@
               <div v-else class="space-y-6">
                 <!-- Mevcut doktor ataması -->
                 <div v-if="existingAssignment" class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
-                  <h4 class="font-medium text-blue-900 dark:text-blue-300 mb-2">Mevcut Doktor Ataması</h4>
+                  <h4 class="font-medium text-blue-900 dark:text-blue-300 mb-2">
+                    {{ t('doctor_modal.current_assignment', 'Mevcut Doktor Ataması') }}
+                  </h4>
                   <div class="space-y-2 text-sm">
                     <p class="text-gray-700 dark:text-gray-300">
-                      <span class="font-medium">Doktor:</span> {{ existingAssignment.doctor?.name || '-' }}
+                      <span class="font-medium">{{ t('doctor_modal.doctor', 'Doktor:') }}</span> {{ existingAssignment.doctor?.name || '-' }}
                     </p>
                     <p class="text-gray-700 dark:text-gray-300">
-                      <span class="font-medium">Branş:</span> {{ existingAssignment.doctor?.branch?.name || '-' }}
+                      <span class="font-medium">{{ t('doctor_modal.branch', 'Branş:') }}</span> {{ existingAssignment.doctor?.branch?.name || '-' }}
                     </p>
                     <div v-if="existingAssignment.doctor?.doctor2Hospitals?.length" class="text-gray-700 dark:text-gray-300">
-                      <span class="font-medium">Hastane{{ existingAssignment.doctor.doctor2Hospitals.length > 1 ? 'ler' : '' }}:</span>
+                      <span class="font-medium">{{ t('doctor_modal.hospitals', 'Hastane') }}{{ existingAssignment.doctor.doctor2Hospitals.length > 1 ? t('doctor_modal.hospitals_plural', 'ler') : '' }}:</span>
                       <ul class="ml-4 mt-1 space-y-1">
                         <li v-for="d2h in existingAssignment.doctor.doctor2Hospitals" :key="d2h.id">
                           • {{ d2h.hospital?.name || '-' }}
@@ -35,10 +37,10 @@
                       </ul>
                     </div>
                     <p v-else class="text-gray-700 dark:text-gray-300">
-                      <span class="font-medium">Hastane:</span> -
+                      <span class="font-medium">{{ t('doctor_modal.hospital', 'Hastane:') }}</span> -
                     </p>
                     <div v-if="existingAssignment.doctor?.doctor2Branches?.length > 1" class="text-gray-700 dark:text-gray-300">
-                      <span class="font-medium">Ek Branşlar:</span>
+                      <span class="font-medium">{{ t('doctor_modal.additional_branches', 'Ek Branşlar:') }}</span>
                       <ul class="ml-4 mt-1 space-y-1">
                         <li v-for="d2b in existingAssignment.doctor.doctor2Branches" :key="d2b.id">
                           • {{ d2b.branch?.name || '-' }}
@@ -46,27 +48,27 @@
                       </ul>
                     </div>
                     <p class="text-gray-700 dark:text-gray-300">
-                      <span class="font-medium">Not:</span> {{ existingAssignment.note || '-' }}
+                      <span class="font-medium">{{ t('doctor_modal.note', 'Not:') }}</span> {{ existingAssignment.note || '-' }}
                     </p>
                   </div>
 
                   <!-- Doktor yorumu - sadece doctor rolü görebilir -->
                   <div v-if="isDoctor" class="mt-4">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Doktor Yorumu
+                      {{ t('doctor_modal.doctor_comment', 'Doktor Yorumu') }}
                     </label>
                     <textarea
                       v-model="doctorComment"
                       rows="3"
                       class="form-input"
-                      placeholder="Doktor yorumunu girin..."
+                      :placeholder="t('doctor_modal.doctor_comment_placeholder', 'Doktor yorumunu girin...')"
                     ></textarea>
                     <button
                       @click="updateDoctorComment"
                       :disabled="updatingComment"
                       class="mt-2 btn-primary"
                     >
-                      {{ updatingComment ? 'Kaydediliyor...' : 'Yorumu Kaydet' }}
+                      {{ updatingComment ? t('doctor_modal.saving_comment', 'Kaydediliyor...') : t('doctor_modal.save_comment', 'Yorumu Kaydet') }}
                     </button>
                   </div>
                 </div>
@@ -74,20 +76,20 @@
                 <!-- Doktor atama formu -->
                 <div class="border-t dark:border-gray-700 pt-4">
                   <h4 class="font-medium text-gray-900 dark:text-white mb-4">
-                    {{ existingAssignment ? 'Yeni Doktor Ata' : 'Doktor Ata' }}
+                    {{ existingAssignment ? t('doctor_modal.assign_new_doctor', 'Yeni Doktor Ata') : t('doctor_modal.assign_doctor', 'Doktor Ata') }}
                   </h4>
 
                   <!-- Branş seçimi -->
                   <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Branş Seçin
+                      {{ t('doctor_modal.select_branch', 'Branş Seçin') }}
                     </label>
                     <select
                       v-model="selectedBranch"
                       @change="onBranchChange"
                       class="form-input"
                     >
-                      <option value="">Branş seçin...</option>
+                      <option value="">{{ t('doctor_modal.select_branch_placeholder', 'Branş seçin...') }}</option>
                       <option v-for="branch in branches" :key="branch.id" :value="branch.id">
                         {{ branch.name }}
                       </option>
@@ -97,7 +99,7 @@
                   <!-- Hastane seçimi -->
                   <div v-if="selectedBranch" class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Hastane Seçin
+                      {{ t('doctor_modal.select_hospital', 'Hastane Seçin') }}
                     </label>
                     <select
                       v-model="selectedHospital"
@@ -105,46 +107,46 @@
                       class="form-input"
                       :disabled="!hospitals.length"
                     >
-                      <option value="">Hastane seçin...</option>
+                      <option value="">{{ t('doctor_modal.select_hospital_placeholder', 'Hastane seçin...') }}</option>
                       <option v-for="hospital in hospitals" :key="hospital.id" :value="hospital.id">
                         {{ hospital.name }}
                       </option>
                     </select>
                     <p v-if="!hospitals.length" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                      Bu branşta hastane bulunamadı
+                      {{ t('doctor_modal.no_hospitals', 'Bu branşta hastane bulunamadı') }}
                     </p>
                   </div>
 
                   <!-- Doktor seçimi -->
                   <div v-if="selectedHospital" class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Doktor Seçin
+                      {{ t('doctor_modal.select_doctor', 'Doktor Seçin') }}
                     </label>
                     <select
                       v-model="selectedDoctor"
                       class="form-input"
                       :disabled="!doctors.length"
                     >
-                      <option value="">Doktor seçin...</option>
+                      <option value="">{{ t('doctor_modal.select_doctor_placeholder', 'Doktor seçin...') }}</option>
                       <option v-for="doctor in doctors" :key="doctor.id" :value="doctor.id">
                         {{ doctor.name }}
                       </option>
                     </select>
                     <p v-if="!doctors.length" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                      Bu hastane ve branşta doktor bulunamadı
+                      {{ t('doctor_modal.no_doctors', 'Bu hastane ve branşta doktor bulunamadı') }}
                     </p>
                   </div>
 
                   <!-- Not -->
                   <div v-if="selectedDoctor" class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Not
+                      {{ t('doctor_modal.note', 'Not') }}
                     </label>
                     <textarea
                       v-model="assignmentNote"
                       rows="3"
                       class="form-input"
-                      placeholder="Atama notu girin..."
+                      :placeholder="t('doctor_modal.assignment_note_placeholder', 'Atama notu girin...')"
                     ></textarea>
                   </div>
 
@@ -155,7 +157,7 @@
                       :disabled="savingAssignment"
                       class="btn-primary"
                     >
-                      {{ savingAssignment ? 'Kaydediliyor...' : 'Doktor Ata' }}
+                      {{ savingAssignment ? t('doctor_modal.saving', 'Kaydediliyor...') : t('doctor_modal.assign_button', 'Doktor Ata') }}
                     </button>
                   </div>
                 </div>
@@ -169,7 +171,7 @@
             @click="close"
             class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-600 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 sm:mt-0 sm:w-auto"
           >
-            Kapat
+            {{ t('notes_modal.close', 'Kapat') }}
           </button>
         </div>
       </div>
@@ -178,6 +180,10 @@
 </template>
 
 <script setup>
+import { useLanguage } from '~/composables/useLanguage'
+
+const { t } = useLanguage()
+
 const props = defineProps({
   show: Boolean,
   customer: Object
@@ -283,10 +289,10 @@ const updateDoctorComment = async () => {
       }
     })
     existingAssignment.value.doctorComment = doctorComment.value
-    alert('Doktor yorumu güncellendi')
+    alert(t('doctor_modal.comment_updated', 'Doktor yorumu güncellendi'))
   } catch (error) {
     console.error('Error updating doctor comment:', error)
-    alert('Yorum güncellenirken hata oluştu')
+    alert(t('doctor_modal.comment_update_error', 'Yorum güncellenirken hata oluştu'))
   } finally {
     updatingComment.value = false
   }
@@ -347,7 +353,7 @@ const onHospitalChange = async () => {
     console.log('Loaded doctors:', doctors.value)
   } catch (error) {
     console.error('Error loading doctors:', error)
-    alert('Doktorlar yüklenirken hata oluştu. Lütfen backend\'deki /doctors/by-hospital-and-branch endpoint\'ini kontrol edin.')
+    alert(t('doctor_modal.doctors_load_error', 'Doktorlar yüklenirken hata oluştu. Lütfen backend\'deki /doctors/by-hospital-and-branch endpoint\'ini kontrol edin.'))
     doctors.value = []
   }
 }
@@ -368,7 +374,7 @@ const assignDoctor = async () => {
       }
     })
 
-    alert('Doktor ataması başarıyla yapıldı')
+    alert(t('doctor_modal.assignment_success', 'Doktor ataması başarıyla yapıldı'))
     emit('assigned', response)
 
     // Reset form
@@ -383,7 +389,7 @@ const assignDoctor = async () => {
     await loadExistingAssignment()
   } catch (error) {
     console.error('Error assigning doctor:', error)
-    alert('Doktor ataması yapılırken hata oluştu')
+    alert(t('doctor_modal.assignment_error', 'Doktor ataması yapılırken hata oluştu'))
   } finally {
     savingAssignment.value = false
   }

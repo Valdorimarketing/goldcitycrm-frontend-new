@@ -10,7 +10,7 @@
         leave-from="opacity-100"
         leave-to="opacity-0"
       >
-        <div class="fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity" />
+        <div class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" />
       </TransitionChild>
 
       <div class="fixed inset-0 z-10 overflow-y-auto">
@@ -25,139 +25,131 @@
             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
             <DialogPanel class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-xl">
-              <form @submit.prevent="handleSubmit">
-                <div class="bg-white dark:bg-gray-800 px-6 pb-6 pt-6">
-                  <div class="flex items-center justify-between mb-6">
-                    <div class="flex items-center space-x-3">
-                      <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600">
-                        <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                        </svg>
-                      </div>
-                      <DialogTitle as="h3" class="text-xl font-semibold leading-6 text-gray-900 dark:text-white">
-                        {{ hospital ? 'Hastane Düzenle' : 'Yeni Hastane Ekle' }}
+              <!-- Header -->
+              <div class="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-5">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                      <BuildingOffice2Icon class="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <DialogTitle as="h3" class="text-lg font-bold text-white">
+                        {{ hospital ? t('hospital_modal.title_edit', 'Hastane Düzenle') : t('hospital_modal.title_new', 'Yeni Hastane Ekle') }}
                       </DialogTitle>
+                      <p class="text-sm text-indigo-100 mt-0.5">
+                        {{ hospital ? 'Hastane bilgilerini güncelleyin' : 'Yeni hastane bilgilerini girin' }}
+                      </p>
                     </div>
-                    <button
-                      @click="$emit('close')"
-                      type="button"
-                      class="rounded-lg p-1 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    >
-                      <svg class="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
                   </div>
-                      
-                  <div class="space-y-5">
-                    <div class="group">
-                      <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Hastane Adı <span class="text-red-500">*</span>
-                      </label>
-                      <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                          </svg>
-                        </div>
-                        <input
-                          id="name"
-                          v-model="formData.name"
-                          type="text"
-                          required
-                          placeholder="Örn: Acıbadem Hastanesi"
-                          class="pl-10 block w-full rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 transition-all duration-200 sm:text-sm"
-                        />
-                      </div>
-                    </div>
+                  <button
+                    type="button"
+                    @click="$emit('close')"
+                    class="rounded-lg p-2 text-white/80 hover:text-white hover:bg-white/20 transition-colors"
+                  >
+                    <XMarkIcon class="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
 
-                    <div class="group">
-                      <label for="code" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Hastane Kodu <span class="text-red-500">*</span>
-                      </label>
-                      <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
-                          </svg>
-                        </div>
-                        <input
-                          id="code"
-                          v-model="formData.code"
-                          type="text"
-                          required
-                          placeholder="Örn: ACB-001"
-                          class="pl-10 block w-full rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 transition-all duration-200 sm:text-sm"
-                        />
-                      </div>
+              <!-- Form -->
+              <form @submit.prevent="handleSubmit" class="p-6">
+                <div class="space-y-5">
+                  <!-- Hospital Name -->
+                  <div>
+                    <label for="name" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                      {{ t('hospital_modal.name_label', 'Hastane Adı') }} *
+                    </label>
+                    <div class="relative">
+                      <BuildingOffice2Icon class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+                      <input
+                        id="name"
+                        v-model="formData.name"
+                        type="text"
+                        required
+                        :placeholder="t('hospital_modal.name_placeholder', 'Örn: Acıbadem Hastanesi')"
+                        class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                      />
                     </div>
+                  </div>
 
-                    <div class="group">
-                      <label for="address" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Adres
-                      </label>
-                      <div class="relative">
-                        <div class="absolute top-3 left-3 pointer-events-none">
-                          <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                          </svg>
-                        </div>
-                        <textarea
-                          id="address"
-                          v-model="formData.address"
-                          rows="3"
-                          placeholder="Hastane adresini girin..."
-                          class="pl-10 block w-full rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 transition-all duration-200 sm:text-sm resize-none"
-                        />
-                      </div>
+                  <!-- Hospital Code -->
+                  <div>
+                    <label for="code" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                      {{ t('hospital_modal.code_label', 'Hastane Kodu') }} *
+                    </label>
+                    <div class="relative">
+                      <HashtagIcon class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+                      <input
+                        id="code"
+                        v-model="formData.code"
+                        type="text"
+                        required
+                        :placeholder="t('hospital_modal.code_placeholder', 'Örn: ACB-001')"
+                        class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                      />
                     </div>
+                  </div>
 
-                    <div class="group">
-                      <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Açıklama
-                      </label>
-                      <div class="relative">
-                        <div class="absolute top-3 left-3 pointer-events-none">
-                          <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                          </svg>
-                        </div>
-                        <textarea
-                          id="description"
-                          v-model="formData.description"
-                          rows="3"
-                          placeholder="Hastane hakkında ek bilgiler..."
-                          class="pl-10 block w-full rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 transition-all duration-200 sm:text-sm resize-none"
-                        />
-                      </div>
+                  <!-- Address -->
+                  <div>
+                    <label for="address" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                      {{ t('hospital_modal.address_label', 'Adres') }}
+                    </label>
+                    <div class="relative">
+                      <MapPinIcon class="absolute left-3 top-3 h-5 w-5 text-gray-400 pointer-events-none" />
+                      <textarea
+                        id="address"
+                        v-model="formData.address"
+                        rows="3"
+                        :placeholder="t('hospital_modal.address_placeholder', 'Hastane adresini girin...')"
+                        class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- Description -->
+                  <div>
+                    <label for="description" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                      {{ t('hospital_modal.description_label', 'Açıklama') }}
+                    </label>
+                    <div class="relative">
+                      <DocumentTextIcon class="absolute left-3 top-3 h-5 w-5 text-gray-400 pointer-events-none" />
+                      <textarea
+                        id="description"
+                        v-model="formData.description"
+                        rows="3"
+                        :placeholder="t('hospital_modal.description_placeholder', 'Hastane hakkında ek bilgiler...')"
+                        class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none"
+                      />
                     </div>
                   </div>
                 </div>
-                <div class="bg-gray-50 dark:bg-gray-800 border-t dark:border-gray-700 px-6 py-4">
-                  <div class="flex items-center justify-end space-x-3">
-                    <button
-                      type="button"
-                      @click="$emit('close')"
-                      class="px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200"
-                    >
-                      İptal
-                    </button>
-                    <button
-                      type="submit"
-                      :disabled="saving"
-                      class="inline-flex items-center px-4 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg shadow-indigo-500/25"
-                    >
-                      <svg v-if="saving" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+
+                <!-- Actions -->
+                <div class="mt-6 flex gap-3">
+                  <button
+                    type="button"
+                    @click="$emit('close')"
+                    class="flex-1 px-4 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-all text-sm"
+                  >
+                    {{ t('hospital_modal.cancel', 'İptal') }}
+                  </button>
+                  <button
+                    type="submit"
+                    :disabled="saving"
+                    class="flex-1 px-4 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm shadow-lg shadow-indigo-500/25"
+                  >
+                    <span v-if="saving" class="flex items-center justify-center gap-2">
+                      <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      <svg v-else class="-ml-1 mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                      </svg>
-                      {{ saving ? 'Kaydediliyor...' : (hospital ? 'Güncelle' : 'Ekle') }}
-                    </button>
-                  </div>
+                      {{ t('hospital_modal.saving', 'Kaydediliyor...') }}
+                    </span>
+                    <span v-else>
+                      {{ hospital ? t('hospital_modal.save_edit', 'Güncelle') : t('hospital_modal.save_new', 'Ekle') }}
+                    </span>
+                  </button>
                 </div>
               </form>
             </DialogPanel>
@@ -170,6 +162,16 @@
 
 <script setup>
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import { 
+  BuildingOffice2Icon, 
+  HashtagIcon, 
+  MapPinIcon, 
+  DocumentTextIcon,
+  XMarkIcon
+} from '@heroicons/vue/24/outline'
+import { useLanguage } from '~/composables/useLanguage'
+
+const { t } = useLanguage()
 
 const props = defineProps({
   show: Boolean,
@@ -193,15 +195,15 @@ const handleSubmit = async () => {
   try {
     if (props.hospital) {
       await updateHospital(props.hospital.id, formData.value)
-      useToast().showSuccess('Hastane başarıyla güncellendi')
+      useToast().showSuccess(t('hospital_modal.success_updated', 'Hastane başarıyla güncellendi'))
     } else {
       await createHospital(formData.value)
-      useToast().showSuccess('Hastane başarıyla eklendi')
+      useToast().showSuccess(t('hospital_modal.success_created', 'Hastane başarıyla eklendi'))
     }
     emit('saved')
     emit('close')
   } catch (error) {
-    useToast().showError('İşlem sırasında bir hata oluştu')
+    useToast().showError(t('hospital_modal.error', 'İşlem sırasında bir hata oluştu'))
   } finally {
     saving.value = false
   }

@@ -10,17 +10,19 @@
             </div>
             <div>
               <div class="flex items-center gap-3">
-                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Havuz Verileri</h1>
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+                  {{ t('pool.title', 'Havuz Verileri') }}
+                </h1>
                 <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-xs font-medium rounded-full">
                   <span class="relative flex h-2 w-2">
                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                     <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                   </span>
-                  Canlı
+                  {{ t('pool.live', 'Canlı') }}
                 </span>
               </div>
               <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-                Yeni gelen müşteri verileri anlık olarak listelenir
+                {{ t('pool.description', 'Yeni gelen müşteri verileri anlık olarak listelenir') }}
               </p>
             </div>
           </div>
@@ -40,14 +42,14 @@
             class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-sm font-medium"
           >
             <ArrowPathIcon class="h-5 w-5" :class="{ 'animate-spin': loading }" />
-            Yenile
+            {{ t('dashboard.refresh', 'Yenile') }}
           </button>
           <button 
             @click="showCreateModal = true"
             class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all text-sm font-medium shadow-lg shadow-indigo-500/25"
           >
             <PlusIcon class="h-5 w-5" />
-            Yeni Müşteri
+            {{ t('pool.new_customer', 'Yeni Müşteri') }}
           </button>
         </div>
       </div>
@@ -58,7 +60,9 @@
       <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-200 dark:border-gray-700">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Atanmamış</p>
+            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+              {{ t('pool.stats.unassigned', 'Atanmamış') }}
+            </p>
             <p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ stats.unassigned }}</p>
           </div>
           <div class="p-3 bg-amber-100 dark:bg-amber-900/30 rounded-xl">
@@ -70,7 +74,9 @@
       <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-200 dark:border-gray-700">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Beklemede</p>
+            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+              {{ t('pool.stats.waiting', 'Beklemede') }}
+            </p>
             <p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ stats.assigned }}</p>
           </div>
           <div class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
@@ -82,7 +88,9 @@
       <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-200 dark:border-gray-700">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Bugün Gelen</p>
+            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+              {{ t('pool.stats.today', 'Bugün Gelen') }}
+            </p>
             <p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ stats.today }}</p>
           </div>
           <div class="p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl">
@@ -94,7 +102,9 @@
       <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-200 dark:border-gray-700">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Ort. Bekleme</p>
+            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+              {{ t('pool.stats.avg_wait', 'Ort. Bekleme') }}
+            </p>
             <p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ stats.avgWait }}</p>
           </div>
           <div class="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-xl">
@@ -118,7 +128,7 @@
         >
           <div class="flex items-center justify-center gap-2">
             <InboxIcon class="h-5 w-5" />
-            <span>Henüz Atanmamış</span>
+            <span>{{ t('pool.tabs.not_assigned', 'Henüz Atanmamış') }}</span>
             <span 
               v-if="stats.unassigned > 0"
               class="ml-1 px-2 py-0.5 text-xs font-semibold rounded-full"
@@ -144,7 +154,7 @@
         >
           <div class="flex items-center justify-center gap-2">
             <UserGroupIcon class="h-5 w-5" />
-            <span>Atandı, Beklemede</span>
+            <span>{{ t('pool.tabs.assigned_waiting', 'Atandı, Beklemede') }}</span>
             <span 
               v-if="stats.assigned > 0"
               class="ml-1 px-2 py-0.5 text-xs font-semibold rounded-full"
@@ -168,7 +178,7 @@
             v-model="columnFilters.name" 
             type="text"
             class="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-            placeholder="Ad, soyad, email, telefon, paket veya URL ile ara..."
+            :placeholder="t('pool.search_placeholder', 'Ad, soyad, email, telefon, paket veya URL ile ara...')"
           />
           <button 
             v-if="columnFilters.name"
@@ -186,7 +196,9 @@
           <div class="w-12 h-12 rounded-full border-4 border-indigo-100 dark:border-indigo-900"></div>
           <div class="absolute top-0 left-0 w-12 h-12 rounded-full border-4 border-transparent border-t-indigo-600 animate-spin"></div>
         </div>
-        <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">Veriler yükleniyor...</p>
+        <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
+          {{ t('pool.loading', 'Veriler yükleniyor...') }}
+        </p>
       </div>
 
       <!-- Table -->
@@ -195,28 +207,28 @@
           <thead>
             <tr class="bg-gray-50 dark:bg-gray-900/50">
               <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Müşteri
+                {{ t('pool.table.customer', 'Müşteri') }}
               </th>
               <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                İletişim
+                {{ t('pool.table.contact', 'İletişim') }}
               </th>
               <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Kaynak
+                {{ t('pool.table.source', 'Kaynak') }}
               </th>
               <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Paket / Hastalık
+                {{ t('pool.table.package', 'Paket / Hastalık') }}
               </th>
               <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Bekleme
+                {{ t('pool.table.waiting', 'Bekleme') }}
               </th>
               <th v-if="activeTab === 'unassigned'" class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Atama
+                {{ t('pool.table.assignment', 'Atama') }}
               </th>
               <th v-if="activeTab === 'assigned'" class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Atanan Kişi
+                {{ t('pool.table.assigned_person', 'Atanan Kişi') }}
               </th>
               <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                İşlem
+                {{ t('pool.table.actions', 'İşlem') }}
               </th>
             </tr>
           </thead>
@@ -318,7 +330,7 @@
                       @change="onGroupChange(customer.id)"
                       class="text-xs py-2 px-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 min-w-[120px]"
                     >
-                      <option value="">Grup Seç</option>
+                      <option value="">{{ t('pool.select_group', 'Grup Seç') }}</option>
                       <option v-for="group in userGroups" :key="group.id" :value="group.id">
                         {{ group.name }}
                       </option>
@@ -328,7 +340,7 @@
                       :disabled="!rowAssignments[customer.id].selectedGroupId"
                       class="text-xs py-2 px-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 min-w-[120px] disabled:opacity-50"
                     >
-                      <option value="">Kullanıcı Seç</option>
+                      <option value="">{{ t('pool.select_user', 'Kullanıcı Seç') }}</option>
                       <option v-for="user in getGroupUsers(customer.id)" :key="user.id" :value="user.id">
                         {{ user.name }}
                       </option>
@@ -340,7 +352,7 @@
                     class="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                   >
                     <UserPlusIcon class="h-4 w-4" />
-                    Ata
+                    {{ t('pool.assign', 'Ata') }}
                   </button>
                 </div>
               </td>
@@ -356,7 +368,7 @@
                   </div>
                   <div>
                     <p class="text-sm font-medium text-gray-900 dark:text-white">
-                      {{ customer.relevantUserData?.name || 'Atanmamış' }}
+                      {{ customer.relevantUserData?.name || t('pool.unassigned', 'Atanmamış') }}
                     </p>
                     <p v-if="customer.relevantUserData?.lastActiveTime" class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
                       <span class="w-1.5 h-1.5 rounded-full" :class="isOnline(customer.relevantUserData?.lastActiveTime) ? 'bg-emerald-500' : 'bg-gray-400'"></span>
@@ -372,21 +384,21 @@
                   <NuxtLink 
                     :to="`/customers/show/${customer.id}`"
                     class="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition-all"
-                    title="Görüntüle"
+                    :title="t('pool.actions.view', 'Görüntüle')"
                   >
                     <EyeIcon class="h-5 w-5" />
                   </NuxtLink>
                   <button 
                     @click="showNotes(customer)"
                     class="p-2 text-gray-400 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/30 rounded-lg transition-all"
-                    title="Notlar"
+                    :title="t('pool.actions.notes', 'Notlar')"
                   >
                     <DocumentTextIcon class="h-5 w-5" />
                   </button>
                   <button 
                     @click="toggleShow(customer.id)"
                     class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all"
-                    title="Daha fazla"
+                    :title="t('pool.actions.more', 'Daha fazla')"
                   >
                     <EllipsisHorizontalIcon class="h-5 w-5" />
                   </button>
@@ -402,10 +414,10 @@
                     <InboxIcon class="h-8 w-8 text-gray-400" />
                   </div>
                   <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-1">
-                    Havuz verisi bulunamadı
+                    {{ t('pool.empty.title', 'Havuz verisi bulunamadı') }}
                   </h3>
                   <p class="text-sm text-gray-500 dark:text-gray-400">
-                    {{ hasActiveFilters ? 'Filtrelere uygun veri bulunamadı.' : 'Henüz havuz verisi yok.' }}
+                    {{ hasActiveFilters ? t('pool.empty.filtered', 'Filtrelere uygun veri bulunamadı.') : t('pool.empty.no_data', 'Henüz havuz verisi yok.') }}
                   </p>
                 </div>
               </td>
@@ -491,7 +503,9 @@
               class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden"
             >
               <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-700">
-                <h3 class="font-semibold text-gray-900 dark:text-white">İşlemler</h3>
+                <h3 class="font-semibold text-gray-900 dark:text-white">
+                  {{ t('pool.modal.actions', 'İşlemler') }}
+                </h3>
                 <button 
                   @click="showStates.activeId = null"
                   class="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
@@ -508,7 +522,7 @@
                   <div class="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg">
                     <EyeIcon class="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
                   </div>
-                  <span class="text-xs text-gray-600 dark:text-gray-300">Görüntüle</span>
+                  <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('pool.actions.view', 'Görüntüle') }}</span>
                 </NuxtLink>
 
                 <button 
@@ -518,7 +532,7 @@
                   <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
                     <ClockIcon class="h-5 w-5 text-blue-600 dark:text-blue-400" />
                   </div>
-                  <span class="text-xs text-gray-600 dark:text-gray-300">Geçmiş</span>
+                  <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('pool.actions.history', 'Geçmiş') }}</span>
                 </button>
 
                 <button 
@@ -528,7 +542,7 @@
                   <div class="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
                     <DocumentTextIcon class="h-5 w-5 text-amber-600 dark:text-amber-400" />
                   </div>
-                  <span class="text-xs text-gray-600 dark:text-gray-300">Notlar</span>
+                  <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('pool.actions.notes', 'Notlar') }}</span>
                 </button>
 
                 <button 
@@ -538,7 +552,7 @@
                   <div class="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
                     <UsersIcon class="h-5 w-5 text-purple-600 dark:text-purple-400" />
                   </div>
-                  <span class="text-xs text-gray-600 dark:text-gray-300">Doktor</span>
+                  <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('pool.actions.doctor', 'Doktor') }}</span>
                 </button>
 
                 <button 
@@ -548,7 +562,7 @@
                   <div class="p-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg">
                     <ShoppingBagIcon class="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                   </div>
-                  <span class="text-xs text-gray-600 dark:text-gray-300">Hizmetler</span>
+                  <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('pool.actions.services', 'Hizmetler') }}</span>
                 </button>
 
                 <button 
@@ -558,7 +572,7 @@
                   <div class="p-2 bg-cyan-100 dark:bg-cyan-900/30 rounded-lg">
                     <FolderIcon class="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
                   </div>
-                  <span class="text-xs text-gray-600 dark:text-gray-300">Dosyalar</span>
+                  <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('pool.actions.files', 'Dosyalar') }}</span>
                 </button>
 
                 <NuxtLink 
@@ -569,7 +583,7 @@
                   <div class="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
                     <PencilIcon class="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
                   </div>
-                  <span class="text-xs text-gray-600 dark:text-gray-300">Düzenle</span>
+                  <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('pool.actions.edit', 'Düzenle') }}</span>
                 </NuxtLink>
 
                 <button 
@@ -580,7 +594,7 @@
                   <div class="p-2 bg-red-100 dark:bg-red-900/30 rounded-lg">
                     <TrashIcon class="h-5 w-5 text-red-600 dark:text-red-400" />
                   </div>
-                  <span class="text-xs text-red-600 dark:text-red-400">Sil</span>
+                  <span class="text-xs text-red-600 dark:text-red-400">{{ t('pool.actions.delete', 'Sil') }}</span>
                 </button>
               </div>
             </div>
@@ -609,10 +623,11 @@
                 <ExclamationTriangleIcon class="h-7 w-7 text-red-600 dark:text-red-400" />
               </div>
               <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                Müşteriyi Sil
+                {{ t('pool.delete.title', 'Müşteriyi Sil') }}
               </h3>
               <p class="text-sm text-gray-500 dark:text-gray-400">
-                <strong class="text-gray-700 dark:text-gray-300">{{ customerToDelete?.name }}</strong> adlı müşteriyi silmek istediğinize emin misiniz? Bu işlem geri alınamaz.
+                <strong class="text-gray-700 dark:text-gray-300">{{ customerToDelete?.name }}</strong> 
+                {{ t('pool.delete.message', 'adlı müşteriyi silmek istediğinize emin misiniz? Bu işlem geri alınamaz.') }}
               </p>
             </div>
             <div class="flex gap-3 px-6 pb-6">
@@ -620,13 +635,13 @@
                 @click="showDeleteModal = false"
                 class="flex-1 py-2.5 px-4 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-all"
               >
-                İptal
+                {{ t('pool.delete.cancel', 'İptal') }}
               </button>
               <button 
                 @click="handleDelete"
                 class="flex-1 py-2.5 px-4 bg-red-600 text-white rounded-xl font-medium hover:bg-red-700 transition-all"
               >
-                Sil
+                {{ t('pool.delete.confirm', 'Sil') }}
               </button>
             </div>
           </div>
@@ -674,6 +689,9 @@ import {
 } from '@heroicons/vue/24/outline'
 
 import { useAuthStore } from '~/stores/auth'
+import { useLanguage } from '~/composables/useLanguage'
+
+const { t } = useLanguage()
 const { $dayjs } = useNuxtApp()
 
 const config = useRuntimeConfig()
@@ -911,7 +929,7 @@ const fetchCustomers = async (page = 1) => {
 
     customersData.value = customersArray.map(customer => ({
       ...customer,
-      name: `${customer.name || ''} ${customer.surname || ''}`.trim() || 'İsimsiz',
+      name: `${customer.name || ''} ${customer.surname || ''}`.trim() || t('dashboard.unassigned.no_name', 'İsimsiz'),
       source: customer.source || '-',
       isActive: customer.isActive !== undefined ? customer.isActive : true,
       user: usersMap.value[customer.userId] || customer.user,

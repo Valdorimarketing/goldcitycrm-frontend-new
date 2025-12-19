@@ -8,9 +8,9 @@
             <DocumentTextIcon class="h-7 w-7 text-white" />
           </div>
           <div>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Proforma Takibi</h1>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ t('proforma_tracking.title', 'Proforma Takibi') }}</h1>
             <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-              Proforma istenen ve gelen müşterileri takip edin
+              {{ t('proforma_tracking.subtitle', 'Proforma istenen ve gelen müşterileri takip edin') }}
             </p>
           </div>
         </div>
@@ -20,17 +20,17 @@
           <NuxtLink to="/proforma/list"
             class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-sm font-medium">
             <DocumentTextIcon class="h-5 w-5" :class="{ 'animate-spin': loading }" />
-            Proforma Listesi
+            {{ t('proforma_tracking.actions.list', 'Proforma Listesi') }}
           </NuxtLink>
           <NuxtLink to="/proforma/create"
             class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-sm font-medium">
             <PlusIcon class="h-5 w-5" :class="{ 'animate-spin': loading }" />
-            Proforma Oluştur
+            {{ t('proforma_tracking.actions.create', 'Proforma Oluştur') }}
           </NuxtLink>
           <button @click="loadAllData"
             class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-sm font-medium">
             <ArrowPathIcon class="h-5 w-5" :class="{ 'animate-spin': loading }" />
-            Yenile
+            {{ t('proforma_tracking.actions.refresh', 'Yenile') }}
           </button>
         </div>
       </div>
@@ -42,7 +42,7 @@
         class="group bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Toplam</p>
+            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">{{ t('proforma_tracking.stats.total', 'Toplam') }}</p>
             <p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ requestedPagination.total +
               receivedPagination.total }}</p>
           </div>
@@ -58,7 +58,7 @@
         class="group bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">İstenen</p>
+            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">{{ t('proforma_tracking.stats.requested', 'İstenen') }}</p>
             <p class="text-2xl font-bold text-orange-600 dark:text-orange-400 mt-1">{{ requestedPagination.total }}</p>
           </div>
           <div
@@ -73,7 +73,7 @@
         class="group bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Gelen</p>
+            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">{{ t('proforma_tracking.stats.received', 'Gelen') }}</p>
             <p class="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">{{ receivedPagination.total }}</p>
           </div>
           <div
@@ -88,7 +88,7 @@
         class="group bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Dönüşüm</p>
+            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">{{ t('proforma_tracking.stats.conversion', 'Dönüşüm') }}</p>
             <p class="text-2xl font-bold text-purple-600 dark:text-purple-400 mt-1">{{ conversionRate }}%</p>
           </div>
           <div
@@ -106,11 +106,11 @@
       <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-700">
         <div class="flex items-center gap-2">
           <FunnelIcon class="h-5 w-5 text-gray-400" />
-          <span class="font-medium text-gray-700 dark:text-gray-300">Filtreler</span>
+          <span class="font-medium text-gray-700 dark:text-gray-300">{{ t('proforma_tracking.filters.title', 'Filtreler') }}</span>
         </div>
         <button v-if="searchTerm || relevantUserFilter || dateFilter !== 'all'" @click="resetFilters"
           class="text-sm text-orange-600 dark:text-orange-400 hover:text-orange-700 font-medium">
-          Temizle
+          {{ t('proforma_tracking.filters.clear', 'Temizle') }}
         </button>
       </div>
 
@@ -119,24 +119,24 @@
           <!-- Search -->
           <div>
             <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">
-              Ara
+              {{ t('proforma_tracking.filters.search', 'Ara') }}
             </label>
             <div class="relative">
               <MagnifyingGlassIcon class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input v-model="searchTerm" type="text"
                 class="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
-                placeholder="İsim, email, telefon..." />
+                :placeholder="t('proforma_tracking.filters.search_placeholder', 'İsim, email, telefon...')" />
             </div>
           </div>
 
           <!-- User Filter (Admin only) -->
           <div v-if="isAdmin">
             <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">
-              Atanan Kullanıcı
+              {{ t('proforma_tracking.filters.assigned_user', 'Atanan Kullanıcı') }}
             </label>
             <select v-model="relevantUserFilter"
               class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all appearance-none cursor-pointer">
-              <option value="">Tüm Kullanıcılar</option>
+              <option value="">{{ t('proforma_tracking.filters.all_users', 'Tüm Kullanıcılar') }}</option>
               <option v-for="user in usersList" :key="user.id" :value="user.id">
                 {{ user.name }}
               </option>
@@ -146,14 +146,14 @@
           <!-- Date Filter -->
           <div>
             <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">
-              Tarih Aralığı
+              {{ t('proforma_tracking.filters.date_range', 'Tarih Aralığı') }}
             </label>
             <select v-model="dateFilter"
               class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all appearance-none cursor-pointer">
-              <option value="all">Tümü</option>
-              <option value="today">Bugün</option>
-              <option value="week">Bu Hafta</option>
-              <option value="month">Bu Ay</option>
+              <option value="all">{{ t('proforma_tracking.filters.date_all', 'Tümü') }}</option>
+              <option value="today">{{ t('proforma_tracking.filters.date_today', 'Bugün') }}</option>
+              <option value="week">{{ t('proforma_tracking.filters.date_week', 'Bu Hafta') }}</option>
+              <option value="month">{{ t('proforma_tracking.filters.date_month', 'Bu Ay') }}</option>
             </select>
           </div>
 
@@ -161,7 +161,7 @@
           <div class="flex items-end">
             <button @click="resetFilters"
               class="w-full px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-all text-sm font-medium">
-              Filtreleri Temizle
+              {{ t('proforma_tracking.filters.clear_filters', 'Filtreleri Temizle') }}
             </button>
           </div>
         </div>
@@ -176,7 +176,7 @@
           class="absolute top-0 left-0 w-14 h-14 rounded-full border-4 border-transparent border-t-orange-600 animate-spin">
         </div>
       </div>
-      <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">Yükleniyor...</p>
+      <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">{{ t('proforma_tracking.loading', 'Yükleniyor...') }}</p>
     </div>
 
     <!-- Two Column Layout -->
@@ -199,8 +199,8 @@
                   <ClockIcon class="h-5 w-5 text-white" />
                 </div>
                 <div>
-                  <h2 class="font-semibold text-white">Proforma İstendi</h2>
-                  <p class="text-xs text-white/70">Cevap bekleniyor</p>
+                  <h2 class="font-semibold text-white">{{ t('proforma_tracking.requested.title', 'Proforma İstendi') }}</h2>
+                  <p class="text-xs text-white/70">{{ t('proforma_tracking.requested.subtitle', 'Cevap bekleniyor') }}</p>
                 </div>
               </div>
               <span class="px-3 py-1.5 bg-white/20 backdrop-blur-sm text-white text-sm font-bold rounded-full">
@@ -218,9 +218,9 @@
               class="h-16 w-16 rounded-2xl bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mb-4">
               <DocumentTextIcon class="h-8 w-8 text-orange-500" />
             </div>
-            <p class="text-sm font-medium text-gray-900 dark:text-white mb-1">Müşteri Yok</p>
+            <p class="text-sm font-medium text-gray-900 dark:text-white mb-1">{{ t('proforma_tracking.requested.empty_title', 'Müşteri Yok') }}</p>
             <p class="text-xs text-gray-500 dark:text-gray-400 text-center">
-              Proforma istenen müşteri bulunmuyor
+              {{ t('proforma_tracking.requested.empty_message', 'Proforma istenen müşteri bulunmuyor') }}
             </p>
           </div>
 
@@ -274,7 +274,7 @@
                   <span
                     class="inline-flex items-center gap-1.5 px-2 py-1 bg-orange-100 dark:bg-orange-900/30 rounded-lg text-xs text-orange-600 dark:text-orange-400">
                     <ClockIcon class="h-3.5 w-3.5" />
-                    Bekliyor
+                    {{ t('proforma_tracking.requested.status_waiting', 'Bekliyor') }}
                   </span>
                 </div>
               </div>
@@ -286,7 +286,7 @@
         <div v-if="requestedPagination.totalPages > 1"
           class="border-t border-gray-100 dark:border-gray-700 px-4 py-3 flex items-center justify-between bg-gray-50 dark:bg-gray-900/50">
           <span class="text-xs text-gray-500 dark:text-gray-400">
-            Sayfa {{ requestedPagination.page }} / {{ requestedPagination.totalPages }}
+            {{ tp('proforma_tracking.pagination.page', { current: requestedPagination.page, total: requestedPagination.totalPages }, 'Sayfa {current} / {total}') }}
           </span>
           <div class="flex items-center gap-1">
             <button @click="loadRequestedData(requestedPagination.page - 1)" :disabled="requestedPagination.page <= 1"
@@ -319,8 +319,8 @@
                   <CheckCircleIcon class="h-5 w-5 text-white" />
                 </div>
                 <div>
-                  <h2 class="font-semibold text-white">Proforma Geldi</h2>
-                  <p class="text-xs text-white/70">İşleme hazır</p>
+                  <h2 class="font-semibold text-white">{{ t('proforma_tracking.received.title', 'Proforma Geldi') }}</h2>
+                  <p class="text-xs text-white/70">{{ t('proforma_tracking.received.subtitle', 'İşleme hazır') }}</p>
                 </div>
               </div>
               <span class="px-3 py-1.5 bg-white/20 backdrop-blur-sm text-white text-sm font-bold rounded-full">
@@ -338,9 +338,9 @@
               class="h-16 w-16 rounded-2xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-4">
               <DocumentCheckIcon class="h-8 w-8 text-emerald-500" />
             </div>
-            <p class="text-sm font-medium text-gray-900 dark:text-white mb-1">Müşteri Yok</p>
+            <p class="text-sm font-medium text-gray-900 dark:text-white mb-1">{{ t('proforma_tracking.received.empty_title', 'Müşteri Yok') }}</p>
             <p class="text-xs text-gray-500 dark:text-gray-400 text-center">
-              Proforma gelen müşteri bulunmuyor
+              {{ t('proforma_tracking.received.empty_message', 'Proforma gelen müşteri bulunmuyor') }}
             </p>
           </div>
 
@@ -394,7 +394,7 @@
                   <span
                     class="inline-flex items-center gap-1.5 px-2 py-1 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg text-xs text-emerald-600 dark:text-emerald-400">
                     <CheckCircleIcon class="h-3.5 w-3.5" />
-                    Hazır
+                    {{ t('proforma_tracking.received.status_ready', 'Hazır') }}
                   </span>
                 </div>
               </div>
@@ -406,7 +406,7 @@
         <div v-if="receivedPagination.totalPages > 1"
           class="border-t border-gray-100 dark:border-gray-700 px-4 py-3 flex items-center justify-between bg-gray-50 dark:bg-gray-900/50">
           <span class="text-xs text-gray-500 dark:text-gray-400">
-            Sayfa {{ receivedPagination.page }} / {{ receivedPagination.totalPages }}
+            {{ tp('proforma_tracking.pagination.page', { current: receivedPagination.page, total: receivedPagination.totalPages }, 'Sayfa {current} / {total}') }}
           </span>
           <div class="flex items-center gap-1">
             <button @click="loadReceivedData(receivedPagination.page - 1)" :disabled="receivedPagination.page <= 1"
@@ -444,6 +444,9 @@ import {
   FunnelIcon
 } from '@heroicons/vue/24/outline'
 import { watchDebounced } from '@vueuse/core'
+import { useLanguage } from '~/composables/useLanguage'
+
+const { t, tp } = useLanguage()
 
 definePageMeta({
   layout: 'default'

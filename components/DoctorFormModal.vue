@@ -10,7 +10,7 @@
         leave-from="opacity-100"
         leave-to="opacity-0"
       >
-        <div class="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-80 transition-opacity" />
+        <div class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" />
       </TransitionChild>
 
       <div class="fixed inset-0 z-10 overflow-y-auto">
@@ -24,107 +24,160 @@
             leave-from="opacity-100 translate-y-0 sm:scale-100"
             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <DialogPanel class="relative transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-              <form @submit.prevent="handleSubmit">
-                <div class="bg-white dark:bg-gray-800 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                  <div class="sm:flex sm:items-start">
-                    <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
-                      <DialogTitle as="h3" class="text-lg font-semibold leading-6 text-gray-900 dark:text-white mb-4">
-                        {{ doctor ? 'Doktor Düzenle' : 'Yeni Doktor' }}
+            <DialogPanel class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-xl">
+              <!-- Header -->
+              <div class="bg-gradient-to-r from-emerald-600 to-teal-600 px-6 py-5">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                      <UserGroupIcon class="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <DialogTitle as="h3" class="text-lg font-bold text-white">
+                        {{ doctor ? t('doctor_modal.title_edit', 'Doktor Düzenle') : t('doctor_modal.title_new', 'Yeni Doktor') }}
                       </DialogTitle>
-                      
-                      <div class="mt-4 space-y-4">
-                        <div>
-                          <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Doktor Adı *
-                          </label>
+                      <p class="text-sm text-emerald-100 mt-0.5">
+                        {{ doctor ? 'Doktor bilgilerini güncelleyin' : 'Yeni doktor bilgilerini girin' }}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    @click="$emit('close')"
+                    class="rounded-lg p-2 text-white/80 hover:text-white hover:bg-white/20 transition-colors"
+                  >
+                    <XMarkIcon class="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
+
+              <!-- Form -->
+              <form @submit.prevent="handleSubmit" class="p-6">
+                <div class="space-y-5">
+                  <!-- Doctor Name -->
+                  <div>
+                    <label for="name" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                      {{ t('doctor_modal.name_label', 'Doktor Adı') }} *
+                    </label>
+                    <div class="relative">
+                      <UserIcon class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+                      <input
+                        id="name"
+                        v-model="formData.name"
+                        type="text"
+                        required
+                        :placeholder="t('doctor_modal.name_placeholder', 'Örn: Dr. Ahmet Yılmaz')"
+                        class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- Main Branch -->
+                  <div>
+                    <label for="branchId" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                      {{ t('doctor_modal.main_branch_label', 'Ana Branş') }}
+                    </label>
+                    <div class="relative">
+                      <TagIcon class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+                      <select
+                        id="branchId"
+                        v-model.number="formData.branchId"
+                        class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all appearance-none cursor-pointer"
+                      >
+                        <option :value="0">{{ t('doctor_modal.main_branch_placeholder', 'Seçiniz') }}</option>
+                        <option v-for="branch in branches" :key="branch.id" :value="branch.id">
+                          {{ branch.name }}
+                        </option>
+                      </select>
+                      <ChevronDownIcon class="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+                    </div>
+                  </div>
+
+                  <!-- Related Branches -->
+                  <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                      {{ t('doctor_modal.branches_label', 'İlişkili Branşlar') }}
+                    </label>
+                    <div class="border border-gray-200 dark:border-gray-600 rounded-xl max-h-48 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+                      <div v-for="branch in branches" :key="branch.id" class="px-4 py-2.5 hover:bg-white dark:hover:bg-gray-800 transition-colors border-b border-gray-100 dark:border-gray-700 last:border-0">
+                        <label class="flex items-center cursor-pointer group">
                           <input
-                            id="name"
-                            v-model="formData.name"
-                            type="text"
-                            required
-                            class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                            placeholder="Örn: Dr. Ahmet Yılmaz"
+                            type="checkbox"
+                            :value="branch.id"
+                            v-model="formData.branchIds"
+                            class="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-emerald-600 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-0 transition-all"
                           />
+                          <span class="ml-3 text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
+                            {{ branch.name }}
+                          </span>
+                        </label>
+                      </div>
+                      <div v-if="branches.length === 0" class="px-4 py-8 text-center">
+                        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-800 mb-2">
+                          <TagIcon class="h-6 w-6 text-gray-400" />
                         </div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                          {{ t('doctor_modal.branches_empty', 'Branş bulunamadı') }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
 
-                        <div>
-                          <label for="branchId" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Ana Branş
-                          </label>
-                          <select
-                            id="branchId"
-                            v-model.number="formData.branchId"
-                            class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                          >
-                            <option :value="0">Seçiniz</option>
-                            <option v-for="branch in branches" :key="branch.id" :value="branch.id">
-                              {{ branch.name }}
-                            </option>
-                          </select>
+                  <!-- Related Hospitals -->
+                  <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                      {{ t('doctor_modal.hospitals_label', 'İlişkili Hastaneler') }}
+                    </label>
+                    <div class="border border-gray-200 dark:border-gray-600 rounded-xl max-h-48 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+                      <div v-for="hospital in hospitals" :key="hospital.id" class="px-4 py-2.5 hover:bg-white dark:hover:bg-gray-800 transition-colors border-b border-gray-100 dark:border-gray-700 last:border-0">
+                        <label class="flex items-center cursor-pointer group">
+                          <input
+                            type="checkbox"
+                            :value="hospital.id"
+                            v-model="formData.hospitalIds"
+                            class="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-emerald-600 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-0 transition-all"
+                          />
+                          <span class="ml-3 text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
+                            {{ hospital.name }}
+                          </span>
+                        </label>
+                      </div>
+                      <div v-if="hospitals.length === 0" class="px-4 py-8 text-center">
+                        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-800 mb-2">
+                          <BuildingOffice2Icon class="h-6 w-6 text-gray-400" />
                         </div>
-
-                        <div>
-                          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            İlişkili Branşlar
-                          </label>
-                          <div class="border border-gray-300 dark:border-gray-600 rounded-md max-h-48 overflow-y-auto">
-                            <div v-for="branch in branches" :key="branch.id" class="px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-700">
-                              <label class="flex items-center cursor-pointer">
-                                <input
-                                  type="checkbox"
-                                  :value="branch.id"
-                                  v-model="formData.branchIds"
-                                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                />
-                                <span class="ml-2 text-sm text-gray-900 dark:text-gray-100">{{ branch.name }}</span>
-                              </label>
-                            </div>
-                            <div v-if="branches.length === 0" class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
-                              Branş bulunamadı
-                            </div>
-                          </div>
-                        </div>
-
-                        <div>
-                          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            İlişkili Hastaneler
-                          </label>
-                          <div class="border border-gray-300 dark:border-gray-600 rounded-md max-h-48 overflow-y-auto">
-                            <div v-for="hospital in hospitals" :key="hospital.id" class="px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-700">
-                              <label class="flex items-center cursor-pointer">
-                                <input
-                                  type="checkbox"
-                                  :value="hospital.id"
-                                  v-model="formData.hospitalIds"
-                                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                />
-                                <span class="ml-2 text-sm text-gray-900 dark:text-gray-100">{{ hospital.name }}</span>
-                              </label>
-                            </div>
-                            <div v-if="hospitals.length === 0" class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
-                              Hastane bulunamadı
-                            </div>
-                          </div>
-                        </div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                          {{ t('doctor_modal.hospitals_empty', 'Hastane bulunamadı') }}
+                        </p>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                  <button
-                    type="submit"
-                    :disabled="saving"
-                    class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 sm:ml-3 sm:w-auto"
-                  >
-                    {{ saving ? 'Kaydediliyor...' : 'Kaydet' }}
-                  </button>
+
+                <!-- Actions -->
+                <div class="mt-6 flex gap-3">
                   <button
                     type="button"
                     @click="$emit('close')"
-                    class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-600 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 sm:mt-0 sm:w-auto"
+                    class="flex-1 px-4 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-all text-sm"
                   >
-                    İptal
+                    {{ t('doctor_modal.cancel', 'İptal') }}
+                  </button>
+                  <button
+                    type="submit"
+                    :disabled="saving"
+                    class="flex-1 px-4 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl font-semibold hover:from-emerald-700 hover:to-teal-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm shadow-lg shadow-emerald-500/25"
+                  >
+                    <span v-if="saving" class="flex items-center justify-center gap-2">
+                      <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      {{ t('doctor_modal.saving', 'Kaydediliyor...') }}
+                    </span>
+                    <span v-else>
+                      {{ t('doctor_modal.save', 'Kaydet') }}
+                    </span>
                   </button>
                 </div>
               </form>
@@ -138,6 +191,17 @@
 
 <script setup>
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import { 
+  UserGroupIcon, 
+  UserIcon,
+  TagIcon, 
+  BuildingOffice2Icon,
+  ChevronDownIcon,
+  XMarkIcon
+} from '@heroicons/vue/24/outline'
+import { useLanguage } from '~/composables/useLanguage'
+
+const { t } = useLanguage()
 
 const props = defineProps({
   show: Boolean,
@@ -171,15 +235,15 @@ const handleSubmit = async () => {
 
     if (props.doctor) {
       await updateDoctor(props.doctor.id, dataToSend)
-      useToast().showSuccess('Doktor başarıyla güncellendi')
+      useToast().showSuccess(t('doctor_modal.success_updated', 'Doktor başarıyla güncellendi'))
     } else {
       await createDoctor(dataToSend)
-      useToast().showSuccess('Doktor başarıyla eklendi')
+      useToast().showSuccess(t('doctor_modal.success_created', 'Doktor başarıyla eklendi'))
     }
     emit('saved')
     emit('close')
   } catch (error) {
-    useToast().showError('İşlem sırasında bir hata oluştu')
+    useToast().showError(t('doctor_modal.error', 'İşlem sırasında bir hata oluştu'))
   } finally {
     saving.value = false
   }
@@ -192,14 +256,11 @@ watch(() => props.show, async (newVal) => {
       fetchBranches(undefined, 1000, 1),  // Fetch all branches: limit=1000, page=1
       fetchHospitals(1000, 1)  // Fetch all hospitals: limit=1000, page=1
     ])
-    console.log('Branches loaded:', branches.value.length)
-    console.log('Hospitals loaded:', hospitals.value.length)
   }
 })
 
 // Watch for doctor changes
 watch(() => props.doctor, (newVal) => {
-  console.log('Doctor prop changed in modal:', newVal)
 
   if (newVal) {
     // Extract branch IDs from doctor2Branches relationship
@@ -212,8 +273,6 @@ watch(() => props.doctor, (newVal) => {
       ? newVal.doctor2Hospitals.map(d2h => d2h.hospitalId)
       : (newVal.hospitalIds || [])
 
-    console.log('Extracted branchIds:', branchIds)
-    console.log('Extracted hospitalIds:', hospitalIds)
 
     formData.value = {
       name: newVal.name || '',

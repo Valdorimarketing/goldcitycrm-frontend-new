@@ -39,7 +39,7 @@
                       <DocumentTextIcon class="h-6 w-6 text-white" />
                     </div>
                     <div>
-                      <h2 class="text-xl font-bold text-white">Müşteri Notları</h2>
+                      <h2 class="text-xl font-bold text-white">{{ t('notes_modal.title', 'Müşteri Notları') }}</h2>
                       <p class="text-sm text-white/70">{{ customer?.name }} {{ customer?.surname }}</p>
                     </div>
                   </div>
@@ -53,12 +53,53 @@
               </div>
             </div>
 
+            <!-- Draft Restore Alert -->
+            <Transition
+              enter-active-class="transition-all duration-300"
+              enter-from-class="opacity-0 -translate-y-4"
+              enter-to-class="opacity-100 translate-y-0"
+              leave-active-class="transition-all duration-200"
+              leave-from-class="opacity-100 translate-y-0"
+              leave-to-class="opacity-0 -translate-y-4"
+            >
+              <div v-if="showDraftAlert" class="flex-shrink-0 mx-5 mt-5 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4">
+                <div class="flex items-start gap-3">
+                  <div class="h-10 w-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0">
+                    <DocumentTextIcon class="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="text-sm font-semibold text-blue-900 dark:text-blue-200 mb-1">
+                      {{ t('notes_modal.draft_found', 'Kaydedilmiş Taslak Bulundu') }}
+                    </h4>
+                    <p class="text-sm text-blue-700 dark:text-blue-300 mb-3">
+                      {{ t('notes_modal.draft_message', 'Bu müşteri için kaydedilmiş bir taslak notunuz var. Devam etmek ister misiniz?') }}
+                    </p>
+                    <div class="flex items-center gap-2">
+                      <button
+                        @click="restoreDraft"
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-all"
+                      >
+                        <DocumentDuplicateIcon class="h-4 w-4" />
+                        {{ t('notes_modal.restore_draft', 'Devam Et') }}
+                      </button>
+                      <button
+                        @click="deleteDraft"
+                        class="px-3 py-1.5 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium transition-colors"
+                      >
+                        {{ t('notes_modal.delete_draft', 'Taslağı Sil') }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Transition>
+
             <!-- Add Note Section -->
             <div class="flex-shrink-0 border-b border-gray-200 dark:border-gray-700 p-5 bg-gray-50 dark:bg-gray-900/50">
               <!-- Status Selection -->
               <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Müşteri Durumu
+                  {{ t('notes_modal.customer_status', 'Müşteri Durumu') }}
                 </label>
                 <div class="relative">
                   <TagIcon class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -66,7 +107,7 @@
                     v-model="selectedStatus"
                     class="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all appearance-none cursor-pointer"
                   >
-                    <option :value="null" disabled>Durum seçiniz...</option>
+                    <option :value="null" disabled>{{ t('notes_modal.select_status', 'Durum seçiniz...') }}</option>
                     <option v-for="status in availableStatuses" :key="status.id" :value="status.id">
                       {{ status.name }}
                     </option>
@@ -75,7 +116,7 @@
 
                 <!-- Current Status Badge -->
                 <div v-if="customer?.status_info" class="mt-2 flex items-center gap-2">
-                  <span class="text-xs text-gray-500 dark:text-gray-400">Mevcut:</span>
+                  <span class="text-xs text-gray-500 dark:text-gray-400">{{ t('notes_modal.current', 'Mevcut:') }}</span>
                   <span 
                     class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium"
                     :style="{
@@ -99,7 +140,7 @@
                     </div>
                     <div>
                       <p class="text-sm font-medium text-amber-800 dark:text-amber-200">
-                        {{ reminderDays }} gün sonra aranacak.
+                        {{ tp('notes_modal.reminder_days', { days: reminderDays }, '{days} gün sonra aranacak.') }}
                       </p>
                       <p v-if="reminderDate" class="text-xs text-amber-600 dark:text-amber-400">
                         {{ reminderDate }}
@@ -115,8 +156,29 @@
                   v-model="newNote.note"
                   rows="3"
                   class="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all resize-none"
-                  placeholder="Yeni not ekleyin..."
+                  :placeholder="t('notes_modal.note_placeholder', 'Yeni not ekleyin...')"
                 ></textarea>
+                
+                <!-- Auto-save Indicator -->
+                <Transition
+                  enter-active-class="transition-all duration-200"
+                  enter-from-class="opacity-0 scale-95"
+                  enter-to-class="opacity-100 scale-100"
+                  leave-active-class="transition-all duration-200"
+                  leave-from-class="opacity-100 scale-100"
+                  leave-to-class="opacity-0 scale-95"
+                >
+                  <div 
+                    v-if="autoSaveStatus"
+                    class="absolute top-2 right-2 flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-sm"
+                  >
+                    <div v-if="autoSaveStatus === 'saving'" class="h-2 w-2 rounded-full bg-amber-500 animate-pulse"></div>
+                    <div v-else-if="autoSaveStatus === 'saved'" class="h-2 w-2 rounded-full bg-green-500"></div>
+                    <span class="text-xs font-medium" :class="autoSaveStatus === 'saving' ? 'text-amber-600 dark:text-amber-400' : 'text-green-600 dark:text-green-400'">
+                      {{ autoSaveStatus === 'saving' ? t('notes_modal.saving', 'Kaydediliyor...') : t('notes_modal.saved', 'Kaydedildi') }}
+                    </span>
+                  </div>
+                </Transition>
               </div>
 
               <!-- Note Actions -->
@@ -135,7 +197,7 @@
                     </div>
                     <span class="text-sm text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
                       <BellIcon class="inline h-4 w-4 mr-1" />
-                      Hatırlatıcı
+                      {{ t('notes_modal.reminder', 'Hatırlatıcı') }}
                     </span>
                   </label>
 
@@ -162,7 +224,7 @@
                     class="inline-flex items-center gap-2 px-4 py-2.5 bg-green-600 text-white text-sm font-medium rounded-xl hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                   >
                     <CurrencyDollarIcon class="h-4 w-4" />
-                    Satışa Çevir
+                    {{ t('notes_modal.convert_to_sale', 'Satışa Çevir') }}
                   </button>
                   <button
                     @click="addNote"
@@ -170,7 +232,7 @@
                     class="inline-flex items-center gap-2 px-4 py-2.5 bg-amber-600 text-white text-sm font-medium rounded-xl hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                   >
                     <PlusIcon class="h-4 w-4" />
-                    {{ addingNote ? 'Ekleniyor...' : 'Not Ekle' }}
+                    {{ addingNote ? t('notes_modal.adding', 'Ekleniyor...') : t('notes_modal.add_note', 'Not Ekle') }}
                   </button>
                 </div>
               </div>
@@ -184,7 +246,7 @@
                   <div class="w-12 h-12 rounded-full border-4 border-amber-100 dark:border-amber-900"></div>
                   <div class="absolute top-0 left-0 w-12 h-12 rounded-full border-4 border-transparent border-t-amber-600 animate-spin"></div>
                 </div>
-                <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">Notlar yükleniyor...</p>
+                <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">{{ t('notes_modal.loading', 'Notlar yükleniyor...') }}</p>
               </div>
 
               <!-- Notes -->
@@ -204,7 +266,7 @@
                       </div>
                       <div>
                         <p class="text-sm font-medium text-gray-900 dark:text-white">
-                          {{ note.userInfo?.name || 'Sistem' }}
+                          {{ note.userInfo?.name || t('customer_show.history.system', 'Sistem') }}
                         </p>
                         <div class="flex gap-2">
                           <p class="text-xs text-gray-500 dark:text-gray-400">
@@ -222,14 +284,14 @@
                       <button
                         @click="cloneNote(note)"
                         class="p-2 text-gray-400 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20 rounded-lg transition-all"
-                        title="Klonla"
+                        :title="t('notes_modal.clone', 'Klonla')"
                       >
                         <DocumentDuplicateIcon class="h-4 w-4" />
                       </button>
                       <button
                         @click="editNote(note)"
                         class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all"
-                        title="Düzenle"
+                        :title="t('pool.actions.edit', 'Düzenle')"
                       >
                         <PencilIcon class="h-4 w-4" />
                       </button>
@@ -237,7 +299,7 @@
                         v-if="isAdmin"
                         @click="deleteNote(note)"
                         class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all"
-                        title="Sil"
+                        :title="t('pool.actions.delete', 'Sil')"
                       >
                         <TrashIcon class="h-4 w-4" />
                       </button>
@@ -258,21 +320,21 @@
                           type="checkbox"
                           class="h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-amber-500"
                         />
-                        <span class="text-sm text-gray-600 dark:text-gray-300">Hatırlatıcı</span>
+                        <span class="text-sm text-gray-600 dark:text-gray-300">{{ t('notes_modal.reminder', 'Hatırlatıcı') }}</span>
                       </label>
                       <div class="flex items-center gap-2">
                         <button
                           @click="cancelEdit"
                           class="px-3 py-1.5 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                         >
-                          İptal
+                          {{ t('pool.delete.cancel', 'İptal') }}
                         </button>
                         <button
                           @click="saveEdit"
                           :disabled="!editingNote.note.trim()"
                           class="px-3 py-1.5 bg-amber-600 text-white text-sm font-medium rounded-lg hover:bg-amber-700 disabled:opacity-50 transition-all"
                         >
-                          Kaydet
+                          {{ t('notes_modal.save', 'Kaydet') }}
                         </button>
                       </div>
                     </div>
@@ -295,7 +357,7 @@
                         class="inline-flex items-center gap-1 px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-lg text-xs font-medium"
                       >
                         <ExclamationTriangleIcon class="h-3 w-3" />
-                        Gecikmiş
+                        {{ t('notes_modal.overdue', 'Gecikmiş') }}
                       </span>
                     </div>
                   </div>
@@ -307,9 +369,11 @@
                 <div class="h-16 w-16 rounded-2xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-4">
                   <DocumentTextIcon class="h-8 w-8 text-gray-400" />
                 </div>
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">Not Bulunamadı</h3>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                  {{ t('notes_modal.empty.title', 'Not Bulunamadı') }}
+                </h3>
                 <p class="text-sm text-gray-500 dark:text-gray-400">
-                  Bu müşteri için henüz not eklenmemiş.
+                  {{ t('notes_modal.empty.description', 'Bu müşteri için henüz not eklenmemiş.') }}
                 </p>
               </div>
             </div>
@@ -319,18 +383,18 @@
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
                   <span>
-                    Toplam <span class="font-medium text-gray-700 dark:text-gray-300">{{ notes.length }}</span> not
+                    {{ t('dashboard.total', 'Toplam') }} <span class="font-medium text-gray-700 dark:text-gray-300">{{ notes.length }}</span> {{ t('notes_modal.note', 'not') }}
                   </span>
                   <span v-if="reminderCount > 0" class="flex items-center gap-1">
                     <BellIcon class="h-4 w-4 text-amber-500" />
-                    <span class="font-medium text-amber-600 dark:text-amber-400">{{ reminderCount }}</span> hatırlatıcı
+                    <span class="font-medium text-amber-600 dark:text-amber-400">{{ reminderCount }}</span> {{ t('notes_modal.reminder_count', 'hatırlatıcı') }}
                   </span>
                 </div>
                 <button
                   @click="$emit('close')"
                   class="px-4 py-2.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 transition-all"
                 >
-                  Kapat
+                  {{ t('notes_modal.close', 'Kapat') }}
                 </button>
               </div>
             </div>
@@ -364,7 +428,9 @@ import {
   ExclamationTriangleIcon,
   CurrencyDollarIcon
 } from '@heroicons/vue/24/outline'
-import { useCustomer2Product } from '~/composables/useCustomer2Product'
+import { useLanguage } from '~/composables/useLanguage'
+
+const { t, tp } = useLanguage()
 
 const props = defineProps({
   show: Boolean,
@@ -390,6 +456,10 @@ const editingNote = ref(null)
 const selectedStatus = ref(null)
 const showConvertToSaleModal = ref(false)
 const pendingStatusId = ref(null)
+const autoSaveStatus = ref(null) // 'saving', 'saved', null
+const autoSaveTimeout = ref(null)
+const showDraftAlert = ref(false)
+const draftData = ref(null)
 
 const newNote = reactive({
   note: '',
@@ -419,6 +489,91 @@ const reminderDate = computed(() => {
   return $dayjs().add(reminderDays.value, 'day').format('DD.MM.YYYY')
 })
 
+const isSaleStatus = computed(() => {
+  if (!selectedStatus.value) return false
+  const status = availableStatuses.value.find(s => s.id === selectedStatus.value)
+  return status?.is_sale || status?.isSale || false
+})
+
+// Draft Management Methods
+const getDraftKey = () => {
+  return `customer_note_draft_${props.customer?.id}`
+}
+
+const saveDraft = () => {
+  if (!props.customer?.id || !newNote.note.trim()) {
+    clearDraft()
+    return
+  }
+
+  const draft = {
+    note: newNote.note,
+    isReminding: newNote.isReminding,
+    remindingAt: newNote.remindingAt,
+    status: selectedStatus.value,
+    timestamp: new Date().toISOString()
+  }
+
+  try {
+    localStorage.setItem(getDraftKey(), JSON.stringify(draft))
+    autoSaveStatus.value = 'saved'
+    setTimeout(() => {
+      autoSaveStatus.value = null
+    }, 2000)
+  } catch (error) {
+    console.error('Error saving draft:', error)
+  }
+}
+
+const loadDraft = () => {
+  if (!props.customer?.id) return null
+
+  try {
+    const draft = localStorage.getItem(getDraftKey())
+    return draft ? JSON.parse(draft) : null
+  } catch (error) {
+    console.error('Error loading draft:', error)
+    return null
+  }
+}
+
+const clearDraft = () => {
+  if (!props.customer?.id) return
+
+  try {
+    localStorage.removeItem(getDraftKey())
+  } catch (error) {
+    console.error('Error clearing draft:', error)
+  }
+}
+
+const checkForDraft = () => {
+  const draft = loadDraft()
+  if (draft && draft.note.trim()) {
+    draftData.value = draft
+    showDraftAlert.value = true
+  }
+}
+
+const restoreDraft = () => {
+  if (draftData.value) {
+    newNote.note = draftData.value.note
+    newNote.isReminding = draftData.value.isReminding
+    newNote.remindingAt = draftData.value.remindingAt
+    if (draftData.value.status) {
+      selectedStatus.value = draftData.value.status
+    }
+  }
+  showDraftAlert.value = false
+  draftData.value = null
+}
+
+const deleteDraft = () => {
+  clearDraft()
+  showDraftAlert.value = false
+  draftData.value = null
+}
+
 // Methods
 const fetchNotes = async () => {
   if (!props.customer?.id) return
@@ -446,7 +601,7 @@ const addNote = async () => {
   if (!newNote.note.trim() || !props.customer?.id) return
 
   if (notes.value.find(item => item.note === newNote.note.trim())) {
-    alert("Aynı nottan tekrar oluşturulamaz")
+    alert(t('notes_modal.duplicate_note', "Aynı nottan tekrar oluşturulamaz"))
     return false
   }
 
@@ -460,32 +615,16 @@ const addNote = async () => {
       const selectedStatusObj = availableStatuses.value.find(s => s.id === selectedStatus.value)
       isSaleStatus = selectedStatusObj?.is_sale || selectedStatusObj?.isSale
 
-      // if (isSaleStatus) {
-      //   try {
-      //     const unsoldProducts = await fetchUnsoldProducts(props.customer.id)
-      //     if (!unsoldProducts || unsoldProducts.length === 0) {
-      //       alert('Satış yapılamaz. Önce ürün girilmeli')
-      //       addingNote.value = false
-      //       return
-      //     }
-      //   } catch (error) {
-      //     console.error('Error fetching unsold products:', error)
-      //     alert('Ürünler kontrol edilirken hata oluştu')
-      //     addingNote.value = false
-      //     return
-      //   }
-      // }
-
       try {
         await customersStore.updateCustomer(props.customer.id, { status: selectedStatus.value })
         statusUpdateSuccess = true
 
         await customersStore.fetchCustomer(props.customer.id)
         emit('customer-updated')
-        showSuccess('Müşteri durumu güncellendi')
+        showSuccess(t('notes_modal.status_updated', 'Müşteri durumu güncellendi'))
       } catch (error) {
         console.error('Error updating customer status:', error)
-        const errorMessage = error?.data?.message || 'Durum güncellenirken hata oluştu'
+        const errorMessage = error?.data?.message || t('notes_modal.status_update_error', 'Durum güncellenirken hata oluştu')
         showError(errorMessage)
         addingNote.value = false
         return
@@ -502,6 +641,9 @@ const addNote = async () => {
 
     await customerNotesStore.createCustomerNote(noteData)
 
+    // Clear draft after successful note addition
+    clearDraft()
+
     newNote.note = ''
     newNote.isReminding = false
     newNote.remindingAt = ''
@@ -510,7 +652,7 @@ const addNote = async () => {
 
   } catch (error) {
     console.error('Error adding note:', error)
-    showError('Not eklenirken hata oluştu')
+    showError(t('notes_modal.add_note_error', 'Not eklenirken hata oluştu'))
   } finally {
     addingNote.value = false
   }
@@ -546,7 +688,7 @@ const saveEdit = async () => {
 }
 
 const deleteNote = async (note) => {
-  if (!confirm('Bu notu silmek istediğinizden emin misiniz?')) return
+  if (!confirm(t('notes_modal.delete_confirm', 'Bu notu silmek istediğinizden emin misiniz?'))) return
   
   try {
     await customerNotesStore.deleteCustomerNote(note.id)
@@ -580,6 +722,43 @@ const formatDateTime = (dateString) => {
   })
 }
 
+// Auto-save watcher with debounce
+watch(() => newNote.note, (newValue) => {
+  if (!props.customer?.id) return
+
+  // Clear existing timeout
+  if (autoSaveTimeout.value) {
+    clearTimeout(autoSaveTimeout.value)
+  }
+
+  // If note is empty, clear draft
+  if (!newValue.trim()) {
+    autoSaveStatus.value = null
+    return
+  }
+
+  // Show saving status
+  autoSaveStatus.value = 'saving'
+
+  // Set new timeout for auto-save (1 second debounce)
+  autoSaveTimeout.value = setTimeout(() => {
+    saveDraft()
+  }, 1000)
+})
+
+// Also watch other fields for auto-save
+watch([() => newNote.isReminding, () => newNote.remindingAt, () => selectedStatus.value], () => {
+  if (newNote.note.trim() && props.customer?.id) {
+    if (autoSaveTimeout.value) {
+      clearTimeout(autoSaveTimeout.value)
+    }
+    autoSaveStatus.value = 'saving'
+    autoSaveTimeout.value = setTimeout(() => {
+      saveDraft()
+    }, 500)
+  }
+})
+
 // Watchers
 watch(() => newNote.isReminding, (value) => {
   if (value && !newNote.remindingAt) {
@@ -597,6 +776,11 @@ watch(() => props.show, async (newValue) => {
       await fetchStatuses()
     }
     selectedStatus.value = props.customer?.status || null
+    
+    // Check for draft after a short delay to ensure modal is fully rendered
+    setTimeout(() => {
+      checkForDraft()
+    }, 100)
   } else {
     notes.value = []
     newNote.note = ''
@@ -604,6 +788,20 @@ watch(() => props.show, async (newValue) => {
     newNote.remindingAt = ''
     editingNote.value = null
     selectedStatus.value = null
+    autoSaveStatus.value = null
+    showDraftAlert.value = false
+    draftData.value = null
+    
+    if (autoSaveTimeout.value) {
+      clearTimeout(autoSaveTimeout.value)
+    }
+  }
+})
+
+// Cleanup on unmount
+onBeforeUnmount(() => {
+  if (autoSaveTimeout.value) {
+    clearTimeout(autoSaveTimeout.value)
   }
 })
 </script>

@@ -3,9 +3,9 @@
     <!-- Header -->
     <div class="sm:flex sm:items-center sm:justify-between mb-6">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Hatırlatmalar</h1>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ t('reminders.title', 'Hatırlatmalar') }}</h1>
         <p class="mt-2 text-sm text-gray-700 dark:text-gray-300">
-          Müşteri notlarındaki hatırlatmaları görüntüleyin.
+          {{ t('reminders.subtitle', 'Müşteri notlarındaki hatırlatmaları görüntüleyin.') }}
         </p>
       </div>
     </div>
@@ -15,7 +15,7 @@
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div>
           <label for="dateFilter" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Tarih Filtresi
+            {{ t('reminders.filters.date_label', 'Tarih Filtresi') }}
           </label>
           <select
             id="dateFilter"
@@ -23,14 +23,14 @@
             @change="handleDateFilterChange"
             class="form-input"
           >
-            <option value="today">Bugün ve Öncesi</option>
-            <option value="today-only">Sadece Bugün</option>
-            <option value="tomorrow">Yarın</option>
-            <option value="week">Bu Hafta</option>
-            <option value="month">Bu Ay</option>
-            <option value="overdue">Gecikmiş</option>
-            <option value="all">Tümü</option>
-            <option value="custom">Özel Tarih Aralığı</option>
+            <option value="today">{{ t('reminders.filters.date_today', 'Bugün ve Öncesi') }}</option>
+            <option value="today-only">{{ t('reminders.filters.date_today_only', 'Sadece Bugün') }}</option>
+            <option value="tomorrow">{{ t('reminders.filters.date_tomorrow', 'Yarın') }}</option>
+            <option value="week">{{ t('reminders.filters.date_week', 'Bu Hafta') }}</option>
+            <option value="month">{{ t('reminders.filters.date_month', 'Bu Ay') }}</option>
+            <option value="overdue">{{ t('reminders.filters.date_overdue', 'Gecikmiş') }}</option>
+            <option value="all">{{ t('reminders.filters.date_all', 'Tümü') }}</option>
+            <option value="custom">{{ t('reminders.filters.date_custom', 'Özel Tarih Aralığı') }}</option>
           </select>
         </div>
 
@@ -38,7 +38,7 @@
         <template v-if="dateFilter === 'custom'">
           <div>
             <label for="startDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Başlangıç Tarihi
+              {{ t('reminders.filters.start_date', 'Başlangıç Tarihi') }}
             </label>
             <input
               id="startDate"
@@ -50,7 +50,7 @@
           </div>
           <div>
             <label for="endDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Bitiş Tarihi
+              {{ t('reminders.filters.end_date', 'Bitiş Tarihi') }}
             </label>
             <input
               id="endDate"
@@ -97,7 +97,7 @@
                   >
                     {{ reminder.customerInfo.name }} {{ reminder.customerInfo.surname }}
                   </NuxtLink>
-                  <span v-else>Müşteri #{{ reminder.customer }}</span>
+                  <span v-else>{{ tp('reminders.customer_id', { id: reminder.customer }, 'Müşteri #{id}') }}</span>
                 </h3>
                 <!-- Phone Numbers -->
                 <div v-if="customerMap.get(reminder.customer)" class="flex items-center space-x-2 mt-1 text-sm text-gray-600 dark:text-gray-400">
@@ -139,21 +139,21 @@
             <button
               @click="markAsCompleted(reminder)"
               class="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300 text-sm font-medium"
-              title="Tamamlandı olarak işaretle"
+              :title="t('reminders.actions.mark_completed', 'Tamamlandı olarak işaretle')"
             >
               <CheckIcon class="h-5 w-5" />
             </button>
             <button
               @click="editReminder(reminder)"
               class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium"
-              title="Düzenle"
+              :title="t('reminders.actions.edit', 'Düzenle')"
             >
               <PencilIcon class="h-5 w-5" />
             </button>
             <button
               @click="deleteReminder(reminder)"
               class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 text-sm font-medium"
-              title="Sil"
+              :title="t('reminders.actions.delete', 'Sil')"
             >
               <TrashIcon class="h-5 w-5" />
             </button>
@@ -165,9 +165,9 @@
     <!-- Empty State -->
     <div v-else class="text-center py-12 card">
       <BellIcon class="mx-auto h-12 w-12 text-gray-400" />
-      <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">Hatırlatma bulunamadı</h3>
+      <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">{{ t('reminders.empty.title', 'Hatırlatma bulunamadı') }}</h3>
       <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-        Seçilen tarih aralığında hatırlatma bulunmuyor.
+        {{ t('reminders.empty.message', 'Seçilen tarih aralığında hatırlatma bulunmuyor.') }}
       </p>
     </div>
 
@@ -207,8 +207,8 @@
                         <PencilIcon class="h-6 w-6 text-white" />
                       </div>
                       <div>
-                        <h3 class="text-lg font-semibold text-white">Notu Düzenle</h3>
-                        <p class="text-sm text-indigo-100">Hatırlatma notunu düzenleyin</p>
+                        <h3 class="text-lg font-semibold text-white">{{ t('reminders.modal.title', 'Notu Düzenle') }}</h3>
+                        <p class="text-sm text-indigo-100">{{ t('reminders.modal.subtitle', 'Hatırlatma notunu düzenleyin') }}</p>
                       </div>
                     </div>
                     <button
@@ -226,13 +226,13 @@
                     <!-- Note Textarea -->
                     <div>
                       <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Not İçeriği
+                        {{ t('reminders.modal.note_label', 'Not İçeriği') }}
                       </label>
                       <textarea
                         v-model="editingNote.note"
                         rows="4"
                         class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all"
-                        placeholder="Not içeriğini giriniz..."
+                        :placeholder="t('reminders.modal.note_placeholder', 'Not içeriğini giriniz...')"
                       ></textarea>
                     </div>
 
@@ -246,7 +246,7 @@
                         />
                         <span class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                           <BellIcon class="inline h-4 w-4 mr-1" />
-                          Hatırlatıcı olarak ayarla
+                          {{ t('reminders.modal.reminder_checkbox', 'Hatırlatıcı olarak ayarla') }}
                         </span>
                       </label>
 
@@ -260,7 +260,7 @@
                       >
                         <div v-if="editingNote.isReminding">
                           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Hatırlatma Tarihi ve Saati
+                            {{ t('reminders.modal.reminder_datetime', 'Hatırlatma Tarihi ve Saati') }}
                           </label>
                           <input
                             v-model="editingNote.remindingAt"
@@ -280,7 +280,7 @@
                       @click="closeEditModal"
                       class="inline-flex items-center rounded-lg bg-gray-100 dark:bg-gray-700 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                     >
-                      İptal
+                      {{ t('reminders.modal.cancel', 'İptal') }}
                     </button>
                     <button
                       @click="saveEditedNote"
@@ -288,7 +288,7 @@
                       class="inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
                       <CheckIcon class="mr-2 h-4 w-4" />
-                      {{ savingNote ? 'Kaydediliyor...' : 'Kaydet' }}
+                      {{ savingNote ? t('reminders.modal.saving', 'Kaydediliyor...') : t('reminders.modal.save', 'Kaydet') }}
                     </button>
                   </div>
                 </div>
@@ -312,6 +312,9 @@ import {
   XMarkIcon
 } from '@heroicons/vue/24/outline'
 import type { CustomerNote } from '~/types'
+import { useLanguage } from '~/composables/useLanguage'
+
+const { t, tp } = useLanguage()
 
 // Store
 const customerNotesStore = useCustomerNotesStore()
@@ -331,7 +334,6 @@ const savingNote = ref(false)
 
 // Helper functions
 const getTodayDateString = () => {
-  // Bugünün tarihini yerel saat dilimine göre al
   const today = new Date()
   const year = today.getFullYear()
   const month = String(today.getMonth() + 1).padStart(2, '0')
@@ -366,53 +368,43 @@ const fetchReminders = async () => {
       isReminding: true
     }
 
-    // Aktif kullanıcının ID'sini al ve filtrele
     const currentUserId = authStore.user?.id || useCookie('user-id').value
     if (currentUserId) {
       filters.user = parseInt(String(currentUserId))
     }
 
-    // Apply date filters using backend's expected format (YYYY-MM-DD)
     switch (dateFilter.value) {
       case 'today':
-        // Bugün ve öncesi - çok eski bir tarihten bugüne kadar
         filters.startDate = '2020-01-01'
         filters.endDate = getTodayDateString()
         break
       case 'today-only':
-        // Sadece bugün - today parametresi veya startDate=endDate
         filters.today = true
         break
       case 'overdue':
-        // Gecikmiş (bugünden öncekiler)
         const yesterday = new Date()
         yesterday.setDate(yesterday.getDate() - 1)
         filters.startDate = '2020-01-01'
         filters.endDate = yesterday.toISOString().split('T')[0]
         break
       case 'tomorrow':
-        // Yarının kayıtları (startDate ve endDate aynı)
         const tomorrow = getTomorrowDateString()
         filters.startDate = tomorrow
         filters.endDate = tomorrow
         break
       case 'week':
-        // Bu hafta (bugünden hafta sonuna)
         filters.startDate = getTodayDateString()
         filters.endDate = getWeekEndDateString()
         break
       case 'month':
-        // Bu ay (bugünden ay sonuna)
         filters.startDate = getTodayDateString()
         filters.endDate = getMonthEndDateString()
         break
       case 'all':
-        // Tüm kayıtlar - çok geniş tarih aralığı
         filters.startDate = '2020-01-01'
         filters.endDate = '2030-12-31'
         break
       case 'custom':
-        // Özel tarih aralığı
         if (customStartDate.value) {
           filters.startDate = customStartDate.value
         }
@@ -425,7 +417,6 @@ const fetchReminders = async () => {
     await customerNotesStore.fetchCustomerNotes(1, 100, filters)
     reminders.value = customerNotesStore.customerNotes || []
 
-    // Fetch customer information for each reminder
     const customerIds = [...new Set(reminders.value.map(r => r.customer).filter(Boolean))]
     for (const customerId of customerIds) {
       if (!customerMap.value.has(customerId)) {
@@ -445,7 +436,6 @@ const fetchReminders = async () => {
   }
 }
 
-// Handle date filter change
 const handleDateFilterChange = () => {
   if (dateFilter.value !== 'custom') {
     customStartDate.value = ''
@@ -454,24 +444,19 @@ const handleDateFilterChange = () => {
   }
 }
 
-// Mark reminder as completed (remove reminder flag)
 const markAsCompleted = async (reminder: CustomerNote) => {
   try {
     await customerNotesStore.updateCustomerNote(reminder.id, {
       isReminding: false
     })
-    // Remove from list
     reminders.value = reminders.value.filter(r => r.id !== reminder.id)
   } catch (error) {
     console.error('Failed to mark reminder as completed:', error)
   }
 }
 
-// Edit reminder
 const editReminder = (reminder: CustomerNote) => {
-  // Open edit modal with reminder data
   editingNote.value = { ...reminder }
-  // Convert remindingAt to datetime-local format if exists
   if (editingNote.value.remindingAt) {
     const date = new Date(editingNote.value.remindingAt)
     const year = date.getFullYear()
@@ -484,9 +469,8 @@ const editReminder = (reminder: CustomerNote) => {
   showEditModal.value = true
 }
 
-// Delete reminder
 const deleteReminder = async (reminder: CustomerNote) => {
-  if (!confirm('Bu hatırlatmayı silmek istediğinizden emin misiniz?')) return
+  if (!confirm(t('reminders.confirm_delete', 'Bu hatırlatmayı silmek istediğinizden emin misiniz?'))) return
   
   try {
     await customerNotesStore.deleteCustomerNote(reminder.id)
@@ -496,7 +480,6 @@ const deleteReminder = async (reminder: CustomerNote) => {
   }
 }
 
-// Format date time
 const formatDateTime = (dateString: string | undefined) => {
   if (!dateString) return '-'
   return new Date(dateString).toLocaleString('tr-TR', {
@@ -508,7 +491,6 @@ const formatDateTime = (dateString: string | undefined) => {
   })
 }
 
-// Get time remaining text
 const getTimeRemaining = (dateString: string | undefined) => {
   if (!dateString) return ''
   
@@ -519,29 +501,27 @@ const getTimeRemaining = (dateString: string | undefined) => {
   if (diff < 0) {
     const hours = Math.abs(Math.floor(diff / (1000 * 60 * 60)))
     if (hours < 24) {
-      return `${hours} saat geçti`
+      return tp('reminders.time.hours_passed', { hours }, '{hours} saat geçti')
     } else {
       const days = Math.floor(hours / 24)
-      return `${days} gün geçti`
+      return tp('reminders.time.days_passed', { days }, '{days} gün geçti')
     }
   } else {
     const hours = Math.floor(diff / (1000 * 60 * 60))
     if (hours < 24) {
-      return `${hours} saat kaldı`
+      return tp('reminders.time.hours_left', { hours }, '{hours} saat kaldı')
     } else {
       const days = Math.floor(hours / 24)
-      return `${days} gün kaldı`
+      return tp('reminders.time.days_left', { days }, '{days} gün kaldı')
     }
   }
 }
 
-// Close edit modal
 const closeEditModal = () => {
   showEditModal.value = false
   editingNote.value = {}
 }
 
-// Save edited note
 const saveEditedNote = async () => {
   if (!editingNote.value.note?.trim()) return
 
@@ -552,7 +532,6 @@ const saveEditedNote = async () => {
       isReminding: editingNote.value.isReminding
     }
 
-    // Convert datetime-local to ISO string if reminder is enabled
     if (editingNote.value.isReminding && editingNote.value.remindingAt) {
       updateData.remindingAt = new Date(editingNote.value.remindingAt).toISOString()
     } else {
@@ -561,14 +540,11 @@ const saveEditedNote = async () => {
 
     await customerNotesStore.updateCustomerNote(editingNote.value.id, updateData)
 
-    // Update the reminder in the list
     const index = reminders.value.findIndex(r => r.id === editingNote.value.id)
     if (index !== -1) {
-      // If reminder was disabled, remove from list
       if (!updateData.isReminding) {
         reminders.value.splice(index, 1)
       } else {
-        // Update the reminder data
         reminders.value[index] = {
           ...reminders.value[index],
           ...updateData
@@ -579,18 +555,16 @@ const saveEditedNote = async () => {
     closeEditModal()
   } catch (error) {
     console.error('Failed to update reminder:', error)
-    alert('Hatırlatma güncellenirken bir hata oluştu.')
+    alert(t('reminders.error.update', 'Hatırlatma güncellenirken bir hata oluştu.'))
   } finally {
     savingNote.value = false
   }
 }
 
-// Load initial data
 onMounted(() => {
   fetchReminders()
 })
 
-// Page head
 useHead({
   title: 'Hatırlatmalar - Valdori CRM'
 })

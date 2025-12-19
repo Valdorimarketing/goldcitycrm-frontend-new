@@ -12,12 +12,12 @@
             </div>
             <div>
               <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-                Hoş geldiniz, {{ authStore.user?.name || 'Kullanıcı' }}
+                {{ tp('dashboard.welcome', { name: authStore.user?.name || t('dashboard.user_default', 'Kullanıcı') }, 'Hoş geldiniz, {name}') }}
               </h1>
               <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5 flex items-center gap-2">
                 <span class="inline-flex items-center gap-1">
                   <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                  Çevrimiçi
+                  {{ t('dashboard.online', 'Çevrimiçi') }}
                 </span>
                 <span class="text-gray-300 dark:text-gray-600">•</span>
                 <span>{{ currentDate }}</span>
@@ -33,7 +33,7 @@
             class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-sm font-medium text-gray-700 dark:text-gray-300"
           >
             <ArrowPathIcon class="h-4 w-4" :class="{ 'animate-spin': isRefreshing }" />
-            Yenile
+            {{ t('dashboard.refresh', 'Yenile') }}
           </button> 
         </div>
       </div>
@@ -49,13 +49,13 @@
         <div class="flex items-start justify-between">
           <div class="flex-1">
             <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
-              {{ stat.name }}
+              {{ t(stat.nameKey, stat.name) }}
             </p>
             <p class="text-2xl font-bold text-gray-900 dark:text-white">
               {{ stat.value }}
             </p>
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-              {{ stat.description }}
+              {{ t(stat.descriptionKey, stat.description) }}
             </p>
           </div>
           <div :class="[
@@ -91,15 +91,19 @@
                     <UserPlusIcon class="h-5 w-5 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div>
-                    <h3 class="font-semibold text-gray-900 dark:text-white text-sm">Atanmamış Kişiler</h3>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">Bekleyen müşteriler</p>
+                    <h3 class="font-semibold text-gray-900 dark:text-white text-sm">
+                      {{ t('dashboard.unassigned.title', 'Atanmamış Kişiler') }}
+                    </h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                      {{ t('dashboard.unassigned.description', 'Bekleyen müşteriler') }}
+                    </p>
                   </div>
                 </div>
                 <NuxtLink 
                   to="/pool-data?tab=unassigned"
                   class="text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:underline"
                 >
-                  Tümü →
+                  {{ t('dashboard.view_all', 'Tümü →') }}
                 </NuxtLink>
               </div>
 
@@ -128,7 +132,7 @@
                     </div>
                     <div class="flex-1 min-w-0">
                       <p class="text-sm font-medium text-gray-900 dark:text-white truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                        {{ customer.name || 'İsimsiz' }}
+                        {{ customer.name || t('dashboard.unassigned.no_name', 'İsimsiz') }}
                       </p>
                       <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
                         {{ customer.email || customer.phone || '-' }}
@@ -142,7 +146,7 @@
                   <!-- Total -->
                   <div class="pt-3 mt-3 border-t border-gray-100 dark:border-gray-700">
                     <div class="flex items-center justify-between">
-                      <span class="text-xs text-gray-500 dark:text-gray-400">Toplam</span>
+                      <span class="text-xs text-gray-500 dark:text-gray-400">{{ t('dashboard.total', 'Toplam') }}</span>
                       <span class="text-sm font-bold text-gray-900 dark:text-white">{{ unassignedNewCustomersTotal }}</span>
                     </div>
                   </div>
@@ -153,7 +157,9 @@
                   <div class="h-12 w-12 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto mb-3">
                     <CheckCircleIcon class="h-6 w-6 text-gray-400" />
                   </div>
-                  <p class="text-sm text-gray-500 dark:text-gray-400">Tüm müşteriler atandı</p>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">
+                    {{ t('dashboard.unassigned.all_assigned', 'Tüm müşteriler atandı') }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -166,15 +172,19 @@
                     <ClipboardDocumentListIcon class="h-5 w-5 text-purple-600 dark:text-purple-400" />
                   </div>
                   <div>
-                    <h3 class="font-semibold text-gray-900 dark:text-white text-sm">Bugünkü Atamalar</h3>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">Temsilci bazında dağılım</p>
+                    <h3 class="font-semibold text-gray-900 dark:text-white text-sm">
+                      {{ t('dashboard.assignments_today.title', 'Bugünkü Atamalar') }}
+                    </h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                      {{ t('dashboard.assignments_today.description', 'Temsilci bazında dağılım') }}
+                    </p>
                   </div>
                 </div>
                 <NuxtLink 
                   to="/assignments?tab=today"
                   class="text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:underline"
                 >
-                  Tümü →
+                  {{ t('dashboard.view_all', 'Tümü →') }}
                 </NuxtLink>
               </div>
 
@@ -198,7 +208,9 @@
                         </div>
                         <div>
                           <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ assignment.salesRepName }}</p>
-                          <p class="text-xs text-gray-500 dark:text-gray-400">{{ assignment.totalCount }} atama</p>
+                          <p class="text-xs text-gray-500 dark:text-gray-400">
+                            {{ tp('dashboard.assignments_today.assignment_count', { count: assignment.totalCount }, '{count} atama') }}
+                          </p>
                         </div>
                       </div>
                       <span class="px-2.5 py-1 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-sm font-bold rounded-lg">
@@ -209,15 +221,21 @@
                     <div class="grid grid-cols-3 gap-2">
                       <div class="text-center p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
                         <p class="text-lg font-bold text-emerald-600 dark:text-emerald-400">{{ assignment.newDataCount }}</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Yeni</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                          {{ t('dashboard.assignments_today.new', 'Yeni') }}
+                        </p>
                       </div>
                       <div class="text-center p-2 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
                         <p class="text-lg font-bold text-amber-600 dark:text-amber-400">{{ assignment.dynamicSearchCount }}</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Dinamik</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                          {{ t('dashboard.assignments_today.dynamic', 'Dinamik') }}
+                        </p>
                       </div>
                       <div class="text-center p-2 bg-gray-100 dark:bg-gray-600/50 rounded-lg">
                         <p class="text-lg font-bold text-gray-600 dark:text-gray-300">{{ assignment.oldDataCount }}</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Eski</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                          {{ t('dashboard.assignments_today.old', 'Eski') }}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -225,21 +243,29 @@
                   <!-- Totals -->
                   <div class="p-4 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-xl border border-indigo-100 dark:border-indigo-800">
                     <div class="flex items-center justify-between mb-2">
-                      <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Toplam Atama</span>
+                      <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        {{ t('dashboard.assignments_today.total_assignment', 'Toplam Atama') }}
+                      </span>
                       <span class="text-xl font-bold text-gray-900 dark:text-white">{{ totalTodayAssignments }}</span>
                     </div>
                     <div class="grid grid-cols-3 gap-2 text-center text-xs">
                       <div>
                         <span class="font-semibold text-emerald-600 dark:text-emerald-400">{{ totalNewData }}</span>
-                        <span class="text-gray-500 dark:text-gray-400 ml-1">Yeni</span>
+                        <span class="text-gray-500 dark:text-gray-400 ml-1">
+                          {{ t('dashboard.assignments_today.new', 'Yeni') }}
+                        </span>
                       </div>
                       <div>
                         <span class="font-semibold text-amber-600 dark:text-amber-400">{{ totalDynamicSearch }}</span>
-                        <span class="text-gray-500 dark:text-gray-400 ml-1">Dinamik</span>
+                        <span class="text-gray-500 dark:text-gray-400 ml-1">
+                          {{ t('dashboard.assignments_today.dynamic', 'Dinamik') }}
+                        </span>
                       </div>
                       <div>
                         <span class="font-semibold text-gray-600 dark:text-gray-400">{{ totalOldData }}</span>
-                        <span class="text-gray-500 dark:text-gray-400 ml-1">Eski</span>
+                        <span class="text-gray-500 dark:text-gray-400 ml-1">
+                          {{ t('dashboard.assignments_today.old', 'Eski') }}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -250,7 +276,9 @@
                   <div class="h-12 w-12 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto mb-3">
                     <CalendarIcon class="h-6 w-6 text-gray-400" />
                   </div>
-                  <p class="text-sm text-gray-500 dark:text-gray-400">Bugün henüz atama yok</p>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">
+                    {{ t('dashboard.assignments_today.no_assignments', 'Bugün henüz atama yok') }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -266,15 +294,19 @@
                   <ClockIcon class="h-5 w-5 text-amber-600 dark:text-amber-400" />
                 </div>
                 <div>
-                  <h3 class="font-semibold text-gray-900 dark:text-white text-sm">Beklemedekiler</h3>
-                  <p class="text-xs text-gray-500 dark:text-gray-400">Atanmış, işlem bekliyor</p>
+                  <h3 class="font-semibold text-gray-900 dark:text-white text-sm">
+                    {{ t('dashboard.assigned_waiting.title', 'Beklemedekiler') }}
+                  </h3>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">
+                    {{ t('dashboard.assigned_waiting.description', 'Atanmış, işlem bekliyor') }}
+                  </p>
                 </div>
               </div>
               <NuxtLink 
                 to="/pool-data?tab=assigned"
                 class="text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:underline"
               >
-                Tümü →
+                {{ t('dashboard.view_all', 'Tümü →') }}
               </NuxtLink>
             </div>
 
@@ -303,10 +335,10 @@
                   </div>
                   <div class="flex-1 min-w-0">
                     <p class="text-sm font-medium text-gray-900 dark:text-white truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                      {{ customer.name || 'İsimsiz' }}
+                      {{ customer.name || t('dashboard.unassigned.no_name', 'İsimsiz') }}
                     </p>
                     <p class="text-xs text-indigo-600 dark:text-indigo-400 truncate">
-                      {{ customer.relevantUserInfo?.name || 'Bilinmiyor' }}
+                      {{ customer.relevantUserInfo?.name || t('dashboard.assigned_waiting.unknown', 'Bilinmiyor') }}
                     </p>
                   </div>
                   <span class="text-xs text-gray-400 dark:text-gray-500">
@@ -317,7 +349,7 @@
                 <!-- Total -->
                 <div class="pt-3 mt-3 border-t border-gray-100 dark:border-gray-700">
                   <div class="flex items-center justify-between">
-                    <span class="text-xs text-gray-500 dark:text-gray-400">Toplam</span>
+                    <span class="text-xs text-gray-500 dark:text-gray-400">{{ t('dashboard.total', 'Toplam') }}</span>
                     <span class="text-sm font-bold text-gray-900 dark:text-white">{{ assignedNewCustomersTotal }}</span>
                   </div>
                 </div>
@@ -328,7 +360,9 @@
                 <div class="h-12 w-12 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto mb-3">
                   <InboxIcon class="h-6 w-6 text-gray-400" />
                 </div>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Bekleyen müşteri yok</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">
+                  {{ t('dashboard.assigned_waiting.no_customers', 'Bekleyen müşteri yok') }}
+                </p>
               </div>
             </div>
           </div>
@@ -346,8 +380,12 @@
                     <ClipboardDocumentCheckIcon class="h-7 w-7 text-white" />
                   </div>
                   <div>
-                    <h2 class="text-xl font-bold text-gray-900 dark:text-white">Bugünkü Atamalarım</h2>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Size bugün atanan müşteri verileri</p>
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white">
+                      {{ t('dashboard.my_assignments.title', 'Bugünkü Atamalarım') }}
+                    </h2>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                      {{ t('dashboard.my_assignments.description', 'Size bugün atanan müşteri verileri') }}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -370,7 +408,9 @@
                     </div>
                     <span class="text-3xl font-bold text-gray-900 dark:text-white">{{ myAssignments.totalCount }}</span>
                   </div>
-                  <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Toplam Atama</p>
+                  <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    {{ t('dashboard.my_assignments.total_assignment', 'Toplam Atama') }}
+                  </p>
                 </div>
 
                 <!-- New Data -->
@@ -381,10 +421,12 @@
                     </div>
                     <span class="text-3xl font-bold text-emerald-600 dark:text-emerald-400">{{ myAssignments.newDataCount }}</span>
                   </div>
-                  <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Yeni Data</p>
+                  <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    {{ t('dashboard.my_assignments.new_data', 'Yeni Data') }}
+                  </p>
                   <p class="text-xs text-emerald-600 dark:text-emerald-400 mt-1 flex items-center gap-1">
                     <ArrowTrendingUpIcon class="h-3 w-3" />
-                    Taze potansiyel
+                    {{ t('dashboard.my_assignments.new_data_description', 'Taze potansiyel') }}
                   </p>
                 </div>
 
@@ -396,10 +438,12 @@
                     </div>
                     <span class="text-3xl font-bold text-amber-600 dark:text-amber-400">{{ myAssignments.dynamicSearchCount }}</span>
                   </div>
-                  <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Dinamik Arama</p>
+                  <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    {{ t('dashboard.my_assignments.dynamic_search', 'Dinamik Arama') }}
+                  </p>
                   <p class="text-xs text-amber-600 dark:text-amber-400 mt-1 flex items-center gap-1">
                     <BoltIcon class="h-3 w-3" />
-                    Hızlı takip gerekli
+                    {{ t('dashboard.my_assignments.dynamic_search_description', 'Hızlı takip gerekli') }}
                   </p>
                 </div>
 
@@ -411,10 +455,12 @@
                     </div>
                     <span class="text-3xl font-bold text-gray-600 dark:text-gray-400">{{ myAssignments.oldDataCount }}</span>
                   </div>
-                  <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Eski Data</p>
+                  <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    {{ t('dashboard.my_assignments.old_data', 'Eski Data') }}
+                  </p>
                   <p class="text-xs text-gray-500 dark:text-gray-500 mt-1 flex items-center gap-1">
                     <ClockIcon class="h-3 w-3" />
-                    Yeniden aktivasyon
+                    {{ t('dashboard.my_assignments.old_data_description', 'Yeniden aktivasyon') }}
                   </p>
                 </div>
               </div>
@@ -424,8 +470,12 @@
                 <div class="h-16 w-16 rounded-2xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto mb-4">
                   <InboxIcon class="h-8 w-8 text-gray-400" />
                 </div>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Bugün size henüz atama yapılmadı</p>
-                <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Yeni atamalar burada görünecek</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">
+                  {{ t('dashboard.my_assignments.no_assignments', 'Bugün size henüz atama yapılmadı') }}
+                </p>
+                <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                  {{ t('dashboard.my_assignments.will_appear_here', 'Yeni atamalar burada görünecek') }}
+                </p>
               </div>
             </div>
           </div>
@@ -448,13 +498,15 @@
             <div class="h-9 w-9 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
               <UsersIcon class="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
             </div>
-            <h3 class="font-semibold text-gray-900 dark:text-white">Son Müşteriler</h3>
+            <h3 class="font-semibold text-gray-900 dark:text-white">
+              {{ t('dashboard.recent_customers.title', 'Son Müşteriler') }}
+            </h3>
           </div>
           <NuxtLink 
             to="/customers"
             class="text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:underline"
           >
-            Tümünü gör →
+            {{ t('dashboard.recent_customers.view_all', 'Tümünü gör →') }}
           </NuxtLink>
         </div>
 
@@ -483,7 +535,7 @@
               </div>
               <div class="flex-1 min-w-0">
                 <p class="text-sm font-medium text-gray-900 dark:text-white truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                  {{ customer.name || 'İsimsiz' }} {{ customer.surname || '' }}
+                  {{ customer.name || t('dashboard.unassigned.no_name', 'İsimsiz') }} {{ customer.surname || '' }}
                 </p>
                 <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
                   {{ customer.email || '-' }}
@@ -500,7 +552,9 @@
             <div class="h-12 w-12 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto mb-3">
               <UsersIcon class="h-6 w-6 text-gray-400" />
             </div>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Henüz müşteri yok</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+              {{ t('dashboard.recent_customers.no_customers', 'Henüz müşteri yok') }}
+            </p>
           </div>
         </div>
       </div>
@@ -512,7 +566,9 @@
             <div class="h-9 w-9 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
               <BellAlertIcon class="h-5 w-5 text-amber-600 dark:text-amber-400" />
             </div>
-            <h3 class="font-semibold text-gray-900 dark:text-white">Yaklaşan Hatırlatmalar</h3>
+            <h3 class="font-semibold text-gray-900 dark:text-white">
+              {{ t('dashboard.reminders.title', 'Yaklaşan Hatırlatmalar') }}
+            </h3>
           </div>
         </div>
 
@@ -541,7 +597,7 @@
               </div>
               <div class="flex-1 min-w-0">
                 <p class="text-sm font-medium text-gray-900 dark:text-white truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                  {{ reminder.customerInfo?.name || 'Bilinmeyen' }}
+                  {{ reminder.customerInfo?.name || t('dashboard.reminders.unknown_customer', 'Bilinmeyen') }}
                 </p>
                 <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
                   {{ reminder.note }}
@@ -559,7 +615,9 @@
             <div class="h-12 w-12 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto mb-3">
               <BellAlertIcon class="h-6 w-6 text-gray-400" />
             </div>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Yaklaşan hatırlatma yok</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+              {{ t('dashboard.reminders.no_reminders', 'Yaklaşan hatırlatma yok') }}
+            </p>
           </div>
         </div>
       </div>
@@ -571,13 +629,15 @@
           <div class="h-9 w-9 rounded-xl bg-cyan-100 dark:bg-cyan-900/30 flex items-center justify-center">
             <CalendarDaysIcon class="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
           </div>
-          <h3 class="font-semibold text-gray-900 dark:text-white">Yaklaşan Randevular</h3>
+          <h3 class="font-semibold text-gray-900 dark:text-white">
+            {{ t('dashboard.meetings.title', 'Yaklaşan Randevular') }}
+          </h3>
         </div>
         <NuxtLink 
           to="/meetings"
           class="text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:underline"
         >
-          Tümünü gör →
+          {{ t('dashboard.recent_customers.view_all', 'Tümünü gör →') }}
         </NuxtLink>
       </div>
 
@@ -592,10 +652,18 @@
           <table class="min-w-full">
             <thead>
               <tr class="border-b border-gray-100 dark:border-gray-700">
-                <th class="text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider py-3 px-4">Müşteri</th>
-                <th class="text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider py-3 px-4">Hastane</th>
-                <th class="text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider py-3 px-4">Başlangıç</th>
-                <th class="text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider py-3 px-4">Bitiş</th>
+                <th class="text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider py-3 px-4">
+                  {{ t('dashboard.meetings.customer', 'Müşteri') }}
+                </th>
+                <th class="text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider py-3 px-4">
+                  {{ t('dashboard.meetings.hospital', 'Hastane') }}
+                </th>
+                <th class="text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider py-3 px-4">
+                  {{ t('dashboard.meetings.start_time', 'Başlangıç') }}
+                </th>
+                <th class="text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider py-3 px-4">
+                  {{ t('dashboard.meetings.end_time', 'Bitiş') }}
+                </th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
@@ -604,8 +672,6 @@
                 :key="meeting.id"
                 class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
               >
-              
-
                 <td class="py-3 px-4">
                   <div class="flex items-center gap-3">
                     <div class="relative">
@@ -640,7 +706,7 @@
                 </td>
                 <td class="py-3 px-4">
                   <span class="inline-flex px-2.5 py-1 text-xs font-semibold rounded-lg bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-300">
-                    {{ meeting.meetingStatus?.name || 'Belirsiz' }}
+                    {{ meeting.meetingStatus?.name || t('dashboard.meetings.status_unknown', 'Belirsiz') }}
                   </span>
                 </td>
               </tr>
@@ -653,7 +719,9 @@
           <div class="h-12 w-12 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto mb-3">
             <CalendarDaysIcon class="h-6 w-6 text-gray-400" />
           </div>
-          <p class="text-sm text-gray-500 dark:text-gray-400">Yaklaşan randevu yok</p>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            {{ t('dashboard.meetings.no_meetings', 'Yaklaşan randevu yok') }}
+          </p>
         </div>
 
       </div>
@@ -689,8 +757,12 @@ import {
 import { useAuthStore } from '~/stores/auth'
 import { useStatuses } from '~/composables/useStatuses'
 import { useApi } from '~/composables/useApi'
+import { useLanguage } from '~/composables/useLanguage'
 
 definePageMeta({ middleware: 'auth' })
+
+// Composables
+const { t, tp } = useLanguage()
 
 // Stores
 const authStore = useAuthStore()
@@ -762,12 +834,14 @@ const totalOldData = computed(() => todayAssignments.value.reduce((sum: any, a: 
 const canViewSales = computed(() => isAdmin.value || isUser.value)
 const canViewMeetings = computed(() => isAdmin.value || isUser.value)
 
-// Stats computed
+// Stats computed with translation keys
 const stats = computed(() => {
   const baseStats = [
     {
+      nameKey: 'dashboard.stats.total_customers',
       name: 'Toplam Müşteri',
-      value: loadingStats.value ? '...' : totalCustomers.value,
+      value: loadingStats.value ? t('common.loading', '...') : totalCustomers.value,
+      descriptionKey: isAdmin.value ? 'dashboard.stats.all_records' : 'dashboard.stats.your_records',
       description: isAdmin.value ? 'Tüm kayıtlar' : 'Sizin kayıtlarınız',
       icon: UsersIcon
     }
@@ -776,8 +850,10 @@ const stats = computed(() => {
   if (canViewSales.value) {
     baseStats.push( 
       {
+        nameKey: 'dashboard.stats.total_revenue',
         name: 'Toplam Gelir',
-        value: loadingStats.value ? '...' : formatStatsValue(totalRevenue.value),
+        value: loadingStats.value ? t('common.loading', '...') : formatStatsValue(totalRevenue.value),
+        descriptionKey: isAdmin.value ? 'dashboard.stats.all_sales' : 'dashboard.stats.your_sales',
         description: isAdmin.value ? 'Tüm satışlar' : 'Sizin satışlarınız',
         icon: CurrencyDollarIcon
       }
@@ -785,17 +861,16 @@ const stats = computed(() => {
   }
 
   baseStats.push({
+    nameKey: 'dashboard.stats.appointments',
     name: 'Randevular',
-    value: loadingStats.value ? '...' : totalMeetings.value,
+    value: loadingStats.value ? t('common.loading', '...') : totalMeetings.value,
+    descriptionKey: isAdmin.value ? 'dashboard.stats.all_records' : 'dashboard.stats.your_records',
     description: isAdmin.value ? 'Tüm kayıtlar' : 'Sizin kayıtlarınız',
     icon: CalendarIcon
   })
 
   return baseStats
 })
-
-console.log('stats', stats);
-
 
 // Helper functions
 const formatDate = (dateString: string | undefined) => {
@@ -838,7 +913,7 @@ const refreshAllData = async () => {
   isRefreshing.value = false
 }
 
-// Data fetching functions
+// Data fetching functions (bunları değiştirmeden bırakıyorum - aynı kalacak)
 const getRoleBasedFilters = async () => {
   if (isDoctor.value || isPricing.value) {
     try { await fetchStatuses() } catch (error) { console.error('Error fetching statuses:', error) }
@@ -854,9 +929,6 @@ const getRoleBasedFilters = async () => {
   return customerFilters
 }
 
-/**
- * ✅ YENİ: Admin için CRM Stats (tüm satışlar) - Laravel endpoint
- */
 const fetchAdminRevenue = async () => {
   try {
     const api = useApi()
@@ -875,10 +947,6 @@ const fetchAdminRevenue = async () => {
   return { EUR: 0, USD: 0, TRY: 0 }
 }
 
-/**
- * ✅ YENİ: User için Dashboard Stats - NestJS endpoint (user'a özel)
- * Seçenek 1: /sales/stats/dashboard endpoint'ini kullan
- */
 const fetchUserRevenueOption1 = async () => {
   try {
     const api = useApi()
@@ -886,7 +954,6 @@ const fetchUserRevenueOption1 = async () => {
     
     if (!userId) return { EUR: 0, USD: 0, TRY: 0 }
     
-    // Dashboard stats endpoint'ini kullan
     const result = await api('/sales/stats/dashboard', { 
       query: { userId } 
     }) as any
@@ -900,10 +967,6 @@ const fetchUserRevenueOption1 = async () => {
   return { EUR: 0, USD: 0, TRY: 0 }
 }
 
-/**
- * ✅ YENİ: User için kendi satışları (mixed currency destekli)
- * Seçenek 2: /sales/user/details endpoint'ini kullan ve frontend'de hesapla
- */
 const fetchUserRevenueOption2 = async () => {
   try {
     const api = useApi()
@@ -911,14 +974,12 @@ const fetchUserRevenueOption2 = async () => {
     
     if (!userId) return { EUR: 0, USD: 0, TRY: 0 }
     
-    // User'ın satışlarını getir
     const response = await api('/sales/user/details', { 
       query: { user: userId } 
     }) as any
 
     let allSales = Array.isArray(response?.data) ? response.data : []
     
-    // Boş salesProducts'ı olan satışları filtrele
     allSales = allSales.filter((sale: any) => 
       sale.salesProducts && 
       Array.isArray(sale.salesProducts) && 
@@ -927,20 +988,16 @@ const fetchUserRevenueOption2 = async () => {
 
     const revenue: Record<string, number> = {}
 
-    // Her ürünü kendi currency'si ile hesapla (mixed currency support)
     allSales.forEach((sale: any) => {
       sale.salesProducts.forEach((product: any) => {
-        // Currency tespiti (fallback chain)
         const currency = 
           product.currency?.code || 
           product.spCurrency?.code ||
           product.productDetails?.currency?.code || 
           'TRY'
         
-        // Tutar tespiti (totalPrice öncelikli)
         const amount = product.totalPrice || product.offer || product.price || 0
         
-        // Currency bazlı toplama
         revenue[currency] = (revenue[currency] || 0) + amount
       })
     })
@@ -952,15 +1009,11 @@ const fetchUserRevenueOption2 = async () => {
   return { EUR: 0, USD: 0, TRY: 0 }
 }
 
-/**
- * ✅ YENİ: Satış sayfasındaki mantığı kullan (currency bazında gruplama)
- */
  const fetchRevenue = async () => {
   try {
     const api = useApi()
     const userId = authStore.user?.id
 
-    // ✅ Type-safe query object
     const query: Record<string, any> = { limit: 1000 }
     if (!isAdmin.value && userId) {
       query.user = userId
@@ -976,16 +1029,13 @@ const fetchUserRevenueOption2 = async () => {
     }
 
 
-    // Satış sayfasındaki mantık: Currency bazında gruplama
     const revenueByCurrency: Record<string, number> = {}
 
     for (const sale of response.data) {
-      // Boş salesProducts kontrolü
       if (!sale.salesProducts || !Array.isArray(sale.salesProducts) || sale.salesProducts.length === 0) {
         continue
       }
 
-      // Her satıştaki ürünleri currency'ye göre grupla
       const productsByCurrency = new Map<string, any[]>()
 
       for (const sp of sale.salesProducts) {
@@ -1001,7 +1051,6 @@ const fetchUserRevenueOption2 = async () => {
         productsByCurrency.get(currency)?.push(sp)
       }
 
-      // Her currency için ayrı hesaplama
       for (const [currency, products] of productsByCurrency.entries()) {
         
         const totalAmount = products.reduce((sum: number, p: any) => {
@@ -1026,20 +1075,13 @@ const fetchUserRevenueOption2 = async () => {
   return { EUR: 0, USD: 0, TRY: 0 }
 }
 
-/**
- * ✅ GÜNCEL: Rol bazlı gelir hesaplama
- */
 const calculateStats = async () => {
   try {
     loadingStats.value = true
     const api = useApi()
     
-    
-    // 1. Gelir Hesaplama (Satış sayfası mantığı ile)
     totalRevenue.value = await fetchRevenue() as any
     
-    
-    // 2. Müşteri Sayısı
     const filters = await getRoleBasedFilters()
     const customersResponse = await api('/customers', { query: filters }) as any
 
@@ -1051,7 +1093,6 @@ const calculateStats = async () => {
       totalCustomers.value = accessibleCustomers.length.toString()
     }
     
-    // 3. Randevu Sayısı
     const meetingFilters = getRelatedDataFilters() || {}
     const meetingsResponse = await api('/meetings', { query: meetingFilters }) as any
     
@@ -1273,4 +1314,4 @@ onMounted(async () => {
 })
 
 useHead({ title: 'Dashboard - Valdori CRM' })
-</script> 
+</script>

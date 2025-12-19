@@ -8,7 +8,7 @@
             <th v-if="col.isVisible" @click="sortBy(col.key)"
               class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
               <div class="flex items-center gap-1.5">
-                {{ col.label }}
+                {{ t(col.labelKey, col.label) }}
                 <span v-if="sortColumn === col.key" class="text-indigo-600 dark:text-indigo-400">
                   <ChevronUpIcon v-if="sortDirection === 'asc'" class="w-4 h-4" />
                   <ChevronDownIcon v-else class="w-4 h-4" />
@@ -125,7 +125,7 @@
                 </p>
               </div>
             </NuxtLink>
-            <span v-else class="text-sm text-gray-400">Atanmamış</span>
+            <span v-else class="text-sm text-gray-400">{{ t('pool.unassigned', 'Atanmamış') }}</span>
           </td>
 
           <!-- Created Date -->
@@ -146,8 +146,12 @@
               <div class="p-4 bg-gray-100 dark:bg-gray-700 rounded-full mb-4">
                 <UsersIcon class="h-8 w-8 text-gray-400" />
               </div>
-              <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-1">Müşteri bulunamadı</h3>
-              <p class="text-sm text-gray-500 dark:text-gray-400">Arama kriterlerinizi değiştirmeyi deneyin.</p>
+              <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-1">
+                {{ t('table.empty.title', 'Müşteri bulunamadı') }}
+              </h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400">
+                {{ t('table.empty.description', 'Arama kriterlerinizi değiştirmeyi deneyin.') }}
+              </p>
             </div>
           </td>
         </tr>
@@ -168,7 +172,9 @@
             <div v-if="showStates.activeId"
               class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
               <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-700">
-                <h3 class="font-semibold text-gray-900 dark:text-white">İşlemler</h3>
+                <h3 class="font-semibold text-gray-900 dark:text-white">
+                  {{ t('pool.modal.actions', 'İşlemler') }}
+                </h3>
                 <button @click="showStates.activeId = null"
                   class="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
                   <XMarkIcon class="h-5 w-5" />
@@ -181,7 +187,7 @@
                   <div class="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg">
                     <EyeIcon class="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
                   </div>
-                  <span class="text-xs text-gray-600 dark:text-gray-300">Görüntüle</span>
+                  <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('pool.actions.view', 'Görüntüle') }}</span>
                 </NuxtLink>
 
                 <button @click="emitAction('show-history')"
@@ -189,7 +195,7 @@
                   <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
                     <ClockIcon class="h-5 w-5 text-blue-600 dark:text-blue-400" />
                   </div>
-                  <span class="text-xs text-gray-600 dark:text-gray-300">Geçmiş</span>
+                  <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('pool.actions.history', 'Geçmiş') }}</span>
                 </button>
 
                 <button @click="emitAction('show-notes')"
@@ -197,7 +203,7 @@
                   <div class="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
                     <DocumentTextIcon class="h-5 w-5 text-amber-600 dark:text-amber-400" />
                   </div>
-                  <span class="text-xs text-gray-600 dark:text-gray-300">Notlar</span>
+                  <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('pool.actions.notes', 'Notlar') }}</span>
                 </button>
 
                 <button @click="emitAction('show-doctor')"
@@ -205,7 +211,7 @@
                   <div class="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
                     <UsersIcon class="h-5 w-5 text-purple-600 dark:text-purple-400" />
                   </div>
-                  <span class="text-xs text-gray-600 dark:text-gray-300">Doktor</span>
+                  <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('pool.actions.doctor', 'Doktor') }}</span>
                 </button>
 
                 <button @click="emitAction('show-services')"
@@ -213,7 +219,7 @@
                   <div class="p-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg">
                     <ShoppingBagIcon class="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                   </div>
-                  <span class="text-xs text-gray-600 dark:text-gray-300">Hizmetler</span>
+                  <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('pool.actions.services', 'Hizmetler') }}</span>
                 </button>
 
                 <button @click="emitAction('show-files')"
@@ -221,7 +227,7 @@
                   <div class="p-2 bg-cyan-100 dark:bg-cyan-900/30 rounded-lg">
                     <FolderIcon class="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
                   </div>
-                  <span class="text-xs text-gray-600 dark:text-gray-300">Dosyalar</span>
+                  <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('pool.actions.files', 'Dosyalar') }}</span>
                 </button>
 
                 <NuxtLink v-if="isEditable" :to="`/customers/edit/${showStates.activeId}`"
@@ -229,7 +235,7 @@
                   <div class="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
                     <PencilIcon class="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
                   </div>
-                  <span class="text-xs text-gray-600 dark:text-gray-300">Düzenle</span>
+                  <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('pool.actions.edit', 'Düzenle') }}</span>
                 </NuxtLink>
 
                 <button v-if="isDeleteable" @click="emitAction('confirm-delete')"
@@ -237,7 +243,7 @@
                   <div class="p-2 bg-red-100 dark:bg-red-900/30 rounded-lg">
                     <TrashIcon class="h-5 w-5 text-red-600 dark:text-red-400" />
                   </div>
-                  <span class="text-xs text-red-600 dark:text-red-400">Sil</span>
+                  <span class="text-xs text-red-600 dark:text-red-400">{{ t('pool.actions.delete', 'Sil') }}</span>
                 </button>
               </div>
             </div>
@@ -261,8 +267,12 @@ import {
   UsersIcon,
   XMarkIcon,
   ChevronUpIcon,
-  ChevronDownIcon
+  ChevronDownIcon,
+  PhoneIcon
 } from '@heroicons/vue/24/outline'
+import { useLanguage } from '~/composables/useLanguage'
+
+const { t } = useLanguage()
 
 const props = defineProps({
   isAdmin: { type: Boolean, default: false },
@@ -290,16 +300,16 @@ const emit = defineEmits([
 ])
 
 const columns = computed(() => [
-  { label: 'İsim', key: 'name', isVisible: props.isAdmin || props.isUser },
-  { label: 'Durum', key: 'statusData', isVisible: props.isAdmin || props.isUser },
-  { label: 'Kaynak', key: 'source', isVisible: props.isAdmin },
-  { label: 'Telefon', key: 'phone', isVisible: props.isAdmin || props.isUser },
-  { label: 'İlgilenilen Konu', key: 'relatedTransaction', isVisible: props.isAdmin || props.isUser },
-  { label: 'Hastalık', key: 'patient', isVisible: props.isAdmin || props.isUser },
-  { label: 'Checkup Paketi', key: 'checkup_package', isVisible: props.isAdmin || props.isUser },
-  { label: 'Atanan', key: 'relevantUserData', isVisible: props.isAdmin },
-  { label: 'Eklenme', key: 'createdAt', isVisible: props.isAdmin || props.isUser },
-  { label: 'Güncelleme', key: 'updatesAt', isVisible: props.isAdmin || props.isUser }
+  { labelKey: 'table.columns.name', label: 'İsim', key: 'name', isVisible: props.isAdmin || props.isUser },
+  { labelKey: 'table.columns.status', label: 'Durum', key: 'statusData', isVisible: props.isAdmin || props.isUser },
+  { labelKey: 'table.columns.source', label: 'Kaynak', key: 'source', isVisible: props.isAdmin },
+  { labelKey: 'table.columns.phone', label: 'Telefon', key: 'phone', isVisible: props.isAdmin || props.isUser },
+  { labelKey: 'table.columns.related_transaction', label: 'İlgilenilen Konu', key: 'relatedTransaction', isVisible: props.isAdmin || props.isUser },
+  { labelKey: 'table.columns.disease', label: 'Hastalık', key: 'patient', isVisible: props.isAdmin || props.isUser },
+  { labelKey: 'table.columns.checkup_package', label: 'Checkup Paketi', key: 'checkup_package', isVisible: props.isAdmin || props.isUser },
+  { labelKey: 'table.columns.assigned', label: 'Atanan', key: 'relevantUserData', isVisible: props.isAdmin },
+  { labelKey: 'table.columns.created', label: 'Eklenme', key: 'createdAt', isVisible: props.isAdmin || props.isUser },
+  { labelKey: 'table.columns.updated', label: 'Güncelleme', key: 'updatesAt', isVisible: props.isAdmin || props.isUser }
 ])
 
 const toggleShow = (id) => {

@@ -1,5 +1,9 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+  <div 
+    class="min-h-screen bg-gray-50 dark:bg-gray-900" 
+    :dir="isRTL ? 'rtl' : 'ltr'"
+    :lang="currentLanguage"
+  >
     <!-- Connection Status Overlay -->
     <Connectionstatusoverlay 
       ping-url="/health"
@@ -13,7 +17,10 @@
     <AppSidebar />
 
     <!-- Main Content -->
-    <div class="transition-all duration-300 ease-in-out" :class="[sidebarOpen ? 'lg:ml-72' : 'lg:ml-20']">
+    <div 
+      class="transition-all duration-300 ease-in-out" 
+      :class="getMainContentClass"
+    >
       <!-- Header -->
       <AppHeader />
 
@@ -24,25 +31,87 @@
     </div>
 
     <!-- Mobile Sidebar Overlay -->
-    <div v-if="mobileSidebarOpen" class="fixed inset-0 z-40 bg-gray-600 bg-opacity-75 lg:hidden"
-      @click="closeMobileSidebar"></div>
+    <div 
+      v-if="mobileSidebarOpen" 
+      class="fixed inset-0 z-40 bg-gray-600 bg-opacity-75 lg:hidden"
+      @click="closeMobileSidebar"
+    ></div>
 
     <!-- Fraud Alert Popup -->
-    <FraudAlertPopup v-if="isAdmin" :is-open="fraudAlertPopup" :alert="currentFraudAlert" :loading="fraudAlertLoading"
-      @dismiss="dismissFraudAlert" @check="checkFraudAlert" />
+    <FraudAlertPopup 
+      v-if="isAdmin" 
+      :is-open="fraudAlertPopup" 
+      :alert="currentFraudAlert" 
+      :loading="fraudAlertLoading"
+      @dismiss="dismissFraudAlert" 
+      @check="checkFraudAlert" 
+    />
 
     <!-- Reminder Popup -->
-    <ReminderPopup :is-open="reminderPopup" :reminder="currentReminder" :loading="reminderLoading"
-      @dismiss="dismissReminder" @complete="completeReminder" />
+    <ReminderPopup 
+      :is-open="reminderPopup" 
+      :reminder="currentReminder" 
+      :loading="reminderLoading"
+      @dismiss="dismissReminder" 
+      @complete="completeReminder" 
+    />
   </div>
 </template>
 
 <script setup>
-import { ref, provide, onMounted, onUnmounted } from 'vue'
+import { ref, computed, provide, watch, onMounted, onUnmounted } from 'vue'
 import { useFraudAlerts } from '~/composables/useFraudAlerts'
+import { usePermissions } from '~/composables/usePermissions'
+import { useAuthStore } from '~/stores/auth'
 import FraudAlertPopup from '~/components/FraudAlertPopup.vue'
 import ReminderPopup from '~/components/ReminderPopup.vue'
 import Connectionstatusoverlay from '~/components/Connectionstatusoverlay.vue'
+import { useApi } from '~/composables/useApi'
+import { useLanguage } from '~/composables/useLanguage'
+
+const { currentLanguage } = useLanguage()
+
+// RTL dilleri
+const RTL_LANGUAGES = ['ar', 'he', 'fa', 'ur']
+
+// Mevcut dil RTL mi kontrol et
+const isRTL = computed(() => {
+  return RTL_LANGUAGES.includes(currentLanguage.value)
+})
+
+// Main content class - RTL'de margin-right, LTR'de margin-left
+const getMainContentClass = computed(() => {
+  if (isRTL.value) {
+    // RTL: Sidebar sağda, content solda -> margin-right
+    return sidebarOpen.value ? 'lg:mr-72' : 'lg:mr-20'
+  } else {
+    // LTR: Sidebar solda, content sağda -> margin-left
+    return sidebarOpen.value ? 'lg:ml-72' : 'lg:ml-20'
+  }
+})
+
+// HTML direction attribute'unu güncelle
+const updateHTMLDirection = (lang) => {
+  const isRtl = RTL_LANGUAGES.includes(lang)
+  
+  // HTML element'e dir attribute ekle
+  document.documentElement.setAttribute('dir', isRtl ? 'rtl' : 'ltr')
+  document.documentElement.setAttribute('lang', lang)
+  
+  // Body'ye de class ekle (opsiyonel, CSS için kullanışlı)
+  if (isRtl) {
+    document.body.classList.add('rtl')
+    document.body.classList.remove('ltr')
+  } else {
+    document.body.classList.add('ltr')
+    document.body.classList.remove('rtl')
+  }
+}
+
+// Dil değiştiğinde HTML elementini güncelle
+watch(currentLanguage, (newLang) => {
+  updateHTMLDirection(newLang)
+})
 
 // Connection handlers
 const onConnected = () => {
@@ -80,18 +149,12 @@ const {
   getUnreadCount
 } = useFraudAlerts()
 
-const { isAdmin } = usePermissions()
-
-const authStore = useAuthStore()
-const userStats = ref(null)
-const dailyLeadsCount = ref(0)
-const todaySalesCount = ref(0)
-
+const { isAdmin } = usePermissions() 
+const api = useApi()
  
-// Reminder Notification System - composable'ı inline olarak tanımlayalım
+// Reminder Notification System
 const useReminderNotifications = () => {
   const config = useRuntimeConfig()
-  const apiBase = config.public.apiBase
   const authStore = useAuthStore()
 
   const showPopup = ref(false)
@@ -112,10 +175,7 @@ const useReminderNotifications = () => {
       const today = new Date()
       const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
 
-      const token = useCookie('auth-token').value || authStore.token
-
-      const response = await $fetch('/customer-notes', {
-        baseURL: apiBase,
+      const response = await api('/customer-notes', {
         params: {
           isReminding: true,
           user: parseInt(String(currentUserId)),
@@ -123,9 +183,6 @@ const useReminderNotifications = () => {
           endDate: todayStr,
           limit: 100
         },
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
       })
 
       return response || []
@@ -281,6 +338,7 @@ const completeReminder = async () => {
 }
 
 onMounted(async () => {
+  updateHTMLDirection(currentLanguage.value)
   await requestNotificationPermission()
   await checkForNewAlerts()
   await getUnreadCount()
@@ -313,6 +371,52 @@ provide('sidebar', {
   mobileSidebarOpen,
   toggleSidebar,
   openMobileSidebar,
-  closeMobileSidebar
+  closeMobileSidebar,
+  isRTL
 })
 </script>
+
+<style>
+/* RTL-specific adjustments */
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="ltr"] {
+  direction: ltr;
+  text-align: left;
+}
+
+/* Tailwind RTL margin utilities */
+[dir="rtl"] .ltr\:ml-4 {
+  margin-left: 0;
+  margin-right: 1rem;
+}
+
+[dir="rtl"] .ltr\:mr-4 {
+  margin-right: 0;
+  margin-left: 1rem;
+}
+
+[dir="rtl"] .ltr\:ml-20 {
+  margin-left: 0;
+  margin-right: 5rem;
+}
+
+[dir="rtl"] .ltr\:ml-72 {
+  margin-left: 0;
+  margin-right: 18rem;
+}
+
+/* RTL padding utilities */
+[dir="rtl"] .ltr\:pl-4 {
+  padding-left: 0;
+  padding-right: 1rem;
+}
+
+[dir="rtl"] .ltr\:pr-4 {
+  padding-right: 0;
+  padding-left: 1rem;
+}
+</style>

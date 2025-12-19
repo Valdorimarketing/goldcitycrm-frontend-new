@@ -1,103 +1,143 @@
 <template>
   <div>
     <!-- Header -->
-    <div class="sm:flex sm:items-center sm:justify-between mb-6">
-      <div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Hastaneler</h1>
-        <p class="mt-2 text-sm text-gray-700">
-          Tüm hastaneleri buradan yönetebilirsiniz.
-        </p>
-      </div>
-      <div class="mt-4 sm:mt-0">
+    <div class="mb-8">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div class="flex items-center gap-4">
+          <div class="p-3 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-lg shadow-indigo-500/25">
+            <BuildingOffice2Icon class="h-7 w-7 text-white" />
+          </div>
+          <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+              {{ t('hospitals.title', 'Hastaneler') }}
+            </h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+              {{ t('hospitals.subtitle', 'Tüm hastaneleri buradan yönetebilirsiniz.') }}
+            </p>
+          </div>
+        </div>
+
         <button
           @click="showCreateModal = true"
-          class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+          class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all text-sm font-medium shadow-lg shadow-indigo-500/25"
         >
-          <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
-          Yeni Hastane
+          <PlusIcon class="h-5 w-5" />
+          {{ t('hospitals.actions.new_hospital', 'Yeni Hastane') }}
         </button>
       </div>
     </div>
 
     <!-- Search and Filters -->
-    <div class="card mb-6">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
-          <label for="search" class="block text-sm font-medium text-gray-700 mb-2">
-            Ara
+          <label for="search" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+            {{ t('hospitals.filters.search', 'Ara') }}
           </label>
-          <input
-            id="search"
-            v-model="searchTerm"
-            type="text"
-            class="form-input"
-            placeholder="İsim veya kod ile ara..."
-          />
+          <div class="relative">
+            <MagnifyingGlassIcon class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <input
+              id="search"
+              v-model="searchTerm"
+              type="text"
+              :placeholder="t('hospitals.filters.search_placeholder', 'İsim veya kod ile ara...')"
+              class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+            />
+          </div>
         </div>
         <div class="flex items-end">
           <button
             @click="resetFilters"
-            class="btn-secondary"
+            class="w-full px-4 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-all text-sm"
           >
-            Filtreleri Temizle
+            {{ t('hospitals.filters.clear', 'Filtreleri Temizle') }}
           </button>
         </div>
       </div>
     </div>
 
     <!-- Loading State -->
-    <div v-if="loading" class="flex justify-center py-12">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+    <div v-if="loading" class="flex flex-col items-center justify-center py-16">
+      <div class="relative">
+        <div class="w-14 h-14 rounded-full border-4 border-indigo-100 dark:border-indigo-900"></div>
+        <div class="absolute top-0 left-0 w-14 h-14 rounded-full border-4 border-transparent border-t-indigo-600 animate-spin"></div>
+      </div>
+      <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">Yükleniyor...</p>
     </div>
 
     <!-- Hospitals Table -->
-    <div v-else class="card">
+    <div v-else class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-          <thead class="bg-gray-50 dark:bg-gray-800">
+          <thead class="bg-gray-50 dark:bg-gray-900/50">
             <tr>
-              <th class="table-header text-gray-700 dark:text-gray-300">Hastane Adı</th>
-              <th class="table-header text-gray-700 dark:text-gray-300">Kod</th>
-              <th class="table-header text-gray-700 dark:text-gray-300">Adres</th>
-              <th class="table-header text-gray-700 dark:text-gray-300">Açıklama</th>
-              <th class="table-header text-gray-700 dark:text-gray-300">Eklenme Tarihi</th>
-              <th class="table-header text-gray-700 dark:text-gray-300">İşlemler</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                {{ t('hospitals.table.name', 'Hastane Adı') }}
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                {{ t('hospitals.table.code', 'Kod') }}
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                {{ t('hospitals.table.address', 'Adres') }}
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                {{ t('hospitals.table.description', 'Açıklama') }}
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                {{ t('hospitals.table.created_at', 'Eklenme Tarihi') }}
+              </th>
+              <th class="px-6 py-3 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                {{ t('hospitals.table.actions', 'İşlemler') }}
+              </th>
             </tr>
           </thead>
           <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
-            <tr v-for="hospital in hospitals" :key="hospital.id">
-              <td class="table-cell">
-                <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                  {{ hospital.name || '-' }}
+            <tr v-for="hospital in hospitals" :key="hospital.id" class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-sm">
+                    <BuildingOffice2Icon class="h-5 w-5 text-white" />
+                  </div>
+                  <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                    {{ hospital.name || '-' }}
+                  </div>
                 </div>
               </td>
-              <td class="table-cell">
-                <div class="text-sm text-gray-900 dark:text-gray-100">{{ hospital.code || '-' }}</div>
+              <td class="px-6 py-4">
+                <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                  {{ hospital.code || '-' }}
+                </span>
               </td>
-              <td class="table-cell">
-                <div class="text-sm text-gray-900 dark:text-gray-100">{{ hospital.address || '-' }}</div>
+              <td class="px-6 py-4">
+                <div class="text-sm text-gray-600 dark:text-gray-300 max-w-xs truncate">
+                  {{ hospital.address || '-' }}
+                </div>
               </td>
-              <td class="table-cell">
-                <div class="text-sm text-gray-900 dark:text-gray-100">{{ hospital.description || '-' }}</div>
+              <td class="px-6 py-4">
+                <div class="text-sm text-gray-600 dark:text-gray-300 max-w-xs truncate">
+                  {{ hospital.description || '-' }}
+                </div>
               </td>
-              <td class="table-cell">
-                <div class="text-sm text-gray-900 dark:text-gray-100">
+              <td class="px-6 py-4">
+                <div class="text-sm text-gray-600 dark:text-gray-300">
                   {{ formatDate(hospital.createdAt) }}
                 </div>
               </td>
-              <td class="table-cell">
-                <div class="flex flex-wrap gap-2">
+              <td class="px-6 py-4">
+                <div class="flex items-center justify-center gap-2">
                   <button
                     @click="editHospital(hospital)"
-                    class="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300 text-sm"
+                    class="p-1.5 rounded-lg text-yellow-600 dark:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 transition-colors"
+                    :title="t('hospitals.actions.edit', 'Düzenle')"
                   >
-                    Düzenle
+                    <PencilIcon class="h-4 w-4" />
                   </button>
                   <button
                     @click="confirmDelete(hospital)"
-                    class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 text-sm"
+                    class="p-1.5 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                    :title="t('hospitals.actions.delete', 'Sil')"
                   >
-                    Sil
+                    <TrashIcon class="h-4 w-4" />
                   </button>
                 </div>
               </td>
@@ -105,19 +145,24 @@
 
             <!-- Empty State -->
             <tr v-if="hospitals.length === 0">
-              <td colspan="6" class="text-center py-12">
-                <BuildingOffice2Icon class="mx-auto h-12 w-12 text-gray-400" />
-                <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">Hastane bulunamadı</h3>
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                  {{ searchTerm ? 'Arama kriterlerinize uygun hastane bulunamadı.' : 'Henüz hastane eklenmemiş.' }}
-                </p>
-                <div class="mt-6">
+              <td colspan="6" class="px-6 py-16 text-center">
+                <div class="flex flex-col items-center">
+                  <div class="h-16 w-16 rounded-2xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-4">
+                    <BuildingOffice2Icon class="h-8 w-8 text-gray-400" />
+                  </div>
+                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                    {{ t('hospitals.empty.title', 'Hastane bulunamadı') }}
+                  </h3>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 max-w-sm">
+                    {{ searchTerm ? t('hospitals.empty.message_search', 'Arama kriterlerinize uygun hastane bulunamadı.') : t('hospitals.empty.message_empty', 'Henüz hastane eklenmemiş.') }}
+                  </p>
                   <button
+                    v-if="!searchTerm"
                     @click="showCreateModal = true"
-                    class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+                    class="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all text-sm font-medium"
                   >
-                    <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
-                    İlk hastaneyi ekle
+                    <PlusIcon class="h-4 w-4" />
+                    {{ t('hospitals.empty.add_first', 'İlk hastaneyi ekle') }}
                   </button>
                 </div>
               </td>
@@ -125,114 +170,108 @@
           </tbody>
         </table>
       </div>
-
       <!-- Pagination -->
-      <div v-if="pagination.totalPages > 1" class="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 sm:px-6">
-        <div class="flex flex-1 justify-between sm:hidden">
-          <button
-            :disabled="pagination.page === 1"
-            @click="changePage(pagination.page - 1)"
-            class="relative inline-flex items-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
-          >
-            Önceki
-          </button>
-          <button
-            :disabled="pagination.page === pagination.totalPages"
-            @click="changePage(pagination.page + 1)"
-            class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
-          >
-            Sonraki
-          </button>
-        </div>
-        <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-          <div>
-            <p class="text-sm text-gray-700 dark:text-gray-300">
-              <span class="font-medium">{{ ((pagination.page - 1) * pagination.limit) + 1 }}</span>
-              -
-              <span class="font-medium">{{ Math.min(pagination.page * pagination.limit, pagination.total) }}</span>
-              arası, toplam
-              <span class="font-medium">{{ pagination.total }}</span>
-              sonuç
-            </p>
-          </div>
-          <div>
-            <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm">
-              <button
-                :disabled="pagination.page === 1"
-                @click="changePage(pagination.page - 1)"
-                class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
-              >
-                <ChevronLeftIcon class="h-5 w-5" />
-              </button>
+      <div v-if="pagination.totalPages > 1" class="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            {{ tp('hospitals.pagination.results', { 
+              start: ((pagination.page - 1) * pagination.limit) + 1,
+              end: Math.min(pagination.page * pagination.limit, pagination.total),
+              total: pagination.total
+            }, '{start} - {end} arası, toplam {total} sonuç') }}
+          </p>
 
+          <div class="flex items-center gap-2">
+            <button
+              :disabled="pagination.page === 1"
+              @click="changePage(pagination.page - 1)"
+              class="p-2 rounded-lg border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            >
+              <ChevronLeftIcon class="h-5 w-5" />
+            </button>
+
+            <div class="flex items-center gap-1">
               <button
                 v-for="page in visiblePages"
                 :key="page"
                 @click="changePage(page)"
                 :class="[
-                  page === pagination.page
-                    ? 'bg-indigo-600 text-white'
-                    : 'text-gray-900 dark:text-gray-300 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700',
-                  'relative inline-flex items-center px-4 py-2 text-sm font-semibold'
+                  'min-w-[36px] h-9 px-3 rounded-lg text-sm font-medium transition-all',
+                  pagination.page === page
+                    ? 'bg-indigo-600 text-white shadow-sm'
+                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                 ]"
               >
                 {{ page }}
               </button>
+            </div>
 
-              <button
-                :disabled="pagination.page === pagination.totalPages"
-                @click="changePage(pagination.page + 1)"
-                class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
-              >
-                <ChevronRightIcon class="h-5 w-5" />
-              </button>
-            </nav>
+            <button
+              :disabled="pagination.page >= pagination.totalPages"
+              @click="changePage(pagination.page + 1)"
+              class="p-2 rounded-lg border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            >
+              <ChevronRightIcon class="h-5 w-5" />
+            </button>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div v-if="showDeleteModal" class="fixed inset-0 z-50 overflow-y-auto">
-      <div class="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
-        <div class="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-80 transition-opacity"></div>
-        
-        <div class="inline-block transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
-          <div class="bg-white dark:bg-gray-800 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-            <div class="sm:flex sm:items-start">
-              <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30 sm:mx-0 sm:h-10 sm:w-10">
-                <ExclamationTriangleIcon class="h-6 w-6 text-red-600 dark:text-red-400" />
-              </div>
-              <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-white">
-                  Hastaneyi Sil
-                </h3>
-                <div class="mt-2">
+    <Teleport to="body">
+      <Transition
+        enter-active-class="transition-all duration-300"
+        enter-from-class="opacity-0"
+        enter-to-class="opacity-100"
+        leave-active-class="transition-all duration-200"
+        leave-from-class="opacity-100"
+        leave-to-class="opacity-0"
+      >
+        <div v-if="showDeleteModal" class="fixed inset-0 z-50 overflow-y-auto">
+          <div class="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" @click="showDeleteModal = false"></div>
+            
+            <Transition
+              enter-active-class="transition-all duration-300"
+              enter-from-class="opacity-0 scale-95"
+              enter-to-class="opacity-100 scale-100"
+              leave-active-class="transition-all duration-200"
+              leave-from-class="opacity-100 scale-100"
+              leave-to-class="opacity-0 scale-95"
+            >
+              <div v-if="showDeleteModal" class="inline-block transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 text-left align-bottom shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
+                <div class="p-6 text-center">
+                  <div class="mx-auto w-14 h-14 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mb-4">
+                    <ExclamationTriangleIcon class="h-7 w-7 text-red-600 dark:text-red-400" />
+                  </div>
+                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                    {{ t('hospitals.delete_modal.title', 'Hastaneyi Sil') }}
+                  </h3>
                   <p class="text-sm text-gray-500 dark:text-gray-400">
-                    <strong class="text-gray-700 dark:text-gray-300">{{ hospitalToDelete?.name }}</strong> adlı hastaneyi silmek istediğinizden emin misiniz? 
-                    Bu işlem geri alınamaz ve ilişkili tüm branşlar de silinecektir.
+                    {{ tp('hospitals.delete_modal.message', { name: hospitalToDelete?.name }, '{name} adlı hastaneyi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz ve ilişkili tüm branşlar da silinecektir.') }}
                   </p>
                 </div>
+                <div class="flex gap-3 px-6 pb-6">
+                  <button
+                    @click="showDeleteModal = false"
+                    class="flex-1 py-2.5 px-4 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-all"
+                  >
+                    {{ t('hospitals.delete_modal.cancel', 'İptal') }}
+                  </button>
+                  <button
+                    @click="handleDelete"
+                    class="flex-1 py-2.5 px-4 bg-red-600 text-white rounded-xl font-medium hover:bg-red-700 transition-all"
+                  >
+                    {{ t('hospitals.delete_modal.confirm', 'Sil') }}
+                  </button>
+                </div>
               </div>
-            </div>
-          </div>
-          <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-            <button
-              @click="handleDelete"
-              class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 dark:bg-red-600 dark:hover:bg-red-700 sm:ml-3 sm:w-auto"
-            >
-              Sil
-            </button>
-            <button
-              @click="showDeleteModal = false"
-              class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-600 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 sm:mt-0 sm:w-auto"
-            >
-              İptal
-            </button>
+            </Transition>
           </div>
         </div>
-      </div>
-    </div>
+      </Transition>
+    </Teleport>
 
     <!-- Create/Edit Modal -->
     <HospitalFormModal
@@ -250,9 +289,15 @@ import {
   BuildingOffice2Icon,
   ExclamationTriangleIcon,
   ChevronLeftIcon,
-  ChevronRightIcon
+  ChevronRightIcon,
+  MagnifyingGlassIcon,
+  PencilIcon,
+  TrashIcon
 } from '@heroicons/vue/24/outline'
 import { watchDebounced } from '@vueuse/core'
+import { useLanguage } from '~/composables/useLanguage'
+
+const { t, tp } = useLanguage()
 
 const { hospitals, loading, meta, fetchHospitals, deleteHospital } = useHospitals()
 
@@ -325,9 +370,9 @@ const handleDelete = async () => {
     try {
       await deleteHospital(hospitalToDelete.value.id)
       await loadHospitals(pagination.value.page)
-      useToast().showSuccess('Hastane başarıyla silindi')
+      useToast().showSuccess(t('hospitals.toast.deleted', 'Hastane başarıyla silindi'))
     } catch (error) {
-      useToast().showError('Hastane silinirken bir hata oluştu')
+      useToast().showError(t('hospitals.toast.delete_error', 'Hastane silinirken bir hata oluştu'))
     }
   }
   showDeleteModal.value = false
