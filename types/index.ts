@@ -1,72 +1,4 @@
 // Auth types
-
-// types/language.ts
-
-// types/language.ts
-export interface Language {
-  id: number;
-  code: string;
-  name: string;
-  isActive: boolean;
-  isDefault: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface TranslationKey {
-  id: number;
-  keyName: string;
-  description?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface Translation {
-  id: number;
-  languageId: number;
-  translationKeyId: number;
-  value: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface TranslationsResponse {
-  language?: {
-    code: string;
-    name: string;
-  };
-  translations: Record<string, string>;
-}
-
-export interface TranslationWithKey extends Translation {
-  translationKey?: TranslationKey;
-  language?: Language;
-}
-
-export interface BulkImportTranslation {
-  keyName: string;
-  description?: string;
-  translations: Record<string, string>;
-}
-
-export interface BulkImportRequest {
-  items: BulkImportTranslation[];
-}
-
-export interface BulkImportResult {
-  total: number;
-  results: Array<{
-    key: string;
-    language?: string;
-    success: boolean;
-    action?: 'created' | 'updated';
-    error?: string;
-  }>;
-}
-
-
- 
-
 export interface LoginDto {
   email: string
   password: string
@@ -77,24 +9,6 @@ export interface RegisterDto {
   email: string
   password: string
   role?: string
-}
-
-export interface Branch2Hospital {
-  id: number
-  hospitalId: number
-  branchId: number
-  hospital?: {
-    id: number
-    name: string
-    code: string
-  }
-  branch?: {
-    id: number
-    name: string
-    code: string
-  }
-  createdAt: Date
-  updatedAt: Date
 }
 
 export interface User {

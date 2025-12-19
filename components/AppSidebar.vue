@@ -1,51 +1,29 @@
 <template>
   <aside :class="[
-    'fixed top-0 z-50 h-screen transition-all duration-300 ease-in-out',
+    'fixed top-0 left-0 z-50 h-screen transition-all duration-300 ease-in-out',
     'bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950',
-    'border-slate-800/50',
-    // RTL/LTR positioning
-    isRTL ? 'right-0 border-l' : 'left-0 border-r',
-    // Width
+    'border-r border-slate-800/50',
     sidebarOpen ? 'w-72' : 'w-20',
-    // Mobile transform
-    mobileSidebarOpen 
-      ? 'translate-x-0' 
-      : (isRTL ? 'translate-x-full lg:translate-x-0' : '-translate-x-full lg:translate-x-0')
+    mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
   ]">
     <!-- Decorative Elements -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
-      <div 
-        class="absolute -top-24 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl"
-        :class="isRTL ? '-left-24' : '-right-24'"
-      ></div>
-      <div 
-        class="absolute -bottom-24 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl"
-        :class="isRTL ? '-right-24' : '-left-24'"
-      ></div>
+      <div class="absolute -top-24 -right-24 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl"></div>
+      <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl"></div>
     </div>
 
     <div class="relative h-full flex flex-col">
       <!-- Logo Section -->
-      <div 
-        class="flex items-center justify-between h-16 px-4 border-b border-slate-800/50"
-        :class="{ 'flex-row-reverse': isRTL }"
-      >
-        <div class="flex items-center gap-3" :class="{ 'flex-row-reverse': isRTL }">
+      <div class="flex items-center justify-between h-16 px-4 border-b border-slate-800/50">
+        <div class="flex items-center gap-3">
           <div class="relative">
             <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/25">
               <span class="text-white font-bold text-lg">V</span>
             </div>
-            <div 
-              class="absolute -bottom-0.5 w-3 h-3 bg-emerald-500 rounded-full border-2 border-slate-900"
-              :class="isRTL ? '-left-0.5' : '-right-0.5'"
-            ></div>
+            <div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 rounded-full border-2 border-slate-900"></div>
           </div>
           <Transition name="fade-slide">
-            <div 
-              v-if="sidebarOpen" 
-              class="overflow-hidden"
-              :class="isRTL ? 'text-right' : 'text-left'"
-            >
+            <div v-if="sidebarOpen" class="overflow-hidden">
               <h1 class="text-lg font-bold text-white tracking-tight">Valdori</h1>
               <p class="text-xs text-slate-400 -mt-0.5">CRM Platform</p>
             </div>
@@ -56,14 +34,16 @@
         <button 
           @click="sidebar.toggleSidebar"
           class="hidden lg:flex items-center justify-center w-8 h-8 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all duration-200"
-          :title="sidebarOpen ? t('sidebar.collapse', 'Daralt') : t('sidebar.expand', 'Genişlet')"
+          :title="sidebarOpen ? 'Daralt' : 'Genişlet'"
         >
           <ChevronLeftIcon :class="[
             'w-5 h-5 transition-transform duration-300',
-            isRTL ? (sidebarOpen ? 'rotate-180' : '') : (!sidebarOpen ? 'rotate-180' : '')
+            !sidebarOpen && 'rotate-180'
           ]" />
         </button>
       </div>
+
+    
 
       <!-- Navigation -->
       <nav class="flex-1 px-3 py-2 space-y-1 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
@@ -75,12 +55,8 @@
             class="pt-4 pb-2"
           >
             <Transition name="fade">
-              <p 
-                v-if="sidebarOpen" 
-                class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider"
-                :class="isRTL ? 'text-right' : 'text-left'"
-              >
-                {{ t(item.name) }}
+              <p v-if="sidebarOpen" class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                {{ item.name }}
               </p>
             </Transition>
             <div v-if="!sidebarOpen" class="mx-3 border-t border-slate-700/50"></div>
@@ -95,10 +71,9 @@
                 hasActiveChild(item.items)
                   ? 'bg-slate-800/80 text-white'
                   : 'text-slate-400 hover:bg-slate-800/50 hover:text-white',
-                !sidebarOpen && 'justify-center',
-                isRTL && sidebarOpen && 'flex-row-reverse'
+                !sidebarOpen && 'justify-center'
               ]"
-              :title="!sidebarOpen ? t(item.name) : ''"
+              :title="!sidebarOpen ? item.name : ''"
             >
               <div :class="[
                 'flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-200',
@@ -110,16 +85,11 @@
               </div>
               
               <Transition name="fade-slide">
-                <div 
-                  v-if="sidebarOpen" 
-                  class="flex-1 flex items-center justify-between"
-                  :class="isRTL ? 'mr-3' : 'ml-3'"
-                >
-                  <span class="font-medium text-sm">{{ t(item.name) }}</span>
+                <div v-if="sidebarOpen" class="flex-1 flex items-center justify-between ml-3">
+                  <span class="font-medium text-sm">{{ item.name }}</span>
                   <ChevronRightIcon :class="[
                     'w-4 h-4 transition-transform duration-200',
-                    openGroups[item.name] && 'rotate-90',
-                    isRTL && !openGroups[item.name] && 'rotate-180'
+                    openGroups[item.name] && 'rotate-90'
                   ]" />
                 </div>
               </Transition>
@@ -129,11 +99,7 @@
             <Transition name="expand">
               <div 
                 v-if="openGroups[item.name] && sidebarOpen" 
-                class="space-y-1"
-                :class="[
-                  isRTL ? 'mr-4 pr-4 border-r' : 'ml-4 pl-4 border-l',
-                  'border-slate-700/50'
-                ]"
+                class="ml-4 pl-4 border-l border-slate-700/50 space-y-1"
               >
                 <button 
                   v-for="subItem in item.items" 
@@ -143,24 +109,16 @@
                     'group flex items-center w-full px-3 py-2 rounded-lg transition-all duration-200 text-sm',
                     route.path === subItem.href
                       ? 'bg-indigo-500/20 text-indigo-400 font-medium'
-                      : 'text-slate-400 hover:bg-slate-800/50 hover:text-white',
-                    isRTL && 'flex-row-reverse'
+                      : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
                   ]"
                 >
-                  <component 
-                    :is="subItem.icon" 
-                    class="w-4 h-4"
-                    :class="isRTL ? 'ml-3' : 'mr-3'"
-                  />
-                  <span class="flex-1" :class="isRTL ? 'text-right' : 'text-left'">
-                    {{ t(subItem.name) }}
-                  </span>
+                  <component :is="subItem.icon" class="w-4 h-4 mr-3" />
+                  <span>{{ subItem.name }}</span>
                   
                   <!-- Active Indicator -->
                   <div 
                     v-if="route.path === subItem.href"
-                    class="w-1.5 h-1.5 rounded-full bg-indigo-400"
-                    :class="isRTL ? 'mr-auto' : 'ml-auto'"
+                    class="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-400"
                   ></div>
                 </button>
               </div>
@@ -176,10 +134,9 @@
               route.path === item.href
                 ? 'bg-gradient-to-r from-indigo-500/20 to-purple-500/20 text-white shadow-lg shadow-indigo-500/10'
                 : 'text-slate-400 hover:bg-slate-800/50 hover:text-white',
-              !sidebarOpen && 'justify-center',
-              isRTL && sidebarOpen && 'flex-row-reverse'
+              !sidebarOpen && 'justify-center'
             ]"
-            :title="!sidebarOpen ? t(item.name) : ''"
+            :title="!sidebarOpen ? item.name : ''"
           >
             <!-- Icon Container -->
             <div :class="[
@@ -193,20 +150,15 @@
               <!-- Notification Badge -->
               <div 
                 v-if="item.badge"
-                class="absolute -top-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center"
-                :class="isRTL ? '-left-1' : '-right-1'"
+                class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center"
               >
                 <span class="text-[10px] font-bold text-white">{{ item.badge }}</span>
               </div>
             </div>
 
             <Transition name="fade-slide">
-              <div 
-                v-if="sidebarOpen" 
-                class="flex-1 flex items-center justify-between"
-                :class="isRTL ? 'mr-3' : 'ml-3'"
-              >
-                <span class="font-medium text-sm">{{ t(item.name) }}</span>
+              <div v-if="sidebarOpen" class="flex-1 flex items-center justify-between ml-3">
+                <span class="font-medium text-sm">{{ item.name }}</span>
                 
                 <!-- Active Indicator -->
                 <div 
@@ -230,7 +182,7 @@
           <button 
             @click="sidebar.toggleSidebar"
             class="w-full flex items-center justify-center py-2 text-slate-500 hover:text-white transition-colors"
-            :title="t('sidebar.expand_menu', 'Menüyü Genişlet')"
+            title="Menüyü Genişlet"
           >
             <Bars3Icon class="w-5 h-5" />
           </button>
@@ -241,8 +193,7 @@
       <div class="flex-shrink-0 p-4 border-t border-slate-800/50 bg-slate-900/50">
         <div :class="[
           'flex items-center gap-3',
-          !sidebarOpen && 'justify-center',
-          isRTL && sidebarOpen && 'flex-row-reverse'
+          !sidebarOpen && 'justify-center'
         ]">
           <!-- Avatar -->
           <div class="relative flex-shrink-0">
@@ -263,29 +214,19 @@
               </div>
             </div>
             <!-- Online Status -->
-            <div 
-              class="absolute -bottom-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-slate-900"
-              :class="isRTL ? '-left-0.5' : '-right-0.5'"
-            ></div>
+            <div class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-slate-900"></div>
           </div>
 
           <!-- User Info -->
           <Transition name="fade-slide">
-            <div 
-              v-if="sidebarOpen" 
-              class="flex-1 min-w-0"
-              :class="isRTL ? 'text-right' : 'text-left'"
-            >
+            <div v-if="sidebarOpen" class="flex-1 min-w-0">
               <p class="text-sm font-semibold text-white truncate">
-                {{ authStore.user?.name || t('sidebar.user', 'Kullanıcı') }}
+                {{ authStore.user?.name || 'Kullanıcı' }}
               </p>
               <p class="text-xs text-slate-400 truncate">
                 {{ authStore.user?.email || 'email@example.com' }}
               </p>
-              <div 
-                class="flex items-center gap-2 mt-1"
-                :class="isRTL ? 'flex-row-reverse justify-end' : ''"
-              >
+              <div class="flex items-center gap-2 mt-1">
                 <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-indigo-500/20 text-indigo-400">
                   {{ getRoleLabel(authStore.user?.role) }}
                 </span>
@@ -300,7 +241,7 @@
               v-if="sidebarOpen"
               @click="navigateTo('/profile')"
               class="flex-shrink-0 p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all"
-              :title="t('sidebar.profile_settings', 'Profil Ayarları')"
+              title="Profil Ayarları"
             >
               <Cog6ToothIcon class="w-5 h-5" />
             </button>
@@ -320,10 +261,9 @@
             v-if="sidebarOpen"
             @click="handleLogout"
             class="mt-3 w-full flex items-center justify-center gap-2 px-4 py-2 bg-slate-800/50 hover:bg-red-500/20 text-slate-400 hover:text-red-400 rounded-xl transition-all duration-200 text-sm font-medium"
-            :class="isRTL && 'flex-row-reverse'"
           >
             <ArrowRightOnRectangleIcon class="w-4 h-4" />
-            {{ t('sidebar.logout', 'Çıkış Yap') }}
+            Çıkış Yap
           </button>
         </Transition>
       </div>
@@ -342,9 +282,7 @@
 
 <script setup>
 import { inject, ref, computed } from 'vue'
-import { useAuthStore } from '~/stores/auth'
-import { useLanguage } from '~/composables/useLanguage'
-import { usePermissions } from '~/composables/usePermissions'
+import { useAuthStore } from '~/stores/auth' 
 import {
   HomeIcon,
   UsersIcon,
@@ -364,29 +302,28 @@ import {
   FlagIcon,
   ChartBarSquareIcon,
   CurrencyDollarIcon,
+  ClipboardDocumentListIcon,
   DocumentTextIcon,
   ShieldExclamationIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   Cog6ToothIcon,
   ArrowRightOnRectangleIcon,
-  Bars3Icon,
-  LanguageIcon
+  Bars3Icon
 } from '@heroicons/vue/24/outline'
 
 const authStore = useAuthStore()
 const config = useRuntimeConfig()
 const { canViewMenu } = usePermissions()
-const { t } = useLanguage()
 const sidebar = inject('sidebar')
-const { sidebarOpen, mobileSidebarOpen, isRTL } = sidebar
+const { sidebarOpen, mobileSidebarOpen } = sidebar
 const router = useRouter()
 const route = useRoute()
 const path = config.public.apiBase
 
 const openGroups = ref({
-  'menu.customers': false,
-  'menu.definitions': false
+  'Müşteriler': false,
+  'Tanımlamalar': false
 }) 
 
 const toggleGroup = (groupName) => {
@@ -406,56 +343,55 @@ const hasActiveChild = (items) => {
 const getRoleLabel = (role) => {
   const labels = {
     admin: 'Admin',
-    user: t('role.user', 'Kullanıcı'),
-    doctor: t('role.doctor', 'Doktor'),
-    pricing: t('role.pricing', 'Fiyatlandırma')
+    user: 'Kullanıcı',
+    doctor: 'Doktor',
+    pricing: 'Fiyatlandırma'
   }
-  return labels[role] || role || t('role.user', 'Kullanıcı')
+  return labels[role] || role || 'Kullanıcı'
 }
 
 const allNavigationItems = [
-  { name: 'menu.dashboard', href: '/dashboard', icon: HomeIcon },
-  { name: 'menu.pool_data', href: '/pool-data', icon: CircleStackIcon },
-  { name: 'section.customer_management', type: 'divider' },
+  { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
+  { name: 'Havuz Verileri', href: '/pool-data', icon: CircleStackIcon },
+  { name: 'Müşteri Yönetimi', type: 'divider' },
   {
-    name: 'menu.customers',
+    name: 'Müşteriler',
     type: 'group',
     icon: UsersIcon,
     items: [
-      { name: 'menu.customers.people', href: '/customers', icon: UsersIcon },
-      { name: 'menu.customers.new_people', href: '/new-customers', icon: UserPlusIcon },
-      { name: 'menu.customers.dynamic_search', href: '/dinamik-arama', icon: MagnifyingGlassIcon },
-      { name: 'menu.customers.reminders', href: '/reminders', icon: BellIcon },
+      { name: 'Kişiler', href: '/customers', icon: UsersIcon },
+      { name: 'Yeni Kişiler', href: '/new-customers', icon: UserPlusIcon },
+      { name: 'Dinamik Arama', href: '/dinamik-arama', icon: MagnifyingGlassIcon },
+      { name: 'Hatırlatmalar', href: '/reminders', icon: BellIcon },
     ]
   },
-  { name: 'menu.doctor_review', href: '/doctor-review', icon: UserGroupIcon },
-  { name: 'menu.proforma', href: '/proforma', icon: DocumentTextIcon },
-  { name: 'menu.pricing', href: '/pricing', icon: CurrencyDollarIcon },
-  { name: 'section.sales_appointments', type: 'divider' },
-  { name: 'menu.sales', href: '/sales', icon: ShoppingBagIcon },
-  { name: 'menu.sales_without_appointment', href: '/randevusuz-satislar', icon: ShoppingBagIcon },
-  { name: 'menu.appointments', href: '/meetings', icon: CalendarIcon },
-  { name: 'section.system', type: 'divider' },
+  { name: 'Doktor Dönüşü', href: '/doctor-review', icon: UserGroupIcon },
+  { name: 'Proforma', href: '/proforma', icon: DocumentTextIcon },
+  { name: 'Fiyatlandırmalar', href: '/pricing', icon: CurrencyDollarIcon },
+  { name: 'Satış & Randevu', type: 'divider' },
+  { name: 'Satışlar', href: '/sales', icon: ShoppingBagIcon },
+  { name: 'Randevusuz Satışlar', href: '/randevusuz-satislar', icon: ShoppingBagIcon },
+  { name: 'Randevular', href: '/meetings', icon: CalendarIcon },
+  { name: 'Sistem', type: 'divider' },
   {
-    name: 'menu.definitions',
+    name: 'Tanımlamalar',
     type: 'group',
     icon: WrenchScrewdriverIcon,
     items: [
-      { name: 'menu.definitions.users', href: '/users', icon: UserIcon },
-      { name: 'menu.definitions.engagement_analysis', href: '/engagement', icon: ChartBarSquareIcon },
-      { name: 'menu.definitions.user_groups', href: '/user-groups', icon: UserGroupIcon },
-      { name: 'menu.definitions.teams', href: '/teams', icon: FlagIcon },
-      { name: 'menu.definitions.products', href: '/products', icon: ShoppingBagIcon },
-      { name: 'menu.definitions.statuses', href: '/statuses', icon: TagIcon },
-      { name: 'menu.definitions.hospitals', href: '/hospitals', icon: BuildingOffice2Icon },
-      { name: 'menu.definitions.branches', href: '/branches', icon: BuildingOfficeIcon },
-      { name: 'menu.definitions.doctors', href: '/doctors', icon: UserGroupIcon },
-      { name: 'menu.definitions.languages', href: '/languages', icon: LanguageIcon },
-      { name: 'menu.definitions.dynamic_fields', href: '/dynamic-fields', icon: WrenchScrewdriverIcon },
+      { name: 'Kullanıcılar', href: '/users', icon: UserIcon },
+      { name: 'Etkileşim Analizi', href: '/engagement', icon: ChartBarSquareIcon },
+      { name: 'Kullanıcı Grupları', href: '/user-groups', icon: UserGroupIcon },
+      { name: 'Takımlar', href: '/teams', icon: FlagIcon },
+      { name: 'Ürünler', href: '/products', icon: ShoppingBagIcon },
+      { name: 'Durumlar', href: '/statuses', icon: TagIcon },
+      { name: 'Hastaneler', href: '/hospitals', icon: BuildingOffice2Icon },
+      { name: 'Branşlar', href: '/branches', icon: BuildingOfficeIcon },
+      { name: 'Doktorlar', href: '/doctors', icon: UserGroupIcon },
+      { name: 'Dinamik Alanlar', href: '/dynamic-fields', icon: WrenchScrewdriverIcon },
     ]
   },
-  { name: 'menu.fraud_alerts', href: '/fraud-alerts', icon: ExclamationTriangleIcon },
-  { name: 'menu.sheets_sync', href: '/sheets-sync', icon: ShieldExclamationIcon },
+  { name: 'Fraud Alerts', href: '/fraud-alerts', icon: ExclamationTriangleIcon },
+  { name: 'Sheets Sync', href: '/sheets-sync', icon: ShieldExclamationIcon },
 ]
 
 const navigationItems = computed(() => {
@@ -511,12 +447,6 @@ const handleLogout = async () => {
 .fade-slide-leave-to {
   opacity: 0;
   transform: translateX(-10px);
-}
-
-/* RTL için fade-slide */
-[dir="rtl"] .fade-slide-enter-from,
-[dir="rtl"] .fade-slide-leave-to {
-  transform: translateX(10px);
 }
 
 /* Expand Transition */

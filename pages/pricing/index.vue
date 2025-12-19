@@ -8,9 +8,9 @@
             <CurrencyDollarIcon class="h-7 w-7 text-white" />
           </div>
           <div>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ t('pricing.title', 'Fiyatlandırmalar') }}</h1>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Fiyatlandırmalar</h1>
             <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-              {{ t('pricing.subtitle', 'Fiyatlandırma sürecindeki müşterileri takip edin') }}
+              Fiyatlandırma sürecindeki müşterileri takip edin
             </p>
           </div>
         </div>
@@ -21,7 +21,7 @@
           class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-sm font-medium"
         >
           <ArrowPathIcon class="h-5 w-5" :class="{ 'animate-spin': loading }" />
-          {{ t('pricing.actions.refresh', 'Yenile') }}
+          Yenile
         </button>
       </div>
     </div>
@@ -31,7 +31,7 @@
       <div class="group bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">{{ t('pricing.stats.total', 'Toplam') }}</p>
+            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Toplam</p>
             <p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ totalCount }}</p>
           </div>
           <div class="h-12 w-12 rounded-xl bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -44,7 +44,7 @@
       <div class="group bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">{{ t('pricing.stats.sent', 'Gönderilen') }}</p>
+            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Gönderilen</p>
             <p class="text-2xl font-bold text-purple-600 dark:text-purple-400 mt-1">{{ sentPagination.total }}</p>
           </div>
           <div class="h-12 w-12 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -57,7 +57,7 @@
       <div class="group bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">{{ t('pricing.stats.entered', 'Fiyat Girilen') }}</p>
+            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Fiyat Girilen</p>
             <p class="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">{{ enteredPagination.total }}</p>
           </div>
           <div class="h-12 w-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -70,7 +70,7 @@
       <div class="group bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">{{ t('pricing.stats.offered', 'Teklif İletilen') }}</p>
+            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Teklif İletilen</p>
             <p class="text-2xl font-bold text-blue-600 dark:text-blue-400 mt-1">{{ offeredPagination.total }}</p>
           </div>
           <div class="h-12 w-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -84,8 +84,8 @@
     <!-- Progress Pipeline -->
     <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 border border-gray-200 dark:border-gray-700 mb-6">
       <div class="flex items-center justify-between mb-3">
-        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('pricing.pipeline.title', 'Süreç Akışı') }}</span>
-        <span class="text-xs text-gray-500">{{ tp('pricing.pipeline.conversion_rate', { rate: conversionRate }, '{rate}% dönüşüm oranı') }}</span>
+        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Süreç Akışı</span>
+        <span class="text-xs text-gray-500">{{ conversionRate }}% dönüşüm oranı</span>
       </div>
       <div class="flex items-center gap-2">
         <div class="flex-1 h-3 bg-purple-500 rounded-l-full" :style="{ flex: sentPagination.total || 1 }"></div>
@@ -93,9 +93,9 @@
         <div class="flex-1 h-3 bg-blue-500 rounded-r-full" :style="{ flex: offeredPagination.total || 1 }"></div>
       </div>
       <div class="flex items-center justify-between mt-2 text-xs text-gray-500">
-        <span>{{ t('pricing.pipeline.sent_label', 'Gönderilen') }}</span>
-        <span>{{ t('pricing.pipeline.entered_label', 'Fiyat Girilen') }}</span>
-        <span>{{ t('pricing.pipeline.offered_label', 'Teklif İletilen') }}</span>
+        <span>Gönderilen</span>
+        <span>Fiyat Girilen</span>
+        <span>Teklif İletilen</span>
       </div>
     </div>
 
@@ -104,14 +104,14 @@
       <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-700">
         <div class="flex items-center gap-2">
           <FunnelIcon class="h-5 w-5 text-gray-400" />
-          <span class="font-medium text-gray-700 dark:text-gray-300">{{ t('pricing.filters.title', 'Filtreler') }}</span>
+          <span class="font-medium text-gray-700 dark:text-gray-300">Filtreler</span>
         </div>
         <button 
           v-if="searchTerm || relevantUserFilter || dateFilter !== 'all'"
           @click="resetFilters"
           class="text-sm text-violet-600 dark:text-violet-400 hover:text-violet-700 font-medium"
         >
-          {{ t('pricing.filters.clear', 'Temizle') }}
+          Temizle
         </button>
       </div>
 
@@ -120,7 +120,7 @@
           <!-- Search -->
           <div>
             <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">
-              {{ t('pricing.filters.search', 'Ara') }}
+              Ara
             </label>
             <div class="relative">
               <MagnifyingGlassIcon class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -128,7 +128,7 @@
                 v-model="searchTerm" 
                 type="text" 
                 class="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all"
-                :placeholder="t('pricing.filters.search_placeholder', 'İsim, email, telefon...')"
+                placeholder="İsim, email, telefon..."
               />
             </div>
           </div>
@@ -136,13 +136,13 @@
           <!-- User Filter -->
           <div v-if="isAdmin">
             <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">
-              {{ t('pricing.filters.assigned_user', 'Atanan Kullanıcı') }}
+              Atanan Kullanıcı
             </label>
             <select 
               v-model="relevantUserFilter" 
               class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all appearance-none cursor-pointer"
             >
-              <option value="">{{ t('pricing.filters.all_users', 'Tüm Kullanıcılar') }}</option>
+              <option value="">Tüm Kullanıcılar</option>
               <option v-for="user in usersList" :key="user.id" :value="user.id">
                 {{ user.name }}
               </option>
@@ -152,16 +152,16 @@
           <!-- Date Filter -->
           <div>
             <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">
-              {{ t('pricing.filters.date_range', 'Tarih Aralığı') }}
+              Tarih Aralığı
             </label>
             <select 
               v-model="dateFilter" 
               class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all appearance-none cursor-pointer"
             >
-              <option value="all">{{ t('pricing.filters.date_all', 'Tümü') }}</option>
-              <option value="today">{{ t('pricing.filters.date_today', 'Bugün') }}</option>
-              <option value="week">{{ t('pricing.filters.date_week', 'Bu Hafta') }}</option>
-              <option value="month">{{ t('pricing.filters.date_month', 'Bu Ay') }}</option>
+              <option value="all">Tümü</option>
+              <option value="today">Bugün</option>
+              <option value="week">Bu Hafta</option>
+              <option value="month">Bu Ay</option>
             </select>
           </div>
 
@@ -171,7 +171,7 @@
               @click="resetFilters"
               class="w-full px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-all text-sm font-medium"
             >
-              {{ t('pricing.filters.clear_filters', 'Filtreleri Temizle') }}
+              Filtreleri Temizle
             </button>
           </div>
         </div>
@@ -184,9 +184,8 @@
         <div class="w-14 h-14 rounded-full border-4 border-violet-100 dark:border-violet-900"></div>
         <div class="absolute top-0 left-0 w-14 h-14 rounded-full border-4 border-transparent border-t-violet-600 animate-spin"></div>
       </div>
-      <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">{{ t('pricing.loading', 'Yükleniyor...') }}</p>
+      <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">Yükleniyor...</p>
     </div>
-
 
     <!-- Three Column Layout -->
     <div v-else class="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -207,8 +206,8 @@
                   <PaperAirplaneIcon class="h-4 w-4 text-white" />
                 </div>
                 <div>
-                  <h2 class="font-semibold text-white text-sm">{{ t('pricing.sent.title', 'Fiyatlandırmaya Gönderilen') }}</h2>
-                  <p class="text-[10px] text-white/70">{{ t('pricing.sent.subtitle', 'İşlem bekliyor') }}</p>
+                  <h2 class="font-semibold text-white text-sm">Fiyatlandırmaya Gönderilen</h2>
+                  <p class="text-[10px] text-white/70">İşlem bekliyor</p>
                 </div>
               </div>
               <span class="px-2.5 py-1 bg-white/20 backdrop-blur-sm text-white text-xs font-bold rounded-full">
@@ -225,9 +224,9 @@
             <div class="h-14 w-14 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mb-3">
               <CurrencyDollarIcon class="h-7 w-7 text-purple-500" />
             </div>
-            <p class="text-sm font-medium text-gray-900 dark:text-white mb-1">{{ t('pricing.sent.empty_title', 'Müşteri Yok') }}</p>
+            <p class="text-sm font-medium text-gray-900 dark:text-white mb-1">Müşteri Yok</p>
             <p class="text-xs text-gray-500 dark:text-gray-400 text-center">
-              {{ t('pricing.sent.empty_message', 'Fiyatlandırmaya gönderilen müşteri bulunmuyor') }}
+              Fiyatlandırmaya gönderilen müşteri bulunmuyor
             </p>
           </div>
 
@@ -275,7 +274,7 @@
 
         <!-- Pagination -->
         <div v-if="sentPagination.totalPages > 1" class="border-t border-gray-100 dark:border-gray-700 px-3 py-2 flex items-center justify-between bg-gray-50 dark:bg-gray-900/50">
-          <span class="text-xs text-gray-500">{{ tp('pricing.pagination.page', { current: sentPagination.page, total: sentPagination.totalPages }, '{current}/{total}') }}</span>
+          <span class="text-xs text-gray-500">{{ sentPagination.page }}/{{ sentPagination.totalPages }}</span>
           <div class="flex items-center gap-1">
             <button 
               @click="loadSentData(sentPagination.page - 1)"
@@ -312,8 +311,8 @@
                   <CalculatorIcon class="h-4 w-4 text-white" />
                 </div>
                 <div>
-                  <h2 class="font-semibold text-white text-sm">{{ t('pricing.entered.title', 'Fiyatlar Girilen') }}</h2>
-                  <p class="text-[10px] text-white/70">{{ t('pricing.entered.subtitle', 'Teklif hazır') }}</p>
+                  <h2 class="font-semibold text-white text-sm">Fiyatlar Girilen</h2>
+                  <p class="text-[10px] text-white/70">Teklif hazır</p>
                 </div>
               </div>
               <span class="px-2.5 py-1 bg-white/20 backdrop-blur-sm text-white text-xs font-bold rounded-full">
@@ -330,9 +329,9 @@
             <div class="h-14 w-14 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-3">
               <CalculatorIcon class="h-7 w-7 text-emerald-500" />
             </div>
-            <p class="text-sm font-medium text-gray-900 dark:text-white mb-1">{{ t('pricing.entered.empty_title', 'Müşteri Yok') }}</p>
+            <p class="text-sm font-medium text-gray-900 dark:text-white mb-1">Müşteri Yok</p>
             <p class="text-xs text-gray-500 dark:text-gray-400 text-center">
-              {{ t('pricing.entered.empty_message', 'Fiyatı girilen müşteri bulunmuyor') }}
+              Fiyatı girilen müşteri bulunmuyor
             </p>
           </div>
 
@@ -382,7 +381,7 @@
 
         <!-- Pagination -->
         <div v-if="enteredPagination.totalPages > 1" class="border-t border-gray-100 dark:border-gray-700 px-3 py-2 flex items-center justify-between bg-gray-50 dark:bg-gray-900/50">
-          <span class="text-xs text-gray-500">{{ tp('pricing.pagination.page', { current: enteredPagination.page, total: enteredPagination.totalPages }, '{current}/{total}') }}</span>
+          <span class="text-xs text-gray-500">{{ enteredPagination.page }}/{{ enteredPagination.totalPages }}</span>
           <div class="flex items-center gap-1">
             <button 
               @click="loadEnteredData(enteredPagination.page - 1)"
@@ -419,8 +418,8 @@
                   <DocumentCheckIcon class="h-4 w-4 text-white" />
                 </div>
                 <div>
-                  <h2 class="font-semibold text-white text-sm">{{ t('pricing.offered.title', 'Fiyat Teklifi İletilen') }}</h2>
-                  <p class="text-[10px] text-white/70">{{ t('pricing.offered.subtitle', 'Cevap bekleniyor') }}</p>
+                  <h2 class="font-semibold text-white text-sm">Fiyat Teklifi İletilen</h2>
+                  <p class="text-[10px] text-white/70">Cevap bekleniyor</p>
                 </div>
               </div>
               <span class="px-2.5 py-1 bg-white/20 backdrop-blur-sm text-white text-xs font-bold rounded-full">
@@ -437,9 +436,9 @@
             <div class="h-14 w-14 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-3">
               <DocumentCheckIcon class="h-7 w-7 text-blue-500" />
             </div>
-            <p class="text-sm font-medium text-gray-900 dark:text-white mb-1">{{ t('pricing.offered.empty_title', 'Müşteri Yok') }}</p>
+            <p class="text-sm font-medium text-gray-900 dark:text-white mb-1">Müşteri Yok</p>
             <p class="text-xs text-gray-500 dark:text-gray-400 text-center">
-              {{ t('pricing.offered.empty_message', 'Fiyat teklifi iletilen müşteri bulunmuyor') }}
+              Fiyat teklifi iletilen müşteri bulunmuyor
             </p>
           </div>
 
@@ -489,7 +488,7 @@
 
         <!-- Pagination -->
         <div v-if="offeredPagination.totalPages > 1" class="border-t border-gray-100 dark:border-gray-700 px-3 py-2 flex items-center justify-between bg-gray-50 dark:bg-gray-900/50">
-          <span class="text-xs text-gray-500">{{ tp('pricing.pagination.page', { current: offeredPagination.page, total: offeredPagination.totalPages }, '{current}/{total}') }}</span>
+          <span class="text-xs text-gray-500">{{ offeredPagination.page }}/{{ offeredPagination.totalPages }}</span>
           <div class="flex items-center gap-1">
             <button 
               @click="loadOfferedData(offeredPagination.page - 1)"
@@ -529,9 +528,6 @@ import {
   FunnelIcon
 } from '@heroicons/vue/24/outline'
 import { watchDebounced } from '@vueuse/core'
-import { useLanguage } from '~/composables/useLanguage'
-
-const { t, tp } = useLanguage()
 
 definePageMeta({
   layout: 'default'

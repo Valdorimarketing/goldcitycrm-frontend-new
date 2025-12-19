@@ -39,7 +39,7 @@
                       <ShoppingBagIcon class="h-6 w-6 text-white" />
                     </div>
                     <div>
-                      <h2 class="text-xl font-bold text-white">{{ t('services_modal.title', 'Müşteri Hizmetleri') }}</h2>
+                      <h2 class="text-xl font-bold text-white">Müşteri Hizmetleri</h2>
                       <p class="text-sm text-white/70">{{ customer?.name }} {{ customer?.surname }}</p>
                     </div>
                   </div>
@@ -65,7 +65,7 @@
                     <div class="h-8 w-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
                       <ClipboardDocumentListIcon class="h-4 w-4 text-blue-600 dark:text-blue-400" />
                     </div>
-                    <h3 class="font-semibold text-gray-900 dark:text-white">{{ t('services_modal.current_services', 'Mevcut Hizmetler') }}</h3>
+                    <h3 class="font-semibold text-gray-900 dark:text-white">Mevcut Hizmetler</h3>
                     <span class="px-2 py-0.5 text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full">
                       {{ existingServices.length }}
                     </span>
@@ -77,7 +77,7 @@
                     class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-xl hover:bg-blue-700 disabled:opacity-50 transition-all"
                   >
                     <ArrowPathIcon class="h-4 w-4" :class="{ 'animate-spin': updatingExisting }" />
-                    {{ updatingExisting ? t('services_modal.updating', 'Güncelleniyor...') : t('services_modal.update', 'Güncelle') }}
+                    {{ updatingExisting ? 'Güncelleniyor...' : 'Güncelle' }}
                   </button>
                 </div>
 
@@ -96,7 +96,7 @@
                           </span>
                         </div>
                         <div>
-                          <p class="font-medium text-gray-900 dark:text-white">{{ service.productName || t('services_modal.product', 'Ürün') }}</p>
+                          <p class="font-medium text-gray-900 dark:text-white">{{ service.productName || 'Ürün' }}</p>
                           <p class="text-sm text-gray-500 dark:text-gray-400">
                             {{ formatPrice(service.offer) }} {{ service.product?.currency?.code || 'TL' }}
                           </p>
@@ -118,7 +118,7 @@
                           <CheckCircleIcon v-if="service.isPayCompleted" class="h-3.5 w-3.5" />
                           <ClockIcon v-else-if="parseFloat(service.paidAmount) > 0" class="h-3.5 w-3.5" />
                           <XCircleIcon v-else class="h-3.5 w-3.5" />
-                          {{ service.isPayCompleted ? t('services_modal.payment_status.paid', 'Ödendi') : parseFloat(service.paidAmount) > 0 ? t('services_modal.payment_status.partial', 'Kısmi') : t('services_modal.payment_status.unpaid', 'Ödenmedi') }}
+                          {{ service.isPayCompleted ? 'Ödendi' : parseFloat(service.paidAmount) > 0 ? 'Kısmi' : 'Ödenmedi' }}
                         </span>
                         
                         <button 
@@ -133,7 +133,7 @@
                     <!-- Service Fields -->
                     <div class="grid grid-cols-4 gap-3 mb-3">
                       <div>
-                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">{{ t('services_modal.fields.price', 'Fiyat') }}</label>
+                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Fiyat</label>
                         <input 
                           v-model.number="service.price" 
                           type="number" 
@@ -144,7 +144,7 @@
                         />
                       </div>
                       <div>
-                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">{{ t('services_modal.fields.offer', 'Teklif') }}</label>
+                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Teklif</label>
                         <input 
                           v-model.number="service.offer" 
                           type="number"
@@ -155,7 +155,7 @@
                         />
                       </div>
                       <div>
-                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">{{ t('services_modal.fields.paid', 'Alınan') }}</label>
+                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Alınan</label>
                         <input 
                           v-model.number="service.paidAmount" 
                           type="number" 
@@ -167,7 +167,7 @@
                         />
                       </div>
                       <div>
-                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">{{ t('services_modal.fields.remaining', 'Kalan') }}</label>
+                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Kalan</label>
                         <input 
                           :value="calculateRemainingAmount(service)" 
                           type="number" 
@@ -180,7 +180,7 @@
                     <!-- Payment Action -->
                     <div class="flex items-center justify-between pt-3 border-t border-gray-200 dark:border-gray-700">
                       <div v-if="service.note" class="text-sm text-gray-500 dark:text-gray-400">
-                        <span class="font-medium">{{ t('services_modal.note_label', 'Not:') }} {{ service.note }}:</span> {{ service.note }}
+                        <span class="font-medium">Not:</span> {{ service.note }}
                       </div>
                       <div v-else></div>
                       
@@ -191,14 +191,14 @@
                       >
                         <BanknotesIcon class="h-4 w-4" />
                         <span v-if="calculateRemainingAmount(service) > 0">
-                          {{ tp('services_modal.payment_take', { amount: formatPrice(calculateRemainingAmount(service)), currency: service.product?.currency?.code || 'TL' }, '{amount} {currency} Al') }}
+                          {{ formatPrice(calculateRemainingAmount(service)) }} {{ service.product?.currency?.code || 'TL' }} Al
                         </span>
-                        <span v-else>{{ t('services_modal.complete_payment', 'Tamamla') }}</span>
+                        <span v-else>Tamamla</span>
                       </button>
                       
                       <div v-else class="inline-flex items-center gap-1.5 text-sm text-emerald-600 dark:text-emerald-400">
                         <CheckCircleIcon class="h-4 w-4" />
-                        {{ t('services_modal.payment_completed', 'Ödeme tamamlandı') }}
+                        Ödeme tamamlandı
                       </div>
                     </div>
                   </div>
@@ -208,19 +208,19 @@
                 <div class="mt-4 p-4 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900/50 dark:to-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700">
                   <div class="grid grid-cols-3 gap-4">
                     <div class="text-center">
-                      <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ t('services_modal.summary.total_offer', 'Toplam Teklif') }}</p>
+                      <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Toplam Teklif</p>
                       <p class="text-lg font-bold text-gray-900 dark:text-white">
                         {{ formatPrice(totalOfferExisting) }} {{ selectedCurrency?.code || 'TL' }}
                       </p>
                     </div>
                     <div class="text-center">
-                      <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ t('services_modal.summary.total_paid', 'Toplam Alınan') }}</p>
+                      <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Toplam Alınan</p>
                       <p class="text-lg font-bold text-emerald-600 dark:text-emerald-400">
                         {{ formatPrice(totalPaidExisting) }} {{ selectedCurrency?.code || 'TL' }}
                       </p>
                     </div>
                     <div class="text-center">
-                      <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ t('services_modal.summary.total_remaining', 'Toplam Kalan') }}</p>
+                      <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Toplam Kalan</p>
                       <p 
                         class="text-lg font-bold"
                         :class="totalRemainingExisting > 0 ? 'text-red-600 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-400'"
@@ -239,14 +239,14 @@
                     <div class="h-8 w-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
                       <PlusIcon class="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                     </div>
-                    <h3 class="font-semibold text-gray-900 dark:text-white">{{ t('services_modal.add_new_service', 'Yeni Hizmet Ekle') }}</h3>
+                    <h3 class="font-semibold text-gray-900 dark:text-white">Yeni Hizmet Ekle</h3>
                   </div>
                 </div>
 
                 <div class="p-4 space-y-4">
                   <!-- Currency Selection -->
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('services_modal.currency', 'Para Birimi') }}</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Para Birimi</label>
                     <select 
                       v-model="selectedCurrency" 
                       class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:opacity-50 transition-all appearance-none cursor-pointer"
@@ -260,7 +260,7 @@
 
                   <!-- Product Search -->
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('services_modal.select_product', 'Ürün Seç') }}</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Ürün Seç</label>
                     <div class="relative">
                       <MagnifyingGlassIcon class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                       <input 
@@ -270,7 +270,7 @@
                         @focus="showProductDropdown = true"
                         type="text" 
                         class="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:opacity-50 transition-all"
-                        :placeholder="t('services_modal.search_product_placeholder', 'Ürün ara...')"
+                        placeholder="Ürün ara..."
                       />
 
                       <!-- Product Dropdown -->
@@ -326,7 +326,7 @@
 
                     <div class="grid grid-cols-4 gap-3 mb-3">
                       <div>
-                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">{{ t('services_modal.fields.price', 'Fiyat') }}</label>
+                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Fiyat</label>
                         <input 
                           v-model.number="newService.price" 
                           type="number"
@@ -335,7 +335,7 @@
                         />
                       </div>
                       <div>
-                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">{{ t('services_modal.fields.offer', 'Teklif') }}</label>
+                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Teklif</label>
                         <input 
                           v-model.number="newService.offer" 
                           type="number"
@@ -344,7 +344,7 @@
                         />
                       </div>
                       <div>
-                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">{{ t('services_modal.fields.paid', 'Alınan') }}</label>
+                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Alınan</label>
                         <input 
                           v-model.number="newService.paidAmount" 
                           type="number" 
@@ -354,7 +354,7 @@
                         />
                       </div>
                       <div>
-                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">{{ t('services_modal.fields.remaining', 'Kalan') }}</label>
+                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Kalan</label>
                         <input 
                           :value="newService.remainingAmount" 
                           type="number" 
@@ -365,7 +365,7 @@
                     </div>
 
                     <div class="mb-3">
-                      <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">{{ t('services_modal.note_optional', 'Not (Opsiyonel)') }}</label>
+                      <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Not (Opsiyonel)</label>
                       <input 
                         v-model="newService.note" 
                         type="text"
@@ -378,7 +378,7 @@
                       @click="addService"
                       class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-xl transition-all"
                     >
-                      {{ t('services_modal.add_service', 'Hizmeti Ekle') }}
+                      Hizmeti Ekle
                     </button>
                   </div>
                 </div>
@@ -390,7 +390,7 @@
                   <div class="h-8 w-8 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
                     <ClockIcon class="h-4 w-4 text-amber-600 dark:text-amber-400" />
                   </div>
-                  <h3 class="font-semibold text-gray-900 dark:text-white">{{ t('services_modal.pending_services', 'Eklenecek Hizmetler') }}</h3>
+                  <h3 class="font-semibold text-gray-900 dark:text-white">Eklenecek Hizmetler</h3>
                   <span class="px-2 py-0.5 text-xs font-medium bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-full">
                     {{ services.length }}
                   </span>
@@ -411,7 +411,7 @@
                       <div>
                         <p class="font-medium text-gray-900 dark:text-white">{{ service.productName }}</p>
                         <p class="text-xs text-gray-500 dark:text-gray-400">
-                          {{ tp('services_modal.pending_summary', { offer: formatPrice(service.offer), paid: formatPrice(service.paidAmount), remaining: formatPrice(service.offer - service.paidAmount) }, 'Teklif: {offer} | Alınan: {paid} | Kalan: {remaining}') }}
+                          Teklif: {{ formatPrice(service.offer) }} | Alınan: {{ formatPrice(service.paidAmount) }} | Kalan: {{ formatPrice(service.offer - service.paidAmount) }}
                         </p>
                       </div>
                     </div>
@@ -428,15 +428,15 @@
                 <div class="mt-4 p-4 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl border border-amber-200 dark:border-amber-800">
                   <div class="grid grid-cols-3 gap-4">
                     <div class="text-center">
-                      <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ t('services_modal.summary.total_offer', 'Toplam Teklif') }}</p>
+                      <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Toplam Teklif</p>
                       <p class="text-lg font-bold text-gray-900 dark:text-white">{{ formatPrice(totalOffer) }}</p>
                     </div>
                     <div class="text-center">
-                      <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ t('services_modal.summary.total_paid', 'Toplam Alınan') }}</p>
+                      <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Toplam Alınan</p>
                       <p class="text-lg font-bold text-emerald-600 dark:text-emerald-400">{{ formatPrice(totalPaid) }}</p>
                     </div>
                     <div class="text-center">
-                      <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ t('services_modal.summary.total_remaining', 'Toplam Kalan') }}</p>
+                      <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Toplam Kalan</p>
                       <p class="text-lg font-bold" :class="totalRemaining > 0 ? 'text-red-600' : 'text-emerald-600'">
                         {{ formatPrice(totalRemaining) }}
                       </p>
@@ -453,14 +453,14 @@
                   @click="close"
                   class="px-4 py-2.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 transition-all"
                 >
-                  {{ t('services_modal.cancel', 'İptal') }}
+                  İptal
                 </button>
                 <button 
                   @click="saveServices" 
                   :disabled="services.length === 0 || saving"
                   class="px-6 py-2.5 bg-emerald-600 text-white font-medium rounded-xl hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                 >
-                  {{ saving ? t('services_modal.saving', 'Kaydediliyor...') : t('services_modal.save', 'Kaydet') }}
+                  {{ saving ? 'Kaydediliyor...' : 'Kaydet' }}
                 </button>
               </div>
             </div>
@@ -486,28 +486,28 @@
                 <div class="mx-auto w-14 h-14 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-4">
                   <BanknotesIcon class="h-7 w-7 text-emerald-600 dark:text-emerald-400" />
                 </div>
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">{{ t('services_modal.payment_confirm.title', 'Ödeme Tamamla') }}</h3>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Ödeme Tamamla</h3>
                 <p class="text-sm text-gray-500 dark:text-gray-400">
-                  {{ tp('services_modal.payment_confirm.message', { product: pendingPaymentService?.productName }, '...') }}
+                  <strong class="text-gray-700 dark:text-gray-300">{{ pendingPaymentService?.productName }}</strong> için ödemeyi tamamlamak istediğinize emin misiniz?
                 </p>
               </div>
 
               <!-- Payment Summary -->
               <div class="bg-gray-50 dark:bg-gray-900/50 rounded-xl p-4 mb-6 space-y-2">
                 <div class="flex justify-between text-sm">
-                  <span class="text-gray-500 dark:text-gray-400">{{ t('services_modal.summary.total_offer', 'Toplam Teklif:') }}</span>
+                  <span class="text-gray-500 dark:text-gray-400">Toplam Teklif:</span>
                   <span class="font-medium text-gray-900 dark:text-white">
                     {{ formatPrice(pendingPaymentService?.offer) }} {{ pendingPaymentService?.product?.currency?.code || 'TL' }}
                   </span>
                 </div>
                 <div class="flex justify-between text-sm">
-                  <span class="text-gray-500 dark:text-gray-400">{{ t('services_modal.payment_confirm.previous_paid', 'Önceki Alınan:') }}</span>
+                  <span class="text-gray-500 dark:text-gray-400">Önceki Alınan:</span>
                   <span class="font-medium text-gray-900 dark:text-white">
                     {{ formatPrice(pendingPaymentService?.paidAmount) }} {{ pendingPaymentService?.product?.currency?.code || 'TL' }}
                   </span>
                 </div>
                 <div class="flex justify-between text-sm pt-2 border-t border-gray-200 dark:border-gray-700">
-                  <span class="text-gray-500 dark:text-gray-400">{{ t('services_modal.payment_confirm.now_taking', 'Şimdi Alınan:') }}</span>
+                  <span class="text-gray-500 dark:text-gray-400">Şimdi Alınan:</span>
                   <span class="font-bold text-emerald-600 dark:text-emerald-400">
                     {{ formatPrice(calculateRemainingAmount(pendingPaymentService)) }} {{ pendingPaymentService?.product?.currency?.code || 'TL' }}
                   </span>
@@ -553,8 +553,8 @@ import {
   ClipboardDocumentListIcon
 } from '@heroicons/vue/24/outline'
 
-import { useLanguage } from '~/composables/useLanguage'
-const { t, tp } = useLanguage()
+
+const { isAdmin } = usePermissions()
 
 const props = defineProps({
   show: { type: Boolean, default: false },
@@ -714,7 +714,7 @@ const saveServices = async () => {
     close()
   } catch (error) {
     console.error('Error saving services:', error)
-    alert(t('services_modal.errors.save_error', 'Hizmetler kaydedilirken bir hata oluştu.'))
+    alert('Hizmetler kaydedilirken bir hata oluştu.')
   } finally {
     saving.value = false
   }
@@ -835,10 +835,10 @@ const confirmPaymentComplete = async () => {
     service.paidAmount = offer
     service.isPayCompleted = true
     closePaymentConfirm()
-    alert(t('services_modal.success.payment_success', 'Ödeme başarıyla tamamlandı!'))
+    alert('Ödeme başarıyla tamamlandı!')
   } catch (error) {
     console.error('Error completing payment:', error)
-    alert(t('services_modal.errors.payment_error', 'Ödeme tamamlanırken bir hata oluştu.'))
+    alert('Ödeme tamamlanırken bir hata oluştu.')
   } finally {
     completingPayment.value = false
   }
@@ -863,23 +863,23 @@ const updateExistingServices = async () => {
       })
     )
     await Promise.all(updatePromises)
-    alert(t('services_modal.success.update_success', 'Hizmetler başarıyla güncellendi!'))
+    alert('Hizmetler başarıyla güncellendi!')
   } catch (error) {
     console.error('Error updating services:', error)
-    alert(t('services_modal.errors.update_error', 'Hizmetler güncellenirken bir hata oluştu.'))
+    alert('Hizmetler güncellenirken bir hata oluştu.')
   } finally {
     updatingExisting.value = false
   }
 }
 
 const deleteExistingService = async (serviceId) => {
-  if (!confirm(t('services_modal.confirm.delete_service', 'Bu hizmeti silmek istediğinizden emin misiniz?'))) return
+  if (!confirm('Bu hizmeti silmek istediğinizden emin misiniz?')) return
   try {
     await api(`/customer2product/${serviceId}`, { method: 'DELETE' })
     existingServices.value = existingServices.value.filter(s => s.id !== serviceId)
   } catch (error) {
     console.error('Error deleting service:', error)
-    alert(t('services_modal.errors.delete_error', 'Hizmet silinirken bir hata oluştu.'))
+    alert('Hizmet silinirken bir hata oluştu.')
   }
 }
 

@@ -9,11 +9,9 @@
               <UsersIcon class="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-                {{ t('customers.title', 'Müşteriler') }}
-              </h1>
+              <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Müşteriler</h1>
               <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-                {{ t('customers.description', 'Tüm müşterilerinizi tek bir yerden yönetin') }}
+                Tüm müşterilerinizi tek bir yerden yönetin
               </p>
             </div>
           </div>
@@ -26,14 +24,14 @@
             class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-sm font-medium"
           >
             <ArrowDownTrayIcon class="h-5 w-5" />
-            {{ t('customers.export', 'Dışa Aktar') }}
+            Dışa Aktar
           </button>
           <button 
             @click="loadCustomers(pagination.page)"
             class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-sm font-medium"
           >
             <ArrowPathIcon class="h-5 w-5" :class="{ 'animate-spin': loading }" />
-            {{ t('dashboard.refresh', 'Yenile') }}
+            Yenile
           </button>
           <button 
             v-if="authStore.user?.role === 'admin'"
@@ -41,7 +39,7 @@
             class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all text-sm font-medium shadow-lg shadow-indigo-500/25"
           >
             <PlusIcon class="h-5 w-5" />
-            {{ t('pool.new_customer', 'Yeni Müşteri') }}
+            Yeni Müşteri
           </button>
         </div>
       </div>
@@ -52,9 +50,7 @@
       <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-200 dark:border-gray-700">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-              {{ t('dashboard.total', 'Toplam') }}
-            </p>
+            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Toplam</p>
             <p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ pagination.total || 0 }}</p>
           </div>
           <div class="p-3 bg-violet-100 dark:bg-violet-900/30 rounded-xl">
@@ -66,9 +62,7 @@
       <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-200 dark:border-gray-700">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-              {{ t('customers.stats.active_filter', 'Aktif Filtre') }}
-            </p>
+            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Aktif Filtre</p>
             <p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ activeFilterCount }}</p>
           </div>
           <div class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
@@ -80,9 +74,7 @@
       <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-200 dark:border-gray-700">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-              {{ t('customers.stats.page', 'Sayfa') }}
-            </p>
+            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Sayfa</p>
             <p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ pagination.page }} / {{ pagination.totalPages || 1 }}</p>
           </div>
           <div class="p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl">
@@ -94,9 +86,7 @@
       <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-200 dark:border-gray-700">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-              {{ t('customers.stats.shown', 'Gösterilen') }}
-            </p>
+            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Gösterilen</p>
             <p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ customers.length }}</p>
           </div>
           <div class="p-3 bg-amber-100 dark:bg-amber-900/30 rounded-xl">
@@ -111,14 +101,12 @@
       <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-700">
         <div class="flex items-center gap-2">
           <FunnelIcon class="h-5 w-5 text-gray-400" />
-          <span class="font-medium text-gray-700 dark:text-gray-300">
-            {{ t('customers.filters.title', 'Filtreler') }}
-          </span>
+          <span class="font-medium text-gray-700 dark:text-gray-300">Filtreler</span>
           <span 
             v-if="activeFilterCount > 0"
             class="px-2 py-0.5 text-xs font-medium bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-full"
           >
-            {{ tp('customers.filters.active_count', { count: activeFilterCount }, '{count} aktif') }}
+            {{ activeFilterCount }} aktif
           </span>
         </div>
         <button 
@@ -126,7 +114,7 @@
           class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium flex items-center gap-1 transition-colors"
         >
           <XMarkIcon class="h-4 w-4" />
-          {{ t('customers.filters.clear', 'Temizle') }}
+          Temizle
         </button>
       </div>
 
@@ -135,7 +123,7 @@
           <!-- Search -->
           <div>
             <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">
-              {{ t('customers.filters.search', 'Ara') }}
+              Ara
             </label>
             <div class="relative">
               <MagnifyingGlassIcon class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -143,7 +131,7 @@
                 v-model="searchTerm" 
                 type="text" 
                 class="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                :placeholder="t('customers.filters.search_placeholder', 'ID, İsim, email veya telefon...')"
+                placeholder="ID, İsim, email veya telefon..."
               />
             </div>
           </div>
@@ -151,13 +139,13 @@
           <!-- Status -->
           <div>
             <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">
-              {{ t('customers.filters.status', 'Durum') }}
+              Durum
             </label>
             <select 
               v-model="statusFilter" 
               class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all appearance-none cursor-pointer"
             >
-              <option :value="undefined">{{ t('customers.filters.all_statuses', 'Tüm Durumlar') }}</option>
+              <option :value="undefined">Tüm Durumlar</option>
               <option v-for="status in statusOptions" :key="status.value" :value="status.value">
                 {{ status.label }}
               </option>
@@ -167,7 +155,7 @@
           <!-- User Filter (Admin) -->
           <div v-if="authStore.user?.role === 'admin'">
             <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">
-              {{ t('customers.filters.assigned_user', 'Atanan Kullanıcı') }}
+              Atanan Kullanıcı
             </label>
             <Combobox v-model="relevantUserFilter" nullable>
               <div class="relative">
@@ -175,7 +163,7 @@
                   class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all" 
                   :displayValue="user => user ? user.name : ''"
                   @change="userQuery = $event.target.value" 
-                  :placeholder="t('customers.filters.select_user', 'Kullanıcı seçin...')" 
+                  placeholder="Kullanıcı seçin..." 
                 />
                 <ComboboxButton class="absolute inset-y-0 right-0 flex items-center pr-3">
                   <ChevronUpDownIcon class="h-5 w-5 text-gray-400" />
@@ -198,7 +186,7 @@
                       class="relative cursor-pointer select-none py-2.5 pl-4 pr-9"
                       :class="active ? 'bg-indigo-600 text-white' : 'text-gray-900 dark:text-gray-100'"
                     >
-                      {{ t('customers.filters.all_users', 'Tüm Kullanıcılar') }}
+                      Tüm Kullanıcılar
                     </ComboboxOption>
                     <ComboboxOption 
                       v-for="user in filteredUsers" 
@@ -223,7 +211,7 @@
                       v-if="filteredUsers.length === 0"
                       class="relative cursor-default select-none py-2.5 px-4 text-gray-500 dark:text-gray-400"
                     >
-                      {{ t('customers.filters.no_user_found', 'Kullanıcı bulunamadı') }}
+                      Kullanıcı bulunamadı
                     </div>
                   </ComboboxOptions>
                 </Transition>
@@ -243,9 +231,7 @@
         <div class="w-12 h-12 rounded-full border-4 border-indigo-100 dark:border-indigo-900"></div>
         <div class="absolute top-0 left-0 w-12 h-12 rounded-full border-4 border-transparent border-t-indigo-600 animate-spin"></div>
       </div>
-      <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
-        {{ t('customers.loading', 'Müşteriler yükleniyor...') }}
-      </p>
+      <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">Müşteriler yükleniyor...</p>
     </div>
 
     <!-- Table -->
@@ -356,11 +342,10 @@
                 <ExclamationTriangleIcon class="h-7 w-7 text-red-600 dark:text-red-400" />
               </div>
               <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                {{ t('pool.delete.title', 'Müşteriyi Sil') }}
+                Müşteriyi Sil
               </h3>
               <p class="text-sm text-gray-500 dark:text-gray-400">
-                <strong class="text-gray-700 dark:text-gray-300">{{ customerToDelete?.name }}</strong> 
-                {{ t('pool.delete.message', 'adlı müşteriyi silmek istediğinize emin misiniz? Bu işlem geri alınamaz.') }}
+                <strong class="text-gray-700 dark:text-gray-300">{{ customerToDelete?.name }}</strong> adlı müşteriyi silmek istediğinize emin misiniz? Bu işlem geri alınamaz.
               </p>
             </div>
             <div class="flex gap-3 px-6 pb-6">
@@ -368,13 +353,13 @@
                 @click="showDeleteModal = false"
                 class="flex-1 py-2.5 px-4 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-all"
               >
-                {{ t('pool.delete.cancel', 'İptal') }}
+                İptal
               </button>
               <button 
                 @click="handleDelete"
                 class="flex-1 py-2.5 px-4 bg-red-600 text-white rounded-xl font-medium hover:bg-red-700 transition-all"
               >
-                {{ t('pool.delete.confirm', 'Sil') }}
+                Sil
               </button>
             </div>
           </div>
@@ -412,11 +397,8 @@ import { watchDebounced } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import CustomerTable from '~/components/CustomerTable.vue'
 import CustomerExportModal from '~/components/CustomerExportModal.vue'
-import { useLanguage } from '~/composables/useLanguage'
 
 definePageMeta({})
-
-const { t, tp } = useLanguage()
 
 const isEditable = ref(true)
 const isDeleteable = ref(true)
@@ -594,11 +576,11 @@ const handleExport = async ({ format, columns, scope }) => {
     
     if (exportModalRef.value) exportModalRef.value.resetExporting()
     showExportModal.value = false
-    useToast().showSuccess(t('customers.export_success', 'Müşteriler başarıyla dışa aktarıldı'))
+    useToast().showSuccess('Müşteriler başarıyla dışa aktarıldı')
   } catch (error) {
     console.error('Error exporting customers:', error)
     if (exportModalRef.value) exportModalRef.value.resetExporting()
-    useToast().showError(t('customers.export_error', 'Müşteriler dışa aktarılırken bir hata oluştu'))
+    useToast().showError('Müşteriler dışa aktarılırken bir hata oluştu')
   }
 }
 
@@ -728,10 +710,10 @@ const handleDelete = async () => {
     try {
       await customersStore.deleteCustomer(customerToDelete.value.id)
       await loadCustomers(pagination.value.page)
-      useToast().showSuccess(t('customers.delete_success', 'Müşteri başarıyla silindi'))
+      useToast().showSuccess('Müşteri başarıyla silindi')
     } catch (error) {
       console.error('Error deleting customer:', error)
-      useToast().showError(t('customers.delete_error', 'Müşteri silinirken bir hata oluştu'))
+      useToast().showError('Müşteri silinirken bir hata oluştu')
     }
   }
   showDeleteModal.value = false
@@ -740,7 +722,7 @@ const handleDelete = async () => {
 
 const handleCustomerCreated = async () => {
   await loadCustomers(pagination.value.page)
-  useToast().showSuccess(t('customers.create_success', 'Müşteri başarıyla oluşturuldu'))
+  useToast().showSuccess('Müşteri başarıyla oluşturuldu')
 }
 
 useHead({ title: 'Müşteriler - Valdori CRM' })

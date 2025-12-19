@@ -16,7 +16,7 @@
           İptal
         </button>
         
-        <button @click="handlePreview" class="btn-secondary" v-if="isEditMode && canDownload">
+        <button @click="handlePreview" class="btn-secondary" v-if="isEditMode">
           <EyeIcon class="w-5 h-5 mr-2" />
           Önizleme
         </button>
@@ -32,13 +32,13 @@
     <!-- Form Content -->
     <div class="form-container">
       
-      <!-- Date, Currency & Language -->
+      <!-- Date & Currency -->
       <div class="form-section">
         <div class="section-header">
           <h2 class="section-title">Temel Bilgiler</h2>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label class="form-label">Tarih *</label>
             <input v-model="formData.date" type="date" class="form-input" required />
@@ -46,18 +46,10 @@
 
           <div>
             <label class="form-label">Para Birimi *</label>
-            <select v-model="formData.currency" @change="handleCurrencyChange" class="form-select">
+            <select v-model="formData.currency" class="form-select">
               <option value="USD">USD ($)</option>
               <option value="EUR">EUR (€)</option>
               <option value="TRY">TRY (₺)</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="form-label">Proforma Dili *</label>
-            <select v-model="formData.language" class="form-select">
-              <option value="tr">🇹🇷 Türkçe</option>
-              <option value="en">🇬🇧 English</option>
             </select>
           </div>
         </div>
@@ -66,20 +58,20 @@
       <!-- GENERAL INFORMATION Section -->
       <div class="form-section">
         <div class="section-header">
-          <h2 class="section-title">Genel Bilgiler</h2>
+          <h2 class="section-title">GENERAL INFORMATION</h2>
           <p class="section-description">Hasta ve doktor bilgileri (Opsiyonel alanlar)</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label class="form-label">Hasta Adı *</label>
+            <label class="form-label">Patient Name *</label>
             <input v-model="formData.patientName" type="text" class="form-input" placeholder="MAİSON NURİ SALİH" required />
           </div>
 
           <!-- Hospital - Autocomplete -->
           <div class="relative">
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Hastane <span class="text-xs text-gray-500">(Opsiyonel)</span>
+              Hospital <span class="text-xs text-gray-500">(Opsiyonel)</span>
             </label>
             <input
               v-model="hospitalSearch"
@@ -108,7 +100,7 @@
           <!-- Physician Name - Autocomplete -->
           <div class="relative">
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Doktor <span class="text-xs text-gray-500">(Opsiyonel)</span>
+              Physician's Name <span class="text-xs text-gray-500">(Opsiyonel)</span>
             </label>
             <input
               v-model="doctorSearch"
@@ -138,10 +130,10 @@
             </p>
           </div>
 
-          <!-- Physician Department - Autocomplete with language filter -->
+          <!-- Physician Department - Autocomplete -->
           <div class="relative">
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Doktor Departmanı <span class="text-xs text-gray-500">(Opsiyonel)</span>
+              Physician's Department <span class="text-xs text-gray-500">(Opsiyonel)</span>
             </label>
             <input
               v-model="branchSearch"
@@ -159,7 +151,7 @@
                 @mousedown.prevent="selectBranch(branch)"
                 class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-gray-100"
               >
-                {{ getBranchName(branch) }}
+                {{ branch.name }}
               </button>
             </div>
             <p v-if="formData.physicianDepartment" class="mt-1 text-xs text-green-600 dark:text-green-400">
@@ -168,12 +160,12 @@
           </div>
 
           <div>
-            <label class="form-label">Yaş</label>
+            <label class="form-label">Age</label>
             <input v-model="formData.age" type="text" class="form-input" placeholder="79 years" />
           </div>
 
           <div>
-            <label class="form-label">Ülke</label>
+            <label class="form-label">Country</label>
             <input v-model="formData.country" type="text" class="form-input" placeholder="Iraq" />
           </div>
 
@@ -187,8 +179,8 @@
       <!-- PHYSICIAN'S OPINION (Optional) -->
       <div class="form-section">
         <div class="section-header">
-          <h2 class="section-title">Doktor Görüşü</h2>
-          <p class="section-description">Bu alan opsiyonel</p>
+          <h2 class="section-title">PHYSICIAN'S OPINION</h2>
+          <p class="section-description">Doktor görüşü (opsiyonel)</p>
         </div>
 
         <div>
@@ -196,7 +188,7 @@
             v-model="formData.physicianOpinion"
             class="form-textarea"
             rows="6"
-            placeholder="Doktorunuzun değerlendirmesinin ardından, belirtileriniz şu şekilde tanımlanmıştır..."
+            placeholder="Following your doctor's evaluation, your symptoms have been identified as..."
           ></textarea>
         </div>
       </div>
@@ -206,7 +198,7 @@
         <div class="section-header">
           <div class="flex justify-between items-center">
             <div>
-              <h2 class="section-title">Önerilen Tedavi ve Tahmini Maliyet Bilgileri</h2>
+              <h2 class="section-title">RECOMMENDED TREATMENT & ESTIMATED COST DETAILS</h2>
               <p class="section-description">Tedavi prosedürleri ve maliyet detayları</p>
             </div>
             
@@ -227,7 +219,7 @@
           >
             <div class="flex justify-between items-start mb-4">
               <h3 class="font-medium text-gray-900 dark:text-white">
-                Prosedür #{{ index + 1 }}
+                Procedure #{{ index + 1 }}
               </h3>
               <button @click="removeTreatmentItem(index)" class="text-red-600 hover:text-red-700">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -238,7 +230,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="form-label">Prosedür *</label>
+                <label class="form-label">Procedure *</label>
                 <input
                   v-model="item.procedure"
                   type="text"
@@ -249,7 +241,7 @@
               </div>
 
               <div>
-                <label class="form-label">Ziyaret Tipi *</label>
+                <label class="form-label">Visit Type *</label>
                 <input
                   v-model="item.visitType"
                   type="text"
@@ -260,24 +252,18 @@
               </div>
 
               <div>
-                <label class="form-label">Tahmini Maliyet *</label>
-                <div class="relative">
-                  <input
-                    v-model="item.estimatedCost"
-                    type="text"
-                    class="form-input pr-16"
-                    placeholder="24.000"
-                    @input="handleEstimatedCostChange(index)"
-                    required
-                  />
-                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 font-medium">
-                    {{ formData.currency }}
-                  </span>
-                </div>
+                <label class="form-label">Estimated Cost *</label>
+                <input
+                  v-model="item.estimatedCost"
+                  type="text"
+                  class="form-input"
+                  placeholder="24.000 USD"
+                  required
+                />
               </div>
 
               <div>
-                <label class="form-label">Notlar</label>
+                <label class="form-label">Notes</label>
                 <input
                   v-model="item.notes"
                   type="text"
@@ -298,34 +284,20 @@
           </div>
         </div>
 
-        <!-- Grand Total with Auto-Calculate -->
+        <!-- Grand Total -->
         <div class="grand-total-section">
           <div class="grand-total-row">
-            <span class="grand-total-label">GENEL TOPLAM:</span>
+            <span class="grand-total-label">GRAND TOTAL:</span>
             <div class="flex items-center gap-3">
-              <button
-                v-if="!manualGrandTotal"
-                @click="calculateGrandTotal"
-                class="p-2 rounded-lg text-cyan-600 hover:bg-cyan-50 dark:hover:bg-cyan-900/20"
-                title="Otomatik Hesapla"
-              >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                </svg>
-              </button>
               <input
                 v-model.number="formData.grandTotal"
                 type="number"
                 min="0"
                 step="0.01"
                 class="form-input w-48"
-                @input="manualGrandTotal = true"
                 required
               />
               <span class="text-lg font-bold text-gray-900 dark:text-white">{{ formData.currency }}</span>
-              <span v-if="calculatedTotal !== formData.grandTotal && manualGrandTotal" class="text-xs text-amber-600">
-                (Hesaplanan: {{ calculatedTotal.toFixed(2) }})
-              </span>
             </div>
           </div>
         </div>
@@ -334,7 +306,7 @@
       <!-- Services Included (Optional) -->
       <div class="form-section">
         <div class="section-header">
-          <h2 class="section-title">Tedavi Planına Dahil Olan Hizmetler</h2>
+          <h2 class="section-title">Services Included in the Treatment Plan</h2>
           <p class="section-description">Dahil edilen servisler (opsiyonel)</p>
         </div>
 
@@ -358,8 +330,8 @@ Anesthesia Services
         <div class="section-header">
           <div class="flex justify-between items-center">
             <div>
-              <h2 class="section-title">Banka Hesap Bilgileri – {{ formData.currency }}</h2>
-              <p class="section-description">Eksiksiz ve doğru giriniz</p>
+              <h2 class="section-title">BANK ACCOUNT INFORMATION – {{ formData.currency }}</h2>
+              <p class="section-description">Banka hesap bilgileri</p>
             </div>
             
             <button
@@ -382,7 +354,7 @@ Anesthesia Services
 
         <div class="bank-info-grid">
           <div>
-            <label class="form-label">Banka</label>
+            <label class="form-label">Bank</label>
             <input
               v-model="formData.bankName"
               type="text"
@@ -393,7 +365,7 @@ Anesthesia Services
           </div>
 
           <div>
-            <label class="form-label">Alıcı Adı</label>
+            <label class="form-label">Receiver Name</label>
             <input
               v-model="formData.receiverName"
               type="text"
@@ -404,7 +376,7 @@ Anesthesia Services
           </div>
 
           <div>
-            <label class="form-label">Şube Adı</label>
+            <label class="form-label">Branch Name</label>
             <input
               v-model="formData.branchName"
               type="text"
@@ -415,7 +387,7 @@ Anesthesia Services
           </div>
 
           <div>
-            <label class="form-label">Şube Kodu</label>
+            <label class="form-label">Branch Code</label>
             <input
               v-model="formData.branchCode"
               type="text"
@@ -426,7 +398,7 @@ Anesthesia Services
           </div>
 
           <div>
-            <label class="form-label">Para Birimi</label>
+            <label class="form-label">Currency</label>
             <input
               v-model="formData.bankCurrency"
               type="text"
@@ -460,16 +432,16 @@ Anesthesia Services
         </div>
       </div>
 
-      <!-- Hospital Contact Information - Auto-filled from selected hospital -->
+      <!-- Hospital Contact Information -->
       <div class="form-section">
         <div class="section-header">
-          <h2 class="section-title">Hastane İletişim Bilgileri</h2>
-          <p class="section-description">İletişim bilgileri (opsiyonel)</p>
+          <h2 class="section-title">Hospital Contact Information</h2>
+          <p class="section-description">İletişim bilgileri (footer için)</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="md:col-span-2">
-            <label class="form-label">Hastane Adresi</label>
+            <label class="form-label">Hospital Address</label>
             <textarea
               v-model="formData.hospitalAddress"
               class="form-textarea"
@@ -478,50 +450,14 @@ Anesthesia Services
           </div>
 
           <div>
-            <label class="form-label">Hastane Telefon</label>
+            <label class="form-label">Hospital Phone</label>
             <input v-model="formData.hospitalPhone" type="tel" class="form-input" />
           </div>
 
           <div>
-            <label class="form-label">Hastane Email</label>
+            <label class="form-label">Hospital Email</label>
             <input v-model="formData.hospitalEmail" type="email" class="form-input" />
           </div>
-        </div>
-      </div>
-
-      <!-- Download Approval Section (Only for Admin/Doctor) -->
-      <div v-if="isEditMode && userCanApproveDownload" class="form-section">
-        <div class="section-header">
-          <h2 class="section-title">İndirme Onayı</h2>
-          <p class="section-description">Bu proforma için indirme izni ver/kaldır</p>
-        </div>
-
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-sm text-gray-700 dark:text-gray-300">
-              İndirme Durumu: 
-              <span :class="formData.downloadApproved ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'">
-                {{ formData.downloadApproved ? '✓ Onaylandı' : '✗ Onaylanmadı' }}
-              </span>
-            </p>
-            <p v-if="formData.downloadApproved && formData.approvedAt" class="text-xs text-gray-500 mt-1">
-              {{ new Date(formData.approvedAt).toLocaleDateString('tr-TR') }} tarihinde onaylandı
-            </p>
-          </div>
-          <button
-            v-if="!formData.downloadApproved"
-            @click="handleApproveDownload"
-            class="btn-primary"
-          >
-            İndirme İznini Onayla
-          </button>
-          <button
-            v-else
-            @click="handleRevokeDownload"
-            class="btn-secondary text-red-600"
-          >
-            İndirme İznini İptal Et
-          </button>
         </div>
       </div>
     </div>
@@ -561,19 +497,14 @@ const proformaStore = useProformaStore();
 const { hospitals, fetchHospitals } = useHospitals()
 const { fetchDoctors } = useDoctors()
 const { branches, fetchBranches } = useBranches()
-const { t, currentLanguage, currentLanguageInfo, availableLanguages, setLanguage } = useLanguage()
-
-const $api = useApi()
-const currentUser = ref<any>(null)
 
 const loading = ref(false);
 const showPreview = ref(false);
 const previewUrl = ref('');
 const bankFieldsUnlocked = ref(false);
 const servicesText = ref('');
-const manualGrandTotal = ref(false);
 
-// Autocomplete için state'ler
+// ✅ Autocomplete için yeni state'ler
 const hospitalSearch = ref('')
 const showHospitalDropdown = ref(false)
 const hospitalDoctors = ref([])
@@ -587,29 +518,11 @@ const showBranchDropdown = ref(false)
 
 const isEditMode = computed(() => !!route.params.id);
 
-// İndirme izni kontrolü
-const canDownload = computed(() => {
-  if (!currentUser.value) return false
-  const role = currentUser.value.role?.toLowerCase()
-  
-  if (role === 'admin' || role === 'doctor') return true
-  if (role === 'user') return formData.value.downloadApproved === true
-  
-  return false
-})
-
-const userCanApproveDownload = computed(() => {
-  if (!currentUser.value) return false
-  const role = currentUser.value.role?.toLowerCase()
-  return role === 'admin' || role === 'doctor'
-})
-
 const formData = ref({
   date: new Date().toISOString().split('T')[0],
   currency: 'USD',
-  language: 'tr',
   
-  // General Information
+  // General Information - ✅ ID alanları eklendi
   patientName: '',
   hospitalId: null,
   hospital: '',
@@ -645,87 +558,8 @@ const formData = ref({
   
   status: 'draft',
   proformaNumber: '',
-  downloadApproved: false,
-  approvedBy: null,
-  approvedAt: null,
 }) as any;
 
-// Calculated Grand Total
-const calculatedTotal = computed(() => {
-  return formData.value.treatmentItems.reduce((sum: number, item: any) => {
-    const cost = parseEstimatedCost(item.estimatedCost)
-    return sum + cost
-  }, 0)
-})
-
-const parseEstimatedCost = (costString: string): number => {
-  if (!costString) return 0
-  const cleaned = costString
-    .replace(/[A-Z₺$€£]/gi, '')
-    .replace(/\./g, '')
-    .replace(/,/g, '.')
-    .trim()
-  const parsed = parseFloat(cleaned)
-  return isNaN(parsed) ? 0 : parsed
-}
-
-const calculateGrandTotal = () => {
-  formData.value.grandTotal = calculatedTotal.value
-  manualGrandTotal.value = false
-}
-
-const handleEstimatedCostChange = (index: number) => {
-  if (!manualGrandTotal.value) {
-    calculateGrandTotal()
-  }
-}
-
-const handleCurrencyChange = () => {
-  formData.value.bankCurrency = formData.value.currency
-  
-  formData.value.treatmentItems.forEach((item: any) => {
-    if (item.estimatedCost) {
-      const numericValue = parseEstimatedCost(item.estimatedCost)
-      item.estimatedCost = `${numericValue.toLocaleString()}`
-    }
-  })
-  
-  if (!manualGrandTotal.value) {
-    calculateGrandTotal()
-  }
-}
-
-const getBranchName = (branch: any) => {
-  if (formData.value.language === 'en' && branch.nameEn) {
-    return branch.nameEn
-  }
-  return branch.name
-}
-
-const filteredBranch = computed(() => {
-  return branches.value
-})
-
-const filteredBranchForSearch = computed(() => {
-  const baseBranch = filteredBranch.value
-
-  if (!branchSearch.value) {
-    return baseBranch
-  }
-
-  const search = branchSearch.value.toLowerCase()
-  return baseBranch.filter((branch: any) => {
-    const name = getBranchName(branch).toLowerCase()
-    return name.includes(search)
-  })
-})
-
-
-
-
-// Sadece değiştirilen kısımlar:
-
-// 1️⃣ onMounted içinde - branşları dile göre yükle
 onMounted(async () => {
   if (isEditMode.value) {
     loading.value = true;
@@ -733,11 +567,7 @@ onMounted(async () => {
     if (proforma) {
       Object.assign(formData.value, proforma);
       
-      // ✅ Proforma dilini set et
-      if (proforma.language) {
-        setLanguage(proforma.language)
-      }
-      
+      // ✅ Restore search fields for display
       if (proforma.hospital) {
         hospitalSearch.value = proforma.hospital;
         hospitalId.value = proforma.hospitalId;
@@ -749,12 +579,15 @@ onMounted(async () => {
         branchSearch.value = proforma.physicianDepartment;
       }
       
+      // Convert servicesIncluded array to text
       if (proforma.servicesIncluded && Array.isArray(proforma.servicesIncluded)) {
         servicesText.value = proforma.servicesIncluded.join('\n');
       }
       
+      // ✅ Load doctors if hospital is selected
       if (proforma.hospitalId) {
         try {
+          const $api = useApi()
           const response = await $api(`/hospitals/${proforma.hospitalId}/doctors`) as any
           hospitalDoctors.value = Array.isArray(response) ? response : (response.data || [])
         } catch (err) {
@@ -765,67 +598,19 @@ onMounted(async () => {
     loading.value = false;
   }
 
+  // ✅ Load hospitals, doctors, branches
   try {
-    // ✅ Branşları seçili dile göre yükle
     await Promise.all([
       fetchHospitals({ limit: 1000 }),
       fetchDoctors({ limit: 1000 }),
-      fetchBranches({ 
-        limit: 1000,
-        languageId: currentLanguageInfo.value?.id
-      }),
+      fetchBranches({ limit: 1000 }),
     ])
-    
-    console.log(`✅ Branşlar ${formData.value.language} diline göre yüklendi`)
   } catch (err) {
     console.error('Failed to initialize form:', err)
   }
-})
+});
 
-// 2️⃣ Dil değiştiğinde branşları yeniden yükle
-const handleLanguageChange = async () => {
-  setLanguage(formData.value.language)
-  
-  // ✅ Branşları seçilen dile göre yeniden yükle
-  try {
-    await fetchBranches({ 
-      limit: 1000,
-      languageId: currentLanguageInfo.value?.id
-    })
-    
-    console.log(`✅ Branşlar ${formData.value.language} diline göre yüklendi`)
-  } catch (err) {
-    console.error('Failed to reload branches for language:', err)
-  }
-}
-
-// 3️⃣ Watch - form dili değişince
-watch(() => formData.value.language, async (newLanguage, oldLanguage) => {
-  if (newLanguage && newLanguage !== oldLanguage) {
-    await handleLanguageChange()
-  }
-})
-
-// 4️⃣ Watch - global dil değişince
-watch(() => currentLanguage.value, async (newLanguage, oldLanguage) => {
-  if (newLanguage && newLanguage !== oldLanguage) {
-    formData.value.language = newLanguage
-  }
-})
-
-// 5️⃣ addTreatmentItem - Para birimi olmadan
-const addTreatmentItem = () => {
-  formData.value.treatmentItems.push({
-    id: `temp-${Date.now()}`,
-    procedure: '',
-    visitType: '',
-    estimatedCost: 0,
-    notes: '',
-  });
-};
-
- 
-
+// ✅ Hospital autocomplete
 const filteredHospitals = computed(() => {
   if (!hospitalSearch.value) {
     return hospitals.value
@@ -838,26 +623,17 @@ const filteredHospitals = computed(() => {
 
 const selectHospital = async (hospital:any) => {
   formData.value.hospitalId = hospital.id
-  formData.value.hospital = hospital.name
+  formData.value.hospital = hospital.name  // ✅ Otomatik doldur
   hospitalId.value = hospital.id
   hospitalSearch.value = hospital.name
   showHospitalDropdown.value = false
   
-  // ✅ Hastane adres bilgisini otomatik doldur
-  if (hospital.address) {
-    formData.value.hospitalAddress = hospital.address
-  }
-  if (hospital.phone) {
-    formData.value.hospitalPhone = hospital.phone
-  }
-  if (hospital.email) {
-    formData.value.hospitalEmail = hospital.email
-  }
-  
   // Fetch doctors for the selected hospital
   try {
+    const $api = useApi()
     const response = await $api(`/hospitals/${hospital.id}/doctors`) as any
     hospitalDoctors.value = Array.isArray(response) ? response : (response.data || [])
+    console.log(`Loaded ${hospitalDoctors.value.length} doctors for hospital ${hospital.name}`)
   } catch (err) {
     console.error('Failed to fetch hospital doctors:', err)
     hospitalDoctors.value = []
@@ -870,6 +646,7 @@ const hideHospitalDropdown = () => {
   }, 200)
 }
 
+// ✅ Doctor autocomplete
 const filteredDoctors = computed(() => {
   return hospitalDoctors.value
 })
@@ -889,7 +666,7 @@ const filteredDoctorsForSearch = computed(() => {
 
 const selectDoctor = (doctor:any) => {
   formData.value.doctorId = doctor.id
-  formData.value.physicianName = doctor.name
+  formData.value.physicianName = doctor.name  // ✅ Otomatik doldur
   doctorSearch.value = doctor.name
   showDoctorDropdown.value = false
 }
@@ -900,10 +677,26 @@ const hideDoctorDropdown = () => {
   }, 200)
 }
 
+// ✅ Branch autocomplete
+const filteredBranch = computed(() => branches.value)
+
+const filteredBranchForSearch = computed(() => {
+  const baseBranch = filteredBranch.value
+
+  if (!branchSearch.value) {
+    return baseBranch
+  }
+
+  const search = branchSearch.value.toLowerCase()
+  return baseBranch.filter(branch =>
+    branch.name.toLowerCase().includes(search)
+  )
+})
+
 const selectBranch = (item: any) => {
   formData.value.branchId = item.id
-  formData.value.physicianDepartment = getBranchName(item)
-  branchSearch.value = getBranchName(item)
+  formData.value.physicianDepartment = item.name  // ✅ Otomatik doldur
+  branchSearch.value = item.name
   showBranchDropdown.value = false 
 }
 
@@ -917,17 +710,24 @@ const hideBranchDropdown = () => {
   }, 200)
 }
 
+const addTreatmentItem = () => {
+  formData.value.treatmentItems.push({
+    id: `temp-${Date.now()}`,
+    procedure: '',
+    visitType: '',
+    estimatedCost: '',
+    notes: '',
+  });
+};
 
 const removeTreatmentItem = (index: number) => {
   formData.value.treatmentItems.splice(index, 1);
-  if (!manualGrandTotal.value) {
-    calculateGrandTotal()
-  }
 };
 
 const handleSave = async () => {
+  // ✅ Validation - hospital kontrolü kaldırıldı (artık opsiyonel)
   if (!formData.value.patientName || formData.value.patientName.trim() === '') {
-    alert('Hasta adı zorunludur');
+    alert('Patient Name zorunludur');
     return;
   }
 
@@ -937,12 +737,13 @@ const handleSave = async () => {
   }
 
   if (!formData.value.grandTotal || formData.value.grandTotal <= 0) {
-    alert('Genel Toplam girilmelidir');
+    alert('Grand Total girilmelidir');
     return;
   }
 
   loading.value = true;
 
+  // Convert services text to array
   const servicesIncluded = servicesText.value
     .split('\n')
     .map(s => s.trim())
@@ -952,6 +753,15 @@ const handleSave = async () => {
     ...formData.value,
     servicesIncluded: servicesIncluded.length > 0 ? servicesIncluded : null,
   };
+
+  console.log('💾 Saving proforma:', {
+    hospitalId: dataToSave.hospitalId,
+    hospital: dataToSave.hospital,
+    doctorId: dataToSave.doctorId,
+    physicianName: dataToSave.physicianName,
+    branchId: dataToSave.branchId,
+    physicianDepartment: dataToSave.physicianDepartment,
+  });
 
   let result;
   if (isEditMode.value) {
@@ -975,59 +785,13 @@ const handleCancel = () => {
 
 const handlePreview = async () => {
   if (isEditMode.value) {
-    if (!canDownload.value) {
-      alert('Bu proformayı görüntüleme yetkiniz yok. Lütfen onay bekleyin.');
-      return;
-    }
-    
     previewUrl.value = `https://vcrmapi.mlpcare.com/proformas/${route.params.id}/preview`;
+    // previewUrl.value = `http://localhost:3001/proformas/${route.params.id}/preview`;
     showPreview.value = true;
   } else {
     alert('Önizleme için önce proformayı kaydetmelisiniz');
   }
 };
-
-const handleApproveDownload = async () => {
-  if (!confirm('Bu proforma için indirme iznini onaylamak istediğinizden emin misiniz?')) {
-    return
-  }
-  
-  try {
-    await $api(`/proformas/${route.params.id}/approve-download`, {
-      method: 'PATCH'
-    })
-    
-    // Reload proforma data
-    const proforma = await proformaStore.fetchProforma(Number(route.params.id)) as any
-    Object.assign(formData.value, proforma)
-    
-    alert('İndirme izni başarıyla onaylandı')
-  } catch (err) {
-    console.error('Failed to approve download:', err)
-    alert('İndirme izni onaylanırken hata oluştu')
-  }
-}
-
-const handleRevokeDownload = async () => {
-  if (!confirm('Bu proforma için indirme iznini iptal etmek istediğinizden emin misiniz?')) {
-    return
-  }
-  
-  try {
-    await $api(`/proformas/${route.params.id}/revoke-download`, {
-      method: 'PATCH'
-    })
-    
-    // Reload proforma data
-    const proforma = await proformaStore.fetchProforma(Number(route.params.id)) as any
-    Object.assign(formData.value, proforma)
-    
-    alert('İndirme izni başarıyla iptal edildi')
-  } catch (err) {
-    console.error('Failed to revoke download:', err)
-    alert('İndirme izni iptal edilirken hata oluştu')
-  }
-}
 </script>
 
 <style scoped>

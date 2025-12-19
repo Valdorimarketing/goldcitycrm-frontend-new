@@ -16,7 +16,6 @@ export interface Proforma {
   date: string;
   patientId?: number;
   saleId?: number;
-  downloadApproved?: boolean;
   
   // GENERAL INFORMATION
   patientName?: string;

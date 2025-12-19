@@ -1,4 +1,20 @@
-import type { Branch2Hospital } from "../types"
+export interface Branch2Hospital {
+  id: number
+  hospitalId: number
+  branchId: number
+  hospital?: {
+    id: number
+    name: string
+    code: string
+  }
+  branch?: {
+    id: number
+    name: string
+    code: string
+  }
+  createdAt: Date
+  updatedAt: Date
+}
 
 export const useBranch2Hospital = () => {
   const $api = useApi()

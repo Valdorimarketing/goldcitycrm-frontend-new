@@ -34,7 +34,7 @@
                       <ClockIcon class="h-6 w-6 text-white" />
                     </div>
                     <div>
-                      <h3 class="text-lg font-semibold text-white">{{ t('customer_show.history.title', 'Müşteri Geçmişi') }}</h3>
+                      <h3 class="text-lg font-semibold text-white">Müşteri Geçmişi</h3>
                       <p class="text-sm text-blue-100">{{ customer?.name }} {{ customer?.surname }}</p>
                     </div>
                   </div>
@@ -75,7 +75,7 @@
                         <div class="flex items-start justify-between">
                           <div class="flex-1">
                             <p class="text-sm font-medium text-gray-900 dark:text-white">
-                              {{ item.action || t('history_modal.action', 'İşlem') }}
+                              {{ item.action || 'İşlem' }}
                             </p>
                             <p v-if="item.description" class="mt-1 text-sm text-gray-600 dark:text-gray-400">
                               {{ item.description }}
@@ -91,7 +91,7 @@
                             </p>
                             <p v-if="item.user || item.userInfo" class="mt-1 text-xs font-medium text-gray-600 dark:text-gray-400">
                               <UserIcon class="inline h-3 w-3 mr-1" />
-                              {{ item.user?.name || item.userInfo?.name || t('customer_show.history.system', 'Sistem') }}
+                              {{ item.user?.name || item.userInfo?.name || 'Sistem' }}
                             </p>
                           </div>
                         </div>
@@ -103,11 +103,9 @@
                 <!-- Empty State -->
                 <div v-else class="text-center py-8">
                   <ClockIcon class="mx-auto h-12 w-12 text-gray-400" />
-                  <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">
-                    {{ t('history_modal.empty.title', 'Geçmiş Bulunamadı') }}
-                  </h3>
+                  <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">Geçmiş Bulunamadı</h3>
                   <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                    {{ t('history_modal.empty.description', 'Bu müşteri için henüz geçmiş kaydı bulunmuyor.') }}
+                    Bu müşteri için henüz geçmiş kaydı bulunmuyor.
                   </p>
                 </div>
               </div>
@@ -116,13 +114,13 @@
               <div class="border-t dark:border-gray-700 px-6 py-4">
                 <div class="flex justify-between items-center">
                   <p class="text-sm text-gray-500 dark:text-gray-400">
-                    {{ tp('history_modal.total_count', { total_count: history.length }, 'Toplam {total_count} kayıt') }}
+                    Toplam <span class="font-medium">{{ history.length }}</span> kayıt
                   </p>
                   <button
                     @click="$emit('close')"
                     class="inline-flex items-center rounded-lg bg-gray-100 dark:bg-gray-700 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                   >
-                    {{ t('history_modal.close', 'Kapat') }}
+                    Kapat
                   </button>
                 </div>
               </div>
@@ -149,13 +147,11 @@ import {
   XCircleIcon,
   ArrowPathIcon
 } from '@heroicons/vue/24/outline'
-import { useLanguage } from '~/composables/useLanguage'
 
 const props = defineProps({
   show: Boolean,
   customer: Object
 })
-const { t, tp } = useLanguage()
 
 const emit = defineEmits(['close'])
 
@@ -221,37 +217,47 @@ const getActionIcon = (action) => {
   }
 }
 
-// Get action text (Bu fonksiyon artık kullanılmıyor çünkü item.action zaten çevrilmiş geliyor)
+// Get action text
 const getActionText = (action) => {
-  const actionMap = {
-    'created': t('history_modal.actions.created', 'Müşteri oluşturuldu'),
-    'updated': t('history_modal.actions.updated', 'Bilgiler güncellendi'),
-    'deleted': t('history_modal.actions.deleted', 'Müşteri silindi'),
-    'status_changed': t('history_modal.actions.status_changed', 'Durum değiştirildi'),
-    'email_sent': t('history_modal.actions.email_sent', 'E-posta gönderildi'),
-    'phone_called': t('history_modal.actions.phone_called', 'Telefon görüşmesi yapıldı'),
-    'address_changed': t('history_modal.actions.address_changed', 'Adres güncellendi'),
-    'activated': t('history_modal.actions.activated', 'Müşteri aktif edildi'),
-    'deactivated': t('history_modal.actions.deactivated', 'Müşteri pasif edildi'),
+  switch (action) {
+    case 'created':
+      return 'Müşteri oluşturuldu'
+    case 'updated':
+      return 'Bilgiler güncellendi'
+    case 'deleted':
+      return 'Müşteri silindi'
+    case 'status_changed':
+      return 'Durum değiştirildi'
+    case 'email_sent':
+      return 'E-posta gönderildi'
+    case 'phone_called':
+      return 'Telefon görüşmesi yapıldı'
+    case 'address_changed':
+      return 'Adres güncellendi'
+    case 'activated':
+      return 'Müşteri aktif edildi'
+    case 'deactivated':
+      return 'Müşteri pasif edildi'
+    default:
+      return 'İşlem yapıldı'
   }
-  return actionMap[action] || t('history_modal.actions.default', 'İşlem yapıldı')
 }
 
 // Get field label
 const getFieldLabel = (field) => {
-  const fieldMap = {
-    'name': t('history_modal.fields.name', 'Ad'),
-    'surname': t('history_modal.fields.surname', 'Soyad'),
-    'email': t('history_modal.fields.email', 'E-posta'),
-    'phone': t('history_modal.fields.phone', 'Telefon'),
-    'status': t('history_modal.fields.status', 'Durum'),
-    'address': t('history_modal.fields.address', 'Adres'),
-    'city': t('history_modal.fields.city', 'Şehir'),
-    'country': t('history_modal.fields.country', 'Ülke'),
-    'title': t('history_modal.fields.title', 'Ünvan'),
-    'company': t('history_modal.fields.company', 'Şirket'),
+  const labels = {
+    name: 'Ad',
+    surname: 'Soyad',
+    email: 'E-posta',
+    phone: 'Telefon',
+    status: 'Durum',
+    address: 'Adres',
+    city: 'Şehir',
+    country: 'Ülke',
+    title: 'Ünvan',
+    company: 'Şirket'
   }
-  return fieldMap[field] || field
+  return labels[field] || field
 }
 
 // Format date

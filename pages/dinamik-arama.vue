@@ -20,22 +20,23 @@
             </div>
             <div class="flex-1">
               <div class="flex items-center gap-2 mb-1">
-                <h3 class="text-lg font-bold text-white">{{ t('dynamic_search.critical_alert.title', 'Kritik Seviye Uyarısı!') }}</h3>
+                <h3 class="text-lg font-bold text-white">Kritik Seviye Uyarısı!</h3>
                 <span class="px-2 py-0.5 bg-white/20 rounded-full text-xs font-bold text-white animate-pulse">
-                  {{ t('dynamic_search.critical_alert.urgent_badge', 'ACİL') }}
+                  ACİL
                 </span>
               </div>
               <p class="text-red-100 text-sm mb-3">
-                {{ tp('dynamic_search.critical_alert.message', { count: userStats.total }, '{count} adet bekleyen dinamik arama kaydınız var. Bu sayı kritik seviyenin üzerinde. Lütfen en kısa sürede müşterilerinizi arayın.') }}
+                <strong class="text-white">{{ userStats.total }}</strong> adet bekleyen dinamik arama kaydınız var. 
+                Bu sayı kritik seviyenin üzerinde. Lütfen en kısa sürede müşterilerinizi arayın.
               </p>
               <div class="flex items-center gap-4">
                 <div class="flex items-center gap-2 text-sm text-white/90">
                   <ClockIcon class="h-4 w-4" />
-                  <span>{{ tp('dynamic_search.critical_alert.overdue', { count: userStats.overdue }, '{count} gecikmiş') }}</span>
+                  <span><strong>{{ userStats.overdue }}</strong> gecikmiş</span>
                 </div>
                 <div class="flex items-center gap-2 text-sm text-white/90">
                   <CalendarIcon class="h-4 w-4" />
-                  <span>{{ tp('dynamic_search.critical_alert.today', { count: userStats.today }, '{count} bugün') }}</span>
+                  <span><strong>{{ userStats.today }}</strong> bugün</span>
                 </div>
               </div>
             </div>
@@ -59,9 +60,9 @@
               <PhoneArrowUpRightIcon class="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ t('dynamic_search.title', 'Dinamik Arama') }}</h1>
+              <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Dinamik Arama</h1>
               <p class="text-sm text-gray-500 dark:text-gray-400">
-                {{ t('dynamic_search.subtitle', 'Hatırlatma gerektiren müşterilerinizi yönetin') }}
+                Hatırlatma gerektiren müşterilerinizi yönetin
               </p>
             </div>
           </div>
@@ -71,21 +72,15 @@
         <div class="flex flex-wrap gap-3">
           <div class="flex items-center gap-2 px-4 py-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl">
             <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-            <span class="text-sm font-medium text-red-700 dark:text-red-400">
-              {{ tp('dynamic_search.stats.overdue', { count: stats.overdue }, '{count} Gecikmiş') }}
-            </span>
+            <span class="text-sm font-medium text-red-700 dark:text-red-400">{{ stats.overdue }} Gecikmiş</span>
           </div>
           <div class="flex items-center gap-2 px-4 py-2 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl">
             <div class="w-2 h-2 bg-amber-500 rounded-full"></div>
-            <span class="text-sm font-medium text-amber-700 dark:text-amber-400">
-              {{ tp('dynamic_search.stats.today', { count: stats.today }, '{count} Bugün') }}
-            </span>
+            <span class="text-sm font-medium text-amber-700 dark:text-amber-400">{{ stats.today }} Bugün</span>
           </div>
           <div class="flex items-center gap-2 px-4 py-2 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl">
             <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
-            <span class="text-sm font-medium text-emerald-700 dark:text-emerald-400">
-              {{ tp('dynamic_search.stats.upcoming', { count: stats.upcoming }, '{count} Yaklaşan') }}
-            </span>
+            <span class="text-sm font-medium text-emerald-700 dark:text-emerald-400">{{ stats.upcoming }} Yaklaşan</span>
           </div>
         </div>
       </div>
@@ -101,15 +96,15 @@
               <ChartBarIcon class="h-5 w-5 text-white" />
             </div>
             <div>
-              <h3 class="font-semibold text-gray-900 dark:text-white">{{ t('dynamic_search.performance.title', 'Kullanıcı Performans Tablosu') }}</h3>
-              <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('dynamic_search.performance.subtitle', 'Dinamik arama yükü dağılımı') }}</p>
+              <h3 class="font-semibold text-gray-900 dark:text-white">Kullanıcı Performans Tablosu</h3>
+              <p class="text-xs text-gray-500 dark:text-gray-400">Dinamik arama yükü dağılımı</p>
             </div>
           </div>
           <button 
             @click="showPerformanceDetails = !showPerformanceDetails"
             class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
           >
-            {{ showPerformanceDetails ? t('dynamic_search.performance.toggle_hide', 'Gizle') : t('dynamic_search.performance.toggle_details', 'Detaylar') }}
+            {{ showPerformanceDetails ? 'Gizle' : 'Detaylar' }}
           </button>
         </div>
 
@@ -122,10 +117,10 @@
               <div class="relative">
                 <div class="flex items-center gap-2 mb-2">
                   <ExclamationTriangleIcon class="h-5 w-5 text-red-600 dark:text-red-400" />
-                  <span class="text-xs font-medium text-red-600 dark:text-red-400 uppercase tracking-wide">{{ t('dynamic_search.performance.critical', 'Kritik') }}</span>
+                  <span class="text-xs font-medium text-red-600 dark:text-red-400 uppercase tracking-wide">Kritik</span>
                 </div>
                 <p class="text-3xl font-bold text-red-700 dark:text-red-300">{{ performanceSummary.critical }}</p>
-                <p class="text-xs text-red-600/70 dark:text-red-400/70 mt-1">{{ t('dynamic_search.performance.critical_count', '70+ kayıt') }}</p>
+                <p class="text-xs text-red-600/70 dark:text-red-400/70 mt-1">70+ kayıt</p>
               </div>
             </div>
 
@@ -135,10 +130,10 @@
               <div class="relative">
                 <div class="flex items-center gap-2 mb-2">
                   <ExclamationCircleIcon class="h-5 w-5 text-amber-600 dark:text-amber-400" />
-                  <span class="text-xs font-medium text-amber-600 dark:text-amber-400 uppercase tracking-wide">{{ t('dynamic_search.performance.warning', 'Uyarı') }}</span>
+                  <span class="text-xs font-medium text-amber-600 dark:text-amber-400 uppercase tracking-wide">Uyarı</span>
                 </div>
                 <p class="text-3xl font-bold text-amber-700 dark:text-amber-300">{{ performanceSummary.warning }}</p>
-                <p class="text-xs text-amber-600/70 dark:text-amber-400/70 mt-1">{{ t('dynamic_search.performance.warning_count', '40-69 kayıt') }}</p>
+                <p class="text-xs text-amber-600/70 dark:text-amber-400/70 mt-1">40-69 kayıt</p>
               </div>
             </div>
 
@@ -148,10 +143,10 @@
               <div class="relative">
                 <div class="flex items-center gap-2 mb-2">
                   <InformationCircleIcon class="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                  <span class="text-xs font-medium text-blue-600 dark:text-blue-400 uppercase tracking-wide">{{ t('dynamic_search.performance.normal', 'Normal') }}</span>
+                  <span class="text-xs font-medium text-blue-600 dark:text-blue-400 uppercase tracking-wide">Normal</span>
                 </div>
                 <p class="text-3xl font-bold text-blue-700 dark:text-blue-300">{{ performanceSummary.normal }}</p>
-                <p class="text-xs text-blue-600/70 dark:text-blue-400/70 mt-1">{{ t('dynamic_search.performance.normal_count', '20-39 kayıt') }}</p>
+                <p class="text-xs text-blue-600/70 dark:text-blue-400/70 mt-1">20-39 kayıt</p>
               </div>
             </div>
 
@@ -161,15 +156,15 @@
               <div class="relative">
                 <div class="flex items-center gap-2 mb-2">
                   <CheckCircleIcon class="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                  <span class="text-xs font-medium text-emerald-600 dark:text-emerald-400 uppercase tracking-wide">{{ t('dynamic_search.performance.excellent', 'Mükemmel') }}</span>
+                  <span class="text-xs font-medium text-emerald-600 dark:text-emerald-400 uppercase tracking-wide">Mükemmel</span>
                 </div>
                 <p class="text-3xl font-bold text-emerald-700 dark:text-emerald-300">{{ performanceSummary.excellent }}</p>
-                <p class="text-xs text-emerald-600/70 dark:text-emerald-400/70 mt-1">{{ t('dynamic_search.performance.excellent_count', '0-19 kayıt') }}</p>
+                <p class="text-xs text-emerald-600/70 dark:text-emerald-400/70 mt-1">0-19 kayıt</p>
               </div>
             </div>
           </div>
 
-          <!-- Detailed User List - devam -->
+          <!-- Detailed User List -->
           <Transition
             enter-active-class="transition-all duration-300 ease-out"
             enter-from-class="opacity-0 max-h-0"
@@ -190,6 +185,7 @@
                     ]"
                     @click="filterByUser(user.id)"
                   >
+                    <!-- Status Indicator -->
                     <div 
                       :class="[
                         'absolute top-3 right-3 w-3 h-3 rounded-full',
@@ -222,9 +218,10 @@
                       </div>
                     </div>
 
+                    <!-- Progress Bar -->
                     <div class="mb-3">
                       <div class="flex items-center justify-between text-xs mb-1">
-                        <span class="text-gray-500 dark:text-gray-400">{{ t('dynamic_search.performance.load_level', 'Yük Seviyesi') }}</span>
+                        <span class="text-gray-500 dark:text-gray-400">Yük Seviyesi</span>
                         <span :class="getUserTextClass(user.total)" class="font-bold">{{ user.total }}</span>
                       </div>
                       <div class="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
@@ -236,18 +233,19 @@
                       </div>
                     </div>
 
+                    <!-- Stats -->
                     <div class="grid grid-cols-3 gap-2 text-center">
                       <div class="bg-white/50 dark:bg-gray-800/50 rounded-lg p-2">
                         <p class="text-lg font-bold text-red-600 dark:text-red-400">{{ user.overdue }}</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('dynamic_search.performance.user_status.overdue_label', 'Gecikmiş') }}</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Gecikmiş</p>
                       </div>
                       <div class="bg-white/50 dark:bg-gray-800/50 rounded-lg p-2">
                         <p class="text-lg font-bold text-amber-600 dark:text-amber-400">{{ user.today }}</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('dynamic_search.performance.user_status.today_label', 'Bugün') }}</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Bugün</p>
                       </div>
                       <div class="bg-white/50 dark:bg-gray-800/50 rounded-lg p-2">
                         <p class="text-lg font-bold text-emerald-600 dark:text-emerald-400">{{ user.upcoming }}</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('dynamic_search.performance.user_status.upcoming_label', 'Yaklaşan') }}</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Yaklaşan</p>
                       </div>
                     </div>
                   </div>
@@ -290,7 +288,7 @@
             </div>
             <div>
               <div class="flex items-center gap-2 mb-1">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white">{{ t('dynamic_search.performance.user_status.your_status', 'Performans Durumunuz') }}</h3>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white">Performans Durumunuz</h3>
                 <span 
                   :class="[
                     'px-2 py-0.5 text-xs font-bold rounded-full',
@@ -311,21 +309,21 @@
           <div class="flex items-center gap-6">
             <div class="text-center">
               <p class="text-3xl font-bold" :class="getUserTextClass(userStats.total)">{{ userStats.total }}</p>
-              <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('dynamic_search.performance.user_status.total_records', 'Toplam Kayıt') }}</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">Toplam Kayıt</p>
             </div>
             <div class="h-12 w-px bg-gray-200 dark:bg-gray-700"></div>
             <div class="flex gap-4">
               <div class="text-center">
                 <p class="text-xl font-bold text-red-600 dark:text-red-400">{{ userStats.overdue }}</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('dynamic_search.performance.user_status.overdue_label', 'Gecikmiş') }}</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Gecikmiş</p>
               </div>
               <div class="text-center">
                 <p class="text-xl font-bold text-amber-600 dark:text-amber-400">{{ userStats.today }}</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('dynamic_search.performance.user_status.today_label', 'Bugün') }}</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Bugün</p>
               </div>
               <div class="text-center">
                 <p class="text-xl font-bold text-emerald-600 dark:text-emerald-400">{{ userStats.upcoming }}</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('dynamic_search.performance.user_status.upcoming_label', 'Yaklaşan') }}</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Yaklaşan</p>
               </div>
             </div>
           </div>
@@ -334,12 +332,9 @@
         <!-- Progress Bar -->
         <div class="mt-4">
           <div class="flex items-center justify-between text-xs mb-2">
-            <span class="text-gray-600 dark:text-gray-400">{{ t('dynamic_search.performance.load_level', 'Yük Seviyesi') }}</span>
+            <span class="text-gray-600 dark:text-gray-400">Yük Seviyesi</span>
             <span class="font-medium text-gray-700 dark:text-gray-300">
-              {{ userStats.total >= 70 ? t('dynamic_search.performance.status_labels.critical', 'Kritik') : 
-                 userStats.total >= 40 ? t('dynamic_search.performance.status_labels.high', 'Yüksek') : 
-                 userStats.total >= 20 ? t('dynamic_search.performance.status_labels.normal', 'Normal') : 
-                 t('dynamic_search.performance.status_labels.good', 'İyi') }}
+              {{ userStats.total >= 70 ? 'Kritik' : userStats.total >= 40 ? 'Yüksek' : userStats.total >= 20 ? 'Normal' : 'İyi' }}
             </span>
           </div>
           <div class="h-3 bg-white/50 dark:bg-gray-800/50 rounded-full overflow-hidden">
@@ -351,10 +346,10 @@
           </div>
           <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
             <span>0</span>
-            <span>{{ t('dynamic_search.performance.progress.excellent_10', 'Mükemmel (10)') }}</span>
-            <span>{{ t('dynamic_search.performance.progress.good_20', 'İyi (20)') }}</span>
-            <span>{{ t('dynamic_search.performance.progress.normal_40', 'Normal (40)') }}</span>
-            <span>{{ t('dynamic_search.performance.progress.critical_70', 'Kritik (70+)') }}</span>
+            <span>Mükemmel (10)</span>
+            <span>İyi (20)</span>
+            <span>Normal (40)</span>
+            <span>Kritik (70+)</span>
           </div>
         </div>
       </div>
@@ -362,15 +357,16 @@
 
     <!-- Filters Card -->
     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 mb-6 overflow-hidden">
+      <!-- ... existing filter code ... -->
       <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-700">
         <div class="flex items-center gap-2">
           <FunnelIcon class="h-5 w-5 text-gray-400" />
-          <span class="font-medium text-gray-700 dark:text-gray-300">{{ t('dynamic_search.filters.title', 'Filtreler') }}</span>
+          <span class="font-medium text-gray-700 dark:text-gray-300">Filtreler</span>
           <span 
             v-if="relevantUserFilter"
             class="px-2 py-0.5 text-xs font-medium bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-full"
           >
-            {{ t('dynamic_search.filters.user_filtered', 'Kullanıcı filtreli') }}
+            Kullanıcı filtreli
           </span>
         </div>
         <button 
@@ -378,7 +374,7 @@
           class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium flex items-center gap-1 transition-colors"
         >
           <ArrowPathIcon class="h-4 w-4" />
-          {{ t('dynamic_search.filters.clear', 'Temizle') }}
+          Temizle
         </button>
       </div>
 
@@ -386,58 +382,58 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <!-- Search -->
           <div class="relative">
-            <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">{{ t('dynamic_search.filters.search', 'Ara') }}</label>
+            <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">Ara</label>
             <div class="relative">
               <MagnifyingGlassIcon class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input 
                 v-model="searchTerm" 
                 type="text" 
                 class="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                :placeholder="t('dynamic_search.filters.search_placeholder', 'İsim, email veya telefon...')"
+                placeholder="İsim, email veya telefon..."
               />
             </div>
           </div>
 
           <!-- Status -->
           <div>
-            <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">{{ t('dynamic_search.filters.status', 'Durum') }}</label>
+            <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">Durum</label>
             <select 
               v-model="statusFilter" 
               class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all appearance-none cursor-pointer"
             >
-              <option value="">{{ t('dynamic_search.filters.all_statuses', 'Tüm Durumlar') }}</option>
+              <option value="">Tüm Durumlar</option>
               <option v-for="status in statusOptions" :key="status.value" :value="status.value">{{ status.label }}</option>
             </select>
           </div>
 
           <!-- User Filter (Admin) -->
           <div v-if="isAdmin">
-            <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">{{ t('dynamic_search.filters.assigned_user', 'Atanan Kullanıcı') }}</label>
+            <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">Atanan Kullanıcı</label>
             <select 
               v-model="relevantUserFilter" 
               class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all appearance-none cursor-pointer"
             >
-              <option value="">{{ t('dynamic_search.filters.all_users', 'Tümü') }}</option>
+              <option value="">Tümü</option>
               <option v-for="item in relevantUserList" :key="item.value" :value="item.value">{{ item.name }}</option>
             </select>
           </div>
 
           <!-- Date Filter -->
           <div>
-            <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">{{ t('dynamic_search.filters.date', 'Tarih') }}</label>
+            <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">Tarih</label>
             <select 
               v-model="dateFilter" 
               @change="handleDateFilterChange"
               class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all appearance-none cursor-pointer"
             >
-              <option value="today">{{ t('dynamic_search.filters.date_today', 'Bugün ve Öncesi') }}</option>
-              <option value="today-only">{{ t('dynamic_search.filters.date_today_only', 'Sadece Bugün') }}</option>
-              <option value="tomorrow">{{ t('dynamic_search.filters.date_tomorrow', 'Yarın') }}</option>
-              <option value="week">{{ t('dynamic_search.filters.date_week', 'Bu Hafta') }}</option>
-              <option value="month">{{ t('dynamic_search.filters.date_month', 'Bu Ay') }}</option>
-              <option value="overdue">{{ t('dynamic_search.filters.date_overdue', 'Gecikmiş') }}</option>
-              <option value="all">{{ t('dynamic_search.filters.date_all', 'Tümü') }}</option>
-              <option value="custom">{{ t('dynamic_search.filters.date_custom', 'Özel Tarih Aralığı') }}</option>
+              <option value="today">Bugün ve Öncesi</option>
+              <option value="today-only">Sadece Bugün</option>
+              <option value="tomorrow">Yarın</option>
+              <option value="week">Bu Hafta</option>
+              <option value="month">Bu Ay</option>
+              <option value="overdue">Gecikmiş</option>
+              <option value="all">Tümü</option>
+              <option value="custom">Özel Tarih Aralığı</option>
             </select>
           </div>
         </div>
@@ -453,11 +449,11 @@
         >
           <div v-if="dateFilter === 'custom'" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
             <div>
-              <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">{{ t('dynamic_search.filters.start_date', 'Başlangıç') }}</label>
+              <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">Başlangıç</label>
               <input v-model="customStartDate" type="date" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all" />
             </div>
             <div>
-              <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">{{ t('dynamic_search.filters.end_date', 'Bitiş') }}</label>
+              <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">Bitiş</label>
               <input v-model="customEndDate" type="date" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all" />
             </div>
           </div>
@@ -465,21 +461,22 @@
       </div>
     </div>
 
+
     <!-- Loading State -->
     <div v-if="loading" class="flex flex-col items-center justify-center py-16">
       <div class="relative">
         <div class="w-12 h-12 rounded-full border-4 border-indigo-100 dark:border-indigo-900"></div>
         <div class="absolute top-0 left-0 w-12 h-12 rounded-full border-4 border-transparent border-t-indigo-600 animate-spin"></div>
       </div>
-      <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">{{ t('dynamic_search.loading', 'Yükleniyor...') }}</p>
+      <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">Yükleniyor...</p>
     </div>
 
-    <!-- Results başlangıç -->
+    <!-- Results -->
     <div v-else>
       <!-- Results Header -->
       <div class="flex items-center justify-between mb-4">
         <p class="text-sm text-gray-500 dark:text-gray-400">
-          {{ tp('dynamic_search.results.found', { count: pagination.total }, '{count} kayıt bulundu') }}
+          <span class="font-semibold text-gray-700 dark:text-gray-300">{{ pagination.total }}</span> kayıt bulundu
         </p>
         <div class="flex items-center gap-2">
           <button 
@@ -514,22 +511,22 @@
             <thead>
               <tr class="bg-gray-50 dark:bg-gray-900/50">
                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  {{ t('dynamic_search.table.customer', 'Müşteri') }}
+                  Müşteri
                 </th>
                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  {{ t('dynamic_search.table.contact', 'İletişim') }}
+                  İletişim
                 </th>
                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  {{ t('dynamic_search.table.status', 'Durum') }}
+                  Durum
                 </th>
                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  {{ t('dynamic_search.table.reminder', 'Hatırlatma') }}
+                  Hatırlatma
                 </th>
                 <th v-if="isAdmin" class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  {{ t('dynamic_search.table.assigned', 'Atanan') }}
+                  Atanan
                 </th>
                 <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  {{ t('dynamic_search.table.actions', 'İşlem') }}
+                  İşlem
                 </th>
               </tr>
             </thead>
@@ -609,12 +606,14 @@
                 <!-- Assigned User (Admin) -->
                 <td v-if="isAdmin" class="px-4 py-4">
                   <div v-if="customer.relevantUser" class="flex items-center gap-2">
+
                     <img v-if="customer.relevantUser?.avatar" :src="path + customer.relevantUser?.avatar" alt="Avatar" class="object-cover h-7 w-7 rounded-lg" />
                     <div v-else class="h-7 w-7 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
                       <span class="text-xs font-medium text-purple-600 dark:text-purple-400">
                         {{ customer.relevantUser?.name?.charAt(0)?.toUpperCase() }}
                       </span>
                     </div>
+                
                     <span class="text-sm text-gray-600 dark:text-gray-300">{{ customer.relevantUser?.name }}</span>
                   </div>
                   <span v-else class="text-sm text-gray-400">-</span>
@@ -626,28 +625,28 @@
                     <NuxtLink 
                       :to="`/customers/show/${customer.id}`"
                       class="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition-all"
-                      :title="t('dynamic_search.actions.view', 'Görüntüle')"
+                      title="Görüntüle"
                     >
                       <EyeIcon class="h-5 w-5" />
                     </NuxtLink>
                     <button 
                       @click="showNotes(customer)"
                       class="p-2 text-gray-400 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/30 rounded-lg transition-all"
-                      :title="t('dynamic_search.actions.notes', 'Notlar')"
+                      title="Notlar"
                     >
                       <DocumentTextIcon class="h-5 w-5" />
                     </button>
                     <button 
                       @click="showHistory(customer)"
                       class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all"
-                      :title="t('dynamic_search.actions.history', 'Geçmiş')"
+                      title="Geçmiş"
                     >
                       <ClockIcon class="h-5 w-5" />
                     </button>
                     <button 
                       @click="toggleShow(customer.id)"
                       class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all"
-                      :title="t('dynamic_search.actions.more', 'Daha fazla')"
+                      title="Daha fazla"
                     >
                       <EllipsisHorizontalIcon class="h-5 w-5" />
                     </button>
@@ -663,10 +662,10 @@
                       <PhoneArrowUpRightIcon class="h-8 w-8 text-gray-400" />
                     </div>
                     <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-1">
-                      {{ t('dynamic_search.empty.title', 'Kayıt bulunamadı') }}
+                      Kayıt bulunamadı
                     </h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400">
-                      {{ searchTerm ? t('dynamic_search.empty.search', 'Arama kriterlerinize uygun müşteri bulunamadı.') : t('dynamic_search.empty.no_reminders', 'Henüz hatırlatma gerektiren müşteri yok.') }}
+                      {{ searchTerm ? 'Arama kriterlerinize uygun müşteri bulunamadı.' : 'Henüz hatırlatma gerektiren müşteri yok.' }}
                     </p>
                   </div>
                 </td>
@@ -727,10 +726,10 @@
               @change="handleLimitChange"
               class="px-3 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500"
             >
-              <option :value="10">{{ tp('dynamic_search.pagination.per_page', { count: 10 }, '10 / sayfa') }}</option>
-              <option :value="25">{{ tp('dynamic_search.pagination.per_page', { count: 25 }, '25 / sayfa') }}</option>
-              <option :value="50">{{ tp('dynamic_search.pagination.per_page', { count: 50 }, '50 / sayfa') }}</option>
-              <option :value="100">{{ tp('dynamic_search.pagination.per_page', { count: 100 }, '100 / sayfa') }}</option>
+              <option :value="10">10 / sayfa</option>
+              <option :value="25">25 / sayfa</option>
+              <option :value="50">50 / sayfa</option>
+              <option :value="100">100 / sayfa</option>
             </select>
           </div>
         </div>
@@ -788,7 +787,7 @@
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-2">
                 <BellAlertIcon class="h-4 w-4 text-gray-400" />
-                <span class="text-xs text-gray-500 dark:text-gray-400">{{ t('dynamic_search.table.reminder', 'Hatırlatma') }}</span>
+                <span class="text-xs text-gray-500 dark:text-gray-400">Hatırlatma</span>
               </div>
               <span 
                 class="text-xs font-medium px-2 py-0.5 rounded-full"
@@ -845,10 +844,10 @@
               <PhoneArrowUpRightIcon class="h-8 w-8 text-gray-400" />
             </div>
             <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-1">
-              {{ t('dynamic_search.empty.title', 'Kayıt bulunamadı') }}
+              Kayıt bulunamadı
             </h3>
             <p class="text-sm text-gray-500 dark:text-gray-400">
-              {{ searchTerm ? t('dynamic_search.empty.search', 'Arama kriterlerinize uygun müşteri bulunamadı.') : t('dynamic_search.empty.no_reminders', 'Henüz hatırlatma gerektiren müşteri yok.') }}
+              {{ searchTerm ? 'Arama kriterlerinize uygun müşteri bulunamadı.' : 'Henüz hatırlatma gerektiren müşteri yok.' }}
             </p>
           </div>
         </div>
@@ -862,7 +861,7 @@
             :disabled="pagination.page === 1"
             class="px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
-            {{ t('dynamic_search.pagination.previous', 'Önceki') }}
+            Önceki
           </button>
           <span class="px-4 py-2 text-sm text-gray-500">
             {{ pagination.page }} / {{ totalPages }}
@@ -872,7 +871,7 @@
             :disabled="pagination.page >= totalPages"
             class="px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
-            {{ t('dynamic_search.pagination.next', 'Sonraki') }}
+            Sonraki
           </button>
         </div>
       </div>
@@ -906,7 +905,7 @@
               class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden"
             >
               <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-700">
-                <h3 class="font-semibold text-gray-900 dark:text-white">{{ t('dynamic_search.actions_modal.title', 'İşlemler') }}</h3>
+                <h3 class="font-semibold text-gray-900 dark:text-white">İşlemler</h3>
                 <button 
                   @click="showStates.activeId = null"
                   class="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
@@ -923,7 +922,7 @@
                   <div class="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg">
                     <EyeIcon class="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
                   </div>
-                  <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('dynamic_search.actions.view', 'Görüntüle') }}</span>
+                  <span class="text-xs text-gray-600 dark:text-gray-300">Görüntüle</span>
                 </NuxtLink>
 
                 <button 
@@ -933,7 +932,7 @@
                   <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
                     <ClockIcon class="h-5 w-5 text-blue-600 dark:text-blue-400" />
                   </div>
-                  <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('dynamic_search.actions.history', 'Geçmiş') }}</span>
+                  <span class="text-xs text-gray-600 dark:text-gray-300">Geçmiş</span>
                 </button>
 
                 <button 
@@ -943,7 +942,7 @@
                   <div class="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
                     <DocumentTextIcon class="h-5 w-5 text-amber-600 dark:text-amber-400" />
                   </div>
-                  <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('dynamic_search.actions.notes', 'Notlar') }}</span>
+                  <span class="text-xs text-gray-600 dark:text-gray-300">Notlar</span>
                 </button>
 
                 <button 
@@ -953,7 +952,7 @@
                   <div class="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
                     <UsersIcon class="h-5 w-5 text-purple-600 dark:text-purple-400" />
                   </div>
-                  <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('dynamic_search.actions.doctor', 'Doktor') }}</span>
+                  <span class="text-xs text-gray-600 dark:text-gray-300">Doktor</span>
                 </button>
 
                 <button 
@@ -963,7 +962,7 @@
                   <div class="p-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg">
                     <ShoppingBagIcon class="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                   </div>
-                  <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('dynamic_search.actions.services', 'Hizmetler') }}</span>
+                  <span class="text-xs text-gray-600 dark:text-gray-300">Hizmetler</span>
                 </button>
 
                 <button 
@@ -973,7 +972,7 @@
                   <div class="p-2 bg-cyan-100 dark:bg-cyan-900/30 rounded-lg">
                     <FolderIcon class="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
                   </div>
-                  <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('dynamic_search.actions.files', 'Dosyalar') }}</span>
+                  <span class="text-xs text-gray-600 dark:text-gray-300">Dosyalar</span>
                 </button>
 
                 <NuxtLink 
@@ -984,7 +983,7 @@
                   <div class="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
                     <PencilIcon class="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
                   </div>
-                  <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('dynamic_search.actions.edit', 'Düzenle') }}</span>
+                  <span class="text-xs text-gray-600 dark:text-gray-300">Düzenle</span>
                 </NuxtLink>
 
                 <button 
@@ -995,7 +994,7 @@
                   <div class="p-2 bg-red-100 dark:bg-red-900/30 rounded-lg">
                     <TrashIcon class="h-5 w-5 text-red-600 dark:text-red-400" />
                   </div>
-                  <span class="text-xs text-red-600 dark:text-red-400">{{ t('dynamic_search.actions.delete', 'Sil') }}</span>
+                  <span class="text-xs text-red-600 dark:text-red-400">Sil</span>
                 </button>
               </div>
             </div>
@@ -1012,7 +1011,6 @@
     <CustomerFilesModal :show="showFilesModal" :customer="selectedCustomer" @close="showFilesModal = false" />
   </div>
 </template>
-
 
 <script setup>
 import {
@@ -1044,9 +1042,6 @@ import {
   ChartBarIcon,
   CalendarIcon
 } from '@heroicons/vue/24/outline'
-import { useLanguage } from '~/composables/useLanguage'
-
-const { t, tp } = useLanguage()
 
 definePageMeta({})
 
@@ -1067,6 +1062,7 @@ const loadingPerformance = ref(false)
 // Current User Stats
 const userStats = computed(() => {
   if (isAdmin.value) {
+    // Admin için seçili kullanıcının veya toplam istatistikler
     const filtered = relevantUserFilter.value 
       ? userPerformanceData.value.find(u => u.id === relevantUserFilter.value)
       : null
@@ -1081,6 +1077,7 @@ const userStats = computed(() => {
     }
   }
   
+  // Normal kullanıcı için
   return {
     total: pagination.value.total,
     overdue: stats.value.overdue,
@@ -1103,7 +1100,7 @@ const performanceSummary = computed(() => {
   return summary
 })
 
-// Sorted User Performance
+// Sorted User Performance (kritik olanlar üstte)
 const sortedUserPerformance = computed(() => {
   return [...userPerformanceData.value].sort((a, b) => b.total - a.total)
 })
@@ -1138,11 +1135,11 @@ const getUserProgressClass = (total) => {
 }
 
 const getUserStatusLabel = (total) => {
-  if (total >= 70) return t('dynamic_search.performance.critical', 'Kritik')
-  if (total >= 40) return t('dynamic_search.performance.warning', 'Uyarı')
-  if (total >= 20) return t('dynamic_search.performance.normal', 'Normal')
-  if (total >= 10) return t('dynamic_search.performance.status_labels.good', 'İyi')
-  return t('dynamic_search.performance.excellent', 'Mükemmel')
+  if (total >= 70) return 'Kritik'
+  if (total >= 40) return 'Uyarı'
+  if (total >= 20) return 'Normal'
+  if (total >= 10) return 'İyi'
+  return 'Mükemmel'
 }
 
 const getStatusIcon = (total) => {
@@ -1160,17 +1157,21 @@ const getStatusMessage = (total) => {
   return 'Mükemmel performans! Dinamik arama yükünüz çok düşük.'
 }
 
+// Filter by user (click on user card)
 const filterByUser = (userId) => {
   relevantUserFilter.value = userId
   showPerformanceDetails.value = false
 }
 
+// Fetch User Performance Data
 const fetchUserPerformance = async () => {
   if (!isAdmin.value) return
   
   loadingPerformance.value = true
   try {
     const api = useApi()
+    
+    // Her kullanıcı için dinamik arama sayılarını al
     const response = await api('/customers/dynamic-search/user-stats')
     
     if (Array.isArray(response)) {
@@ -1178,14 +1179,24 @@ const fetchUserPerformance = async () => {
     }
   } catch (error) {
     console.error('Error fetching user performance:', error)
+    
+    // Fallback: Mevcut verilerden hesapla
     calculateUserPerformanceFromData()
   } finally {
     loadingPerformance.value = false
   }
 }
 
+// Fallback: Calculate from loaded data
 const calculateUserPerformanceFromData = () => {
   const userMap = new Map()
+  const now = new Date()
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const tomorrow = new Date(today)
+  tomorrow.setDate(tomorrow.getDate() + 1)
+  
+  // Bu fonksiyon tüm kullanıcılar için aggregate data gerektirir
+  // API endpoint yoksa, sadece mevcut filtrelenmiş veriyi kullanabiliriz
   
   relevantUserList.value.forEach(user => {
     userMap.set(user.value, {
@@ -1198,11 +1209,16 @@ const calculateUserPerformanceFromData = () => {
     })
   })
   
+  // Bu kısım API'den gelen toplam verilerle doldurulmalı
   userPerformanceData.value = Array.from(userMap.values())
 }
 
+ 
+
+// View Mode
 const viewMode = ref('table')
 
+// Stats
 const stats = computed(() => {
   const now = new Date()
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
@@ -1225,6 +1241,7 @@ const stats = computed(() => {
   return { overdue, today: todayCount, upcoming }
 })
 
+// Helper Methods
 const isOverdue = (date) => {
   if (!date) return false
   return new Date(date) < new Date()
@@ -1249,6 +1266,8 @@ const getStatusDotClass = (statusId) => {
 const getCustomerById = (id) => {
   return customersData.value.find(c => c.id === id)
 }
+
+ 
 
 const CACHE_KEY = 'dynamic_search_filters'
 const CACHE_VERSION = 1
@@ -1298,6 +1317,7 @@ const clearCache = () => {
   localStorage.removeItem(CACHE_KEY)
 }
 
+// State
 const loading = ref(true)
 const customersData = ref([])
 const cacheLoaded = ref(false)
@@ -1325,6 +1345,7 @@ const showFilesModal = ref(false)
 const selectedCustomer = ref(null)
 const showStates = ref({ activeId: null })
 
+// Computed
 const totalPages = computed(() => Math.ceil(pagination.value.total / pagination.value.limit) || 1)
 
 const paginationInfo = computed(() => {
@@ -1347,6 +1368,7 @@ const visiblePages = computed(() => {
   return pages
 })
 
+// Methods
 const goToPage = (page) => {
   if (page < 1 || page > totalPages.value) return
   pagination.value.page = page
@@ -1372,19 +1394,19 @@ const getRemainingTime = (remindingDate) => {
     const absDiff = Math.abs(diff)
     const hours = Math.floor(absDiff / (1000 * 60 * 60))
     const days = Math.floor(hours / 24)
-    if (days > 0) return tp('dynamic_search.time.overdue', { count: days, unit: t('dynamic_search.time.days', 'gün') }, '{count} {unit} gecikmiş')
-    if (hours > 0) return tp('dynamic_search.time.overdue', { count: hours, unit: t('dynamic_search.time.hours', 'saat') }, '{count} {unit} gecikmiş')
-    return t('dynamic_search.time.passed', 'Az önce geçti')
+    if (days > 0) return `${days} gün gecikmiş`
+    if (hours > 0) return `${hours} saat gecikmiş`
+    return 'Az önce geçti'
   }
 
   const minutes = Math.floor(diff / (1000 * 60))
   const hours = Math.floor(diff / (1000 * 60 * 60))
   const days = Math.floor(hours / 24)
 
-  if (days > 0) return tp('dynamic_search.time.remaining', { count: days, unit: t('dynamic_search.time.days', 'gün') }, '{count} {unit} kaldı')
-  if (hours > 0) return tp('dynamic_search.time.remaining', { count: hours, unit: t('dynamic_search.time.hours', 'saat') }, '{count} {unit} kaldı')
-  if (minutes > 0) return tp('dynamic_search.time.remaining', { count: minutes, unit: t('dynamic_search.time.minutes', 'dk') }, '{count} {unit} kaldı')
-  return t('dynamic_search.time.now', 'Şimdi')
+  if (days > 0) return `${days} gün kaldı`
+  if (hours > 0) return `${hours} saat kaldı`
+  if (minutes > 0) return `${minutes} dk kaldı`
+  return 'Şimdi'
 }
 
 const getRemainingTimeClass = (remindingDate) => {
@@ -1532,6 +1554,7 @@ const getStatusClass = statusId => {
 const getStatusText = statusId => statusMap.value[statusId]?.name || 'Bilinmiyor'
 
 const confirmDelete = (customer) => {
+  // Delete logic
   showStates.value.activeId = null
 }
 
@@ -1544,6 +1567,7 @@ watchDebounced(
   { debounce: 600 }
 )
 
+// onMounted'a ekle
 onMounted(async () => {
   const cached = loadFromCache()
   if (cached) {
