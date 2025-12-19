@@ -76,13 +76,13 @@
             </p>
           </div>
 
-
           <div class="relative">
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Branş
             </label>
             <input v-model="branchSearch" type="text" class="form-input" placeholder="Branş adı yazın..."
               @focus="showBranchDropdownList" @blur="hideBranchDropdown" />
+
             <div v-if="showBranchDropdown && filteredBranchForSearch.length > 0"
               class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 shadow-lg rounded-md border border-gray-200 dark:border-gray-700 max-h-60 overflow-auto">
               <button v-for="branch in filteredBranchForSearch" :key="branch.id" type="button"
@@ -128,14 +128,13 @@
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Durum <span class="text-red-500">*</span>
             </label>
-            <select v-model="form.meetingStatus" required class="form-input"
-              :class="{ 'border-red-500': errors.meetingStatus }">
+            <select v-model="form.meetingStatusId" required class="form-input"
+              :class="{ 'border-red-500': errors.meetingStatusId }">
               <option value="">Durum secin...</option>
               <option v-for="status in meetingStatuses" :key="status.id" :value="status.id">
                 {{ status.name }}
               </option>
             </select>
-            <p v-if="errors.meetingStatus" class="mt-1 text-sm text-red-600">{{ errors.meetingStatus }}</p>
           </div>
         </div>
       </div>
@@ -216,6 +215,7 @@ const { doctors, fetchDoctors } = useDoctors()
 const { statuses: meetingStatuses, fetchMeetingStatuses } = useMeetingStatuses()
 const { products: salesProducts, fetchProducts } = useProducts()
 const { branches, fetchBranches } = useBranches()
+const { currentLanguageInfo } = useLanguage()
 const { customers, fetchCustomers } = useCustomers()
 
 // State
@@ -235,6 +235,9 @@ const showHospitalDropdown = ref(false)
 const showDoctorDropdown = ref(false)
 const showBranchDropdown = ref(false)
 
+// State'e cache flag ekle
+const branchesLoaded = ref(false)
+
 // Form state
 const form = ref({
   customer: '',
@@ -244,13 +247,12 @@ const form = ref({
   startTime: '',
   endTime: '',
   remindingAt: '',
-  meetingStatus: '',
+  meetingStatusId: '',
   salesProductId: '',
   description: ''
 })
 
 // Computed - Filter customers by search
-
 const filteredCustomers = computed(() => customers.value) as any
 
 // Computed - Filter hospitals by search
@@ -283,9 +285,14 @@ const filteredDoctorsForSearch = computed(() => {
   )
 })
 
+// 🔥 Sadece name'i olanları filtrele
+const filteredBranch = computed(() => 
+  branches.value.filter(branch => 
+    branch?.name && branch.name.trim() !== ''
+  )
+)
 
-const filteredBranch = computed(() => branches.value)
-
+// 🔥 name bazlı arama
 const filteredBranchForSearch = computed(() => {
   const baseBranch = filteredBranch.value
 
@@ -295,10 +302,9 @@ const filteredBranchForSearch = computed(() => {
 
   const search = branchSearch.value.toLowerCase()
   return baseBranch.filter(branch =>
-    branch.name.toLowerCase().includes(search)
+    branch?.name?.toLowerCase().includes(search)
   )
 })
-
 
 // Select methods
 const selectCustomer = (customer: any) => {
@@ -306,7 +312,6 @@ const selectCustomer = (customer: any) => {
   customerSearch.value = `${customer.name} ${customer.surname}`
   showCustomerDropdown.value = false
 }
-
 
 const selectHospital = async (hospital: any) => {
   form.value.hospitalId = hospital.id
@@ -322,7 +327,6 @@ const selectHospital = async (hospital: any) => {
     const $api = useApi()
     const response = await $api(`/hospitals/${hospital.id}/doctors`) as any
     hospitalDoctors.value = Array.isArray(response) ? response : (response.data || [])
-    console.log(`Loaded ${hospitalDoctors.value.length} doctors for hospital ${hospital.name}`)
   } catch (err) {
     console.error('Failed to fetch hospital doctors:', err)
     hospitalDoctors.value = []
@@ -333,18 +337,7 @@ const selectDoctor = async (doctor: any) => {
   form.value.doctorId = doctor.id
   doctorSearch.value = doctor.name
   showDoctorDropdown.value = false
-  branches.value = [];
-
-  try {
-    const $api = useApi()
-    const response = await $api(`/branches`) as any
-    branches.value = Array.isArray(response) ? response : (response.data || [])
-  } catch (err) {
-    console.error('Failed to fetch branches:', err)
-    branches.value = []
-  }
 }
-
 
 const hideBranchDropdown = () => {
   setTimeout(() => {
@@ -352,18 +345,22 @@ const hideBranchDropdown = () => {
   }, 200)
 }
 
-
+// 🔥 Sadece name kullan
 const selectBranch = (item: any) => {
   form.value.branchId = item.id
-  branchSearch.value = item.name
+  branchSearch.value = item.name || ''
   showBranchDropdown.value = false
 }
 
-
-const showBranchDropdownList = () => {
+const showBranchDropdownList = async () => {
   showBranchDropdown.value = true
-  if (!branchSearch.value) {
-    fetchBranches()
+  
+  if (!branchesLoaded.value) {
+    await fetchBranches({ 
+      limit: 1000,
+      languageId: Number(currentLanguageInfo.value?.id)
+    })
+    branchesLoaded.value = true
   }
 }
 
@@ -400,13 +397,12 @@ const formatDateTimeLocal = (dateString: Date) => {
 
 
 
-// Load meeting data
+
 const loadMeetingData = async () => {
   try {
     const meetingId = parseInt(route.params.id)
     const meeting = await fetchMeeting(meetingId) as any
 
-    // Populate form with meeting data
     form.value = {
       customer: meeting.customer,
       hospitalId: meeting.hospitalId || '',
@@ -415,18 +411,21 @@ const loadMeetingData = async () => {
       startTime: formatDateTimeLocal(meeting.startTime),
       endTime: formatDateTimeLocal(meeting.endTime),
       remindingAt: formatDateTimeLocal(meeting.remindingAt),
-      meetingStatus: meeting.meetingStatus,
+      meetingStatusId: meeting.meetingStatusId || meeting.status?.id || '',
       salesProductId: meeting.salesProductId || '',
       description: meeting.description || ''
     }
 
     customerSearch.value = `${meeting.customerData?.name} ${meeting.customerData?.surname}`
-    branchSearch.value = meeting.branch?.name
+    
+    // 🔥 branches array'inden direkt bul (zaten doğru dilde yüklü)
+    if (meeting.branchId) {
+      const selectedBranch = branches.value.find(b => b.id === meeting.branchId)
+      branchSearch.value = selectedBranch?.name || meeting.branch?.code || ''
+    }
 
     if (meeting.hospital) {
       hospitalSearch.value = meeting.hospital.name
-
-      // Fetch doctors for the selected hospital
       try {
         const $api = useApi()
         const response = await $api(`/hospitals/${meeting.hospitalId}/doctors`) as any
@@ -445,6 +444,14 @@ const loadMeetingData = async () => {
   }
 }
 
+
+
+
+
+
+
+
+
 // Validate form
 const validateForm = () => {
   errors.value = {}
@@ -453,8 +460,8 @@ const validateForm = () => {
     errors.value.customer = 'Musteri secimi zorunludur'
   }
 
-  if (!form.value.meetingStatus) {
-    errors.value.meetingStatus = 'Durum secimi zorunludur'
+  if (!form.value.meetingStatusId) {
+    errors.value.meetingStatusId = 'Durum secimi zorunludur'
   }
 
   if (form.value.startTime && form.value.endTime) {
@@ -480,11 +487,10 @@ const handleSubmit = async () => {
   try {
     const meetingId = parseInt(route.params.id)
 
-    // Prepare data for API
     const data = {
       customer: parseInt(form.value.customer),
-      user: authStore.user?.id || 1, // Current logged in user
-      meetingStatus: parseInt(form.value.meetingStatus),
+      user: authStore.user?.id || 1,
+      meetingStatusId: parseInt(form.value.meetingStatusId),
       ...(form.value.hospitalId && { hospitalId: parseInt(form.value.hospitalId) }),
       ...(form.value.doctorId && { doctorId: parseInt(form.value.doctorId) }),
       ...(form.value.branchId && { branchId: parseInt(form.value.branchId) }),
@@ -496,9 +502,7 @@ const handleSubmit = async () => {
     }
 
     await updateMeeting(meetingId, data)
-
-    // Redirect to meetings list
-    router.push('/meetings')
+    // router.push('/meetings')
   } catch (err) {
     console.error('Failed to update meeting:', err)
     errors.value.submit = 'Gorusme guncellenirken bir hata olustu'
@@ -506,7 +510,6 @@ const handleSubmit = async () => {
     loading.value = false
   }
 }
-
 
 watch(customerSearch, (newValue) => {
   if (searchTimeout.value) {
@@ -534,33 +537,54 @@ watch(branchSearch, (newValue) => {
     searchTimeout.value = null
   }
 
-  if (!newValue || newValue.length < 3) {
-    branches.value = []
-    if (!newValue) {
-      form.value.branchId = ''
-    }
+  if (!newValue) {
+    form.value.branchId = ''
     return
   }
 
-  searchTimeout.value = window.setTimeout(() => {
-    fetchBranches({ search: newValue })
+  if (newValue.length < 3) {
+    return
+  }
+
+  searchTimeout.value = window.setTimeout(async () => {
+    await fetchBranches({ 
+      search: newValue, 
+      limit: 100,
+      languageId: Number(currentLanguageInfo.value?.id)
+    })
     searchTimeout.value = null
   }, 300)
 })
 
+watch(currentLanguageInfo, async (newLanguageId) => {
+  if (newLanguageId && branchesLoaded.value) {
+    branches.value = []
+    branchesLoaded.value = false
+    
+    if (showBranchDropdown.value) {
+      await fetchBranches({ 
+        limit: 1000,
+        languageId: Number(newLanguageId.id)
+      })
+      branchesLoaded.value = true
+    }
+  }
+})
+
 // Initialize
+// onMounted içine ekle
 onMounted(async () => {
   try {
-    // Load all required data
-    await Promise.all([ 
+    await Promise.all([
       fetchHospitals({ limit: 1000 }),
       fetchDoctors({ limit: 1000 }),
       fetchMeetingStatuses(),
-      fetchProducts({ limit: 1000 })
+      fetchProducts({ limit: 1000 }),
+      fetchBranches({ limit: 1000, languageId: Number(currentLanguageInfo.value?.id) }) // 🔥 İLK YÜKLE
     ])
 
-    // Load meeting data
-    await loadMeetingData()
+    await loadMeetingData() // 🔥 SONRA MEETING YÜK
+    branchesLoaded.value = true
   } catch (err) {
     console.error('Failed to initialize form:', err)
   } finally {
@@ -575,8 +599,6 @@ onBeforeUnmount(() => {
   }
 })
 
-
-// Page head
 useHead({
   title: 'Gorusmeyi Duzenle - Valdori CRM'
 })

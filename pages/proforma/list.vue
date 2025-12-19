@@ -179,15 +179,7 @@
                      <PencilSquareIcon class="w-5 h-5" />
                   </NuxtLink>
                   
-                  <!-- ✅ İndirme onayı varsa veya admin/doctor ise göster -->
-                  <button 
-                    v-if="proforma.downloadApproved || canApproveDownload" 
-                    @click="handlePreview(proforma.id)" 
-                    class="btn-icon" 
-                    title="Önizleme"
-                  >
-                    <DocumentIcon class="w-5 h-5" />
-                  </button>
+                 
                   
                   <NuxtLink 
                     v-if="proforma.downloadApproved || canApproveDownload" 

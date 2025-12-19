@@ -492,7 +492,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-8">
       
       <!-- Recent Customers -->
-      <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden lg:col-span-3">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden lg:col-span-6">
         <div class="px-5 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="h-9 w-9 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
@@ -560,7 +560,7 @@
       </div>
 
       <!-- Upcoming Reminders -->
-      <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden  lg:col-span-3">
+      <!-- <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden  lg:col-span-3">
         <div class="px-5 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="h-9 w-9 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
@@ -573,7 +573,6 @@
         </div>
 
         <div class="p-4">
-          <!-- Loading -->
           <div v-if="loadingReminders" class="space-y-3">
             <div v-for="i in 4" :key="i" class="flex items-center gap-3">
               <div class="h-10 w-10 rounded-xl bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
@@ -584,7 +583,6 @@
             </div>
           </div>
 
-          <!-- Data -->
           <div v-else-if="upcomingReminders.length > 0" class="space-y-2">
             <div 
               v-for="reminder in upcomingReminders" 
@@ -610,7 +608,6 @@
             </div>
           </div>
 
-          <!-- Empty -->
           <div v-else class="text-center py-8">
             <div class="h-12 w-12 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto mb-3">
               <BellAlertIcon class="h-6 w-6 text-gray-400" />
@@ -620,7 +617,7 @@
             </p>
           </div>
         </div>
-      </div>
+      </div> -->
 
        <!-- Upcoming Meetings -->
     <div v-if="canViewMeetings" class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden  lg:col-span-6">
@@ -904,7 +901,7 @@ const refreshAllData = async () => {
     calculateStats(),
     fetchRecentCustomers(),
     fetchUpcomingMeetings(),
-    fetchUpcomingReminders(),
+    // fetchUpcomingReminders(),
     fetchUnassignedNewCustomers(),
     fetchAssignedNewCustomers(),
     fetchTodayAssignments(),
@@ -1303,7 +1300,7 @@ onMounted(async () => {
     calculateStats(),
     fetchRecentCustomers(),
     fetchUpcomingMeetings(),
-    fetchUpcomingReminders(),
+    // fetchUpcomingReminders(),
     fetchUnassignedNewCustomers(),
     fetchAssignedNewCustomers(),
     fetchUserCustomersForCalendar(),

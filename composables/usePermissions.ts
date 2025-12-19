@@ -19,28 +19,27 @@ export const usePermissions = () => {
 
   // Menü görünürlük kuralları
   const canViewMenu = (menuName: string) => {
-   
-
-    // Admin diğer tüm menüleri görür
+    // Admin her şeyi görür
     if (isAdmin.value) return true
 
     // User rolü için
     if (isUser.value) {
       const allowedMenus = [
-        'Dashboard',
-        'Müşteriler',
-        'Kişiler',
-        'Yeni Kişiler',
-        'Dinamik Arama',
-        'Hatırlatmalar',
-        'Satışlar',
-        'Randevular',
-        'Ödemeler',
-        // Doktor Dönüşü - tek menü
-        'Doktor Dönüşü',
-        // Fiyatlandırmalar - tek menü
-        'Proforma',
-        'Fiyatlandırmalar'
+        'menu.dashboard',
+        'menu.pool_data',
+        'section.customer_management',
+        'menu.customers',
+        'menu.customers.people',
+        'menu.customers.new_people',
+        'menu.customers.dynamic_search',
+        'menu.customers.reminders',
+        'menu.doctor_review',
+        'menu.proforma',
+        'menu.pricing',
+        'section.sales_appointments',
+        'menu.sales',
+        'menu.sales_without_appointment',
+        'menu.appointments'
       ]
       return allowedMenus.includes(menuName)
     }
@@ -48,14 +47,14 @@ export const usePermissions = () => {
     // Doctor rolü için
     if (isDoctor.value) {
       const allowedMenus = [
-        'Müşteriler',
-        'Kişiler',
-        'Yeni Kişiler',
-        'Dinamik Arama',
-        'Hatırlatmalar',
-        'Havuz Verileri',
-        // Doktor Dönüşü - tek menü
-        'Doktor Dönüşü'
+        'menu.pool_data',
+        'section.customer_management',
+        'menu.customers',
+        'menu.customers.people',
+        'menu.customers.new_people',
+        'menu.customers.dynamic_search',
+        'menu.customers.reminders',
+        'menu.doctor_review'
       ]
       return allowedMenus.includes(menuName)
     }
@@ -63,15 +62,15 @@ export const usePermissions = () => {
     // Pricing rolü için
     if (isPricing.value) {
       const allowedMenus = [
-        'Müşteriler',
-        'Kişiler',
-        'Yeni Kişiler',
-        'Dinamik Arama',
-        'Hatırlatmalar',
-        'Havuz Verileri',
-        // Fiyatlandırmalar - tek menü
-        'Proforma',
-        'Fiyatlandırmalar'
+        'menu.pool_data',
+        'section.customer_management',
+        'menu.customers',
+        'menu.customers.people',
+        'menu.customers.new_people',
+        'menu.customers.dynamic_search',
+        'menu.customers.reminders',
+        'menu.proforma',
+        'menu.pricing'
       ]
       return allowedMenus.includes(menuName)
     }
