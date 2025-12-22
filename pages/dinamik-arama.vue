@@ -566,14 +566,23 @@
                   </div>
                 </td>
 
-                <!-- Contact -->
-                <td class="px-4 py-4">
+
+                <td class="px-6 py-4">
                   <div class="space-y-1">
-                    <p class="text-sm text-gray-600 dark:text-gray-300">{{ customer.email || '-' }}</p>
-                    <p v-if="customer.phone" class="text-xs text-gray-500 dark:text-gray-400">
-                      <template v-if="isAdmin">{{ customer.phone }}</template>
-                      <template v-else>{{ customer.phone.substring(0, 5) }}****</template>
-                    </p>
+                    <div v-if="customer.phone || customer.email" class="space-y-1">
+                      <p class="text-sm text-gray-600 dark:text-gray-300">{{ customer.email || '-' }}</p>
+                      <div v-if="customer.phone" class="flex items-center gap-2">
+                        <!-- ✅ Ülke Bayrağı -->
+                        <span class="text-lg" :title="getCountryName(customer.phone)">
+                          {{ getCountryFlag(customer.phone) }}
+                        </span>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                          <template v-if="isAdmin">{{ customer.phone }}</template>
+                          <template v-else>{{ customer.phone.substring(0, 5) }}****</template>
+                        </p>
+                      </div>
+                    </div>
+                    <span v-if="!customer.email && !customer.phone" class="text-sm text-gray-400">-</span>
                   </div>
                 </td>
 
@@ -1107,6 +1116,247 @@ const performanceSummary = computed(() => {
 const sortedUserPerformance = computed(() => {
   return [...userPerformanceData.value].sort((a, b) => b.total - a.total)
 })
+
+
+// ============================================================
+// ✅ ÜLKE KODU VE BAYRAK FONKSİYONLARI
+// ============================================================
+
+/**
+ * Telefon numarasından ülke kodunu çıkarır
+ */
+const getCountryCode = (phone) => {
+  if (!phone) return null
+  
+  // Telefon numarasını temizle (boşluk, tire, parantez vb.)
+  const cleaned = phone.replace(/[\s\-\(\)\.]/g, '')
+  
+  // 00 ile başlıyorsa + ile değiştir
+  let normalized = cleaned
+  if (cleaned.startsWith('00')) {
+    normalized = '+' + cleaned.substring(2)
+  }
+  
+  // + ile başlamıyorsa başına ekle
+  if (!normalized.startsWith('+')) {
+    normalized = '+' + normalized
+  }
+  
+  // Ülke kodlarını kontrol et (uzundan kısaya doğru)
+  // 4 haneli kodlar
+  if (normalized.startsWith('+9715')) return '971' // UAE
+  if (normalized.startsWith('+9665')) return '966' // Saudi Arabia
+  if (normalized.startsWith('+9745')) return '974' // Qatar
+  
+  // 3 haneli kodlar
+  if (normalized.startsWith('+971')) return '971' // UAE
+  if (normalized.startsWith('+966')) return '966' // Saudi Arabia
+  if (normalized.startsWith('+974')) return '974' // Qatar
+  if (normalized.startsWith('+965')) return '965' // Kuwait
+  if (normalized.startsWith('+962')) return '962' // Jordan
+  if (normalized.startsWith('+963')) return '963' // Syria
+  if (normalized.startsWith('+961')) return '961' // Lebanon
+  if (normalized.startsWith('+964')) return '964' // Iraq
+  if (normalized.startsWith('+212')) return '212' // Morocco
+  if (normalized.startsWith('+213')) return '213' // Algeria
+  if (normalized.startsWith('+216')) return '216' // Tunisia
+  if (normalized.startsWith('+218')) return '218' // Libya
+  if (normalized.startsWith('+967')) return '967' // Yemen
+  if (normalized.startsWith('+968')) return '968' // Oman
+  if (normalized.startsWith('+973')) return '973' // Bahrain
+  
+  // 2 haneli kodlar
+  if (normalized.startsWith('+90')) return '90'   // Turkey
+  if (normalized.startsWith('+44')) return '44'   // UK
+  if (normalized.startsWith('+49')) return '49'   // Germany
+  if (normalized.startsWith('+33')) return '33'   // France
+  if (normalized.startsWith('+39')) return '39'   // Italy
+  if (normalized.startsWith('+34')) return '34'   // Spain
+  if (normalized.startsWith('+86')) return '86'   // China
+  if (normalized.startsWith('+91')) return '91'   // India
+  if (normalized.startsWith('+81')) return '81'   // Japan
+  if (normalized.startsWith('+82')) return '82'   // South Korea
+  if (normalized.startsWith('+20')) return '20'   // Egypt
+  if (normalized.startsWith('+98')) return '98'   // Iran
+  if (normalized.startsWith('+92')) return '92'   // Pakistan
+  if (normalized.startsWith('+93')) return '93'   // Afghanistan
+  if (normalized.startsWith('+95')) return '95'   // Myanmar
+  if (normalized.startsWith('+60')) return '60'   // Malaysia
+  if (normalized.startsWith('+62')) return '62'   // Indonesia
+  if (normalized.startsWith('+63')) return '63'   // Philippines
+  if (normalized.startsWith('+64')) return '64'   // New Zealand
+  if (normalized.startsWith('+65')) return '65'   // Singapore
+  if (normalized.startsWith('+66')) return '66'   // Thailand
+  if (normalized.startsWith('+84')) return '84'   // Vietnam
+  if (normalized.startsWith('+30')) return '30'   // Greece
+  if (normalized.startsWith('+31')) return '31'   // Netherlands
+  if (normalized.startsWith('+32')) return '32'   // Belgium
+  if (normalized.startsWith('+41')) return '41'   // Switzerland
+  if (normalized.startsWith('+43')) return '43'   // Austria
+  if (normalized.startsWith('+45')) return '45'   // Denmark
+  if (normalized.startsWith('+46')) return '46'   // Sweden
+  if (normalized.startsWith('+47')) return '47'   // Norway
+  if (normalized.startsWith('+48')) return '48'   // Poland
+  if (normalized.startsWith('+51')) return '51'   // Peru
+  if (normalized.startsWith('+52')) return '52'   // Mexico
+  if (normalized.startsWith('+53')) return '53'   // Cuba
+  if (normalized.startsWith('+54')) return '54'   // Argentina
+  if (normalized.startsWith('+55')) return '55'   // Brazil
+  if (normalized.startsWith('+56')) return '56'   // Chile
+  if (normalized.startsWith('+57')) return '57'   // Colombia
+  if (normalized.startsWith('+58')) return '58'   // Venezuela
+  if (normalized.startsWith('+27')) return '27'   // South Africa
+  
+  // 1 haneli kodlar
+  if (normalized.startsWith('+1')) return '1'     // USA/Canada
+  if (normalized.startsWith('+7')) return '7'     // Russia/Kazakhstan
+  
+  return null
+}
+
+/**
+ * Ülke koduna göre bayrak emoji döndürür
+ */
+const countryFlags = {
+  '90': '🇹🇷',   // Turkey
+  '1': '🇺🇸',     // USA/Canada
+  '44': '🇬🇧',   // UK
+  '49': '🇩🇪',   // Germany
+  '33': '🇫🇷',   // France
+  '39': '🇮🇹',   // Italy
+  '34': '🇪🇸',   // Spain
+  '86': '🇨🇳',   // China
+  '91': '🇮🇳',   // India
+  '81': '🇯🇵',   // Japan
+  '82': '🇰🇷',   // South Korea
+  '7': '🇷🇺',     // Russia
+  '966': '🇸🇦',  // Saudi Arabia
+  '971': '🇦🇪',  // UAE
+  '974': '🇶🇦',  // Qatar
+  '965': '🇰🇼',  // Kuwait
+  '962': '🇯🇴',  // Jordan
+  '963': '🇸🇾',  // Syria
+  '961': '🇱🇧',  // Lebanon
+  '964': '🇮🇶',  // Iraq
+  '20': '🇪🇬',   // Egypt
+  '212': '🇲🇦',  // Morocco
+  '213': '🇩🇿',  // Algeria
+  '216': '🇹🇳',  // Tunisia
+  '218': '🇱🇾',  // Libya
+  '967': '🇾🇪',  // Yemen
+  '968': '🇴🇲',  // Oman
+  '973': '🇧🇭',  // Bahrain
+  '98': '🇮🇷',   // Iran
+  '92': '🇵🇰',   // Pakistan
+  '93': '🇦🇫',   // Afghanistan
+  '95': '🇲🇲',   // Myanmar
+  '60': '🇲🇾',   // Malaysia
+  '62': '🇮🇩',   // Indonesia
+  '63': '🇵🇭',   // Philippines
+  '64': '🇳🇿',   // New Zealand
+  '65': '🇸🇬',   // Singapore
+  '66': '🇹🇭',   // Thailand
+  '84': '🇻🇳',   // Vietnam
+  '30': '🇬🇷',   // Greece
+  '31': '🇳🇱',   // Netherlands
+  '32': '🇧🇪',   // Belgium
+  '41': '🇨🇭',   // Switzerland
+  '43': '🇦🇹',   // Austria
+  '45': '🇩🇰',   // Denmark
+  '46': '🇸🇪',   // Sweden
+  '47': '🇳🇴',   // Norway
+  '48': '🇵🇱',   // Poland
+  '51': '🇵🇪',   // Peru
+  '52': '🇲🇽',   // Mexico
+  '53': '🇨🇺',   // Cuba
+  '54': '🇦🇷',   // Argentina
+  '55': '🇧🇷',   // Brazil
+  '56': '🇨🇱',   // Chile
+  '57': '🇨🇴',   // Colombia
+  '58': '🇻🇪',   // Venezuela
+  '27': '🇿🇦',   // South Africa
+}
+
+/**
+ * Ülke koduna göre ülke ismi döndürür
+ */
+const countryNames = {
+  '90': 'Türkiye',
+  '1': 'ABD/Kanada',
+  '44': 'İngiltere',
+  '49': 'Almanya',
+  '33': 'Fransa',
+  '39': 'İtalya',
+  '34': 'İspanya',
+  '86': 'Çin',
+  '91': 'Hindistan',
+  '81': 'Japonya',
+  '82': 'Güney Kore',
+  '7': 'Rusya',
+  '966': 'Suudi Arabistan',
+  '971': 'BAE',
+  '974': 'Katar',
+  '965': 'Kuveyt',
+  '962': 'Ürdün',
+  '963': 'Suriye',
+  '961': 'Lübnan',
+  '964': 'Irak',
+  '20': 'Mısır',
+  '212': 'Fas',
+  '213': 'Cezayir',
+  '216': 'Tunus',
+  '218': 'Libya',
+  '967': 'Yemen',
+  '968': 'Umman',
+  '973': 'Bahreyn',
+  '98': 'İran',
+  '92': 'Pakistan',
+  '93': 'Afganistan',
+  '95': 'Myanmar',
+  '60': 'Malezya',
+  '62': 'Endonezya',
+  '63': 'Filipinler',
+  '64': 'Yeni Zelanda',
+  '65': 'Singapur',
+  '66': 'Tayland',
+  '84': 'Vietnam',
+  '30': 'Yunanistan',
+  '31': 'Hollanda',
+  '32': 'Belçika',
+  '41': 'İsviçre',
+  '43': 'Avusturya',
+  '45': 'Danimarka',
+  '46': 'İsveç',
+  '47': 'Norveç',
+  '48': 'Polonya',
+  '51': 'Peru',
+  '52': 'Meksika',
+  '53': 'Küba',
+  '54': 'Arjantin',
+  '55': 'Brezilya',
+  '56': 'Şili',
+  '57': 'Kolombiya',
+  '58': 'Venezuela',
+  '27': 'Güney Afrika',
+}
+
+/**
+ * Telefon numarasına göre bayrak emoji döndürür
+ */
+const getCountryFlag = (phone) => {
+  const code = getCountryCode(phone)
+  return code ? (countryFlags[code] || '🌍') : '🌍'
+}
+
+
+/**
+ * Telefon numarasına göre ülke ismi döndürür
+ */
+const getCountryName = (phone) => {
+  const code = getCountryCode(phone)
+  return code ? (countryNames[code] || 'Bilinmeyen') : 'Bilinmeyen'
+}
+
 
 // Helper Functions for Performance UI
 const getUserCardClass = (total) => {

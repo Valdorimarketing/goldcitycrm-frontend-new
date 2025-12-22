@@ -103,7 +103,7 @@
 
     <!-- ✅ ADVANCED FILTERS CARD -->
     <div
-      class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 mb-6 overflow-hidden">
+      class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 mb-6">
       <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-700">
         <div class="flex items-center gap-2">
           <FunnelIcon class="h-5 w-5 text-gray-400" />
@@ -166,24 +166,6 @@
               </option>
             </select>
           </div>
-
-          <!-- Active Status -->
-          <div>
-            <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">
-              Aktiflik Durumu
-            </label>
-            <select v-model="activeStatusFilter"
-              class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all appearance-none cursor-pointer">
-              <option :value="undefined">Tümü</option>
-              <option :value="true">Aktif</option>
-              <option :value="false">Pasif</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- ✅ Row 2: Country, Related Transaction, Checkup Package, User (Admin) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-
 
           <!-- User Filter (Admin) -->
           <div v-if="authStore.user?.role === 'admin'">
@@ -298,16 +280,7 @@
               Kaynak: {{ sources.find(a => a.id == sourceIdFilter)?.name }}
               <button @click="sourceIdFilter = ''" class="ml-1">×</button>
             </span>
-
-            <span v-if="activeStatusFilter !== undefined" class="filter-badge">
-              {{ activeStatusFilter ? 'Aktif' : 'Pasif' }}
-              <button @click="activeStatusFilter = undefined" class="ml-1">×</button>
-            </span>
-
-            <span v-if="countryFilter" class="filter-badge">
-              Ülke: {{ countryFilter }}
-              <button @click="countryFilter = ''" class="ml-1">×</button>
-            </span>
+ 
 
             <span v-if="relatedTransactionFilter" class="filter-badge">
               Konu: {{ relatedTransactionFilter }}
@@ -524,9 +497,7 @@ const statusFilter = ref(undefined)
 const relevantUserFilter = ref(null)
 
 // ✅ NEW: Advanced filters 
-const sourceIdFilter = ref(null);
-const activeStatusFilter = ref(undefined)
-const countryFilter = ref('')
+const sourceIdFilter = ref(null); 
 const relatedTransactionFilter = ref('')
 const checkupPackageFilter = ref('')
 const startDateFilter = ref('')
@@ -550,9 +521,7 @@ const activeFilterCount = computed(() => {
   if (searchTerm.value) count++
   if (statusFilter.value) count++
   if (relevantUserFilter.value) count++
-  if (sourceIdFilter.value) count++
-  if (activeStatusFilter.value !== undefined) count++
-  if (countryFilter.value) count++
+  if (sourceIdFilter.value) count++ 
   if (relatedTransactionFilter.value) count++
   if (checkupPackageFilter.value) count++
   if (startDateFilter.value) count++
@@ -578,9 +547,7 @@ const currentExportFilters = computed(() => {
 
 
   // ✅ NEW: Advanced filters
-  if (sourceIdFilter.value) filters.source = sourceIdFilter.value
-  if (activeStatusFilter.value !== undefined) filters.isActive = activeStatusFilter.value
-  if (countryFilter.value) filters.country = countryFilter.value
+  if (sourceIdFilter.value) filters.source = sourceIdFilter.value 
   if (relatedTransactionFilter.value) filters.relatedTransaction = relatedTransactionFilter.value
   if (checkupPackageFilter.value) filters.checkupPackage = checkupPackageFilter.value
   if (startDateFilter.value) filters.startDate = startDateFilter.value
@@ -685,9 +652,7 @@ const loadFiltersFromStorage = () => {
     if (parsed.relevantUserFilter) relevantUserFilter.value = parsed.relevantUserFilter
 
     // ✅ NEW: Advanced filters
-    if (parsed.sourceIdFilter) sourceIdFilter.value = parsed.sourceIdFilter
-    if (parsed.activeStatusFilter !== undefined) activeStatusFilter.value = parsed.activeStatusFilter
-    if (parsed.countryFilter) countryFilter.value = parsed.countryFilter
+    if (parsed.sourceIdFilter) sourceIdFilter.value = parsed.sourceIdFilter 
     if (parsed.relatedTransactionFilter) relatedTransactionFilter.value = parsed.relatedTransactionFilter
     if (parsed.checkupPackageFilter) checkupPackageFilter.value = parsed.checkupPackageFilter
     if (parsed.startDateFilter) startDateFilter.value = parsed.startDateFilter
@@ -707,9 +672,7 @@ const saveFiltersToStorage = () => {
     statusFilter: statusFilter.value,
     relevantUserFilter: relevantUserFilter.value,
     // ✅ NEW: Advanced filters
-    sourceIdFilter: sourceIdFilter.value,
-    activeStatusFilter: activeStatusFilter.value,
-    countryFilter: countryFilter.value,
+    sourceIdFilter: sourceIdFilter.value, 
     relatedTransactionFilter: relatedTransactionFilter.value,
     checkupPackageFilter: checkupPackageFilter.value,
     startDateFilter: startDateFilter.value,
@@ -734,9 +697,7 @@ const loadCustomers = async (page = 1) => {
   }
 
   // ✅ NEW: Add all advanced filters to request
-  if (sourceIdFilter.value) customFilters.source = sourceIdFilter.value
-  if (activeStatusFilter.value !== undefined) customFilters.isActive = activeStatusFilter.value
-  if (countryFilter.value) customFilters.country = countryFilter.value
+  if (sourceIdFilter.value) customFilters.source = sourceIdFilter.value 
   if (relatedTransactionFilter.value) customFilters.relatedTransaction = relatedTransactionFilter.value
   if (checkupPackageFilter.value) customFilters.checkupPackage = checkupPackageFilter.value
   if (startDateFilter.value) customFilters.startDate = startDateFilter.value
@@ -757,9 +718,7 @@ const resetFilters = () => {
   relevantUserFilter.value = null
   userQuery.value = ''
   // ✅ NEW: Reset advanced filters
-  sourceIdFilter.value = ''
-  activeStatusFilter.value = undefined
-  countryFilter.value = ''
+  sourceIdFilter.value = '' 
   relatedTransactionFilter.value = ''
   checkupPackageFilter.value = ''
   startDateFilter.value = ''
@@ -793,9 +752,7 @@ const handleExport = async ({ format, columns, scope }) => {
   }
 
   // ✅ NEW: Add all advanced filters to export
-  if (sourceIdFilter.value) exportFilters.source = sourceIdFilter.value
-  if (activeStatusFilter.value !== undefined) exportFilters.isActive = activeStatusFilter.value
-  if (countryFilter.value) exportFilters.country = countryFilter.value
+  if (sourceIdFilter.value) exportFilters.source = sourceIdFilter.value  
   if (relatedTransactionFilter.value) exportFilters.relatedTransaction = relatedTransactionFilter.value
   if (checkupPackageFilter.value) exportFilters.checkupPackage = checkupPackageFilter.value
   if (startDateFilter.value) exportFilters.startDate = startDateFilter.value
@@ -915,9 +872,7 @@ watchDebounced(
     searchTerm,
     statusFilter,
     relevantUserFilter,
-    sourceIdFilter,
-    activeStatusFilter,
-    countryFilter,
+    sourceIdFilter,  
     relatedTransactionFilter,
     checkupPackageFilter,
     startDateFilter,

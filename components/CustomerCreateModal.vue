@@ -140,17 +140,27 @@
                           </p>
                         </div>
 
-                        <!-- Phone -->
+
+                        <!-- Phone Input Section -->
                         <div>
                           <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             <PhoneIcon class="inline h-4 w-4 mr-1" />
                             Telefon <span class="text-red-500">*</span>
                           </label>
+
                           <div class="relative">
-                            <input id="phone" v-model="form.phone" type="tel" required @blur="checkPhoneUniqueness"
-                              :disabled="checkingPhone"
-                              class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                              placeholder="Mobil telefon numarası" maxlength="16" />
+                            <input id="phone" v-model="form.phone" type="tel" required @input="handlePhoneInput"
+                              :disabled="checkingPhone" :class="[
+                                'block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed',
+                                phoneStatus.exists && phoneStatus.exactMatch
+                                  ? 'ring-red-500 dark:ring-red-600'
+                                  : phoneStatus.exists && phoneStatus.similarMatches.length > 0
+                                    ? 'ring-yellow-500 dark:ring-yellow-600'
+                                    : 'ring-gray-300 dark:ring-gray-600',
+                                'focus:ring-2 focus:ring-indigo-500 focus:border-transparent'
+                              ]" placeholder="Mobil telefon numarası" maxlength="16" />
+
+                            <!-- Loading Spinner -->
                             <div v-if="checkingPhone" class="absolute inset-y-0 right-0 flex items-center pr-3">
                               <svg class="animate-spin h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg"
                                 fill="none" viewBox="0 0 24 24">
@@ -161,14 +171,104 @@
                                 </path>
                               </svg>
                             </div>
+
+                            <!-- Status Icons -->
+                            <div v-else-if="form.phone.length >= 10"
+                              class="absolute inset-y-0 right-0 flex items-center pr-3">
+                              <!-- Exact Match - Red X -->
+                              <svg v-if="phoneStatus.exists && phoneStatus.exactMatch" class="h-5 w-5 text-red-500"
+                                fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                  clip-rule="evenodd" />
+                              </svg>
+                              <!-- Similar Match - Yellow Warning -->
+                              <svg v-else-if="phoneStatus.exists && phoneStatus.similarMatches.length > 0"
+                                class="h-5 w-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                  d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                  clip-rule="evenodd" />
+                              </svg>
+                              <!-- Valid - Green Check -->
+                              <svg v-else class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                  clip-rule="evenodd" />
+                              </svg>
+                            </div>
                           </div>
-                          <p v-if="errors.phone" class="mt-2 text-sm text-red-600 dark:text-red-400">{{ errors.phone }}
+
+                          <!-- Error/Warning Messages -->
+                          <p v-if="errors.phone" class="mt-2 text-sm text-red-600 dark:text-red-400">
+                            {{ errors.phone }}
                           </p>
+
+                          <!-- Exact Match Alert -->
+                          <div v-if="phoneStatus.exists && phoneStatus.exactMatch"
+                            class="mt-2 rounded-lg bg-red-50 dark:bg-red-900/20 p-3 border border-red-200 dark:border-red-800">
+                            <div class="flex items-start">
+                              <svg class="h-5 w-5 text-red-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                  clip-rule="evenodd" />
+                              </svg>
+                              <div class="ml-3 flex-1">
+                                <p class="text-sm font-medium text-red-800 dark:text-red-300">
+                                  Bu telefon numarası zaten kayıtlı!
+                                </p>
+                                <p class="mt-1 text-sm text-red-700 dark:text-red-400">
+                                  <strong>{{ phoneStatus.exactMatch.name }} {{ phoneStatus.exactMatch.surname
+                                    }}</strong>
+                                  ({{ phoneStatus.exactMatch.phone }})
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- Similar Matches Alert -->
+                          <div v-else-if="phoneStatus.exists && phoneStatus.similarMatches.length > 0"
+                            class="mt-2 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 p-3 border border-yellow-200 dark:border-yellow-800">
+                            <div class="flex items-start">
+                              <svg class="h-5 w-5 text-yellow-400 flex-shrink-0" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                  d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                  clip-rule="evenodd" />
+                              </svg>
+                              <div class="ml-3 flex-1">
+                                <p class="text-sm font-medium text-yellow-800 dark:text-yellow-300">
+                                  Benzer telefon numaraları bulundu ({{ phoneStatus.similarMatches.length }})
+                                </p>
+                                <ul class="mt-2 space-y-1">
+                                  <li v-for="match in phoneStatus.similarMatches.slice(0, 3)" :key="match.id"
+                                    class="text-sm text-yellow-700 dark:text-yellow-400">
+                                    <strong>{{ match.name }} {{ match.surname }}</strong> - {{ match.phone }}
+                                  </li>
+                                  <li v-if="phoneStatus.similarMatches.length > 3"
+                                    class="text-xs text-yellow-600 dark:text-yellow-500">
+                                    +{{ phoneStatus.similarMatches.length - 3 }} daha...
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
                         </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
                         <div>
-                          <label for="patient"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          <label for="patient" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             <CalendarIcon class="inline h-4 w-4 mr-1" />
                             Hastalık
                           </label>
@@ -176,7 +276,7 @@
                             class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all" />
                         </div>
 
-                          <!-- Birth Date -->
+                        <!-- Birth Date -->
                         <div>
                           <label for="birth_date"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -212,9 +312,9 @@
                           </div>
                         </div>
 
-                      
 
-                        
+
+
                       </div>
                     </div>
                   </Transition>
@@ -611,7 +711,6 @@
     </Transition>
   </Teleport>
 </template>
-
 <script setup>
 import {
   XMarkIcon,
@@ -639,7 +738,7 @@ import {
   XCircleIcon,
   CheckCircleIcon
 } from '@heroicons/vue/24/outline'
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, reactive, ref, watch, onUnmounted } from 'vue' // ✅ onUnmounted eklendi
 
 const props = defineProps({
   show: Boolean
@@ -730,7 +829,6 @@ const showDropdown = ref(false)
 
 let searchTimeout = null
 
-
 const loadingCountries = ref(false)
 const loadingStates = ref(false)
 const loadingCities = ref(false)
@@ -742,11 +840,19 @@ const errors = ref({})
 const errorMessage = ref('')
 const successMessage = ref('')
 
+// ✅ Phone check state
+const phoneStatus = ref({
+  exists: false,
+  exactMatch: null,
+  similarMatches: []
+})
+
+let phoneCheckTimeout = null
+
 // Load initial data
 const loadInitialData = async () => {
   const api = useApi()
 
-  // Load each resource separately to avoid failures
   // Load countries
   try {
     loadingCountries.value = true
@@ -757,7 +863,6 @@ const loadInitialData = async () => {
     console.error('Error loading countries:', error)
     loadingCountries.value = false
   }
-
 
   // Load sources
   try {
@@ -775,7 +880,6 @@ const loadInitialData = async () => {
   try {
     const response = await api('/statuses')
     statuses.value = response.data || response || []
-    // "Yeni" durumunu bul ve form'a ata
     const newStatus = statuses.value.find(s =>
       s.name === 'Yeni' ||
       s.name === 'yeni' ||
@@ -788,7 +892,6 @@ const loadInitialData = async () => {
       console.log('Yeni status set:', newStatus.id, newStatus.name)
     } else {
       console.log('Available statuses:', statuses.value)
-      // Eğer "Yeni" bulunamazsa, ilk status'u seç
       if (statuses.value.length > 0) {
         form.status = statuses.value[0].id
       }
@@ -798,7 +901,7 @@ const loadInitialData = async () => {
     statuses.value = []
   }
 
-  // Load dynamic fields - this should always run
+  // Load dynamic fields
   console.log('Loading dynamic fields...')
   await loadDynamicFields()
   console.log('Dynamic fields after load:', dynamicFields.value)
@@ -825,7 +928,6 @@ const handleImageUpload = (event) => {
   const file = event.target.files[0]
   if (file) {
     selectedImage.value = file
-    // Create preview
     const reader = new FileReader()
     reader.onload = (e) => {
       imagePreview.value = e.target.result
@@ -838,7 +940,6 @@ const handleImageUpload = (event) => {
 const removeImage = () => {
   selectedImage.value = null
   imagePreview.value = null
-  // Reset file input
   const fileInput = document.getElementById('image')
   if (fileInput) {
     fileInput.value = ''
@@ -853,11 +954,10 @@ const handleFileUpload = (event, fieldId) => {
   }
 }
 
-
+// Search references
 const searchReferences = async () => {
   clearTimeout(searchTimeout)
 
-  // Debounce: bekleme (örneğin 400ms)
   searchTimeout = setTimeout(async () => {
     if (!searchQuery.value.trim()) {
       filteredReferances.value = []
@@ -872,9 +972,8 @@ const searchReferences = async () => {
       const response = await api(`/customers?search=${searchQuery.value}`)
       const data = response.data || response || []
 
-      // İlgili verileri listeye ata
       referances.value = data
-      filteredReferances.value = data.slice(0, 10) // ilk 10 sonucu göster
+      filteredReferances.value = data.slice(0, 10)
     } catch (error) {
       console.error('Error loading customers:', error)
     } finally {
@@ -912,7 +1011,6 @@ const onCountryChange = async () => {
   }
 }
 
-
 const onStateChange = async () => {
   form.city = null
   form.district = null
@@ -937,30 +1035,60 @@ const onCityChange = async () => {
   // District is now a text field, no need to reset or load districts
 }
 
-// Check phone uniqueness
-const checkPhoneUniqueness = async () => {
-  // Clear previous phone error
+// ✅ Phone check functions
+/**
+ * Handle phone input with debounced API check
+ */
+const handlePhoneInput = () => {
+  // Clear previous error
   if (errors.value.phone === 'Bu telefon numarası zaten kayıtlı') {
     errors.value.phone = ''
   }
 
-  // Don't check if phone is empty or invalid
-  if (!form.phone?.trim()) {
-    return true
+  // Reset phone status
+  phoneStatus.value = {
+    exists: false,
+    exactMatch: null,
+    similarMatches: []
   }
 
-  const phoneDigits = form.phone.replace(/\D/g, '')
+  // Clear previous timeout
+  if (phoneCheckTimeout) {
+    clearTimeout(phoneCheckTimeout)
+  }
 
-  if (phoneDigits.length !== 10 || !phoneDigits.startsWith('5')) {
+  // Don't check if phone is too short
+  if (!form.phone || form.phone.length < 10) {
+    return
+  }
+
+  // Debounce: wait 500ms after user stops typing
+  phoneCheckTimeout = setTimeout(async () => {
+    await checkPhoneUniqueness()
+  }, 500)
+}
+
+/**
+ * Check phone uniqueness and find similar matches
+ */
+const checkPhoneUniqueness = async () => {
+  if (!form.phone?.trim() || form.phone.length < 10) {
     return true
   }
 
   try {
     checkingPhone.value = true
     const api = useApi()
-    const response = await api(`/customers/check-phone?phone=${phoneDigits}`)
+    const response = await api(`/customers/check-phone?phone=${encodeURIComponent(form.phone)}`)
 
-    if (response.exists) {
+    phoneStatus.value = {
+      exists: response.exists,
+      exactMatch: response.exactMatch,
+      similarMatches: response.similarMatches || []
+    }
+
+    // If exact match, set error and prevent submission
+    if (response.exactMatch) {
       errors.value.phone = 'Bu telefon numarası zaten kayıtlı'
       return false
     }
@@ -1010,7 +1138,7 @@ const validateForm = () => {
       const value = dynamicFieldValues.value[field.id]
       if (!value || (typeof value === 'string' && !value.trim())) {
         errorMessage.value = `"${field.name}" alanı zorunludur`
-        currentStep.value = 4 // Navigate to dynamic fields step
+        currentStep.value = 4
         return false
       }
     }
@@ -1022,14 +1150,14 @@ const validateForm = () => {
 // Handle form submission
 const handleSubmit = async () => {
   if (!validateForm()) {
-    currentStep.value = 1 // Go back to first step if validation fails
+    currentStep.value = 1
     return
   }
-
-  // Check phone uniqueness before submitting
-  const isPhoneUnique = await checkPhoneUniqueness()
-  if (!isPhoneUnique) {
-    currentStep.value = 1 // Go back to first step if phone is not unique
+  
+  // ✅ Block submission if exact match found
+  if (phoneStatus.value.exactMatch) {
+    currentStep.value = 1
+    errors.value.phone = 'Bu telefon numarası zaten kayıtlı. Lütfen farklı bir numara girin.'
     return
   }
 
@@ -1076,7 +1204,6 @@ const handleSubmit = async () => {
       const formData = new FormData()
       formData.append('image', selectedImage.value)
 
-      // Append all customer data to FormData
       Object.keys(customerData).forEach(key => {
         if (customerData[key] !== null && customerData[key] !== undefined) {
           formData.append(key, customerData[key])
@@ -1100,7 +1227,7 @@ const handleSubmit = async () => {
       const value = dynamicFieldValues.value[field.id]
       if (value !== undefined && value !== null && value !== '') {
         dynamicFieldsData.push({
-          customer: response.id,  // Backend expects 'customer' not 'customer_id'
+          customer: response.id,
           customer_dynamic_field: field.id,
           name: field.name,
           type: field.type,
@@ -1118,7 +1245,6 @@ const handleSubmit = async () => {
     successMessage.value = 'Müşteri başarıyla oluşturuldu!'
     emit('created', response)
 
-    // Close modal after short delay
     setTimeout(() => {
       emit('close')
       resetForm()
@@ -1134,24 +1260,30 @@ const handleSubmit = async () => {
 
 // Reset form
 const resetForm = () => {
-  // Status'u sakla
   const savedStatus = form.status
 
   Object.keys(form).forEach(key => {
     if (key === 'isActive') {
       form[key] = true
     } else if (key === 'status') {
-      // Status'u koru
       form[key] = savedStatus
     } else {
       form[key] = ''
     }
   })
+  
   dynamicFieldValues.value = {}
   errors.value = {}
   errorMessage.value = ''
   successMessage.value = ''
   currentStep.value = 1
+
+  // ✅ Reset phone status
+  phoneStatus.value = {
+    exists: false,
+    exactMatch: null,
+    similarMatches: []
+  }
 
   // Reset image
   selectedImage.value = null
@@ -1161,6 +1293,16 @@ const resetForm = () => {
     fileInput.value = ''
   }
 }
+
+// ✅ Cleanup timeout on component unmount
+onUnmounted(() => {
+  if (phoneCheckTimeout) {
+    clearTimeout(phoneCheckTimeout)
+  }
+  if (searchTimeout) {
+    clearTimeout(searchTimeout)
+  }
+})
 
 // Watch for modal open/close
 watch(() => props.show, (newValue) => {
