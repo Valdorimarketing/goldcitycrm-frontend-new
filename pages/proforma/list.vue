@@ -12,6 +12,10 @@
       </div>
 
       <div class="flex items-center gap-3">
+        <button @click="clearFilters()" class="btn-secondary">
+          <XMarkIcon class="w-5 h-5 mr-2" />
+          Filtreleri Temizle
+        </button>
         <button @click="applyFilters()" class="btn-primary">
           <ArrowPathIcon class="w-5 h-5 mr-2" />
           Yenile
@@ -23,9 +27,43 @@
       </div>
     </div>
 
-    <!-- Filters -->
+    <!-- Advanced Filters -->
     <div class="filters-card">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <!-- Proforma No -->
+        <div>
+          <label class="form-label">Proforma No</label>
+          <input 
+            v-model="filters.proformaNumber" 
+            type="text" 
+            class="form-input"
+            placeholder="PRF-2025-0001"
+          />
+        </div>
+
+        <!-- Hasta Adı -->
+        <div>
+          <label class="form-label">Hasta Adı</label>
+          <input 
+            v-model="filters.patientName" 
+            type="text" 
+            class="form-input"
+            placeholder="Hasta adı ara..."
+          />
+        </div>
+
+        <!-- Oluşturan Kişi -->
+        <div>
+          <label class="form-label">Oluşturan</label>
+          <input 
+            v-model="filters.createdBy" 
+            type="text" 
+            class="form-input"
+            placeholder="Kullanıcı adı ara..."
+          />
+        </div>
+
+        <!-- Durum -->
         <div>
           <label class="form-label">Durum</label>
           <select v-model="filters.status" class="form-select">
@@ -37,21 +75,126 @@
           </select>
         </div>
 
+        <!-- Para Birimi -->
+        <div>
+          <label class="form-label">Para Birimi</label>
+          <select v-model="filters.currency" class="form-select">
+            <option value="">Tümü</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="TRY">TRY</option>
+            <option value="GBP">GBP</option>
+          </select>
+        </div>
+
+        <!-- İndirme Onayı -->
+        <div>
+          <label class="form-label">İndirme Onayı</label>
+          <select v-model="filters.downloadApproved" class="form-select">
+            <option value="">Tümü</option>
+            <option value="true">Onaylandı</option>
+            <option value="false">Onay Bekliyor</option>
+          </select>
+        </div>
+
+        <!-- Min Tutar -->
+        <div>
+          <label class="form-label">Min Tutar</label>
+          <input 
+            v-model.number="filters.minAmount" 
+            type="number" 
+            class="form-input"
+            placeholder="0.00"
+            step="0.01"
+          />
+        </div>
+
+        <!-- Max Tutar -->
+        <div>
+          <label class="form-label">Max Tutar</label>
+          <input 
+            v-model.number="filters.maxAmount" 
+            type="number" 
+            class="form-input"
+            placeholder="999999.99"
+            step="0.01"
+          />
+        </div>
+
+        <!-- Başlangıç Tarihi -->
         <div>
           <label class="form-label">Başlangıç Tarihi</label>
           <input v-model="filters.startDate" type="date" class="form-input" />
         </div>
 
+        <!-- Bitiş Tarihi -->
         <div>
           <label class="form-label">Bitiş Tarihi</label>
           <input v-model="filters.endDate" type="date" class="form-input" />
         </div>
 
-        <div class="flex items-end">
-          <button @click="applyFilters" class="btn-secondary w-full">
+        <!-- Filtre Butonu -->
+        <div class="flex items-end md:col-span-2">
+          <button @click="applyFilters" class="btn-primary w-full">
+            <MagnifyingGlassIcon class="w-5 h-5 mr-2" />
             Filtrele
           </button>
         </div>
+      </div>
+
+      <!-- Active Filters Display -->
+      <div v-if="hasActiveFilters" class="mt-4 flex flex-wrap gap-2">
+        <span class="text-sm text-gray-600 dark:text-gray-400 font-medium">Aktif Filtreler:</span>
+        
+        <span v-if="filters.proformaNumber" class="filter-badge">
+          Proforma: {{ filters.proformaNumber }}
+          <button @click="filters.proformaNumber = ''; applyFilters()" class="ml-1">×</button>
+        </span>
+        
+        <span v-if="filters.patientName" class="filter-badge">
+          Hasta: {{ filters.patientName }}
+          <button @click="filters.patientName = ''; applyFilters()" class="ml-1">×</button>
+        </span>
+        
+        <span v-if="filters.createdBy" class="filter-badge">
+          Oluşturan: {{ filters.createdBy }}
+          <button @click="filters.createdBy = ''; applyFilters()" class="ml-1">×</button>
+        </span>
+        
+        <span v-if="filters.status" class="filter-badge">
+          Durum: {{ getStatusText(filters.status) }}
+          <button @click="filters.status = ''; applyFilters()" class="ml-1">×</button>
+        </span>
+        
+        <span v-if="filters.currency" class="filter-badge">
+          Para Birimi: {{ filters.currency }}
+          <button @click="filters.currency = ''; applyFilters()" class="ml-1">×</button>
+        </span>
+        
+        <span v-if="filters.downloadApproved" class="filter-badge">
+          İndirme: {{ filters.downloadApproved === 'true' ? 'Onaylandı' : 'Onay Bekliyor' }}
+          <button @click="filters.downloadApproved = ''; applyFilters()" class="ml-1">×</button>
+        </span>
+        
+        <span v-if="filters.minAmount" class="filter-badge">
+          Min: {{ filters.minAmount }}
+          <button @click="filters.minAmount = null; applyFilters()" class="ml-1">×</button>
+        </span>
+        
+        <span v-if="filters.maxAmount" class="filter-badge">
+          Max: {{ filters.maxAmount }}
+          <button @click="filters.maxAmount = null; applyFilters()" class="ml-1">×</button>
+        </span>
+        
+        <span v-if="filters.startDate" class="filter-badge">
+          Başlangıç: {{ filters.startDate }}
+          <button @click="filters.startDate = ''; applyFilters()" class="ml-1">×</button>
+        </span>
+        
+        <span v-if="filters.endDate" class="filter-badge">
+          Bitiş: {{ filters.endDate }}
+          <button @click="filters.endDate = ''; applyFilters()" class="ml-1">×</button>
+        </span>
       </div>
     </div>
 
@@ -79,15 +222,25 @@
         Proforma bulunamadı
       </h3>
       <p class="text-gray-600 dark:text-gray-400 mb-4">
-        Henüz hiç proforma oluşturulmamış
+        {{ hasActiveFilters ? 'Filtrelere uygun proforma bulunamadı. Filtreleri değiştirmeyi deneyin.' : 'Henüz hiç proforma oluşturulmamış' }}
       </p>
-      <NuxtLink to="/proforma/create" class="btn-primary">
-        İlk Proformayı Oluştur
-      </NuxtLink>
+      <div class="flex gap-3 justify-center">
+        <button v-if="hasActiveFilters" @click="clearFilters" class="btn-secondary">
+          Filtreleri Temizle
+        </button>
+        <NuxtLink to="/proforma/create" class="btn-primary">
+          {{ hasActiveFilters ? 'Yeni Proforma Oluştur' : 'İlk Proformayı Oluştur' }}
+        </NuxtLink>
+      </div>
+    </div>
+
+    <!-- Results Summary -->
+    <div v-else class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+      <span class="font-medium">{{ proformas.length }}</span> proforma bulundu
     </div>
 
     <!-- Proforma Table -->
-    <div v-else class="table-card">
+    <div v-if="!loading && !error && proformas.length > 0" class="table-card">
       <div class="overflow-x-auto">
         <table class="data-table">
           <thead>
@@ -179,8 +332,6 @@
                      <PencilSquareIcon class="w-5 h-5" />
                   </NuxtLink>
                   
-                 
-                  
                   <NuxtLink 
                     v-if="proforma.downloadApproved || canApproveDownload" 
                     :to="`${downloadPath}/proformas/${proforma.id}/preview/${uuid}`" 
@@ -202,7 +353,6 @@
         </table>
       </div>
     </div>
-
 
     <!-- Preview Modal -->
     <div v-if="showPreview" class="modal-overlay" @click="showPreview = false">
@@ -238,11 +388,11 @@ import {
   PlusIcon,
   ArrowPathIcon,
   PencilSquareIcon,
-  DocumentIcon,
   TrashIcon,
   CheckIcon,
   PrinterIcon,
-  XMarkIcon
+  XMarkIcon,
+  MagnifyingGlassIcon
 } from '@heroicons/vue/24/outline'
 
 const authStore = useAuthStore()
@@ -267,15 +417,37 @@ const canApproveDownload = computed(() => {
 
 const uuid = authStore.user?.id;
 
-
 const filters = ref({
+  proformaNumber: '',
+  patientName: '',
+  createdBy: '',
   status: '',
+  currency: '',
+  downloadApproved: '',
+  minAmount: null as number | null,
+  maxAmount: null as number | null,
   startDate: '',
   endDate: '',
 });
 
 // Track status changes for each proforma
 const statusChanges = ref<Record<number, string>>({});
+
+// ✅ Aktif filtre kontrolü
+const hasActiveFilters = computed(() => {
+  return !!(
+    filters.value.proformaNumber ||
+    filters.value.patientName ||
+    filters.value.createdBy ||
+    filters.value.status ||
+    filters.value.currency ||
+    filters.value.downloadApproved ||
+    filters.value.minAmount ||
+    filters.value.maxAmount ||
+    filters.value.startDate ||
+    filters.value.endDate
+  );
+});
 
 onMounted(() => {
   applyFilters();
@@ -293,11 +465,37 @@ watch(() => proformas.value, (newProformas) => {
 }, { immediate: true });
 
 const applyFilters = () => {
-  proformaStore.fetchProformas({
-    status: filters.value.status || undefined,
-    startDate: filters.value.startDate || undefined,
-    endDate: filters.value.endDate || undefined,
-  });
+  const filterParams: any = {};
+
+  if (filters.value.proformaNumber) filterParams.proformaNumber = filters.value.proformaNumber;
+  if (filters.value.patientName) filterParams.patientName = filters.value.patientName;
+  if (filters.value.createdBy) filterParams.createdBy = filters.value.createdBy;
+  if (filters.value.status) filterParams.status = filters.value.status;
+  if (filters.value.currency) filterParams.currency = filters.value.currency;
+  if (filters.value.downloadApproved) filterParams.downloadApproved = filters.value.downloadApproved;
+  if (filters.value.minAmount !== null) filterParams.minAmount = filters.value.minAmount;
+  if (filters.value.maxAmount !== null) filterParams.maxAmount = filters.value.maxAmount;
+  if (filters.value.startDate) filterParams.startDate = filters.value.startDate;
+  if (filters.value.endDate) filterParams.endDate = filters.value.endDate;
+
+  proformaStore.fetchProformas(filterParams);
+};
+
+// ✅ Filtreleri temizle
+const clearFilters = () => {
+  filters.value = {
+    proformaNumber: '',
+    patientName: '',
+    createdBy: '',
+    status: '',
+    currency: '',
+    downloadApproved: '',
+    minAmount: null,
+    maxAmount: null,
+    startDate: '',
+    endDate: '',
+  };
+  applyFilters();
 };
 
 // ✅ İndirme onayı toggle fonksiyonu
@@ -421,7 +619,7 @@ const handleDelete = async (proforma: any) => {
 }
 
 .filters-card {
-  @apply bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 mb-6;
+  @apply bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6;
 }
 
 .table-card {
@@ -491,6 +689,14 @@ const handleDelete = async (proforma: any) => {
 
 .badge-red {
   @apply bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400;
+}
+
+.filter-badge {
+  @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-cyan-100 text-cyan-800 dark:bg-cyan-900/20 dark:text-cyan-400;
+}
+
+.filter-badge button {
+  @apply ml-1 text-cyan-600 dark:text-cyan-400 hover:text-cyan-800 dark:hover:text-cyan-200 font-bold;
 }
 
 .loading-state,

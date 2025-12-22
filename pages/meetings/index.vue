@@ -12,51 +12,38 @@
       </div>
       <div class="mt-4 sm:mt-0 flex gap-3">
         <div class="relative">
-          <button 
-            @click="InitializeData"
-            class="inline-flex items-center px-3 py-2 bg-white/20 hover:bg-white/30 text-white text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition"
-          >
+          <button @click="InitializeData"
+            class="inline-flex items-center px-3 py-2 bg-white/20 hover:bg-white/30 text-white text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition">
             <ArrowPathIcon class="h-5 w-5 mr-2" />
             {{ t('meetings.actions.refresh', 'Yenile') }}
           </button>
         </div>
         <div class="inline-flex rounded-md shadow-sm">
-          <button 
-            @click="viewMode = 'calendar'" 
-            :class="[
-              viewMode === 'calendar'
-                ? 'bg-indigo-600 text-white'
-                : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600',
-              'inline-flex items-center justify-center rounded-l-md px-3 py-2 text-sm font-semibold border border-gray-300 dark:border-gray-600'
-            ]"
-          >
+          <button @click="viewMode = 'calendar'" :class="[
+            viewMode === 'calendar'
+              ? 'bg-indigo-600 text-white'
+              : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600',
+            'inline-flex items-center justify-center rounded-l-md px-3 py-2 text-sm font-semibold border border-gray-300 dark:border-gray-600'
+          ]">
             <CalendarIcon class="h-5 w-5 mr-1.5" />
             {{ t('meetings.view_mode.calendar', 'Takvim') }}
           </button>
-          <button 
-            @click="viewMode = 'table'" 
-            :class="[
-              viewMode === 'table'
-                ? 'bg-indigo-600 text-white'
-                : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600',
-              'inline-flex items-center justify-center rounded-r-md px-3 py-2 text-sm font-semibold border border-l-0 border-gray-300 dark:border-gray-600'
-            ]"
-          >
+          <button @click="viewMode = 'table'" :class="[
+            viewMode === 'table'
+              ? 'bg-indigo-600 text-white'
+              : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600',
+            'inline-flex items-center justify-center rounded-r-md px-3 py-2 text-sm font-semibold border border-l-0 border-gray-300 dark:border-gray-600'
+          ]">
             <TableCellsIcon class="h-5 w-5 mr-1.5" />
             {{ t('meetings.view_mode.list', 'Liste') }}
           </button>
         </div>
-        <button 
-          v-if="viewMode === 'table'" 
-          @click="resetFilters"
-          class="inline-flex items-center justify-center rounded-md bg-gray-100 dark:bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-700 dark:text-gray-200 shadow-sm hover:bg-gray-200 dark:hover:bg-gray-600"
-        >
+        <button v-if="viewMode === 'table'" @click="resetFilters"
+          class="inline-flex items-center justify-center rounded-md bg-gray-100 dark:bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-700 dark:text-gray-200 shadow-sm hover:bg-gray-200 dark:hover:bg-gray-600">
           {{ t('meetings.actions.clear_filters', 'Filtreleri Temizle') }}
         </button>
-        <button 
-          @click="openCreateModal"
-          class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
-        >
+        <button @click="openCreateModal"
+          class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
           <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
           {{ t('meetings.actions.new_meeting', 'Yeni Görüşme') }}
         </button>
@@ -70,12 +57,8 @@
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             {{ t('meetings.filters.search_customer', 'Müşteri Ara') }}
           </label>
-          <input 
-            v-model="filters.customerSearch" 
-            type="text" 
-            class="form-input" 
-            :placeholder="t('meetings.filters.customer_placeholder', 'Müşteri adı...')" 
-          />
+          <input v-model="filters.customerSearch" type="text" class="form-input"
+            :placeholder="t('meetings.filters.customer_placeholder', 'Müşteri adı...')" />
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -92,23 +75,15 @@
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             {{ t('meetings.filters.hospital', 'Hastane') }}
           </label>
-          <input 
-            v-model="filters.hospitalSearch" 
-            type="text" 
-            class="form-input" 
-            :placeholder="t('meetings.filters.hospital_placeholder', 'Hastane adı...')" 
-          />
+          <input v-model="filters.hospitalSearch" type="text" class="form-input"
+            :placeholder="t('meetings.filters.hospital_placeholder', 'Hastane adı...')" />
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             {{ t('meetings.filters.doctor', 'Doktor') }}
           </label>
-          <input 
-            v-model="filters.doctorSearch" 
-            type="text" 
-            class="form-input" 
-            :placeholder="t('meetings.filters.doctor_placeholder', 'Doktor adı...')" 
-          />
+          <input v-model="filters.doctorSearch" type="text" class="form-input"
+            :placeholder="t('meetings.filters.doctor_placeholder', 'Doktor adı...')" />
         </div>
       </div>
     </div>
@@ -119,14 +94,8 @@
     </div>
 
     <!-- Calendar View -->
-    <MeetingCalendar 
-      v-else-if="viewMode === 'calendar'" 
-      :meetings="meetings" 
-      :statuses="meetingStatuses" 
-      :loading="loading"
-      @event-click="handleEventClick" 
-      @date-select="handleDateSelect" 
-    />
+    <MeetingCalendar v-else-if="viewMode === 'calendar'" :meetings="meetings" :statuses="meetingStatuses"
+      :loading="loading" @event-click="handleEventClick" @date-select="handleDateSelect" />
 
     <!-- Meetings Table -->
     <div v-else-if="viewMode === 'table'" class="card">
@@ -161,11 +130,8 @@
             </tr>
           </thead>
           <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
-            <tr 
-              v-for="meeting in filteredMeetings" 
-              :key="meeting.id"
-              :class="isPastMeeting(meeting.startTime) ? 'bg-gray-50 dark:bg-gray-800/50' : ''"
-            >
+            <tr v-for="meeting in filteredMeetings" :key="meeting.id"
+              :class="isPastMeeting(meeting.startTime) ? 'bg-gray-50 dark:bg-gray-800/50' : ''">
               <td class="table-cell">
                 <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
                   #{{ meeting.id }}
@@ -203,28 +169,21 @@
               </td>
               <td class="table-cell">
                 <div class="flex gap-1">
-                  <button 
-                    @click="viewMeeting(meeting)"
+                  <button @click="viewMeeting(meeting)"
                     class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    :title="t('meetings.actions.view', 'Görüntüle')"
-                  >
+                    :title="t('meetings.actions.view', 'Görüntüle')">
                     <EyeIcon class="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
                   </button>
-                  <NuxtLink 
-                    :to="`/meetings/edit/${meeting.id}`"
+                  <NuxtLink :to="`/meetings/edit/${meeting.id}`"
                     class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    :title="t('meetings.actions.edit', 'Düzenle')"
-                  >
+                    :title="t('meetings.actions.edit', 'Düzenle')">
                     <PencilIcon class="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
                   </NuxtLink>
-                  <button
-                    v-if="isAdmin"
-                    @click="confirmDelete(meeting)"
+                  <button v-if="isAdmin" @click="confirmDelete(meeting)"
                     class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    :title="t('meetings.actions.delete', 'Sil')"
-                  >
+                    :title="t('meetings.actions.delete', 'Sil')">
                     <TrashIcon class="h-4 w-4 text-red-600 dark:text-red-400" />
-                  </button> 
+                  </button>
                 </div>
               </td>
             </tr>
@@ -237,7 +196,8 @@
                   {{ t('meetings.empty.title', 'Görüşme bulunamadı') }}
                 </h3>
                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                  {{ t('meetings.empty.message', 'Henüz görüşme eklenmemiş veya filtrelerinize uygun sonuç bulunamadı.') }}
+                  {{ t('meetings.empty.message', 'Henüz görüşme eklenmemiş veya filtrelerinize uygun sonuç bulunamadı.')
+                  }}
                 </p>
               </td>
             </tr>
@@ -246,30 +206,22 @@
       </div>
 
       <!-- Pagination -->
-      <div 
-        v-if="meta.total > meta.limit"
-        class="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 sm:px-6"
-      >
+      <div v-if="meta.total > meta.limit"
+        class="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 sm:px-6">
         <div class="flex flex-1 justify-between sm:hidden">
-          <button 
-            :disabled="meta.page === 1" 
-            @click="changePage(meta.page - 1)"
-            class="relative inline-flex items-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
-          >
+          <button :disabled="meta.page === 1" @click="changePage(meta.page - 1)"
+            class="relative inline-flex items-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50">
             {{ t('meetings.pagination.previous', 'Önceki') }}
           </button>
-          <button 
-            :disabled="meta.page * meta.limit >= meta.total" 
-            @click="changePage(meta.page + 1)"
-            class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
-          >
+          <button :disabled="meta.page * meta.limit >= meta.total" @click="changePage(meta.page + 1)"
+            class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50">
             {{ t('meetings.pagination.next', 'Sonraki') }}
           </button>
         </div>
         <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
           <div>
             <p class="text-sm text-gray-700 dark:text-gray-400">
-              {{ tp('meetings.pagination.results', { 
+              {{ tp('meetings.pagination.results', {
                 start: ((meta.page - 1) * meta.limit) + 1,
                 end: Math.min(meta.page * meta.limit, meta.total),
                 total: meta.total
@@ -278,33 +230,22 @@
           </div>
           <div>
             <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm">
-              <button 
-                :disabled="meta.page === 1" 
-                @click="changePage(meta.page - 1)"
-                class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
-              >
+              <button :disabled="meta.page === 1" @click="changePage(meta.page - 1)"
+                class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50">
                 <ChevronLeftIcon class="h-5 w-5" />
               </button>
 
-              <button 
-                v-for="page in visiblePages" 
-                :key="page" 
-                @click="changePage(page)" 
-                :class="[
-                  page === meta.page
-                    ? 'bg-indigo-600 text-white'
-                    : 'text-gray-900 dark:text-gray-300 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700',
-                  'relative inline-flex items-center px-4 py-2 text-sm font-semibold'
-                ]"
-              >
+              <button v-for="page in visiblePages" :key="page" @click="changePage(page)" :class="[
+                page === meta.page
+                  ? 'bg-indigo-600 text-white'
+                  : 'text-gray-900 dark:text-gray-300 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700',
+                'relative inline-flex items-center px-4 py-2 text-sm font-semibold'
+              ]">
                 {{ page }}
               </button>
 
-              <button 
-                :disabled="meta.page * meta.limit >= meta.total" 
-                @click="changePage(meta.page + 1)"
-                class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
-              >
+              <button :disabled="meta.page * meta.limit >= meta.total" @click="changePage(meta.page + 1)"
+                class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50">
                 <ChevronRightIcon class="h-5 w-5" />
               </button>
             </nav>
@@ -316,12 +257,15 @@
     <!-- Delete Confirmation Modal -->
     <div v-if="showDeleteModal" class="fixed inset-0 z-50 overflow-y-auto">
       <div class="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
-        <div class="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-80 transition-opacity"></div>
+        <div class="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-80 transition-opacity">
+        </div>
 
-        <div class="inline-block transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
+        <div
+          class="inline-block transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
           <div class="bg-white dark:bg-gray-800 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
             <div class="sm:flex sm:items-start">
-              <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30 sm:mx-0 sm:h-10 sm:w-10">
+              <div
+                class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30 sm:mx-0 sm:h-10 sm:w-10">
                 <ExclamationTriangleIcon class="h-6 w-6 text-red-600 dark:text-red-400" />
               </div>
               <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
@@ -337,16 +281,12 @@
             </div>
           </div>
           <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-            <button 
-              @click="handleDelete"
-              class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-            >
+            <button @click="handleDelete"
+              class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">
               {{ t('meetings.delete_modal.confirm', 'Sil') }}
             </button>
-            <button 
-              @click="showDeleteModal = false"
-              class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-600 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 sm:mt-0 sm:w-auto"
-            >
+            <button @click="showDeleteModal = false"
+              class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-600 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 sm:mt-0 sm:w-auto">
               {{ t('meetings.delete_modal.cancel', 'İptal') }}
             </button>
           </div>
@@ -357,12 +297,11 @@
     <!-- View Meeting Modal -->
     <div v-if="showViewModal && selectedMeeting" class="fixed inset-0 z-50 overflow-y-auto">
       <div class="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
-        <div 
-          class="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-80 transition-opacity"
-          @click="showViewModal = false"
-        ></div>
+        <div class="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-80 transition-opacity"
+          @click="showViewModal = false"></div>
 
-        <div class="inline-block transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:align-middle">
+        <div
+          class="inline-block transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:align-middle">
           <div class="bg-white dark:bg-gray-800 px-4 pb-4 pt-5 sm:p-6">
             <div class="flex items-center justify-between mb-4">
               <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
@@ -447,16 +386,12 @@
             </div>
           </div>
           <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-            <NuxtLink 
-              :to="`/meetings/edit/${selectedMeeting.id}`"
-              class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto"
-            >
+            <NuxtLink :to="`/meetings/edit/${selectedMeeting.id}`"
+              class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto">
               {{ t('meetings.view_modal.edit_button', 'Düzenle') }}
             </NuxtLink>
-            <button 
-              @click="showViewModal = false"
-              class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-600 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 sm:mt-0 sm:w-auto"
-            >
+            <button @click="showViewModal = false"
+              class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-600 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 sm:mt-0 sm:w-auto">
               {{ t('meetings.view_modal.close_button', 'Kapat') }}
             </button>
           </div>
@@ -465,12 +400,8 @@
     </div>
 
     <!-- Create Meeting Modal -->
-    <MeetingCreateModal 
-      v-model="showCreateModal" 
-      :initial-start-time="selectedStartTime"
-      :initial-end-time="selectedEndTime" 
-      @created="handleMeetingCreated" 
-    />
+    <MeetingCreateModal v-model="showCreateModal" :initial-start-time="selectedStartTime"
+      :initial-end-time="selectedEndTime" @created="handleMeetingCreated" />
   </div>
 </template>
 
@@ -489,6 +420,7 @@ import {
   ArrowPathIcon
 } from '@heroicons/vue/24/outline'
 import { useLanguage } from '~/composables/useLanguage'
+import { useAuthStore } from '~/stores/auth'
 
 const { t, tp } = useLanguage()
 
@@ -496,9 +428,11 @@ definePageMeta({
   middleware: ['auth']
 })
 
+const authStore = useAuthStore()
 const { meetings, loading, error, meta, fetchMeetings, deleteMeeting } = useMeetings()
 const { statuses: meetingStatuses, fetchMeetingStatuses } = useMeetingStatuses()
-const { isAdmin } = usePermissions()
+
+const isAdmin = computed(() => authStore.user?.role === 'admin')
 
 // Filters
 const filters = ref({
@@ -507,6 +441,8 @@ const filters = ref({
   hospitalSearch: '',
   doctorSearch: ''
 })
+
+const userId = authStore.user?.id || undefined
 
 // View mode
 const viewMode = ref('calendar') // 'calendar' or 'table'
@@ -617,12 +553,13 @@ const resetFilters = () => {
   }
 }
 
-const changePage = (page) => {
-  fetchMeetings({
-    page,
-    limit: meta.value.limit,
-    status: filters.value.status || undefined
-  })
+const changePage = (page) => { 
+    fetchMeetings({
+      page,
+      user: isAdmin.value ? undefined : userId,
+      limit: meta.value.limit,
+      status: filters.value.status || undefined
+    }) 
 }
 
 const viewMeeting = (meeting) => {
@@ -645,8 +582,10 @@ const handleDelete = async () => {
     await fetchMeetings({
       page: meta.value.page,
       limit: meta.value.limit,
+      user: isAdmin ? undefined : userId,
       status: filters.value.status || undefined
     })
+ 
 
     showDeleteModal.value = false
     meetingToDelete.value = null
@@ -677,6 +616,7 @@ const handleMeetingCreated = async () => {
   await fetchMeetings({
     page: meta.value.page,
     limit: meta.value.limit,
+    user: isAdmin.value ? undefined : userId,
     status: filters.value.status || undefined
   })
 }
@@ -686,6 +626,7 @@ watch(() => filters.value.status, (newStatus) => {
   fetchMeetings({
     page: 1,
     limit: meta.value.limit,
+    user: isAdmin.value ? undefined : userId,
     status: newStatus || undefined
   })
 })
@@ -693,9 +634,11 @@ watch(() => filters.value.status, (newStatus) => {
 const InitializeData = async () => {
   await fetchMeetingStatuses()
   await fetchMeetings({
-    page: 1,
-    limit: 20
-  })
+    page: 1, 
+    limit: 20,
+    user: isAdmin.value ? undefined : userId
+  }) 
+  
 }
 
 // Initialize

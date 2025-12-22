@@ -51,6 +51,38 @@
                 </div>
               </div>
 
+              <!-- Error Alert -->
+              <div v-if="errorMessage" class="mx-6 mt-4">
+                <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4">
+                  <div class="flex">
+                    <div class="flex-shrink-0">
+                      <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                      </svg>
+                    </div>
+                    <div class="ml-3 flex-1">
+                      <h3 class="text-sm font-medium text-red-800 dark:text-red-300">
+                        {{ errorTitle }}
+                      </h3>
+                      <div class="mt-2 text-sm text-red-700 dark:text-red-400">
+                        <p>{{ errorMessage }}</p>
+                        <ul v-if="errorDetails.length > 0" class="mt-2 list-disc list-inside space-y-1">
+                          <li v-for="(detail, index) in errorDetails" :key="index">
+                            {{ detail }}
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <button
+                      @click="clearError"
+                      class="ml-3 flex-shrink-0 rounded-lg p-1 text-red-500 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
+                    >
+                      <XMarkIcon class="h-5 w-5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
               <!-- Form -->
               <form @submit.prevent="handleSubmit" class="p-6">
                 <div class="space-y-5">
@@ -67,9 +99,17 @@
                         type="text"
                         required
                         placeholder="Örn: KARD"
-                        class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                        :class="[
+                          'w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all',
+                          fieldErrors.code 
+                            ? 'border-red-300 dark:border-red-700' 
+                            : 'border-gray-200 dark:border-gray-600'
+                        ]"
                       />
                     </div>
+                    <p v-if="fieldErrors.code" class="mt-1 text-xs text-red-600 dark:text-red-400">
+                      {{ fieldErrors.code }}
+                    </p>
                   </div>
 
                   <!-- Hospital Multi-Select -->
@@ -141,8 +181,16 @@
                           type="text"
                           :required="language.isDefault"
                           :placeholder="`${language.name} için branş adı`"
-                          class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                          :class="[
+                            'w-full px-4 py-2 bg-white dark:bg-gray-800 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all',
+                            fieldErrors[`translation_${language.id}`]
+                              ? 'border-red-300 dark:border-red-700'
+                              : 'border-gray-200 dark:border-gray-600'
+                          ]"
                         />
+                        <p v-if="fieldErrors[`translation_${language.id}`]" class="mt-1 text-xs text-red-600 dark:text-red-400">
+                          {{ fieldErrors[`translation_${language.id}`] }}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -153,7 +201,8 @@
                   <button
                     type="button"
                     @click="$emit('close')"
-                    class="flex-1 px-4 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-all text-sm"
+                    :disabled="saving"
+                    class="flex-1 px-4 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm"
                   >
                     İptal
                   </button>
@@ -189,7 +238,6 @@ import {
   HashtagIcon
 } from '@heroicons/vue/24/outline'
 
-
 const props = defineProps({
   show: Boolean,
   branch: Object,
@@ -202,6 +250,12 @@ const { createBranch, updateBranch, fetchBranch } = useBranches()
 const { availableLanguages: languages } = useLanguage()
 const saving = ref(false)
 
+// Error state
+const errorMessage = ref('')
+const errorTitle = ref('')
+const errorDetails = ref([])
+const fieldErrors = ref({})
+
 const formData = ref({
   code: '',
   description: '',
@@ -210,22 +264,173 @@ const formData = ref({
 
 const translationMap = ref({})
 
-const handleSubmit = async () => {
-  saving.value = true
-  try {
-    const translations = Object.entries(translationMap.value)
-      .filter(([_, name]) => name && name.trim())
-      .map(([languageId, name]) => ({
-        languageId: parseInt(languageId),
-        name: name.trim()
-      }))
+const clearError = () => {
+  errorMessage.value = ''
+  errorTitle.value = ''
+  errorDetails.value = []
+  fieldErrors.value = {}
+}
 
-    if (translations.length === 0) {
-      useToast().showError('En az bir dil için branş adı girmelisiniz')
-      saving.value = false
-      return
+
+const handleApiError = (error) => {
+  clearError()
+  
+  console.error('API Error:', error)
+  
+  // Backend'den gelen response
+  const response = error?.response?.data || error?.data || error
+  const status = error?.response?.status || error?.status
+  
+  // Backend'in döndürdüğü errorCode'u kontrol et
+  const errorCode = response?.errorCode
+  const backendMessage = response?.message
+  const details = response?.details
+  
+  console.log('Error Code:', errorCode)
+  console.log('Backend Message:', backendMessage)
+  console.log('Details:', details)
+  
+  // ✅ DUPLICATE_ENTRY - Backend'den gelen mesajı kullan
+  if (errorCode === 'DUPLICATE_ENTRY' || status === 409 || 
+      backendMessage?.includes('zaten kullanılıyor') ||
+      backendMessage?.includes('Duplicate')) {
+    errorTitle.value = '❌ Mükerrer Kayıt'
+    errorMessage.value = backendMessage || 'Bu branş kodu zaten kullanılıyor. Lütfen farklı bir kod deneyin.'
+    
+    // Field hatası ekle
+    if (details?.field === 'branş kodu' || details?.field === 'code') {
+      fieldErrors.value.code = `"${details.value}" zaten kullanımda`
+    } else {
+      fieldErrors.value.code = 'Bu kod zaten mevcut'
     }
+    return
+  }
+  
+  // ✅ FOREIGN_KEY_VIOLATION
+  if (errorCode === 'FOREIGN_KEY_VIOLATION') {
+    errorTitle.value = '⚠️ İlişki Hatası'
+    errorMessage.value = backendMessage || 'Seçtiğiniz kayıt bulunamadı veya geçersiz.'
+    return
+  }
+  
+  // ✅ REFERENCED_RECORD
+  if (errorCode === 'REFERENCED_RECORD') {
+    errorTitle.value = '⚠️ Silme Hatası'
+    errorMessage.value = backendMessage || 'Bu kayıt başka yerlerde kullanılıyor ve silinemez.'
+    return
+  }
+  
+  // ✅ VALIDATION_ERROR - 400 Bad Request
+  if (errorCode === 'VALIDATION_ERROR' || status === 400) {
+    errorTitle.value = '⚠️ Geçersiz Veri'
+    
+    if (Array.isArray(backendMessage)) {
+      errorMessage.value = 'Lütfen aşağıdaki hataları düzeltin:'
+      errorDetails.value = backendMessage
+    } else if (Array.isArray(details)) {
+      errorMessage.value = 'Lütfen aşağıdaki hataları düzeltin:'
+      errorDetails.value = details
+    } else {
+      errorMessage.value = backendMessage || 'Girdiğiniz bilgilerde hatalar var. Lütfen kontrol edin.'
+    }
+    
+    // Field-specific errors
+    if (details && typeof details === 'object') {
+      Object.keys(details).forEach(field => {
+        fieldErrors.value[field] = details[field]
+      })
+    }
+    return
+  }
+  
+  // ✅ NOT_FOUND - 404
+  if (status === 404) {
+    errorTitle.value = '❌ Bulunamadı'
+    errorMessage.value = backendMessage || 'Aradığınız kayıt bulunamadı.'
+    return
+  }
+  
+  // ✅ FORBIDDEN - 403
+  if (status === 403) {
+    errorTitle.value = '🔒 Yetki Hatası'
+    errorMessage.value = backendMessage || 'Bu işlemi gerçekleştirmek için yetkiniz yok.'
+    return
+  }
+  
+  // ✅ UNAUTHORIZED - 401
+  if (status === 401) {
+    errorTitle.value = '🔒 Oturum Hatası'
+    errorMessage.value = 'Oturumunuz sonlanmış. Lütfen tekrar giriş yapın.'
+    return
+  }
+  
+  // ✅ SERVER_ERROR - 500
+  if (status === 500 || status >= 500) {
+    errorTitle.value = '💥 Sunucu Hatası'
+    errorMessage.value = backendMessage || 'Sunucuda bir hata oluştu. Lütfen daha sonra tekrar deneyin.'
+    
+    if (details) {
+      errorDetails.value = [`Hata Kodu: ${details.code || 'N/A'}`]
+    }
+    return
+  }
+  
+  // ✅ NETWORK_ERROR - No connection
+  if (!navigator.onLine) {
+    errorTitle.value = '📡 Bağlantı Hatası'
+    errorMessage.value = 'İnternet bağlantınızı kontrol edin.'
+    return
+  }
+  
+  // ✅ TIMEOUT
+  if (error?.code === 'ECONNABORTED' || error?.message?.includes('timeout')) {
+    errorTitle.value = '⏱️ Zaman Aşımı'
+    errorMessage.value = 'İstek zaman aşımına uğradı. Lütfen tekrar deneyin.'
+    return
+  }
+  
+  // ✅ Generic fallback
+  errorTitle.value = '❌ Hata Oluştu'
+  errorMessage.value = backendMessage || 'İşlem sırasında bir hata oluştu. Lütfen tekrar deneyin.'
+  
+  if (details) {
+    if (typeof details === 'string') {
+      errorDetails.value = [details]
+    } else if (typeof details === 'object') {
+      errorDetails.value = [JSON.stringify(details, null, 2)]
+    }
+  }
+}
 
+const handleSubmit = async () => {
+  clearError()
+  
+  // Validate translations
+  const translations = Object.entries(translationMap.value)
+    .filter(([_, name]) => name && name.trim())
+    .map(([languageId, name]) => ({
+      languageId: parseInt(languageId),
+      name: name.trim()
+    }))
+
+  if (translations.length === 0) {
+    errorTitle.value = 'Eksik Bilgi'
+    errorMessage.value = 'En az bir dil için branş adı girmelisiniz.'
+    return
+  }
+
+  // Check if default language is provided
+  const defaultLanguage = languages.value.find(l => l.isDefault)
+  if (defaultLanguage && !translationMap.value[defaultLanguage.id]?.trim()) {
+    errorTitle.value = 'Eksik Bilgi'
+    errorMessage.value = 'Varsayılan dil için branş adı zorunludur.'
+    fieldErrors.value[`translation_${defaultLanguage.id}`] = 'Bu alan zorunludur'
+    return
+  }
+
+  saving.value = true
+  
+  try {
     const data = {
       ...formData.value,
       translations
@@ -238,10 +443,11 @@ const handleSubmit = async () => {
       await createBranch(data)
       useToast().showSuccess('Branş başarıyla eklendi')
     }
+    
     emit('saved')
     emit('close')
   } catch (error) {
-    useToast().showError('İşlem sırasında bir hata oluştu')
+    handleApiError(error)
   } finally {
     saving.value = false
   }
@@ -249,6 +455,8 @@ const handleSubmit = async () => {
 
 // Watch for branch changes and load translations
 watch(() => props.branch, async (newVal) => {
+  clearError()
+  
   if (newVal) {
     try {
       const fullBranch = await fetchBranch(newVal.id)
@@ -265,7 +473,7 @@ watch(() => props.branch, async (newVal) => {
         })
       }
     } catch (error) {
-      console.error('Error loading branch:', error)
+      handleApiError(error)
     }
   } else {
     formData.value = {
@@ -277,5 +485,10 @@ watch(() => props.branch, async (newVal) => {
   }
 }, { immediate: true })
 
- 
+// Clear errors when modal closes
+watch(() => props.show, (newVal) => {
+  if (!newVal) {
+    clearError()
+  }
+})
 </script>

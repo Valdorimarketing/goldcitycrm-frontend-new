@@ -17,31 +17,31 @@ export interface Proforma {
   patientId?: number;
   saleId?: number;
   downloadApproved?: boolean;
-  
+
   // GENERAL INFORMATION
   patientName?: string;
-  hospitalId?: number | null;  // ✅ Yeni
+  hospitalId?: number | null;
   hospital: string;
-  doctorId?: number | null;  // ✅ Yeni
+  doctorId?: number | null;
   physicianName?: string;
-  branchId?: number | null;  // ✅ Yeni
+  branchId?: number | null;
   physicianDepartment?: string;
   age?: string;
   country?: string;
-  comedNo?: string; 
-  
+  comedNo?: string;
+
   // Optional
   additionalInfo?: string;
   physicianOpinion?: string;
-  
+
   // Treatment
   treatmentItems: TreatmentItem[];
   grandTotal: number;
   currency: string;
-  
+
   // Services
   servicesIncluded?: string[];
-  
+
   // Bank Info (with defaults)
   bankName: string;
   receiverName: string;
@@ -50,12 +50,12 @@ export interface Proforma {
   bankCurrency: string;
   iban: string;
   swiftCode: string;
-  
+
   // Hospital Contact
   hospitalAddress?: string;
   hospitalPhone?: string;
   hospitalEmail?: string;
-  
+
   status: string;
   pdfUrl?: string;
   createdAt?: string;
@@ -64,14 +64,14 @@ export interface Proforma {
 
 export const useProformaStore = defineStore('proforma', () => {
   const $api = useApi();
-  
+
   const proformas = ref<Proforma[]>([]);
   const currentProforma = ref<Proforma | null>(null);
   const loading = ref(false);
   const error = ref<string | null>(null);
 
   /**
-   * Fetch all proformas
+   * Fetch all proformas with advanced filters
    */
   const fetchProformas = async (filters?: {
     status?: string;
@@ -79,26 +79,64 @@ export const useProformaStore = defineStore('proforma', () => {
     saleId?: number;
     startDate?: string;
     endDate?: string;
+    proformaNumber?: string;
+    patientName?: string;
+    createdBy?: string;
+    minAmount?: number;
+    maxAmount?: number;
+    currency?: string;
+    downloadApproved?: string;
   }) => {
     loading.value = true;
     error.value = null;
 
     try {
       const params = new URLSearchParams();
+
+      // Mevcut filtreler
       if (filters?.status) params.append('status', filters.status);
       if (filters?.patientId) params.append('patientId', filters.patientId.toString());
       if (filters?.saleId) params.append('saleId', filters.saleId.toString());
       if (filters?.startDate) params.append('startDate', filters.startDate);
       if (filters?.endDate) params.append('endDate', filters.endDate);
 
-      const queryString = params.toString();
-      const url = queryString ? `/proformas?${queryString}` : '/proformas';
+      // ✅ Yeni gelişmiş filtreler
+      if (filters?.proformaNumber) {
+        params.append('proformaNumber', filters.proformaNumber);
+      }
 
-      const response: any = await $api(url);
-      proformas.value = response;
-    } catch (e: any) {
-      error.value = e.message || 'Failed to fetch proformas';
-      console.error('Error fetching proformas:', e);
+      if (filters?.patientName) {
+        params.append('patientName', filters.patientName);
+      }
+
+      if (filters?.createdBy) {
+        params.append('createdBy', filters.createdBy);
+      }
+
+      if (filters?.minAmount !== undefined && filters?.minAmount !== null) {
+        params.append('minAmount', filters.minAmount.toString());
+      }
+
+      if (filters?.maxAmount !== undefined && filters?.maxAmount !== null) {
+        params.append('maxAmount', filters.maxAmount.toString());
+      }
+
+      if (filters?.currency) {
+        params.append('currency', filters.currency);
+      }
+
+      if (filters?.downloadApproved) {
+        params.append('downloadApproved', filters.downloadApproved);
+      }
+
+      const queryString = params.toString();
+      const url = `/proformas${queryString ? `?${queryString}` : ''}`;
+
+      const data = await $api(url) as any;
+      proformas.value = data;
+    } catch (err: any) {
+      error.value = err.message || 'Failed to fetch proformas';
+      console.error('Error fetching proformas:', err);
     } finally {
       loading.value = false;
     }
@@ -139,7 +177,7 @@ export const useProformaStore = defineStore('proforma', () => {
 
       proformas.value.unshift(response);
       currentProforma.value = response;
-      
+
       return response;
     } catch (e: any) {
       error.value = e.message || 'Failed to create proforma';
@@ -167,7 +205,7 @@ export const useProformaStore = defineStore('proforma', () => {
       if (index !== -1) {
         proformas.value[index] = response;
       }
-      
+
       if (currentProforma.value?.id === id) {
         currentProforma.value = response;
       }
@@ -195,7 +233,7 @@ export const useProformaStore = defineStore('proforma', () => {
       });
 
       proformas.value = proformas.value.filter(p => p.id !== id);
-      
+
       if (currentProforma.value?.id === id) {
         currentProforma.value = null;
       }
@@ -268,7 +306,7 @@ export const useProformaStore = defineStore('proforma', () => {
       const response: any = await $api(`/proformas/${id}/generate-pdf`, {
         method: 'POST',
       });
-      
+
       if (currentProforma.value?.id === id) {
         currentProforma.value.pdfUrl = response.pdfUrl;
       }
@@ -289,12 +327,12 @@ export const useProformaStore = defineStore('proforma', () => {
   const createEmptyProforma = (): Partial<Proforma> => {
     return {
       date: new Date().toISOString().split('T')[0],
-      hospitalId: null,  // ✅ Yeni - null olarak başla
-      hospital: '',  // ✅ Değiştirildi - boş string
-      doctorId: null,  // ✅ Yeni - null olarak başla
-      physicianName: '',  // ✅ Değiştirildi - boş string
-      branchId: null,  // ✅ Yeni - null olarak başla
-      physicianDepartment: '',  // ✅ Değiştirildi - boş string
+      hospitalId: null,
+      hospital: '',
+      doctorId: null,
+      physicianName: '',
+      branchId: null,
+      physicianDepartment: '',
       treatmentItems: [],
       grandTotal: 0,
       currency: 'USD',

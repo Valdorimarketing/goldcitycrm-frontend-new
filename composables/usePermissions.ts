@@ -25,8 +25,7 @@ export const usePermissions = () => {
     // User rolü için
     if (isUser.value) {
       const allowedMenus = [
-        'menu.dashboard',
-        'menu.pool_data',
+        'menu.dashboard', 
         'section.customer_management',
         'menu.customers',
         'menu.customers.people',
@@ -153,7 +152,7 @@ export const usePermissions = () => {
 
     if (isUser.value) {
       return {
-        user_id: userId.value
+        user: userId.value
       }
     }
 
@@ -173,4 +172,4 @@ export const usePermissions = () => {
     getDashboardFilters,
     getRelatedDataFilters
   }
-}
+} 
