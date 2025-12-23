@@ -953,7 +953,7 @@ onMounted(async () => {
   }
 
   isEditable.value = authStore.user?.role !== 'doctor'
-  isDeleteable.value = authStore.user?.role !== 'doctor'
+  isDeleteable.value = authStore.user?.role == 'admin'
 
   await loadCustomers(pagination.value.page)
   isInitialLoad = false

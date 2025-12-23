@@ -13,10 +13,10 @@ import {
   SunIcon,
   MoonIcon,
   UserIcon,
-  ChevronDownIcon,
-  ArrowRightOnRectangleIcon,
+  ChevronDownIcon, 
   UsersIcon,
-  ShoppingBagIcon
+  ShoppingBagIcon,
+  ArrowLeftIcon
 } from '@heroicons/vue/24/outline'
 
 // Props
@@ -32,6 +32,7 @@ const props = defineProps({
 
 // Inject sidebar state
 const sidebar = inject('sidebar')
+const config = useRuntimeConfig()
 
 // Stores
 const authStore = useAuthStore()
@@ -68,7 +69,7 @@ const isScreenLocked = ref(false)
 const isDarkMode = ref(false)
 
 // API path
-const path = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001'
+const path = config.public.apiBase
 
 // Mobile Sidebar - Use sidebar inject
 const openMobileSidebar = () => {
@@ -512,7 +513,7 @@ onUnmounted(() => {
                   :class="{ 'flex-row-reverse': isRTL }"
                 >
                   <div class="w-8 h-8 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
-                    <ArrowRightOnRectangleIcon class="w-4 h-4 text-red-600 dark:text-red-400" />
+                    <ArrowLeftIcon class="w-4 h-4 text-red-600 dark:text-red-400" />
                   </div>
                   <span class="text-sm font-medium">{{ t('header.user_menu.logout', 'Çıkış Yap') }}</span>
                 </button>
