@@ -86,15 +86,7 @@
           </button>
         </form>
  
-        <!-- Register Link -->
-        <div class="mt-8 text-center">
-          <p class="text-sm text-gray-600 dark:text-gray-400">
-            Hesabınız yok mu?
-            <NuxtLink to="/register" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 font-medium transition-colors">
-              Kayıt olun
-            </NuxtLink>
-          </p>
-        </div>
+       
       </div>
     </div>
   </div>

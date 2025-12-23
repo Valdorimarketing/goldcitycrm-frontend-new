@@ -562,7 +562,7 @@ const toggleShow = (id) => {
 }
 
 const emitAction = (action) => {
-  const customer = props.data.find(c => c.id === showStates.activeId)
+  const customer = props.data.find(c => c.id === showStates.value.activeId)
   if (customer) {
     emit(action, customer)
     showStates.value.activeId = null

@@ -876,7 +876,7 @@ const fetchStats = async () => {
     const api = useApi()
     
     const [unassignedRes, assignedRes] = await Promise.all([
-      api('/customers', { query: { isFirst: true, hasRelevantUser: false, limit: 1 } }),
+      api('/customers', { query: { isFirst: true, limit: 1 } }),
       api('/customers', { query: { isFirst: true, hasRelevantUser: true, limit: 1 } })
     ])
 
@@ -915,8 +915,7 @@ const fetchCustomers = async (page = 1) => {
       limit: pagination.value.limit
     }
 
-    if (activeTab.value === 'unassigned') queryParams.hasRelevantUser = false
-    else if (activeTab.value === 'assigned') queryParams.hasRelevantUser = true
+    if (activeTab.value === 'assigned') queryParams.hasRelevantUser = true
 
     if (columnFilters.value.name?.trim()) {
       queryParams.search = columnFilters.value.name.trim()

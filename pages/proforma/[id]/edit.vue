@@ -4,48 +4,48 @@
     <div class="page-header">
       <div>
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-          {{ isEditMode ? 'Proforma Düzenle' : 'Yeni Proforma Oluştur' }}
+          {{ t(isEditMode ? 'proforma.page_title_edit' : 'proforma.page_title_create') }}
         </h1>
         <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-          {{ isEditMode ? formData.proformaNumber : 'LIV Hospital proforma faturası bilgilerini girin' }}
+          {{ isEditMode ? formData.proformaNumber : t('proforma.page_subtitle') }}
         </p>
       </div>
-      
+
       <div class="flex gap-3">
         <button @click="handleCancel" class="btn-secondary">
-          İptal
+          {{ t('proforma.button_cancel') }}
         </button>
-        
+
         <button @click="handlePreview" class="btn-secondary" v-if="isEditMode && canDownload">
           <EyeIcon class="w-5 h-5 mr-2" />
-          Önizleme
+          {{ t('proforma.button_preview') }}
         </button>
-        
+
         <button @click="handleSave" class="btn-primary" :disabled="loading">
           <CheckIcon v-if="!loading" class="w-5 h-5 mr-2" />
-          <span v-if="loading">Kaydediliyor...</span>
-          <span v-else>{{ isEditMode ? 'Güncelle' : 'Kaydet' }}</span>
+          <span>{{ loading ? t('proforma.button_saving') : t(isEditMode ? 'proforma.button_update' :
+            'proforma.button_save') }}</span>
         </button>
       </div>
     </div>
 
     <!-- Form Content -->
     <div class="form-container">
-      
+
       <!-- Date, Currency & Language -->
       <div class="form-section">
         <div class="section-header">
-          <h2 class="section-title">Temel Bilgiler</h2>
+          <h2 class="section-title">{{ t('proforma.section_basic_info') }}</h2>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
-            <label class="form-label">Tarih *</label>
+            <label class="form-label">{{ t('proforma.label_date') }} *</label>
             <input v-model="formData.date" type="date" class="form-input" required />
           </div>
 
           <div>
-            <label class="form-label">Para Birimi *</label>
+            <label class="form-label">{{ t('proforma.label_currency') }} *</label>
             <select v-model="formData.currency" @change="handleCurrencyChange" class="form-select">
               <option value="USD">USD ($)</option>
               <option value="EUR">EUR (€)</option>
@@ -54,10 +54,11 @@
           </div>
 
           <div>
-            <label class="form-label">Proforma Dili *</label>
-            <select v-model="formData.language" class="form-select">
-              <option value="tr">🇹🇷 Türkçe</option>
-              <option value="en">🇬🇧 English</option>
+            <label class="form-label">{{ t('proforma.label_language') }} *</label>
+            <select v-model="formData.language" @change="handleLanguageChange" class="form-select">
+              <option v-for="lang in availableLanguages" :key="lang.code" :value="lang.code">
+                {{ lang.code }} {{ lang.name }}
+              </option>
             </select>
           </div>
         </div>
@@ -66,119 +67,100 @@
       <!-- GENERAL INFORMATION Section -->
       <div class="form-section">
         <div class="section-header">
-          <h2 class="section-title">Genel Bilgiler</h2>
-          <p class="section-description">Hasta ve doktor bilgileri (Opsiyonel alanlar)</p>
+          <h2 class="section-title">{{ t('proforma.section_general_info') }}</h2>
+          <p class="section-description">{{ t('proforma.section_general_info_desc') }}</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label class="form-label">Hasta Adı *</label>
-            <input v-model="formData.patientName" type="text" class="form-input" placeholder="MAİSON NURİ SALİH" required />
+            <label class="form-label">{{ t('proforma.label_patient_name') }} *</label>
+            <input v-model="formData.patientName" type="text" class="form-input" placeholder="MAİSON NURİ SALİH"
+              required />
           </div>
 
           <!-- Hospital - Autocomplete -->
           <div class="relative">
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Hastane <span class="text-xs text-gray-500">(Opsiyonel)</span>
+              {{ t('proforma.label_hospital') }} <span class="text-xs text-gray-500">{{
+                t('proforma.label_hospital_optional') }}</span>
             </label>
-            <input
-              v-model="hospitalSearch"
-              type="text"
-              class="form-input"
-              placeholder="Hastane adı yazın veya boş bırakın..."
-              @focus="showHospitalDropdown = true"
-              @blur="hideHospitalDropdown"
-            />
-            <div v-if="showHospitalDropdown && filteredHospitals.length > 0" class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 shadow-lg rounded-md border border-gray-200 dark:border-gray-700 max-h-60 overflow-auto">
-              <button
-                v-for="hospital in filteredHospitals"
-                :key="hospital.id"
-                type="button"
+            <input v-model="hospitalSearch" type="text" class="form-input"
+              :placeholder="t('proforma.placeholder_hospital')" @focus="showHospitalDropdown = true"
+              @blur="hideHospitalDropdown" />
+            <div v-if="showHospitalDropdown && filteredHospitals.length > 0"
+              class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 shadow-lg rounded-md border border-gray-200 dark:border-gray-700 max-h-60 overflow-auto">
+              <button v-for="hospital in filteredHospitals" :key="hospital.id" type="button"
                 @mousedown.prevent="selectHospital(hospital)"
-                class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-gray-100"
-              >
+                class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-gray-100">
                 {{ hospital.name }}
               </button>
             </div>
             <p v-if="formData.hospital" class="mt-1 text-xs text-green-600 dark:text-green-400">
-              ✓ {{ formData.hospital }}
+              {{ t('proforma.selected_marker') }} {{ formData.hospital }}
             </p>
           </div>
 
           <!-- Physician Name - Autocomplete -->
           <div class="relative">
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Doktor <span class="text-xs text-gray-500">(Opsiyonel)</span>
+              {{ t('proforma.label_physician_name') }} <span class="text-xs text-gray-500">{{
+                t('proforma.label_hospital_optional') }}</span>
             </label>
-            <input
-              v-model="doctorSearch"
-              type="text"
-              class="form-input"
-              :disabled="!hospitalId"
-              placeholder="Önce hastane seçin veya boş bırakın..."
-              @focus="showDoctorDropdown = true"
-              @blur="hideDoctorDropdown"
-            />
-            <div v-if="showDoctorDropdown && filteredDoctorsForSearch.length > 0" class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 shadow-lg rounded-md border border-gray-200 dark:border-gray-700 max-h-60 overflow-auto">
-              <button
-                v-for="doctor in filteredDoctorsForSearch"
-                :key="doctor.id"
-                type="button"
+            <input v-model="doctorSearch" type="text" class="form-input" :disabled="!hospitalId"
+              :placeholder="t('proforma.placeholder_physician')" @focus="showDoctorDropdown = true"
+              @blur="hideDoctorDropdown" />
+            <div v-if="showDoctorDropdown && filteredDoctorsForSearch.length > 0"
+              class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 shadow-lg rounded-md border border-gray-200 dark:border-gray-700 max-h-60 overflow-auto">
+              <button v-for="doctor in filteredDoctorsForSearch" :key="doctor.id" type="button"
                 @mousedown.prevent="selectDoctor(doctor)"
-                class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-gray-100"
-              >
+                class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-gray-100">
                 {{ doctor.name }}
               </button>
             </div>
-            <p v-if="formData.hospitalId && !formData.physicianName" class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-              {{ filteredDoctors.length }} doktor mevcut
+            <p v-if="formData.hospitalId && !formData.physicianName"
+              class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              {{ filteredDoctors.length }} {{ t('proforma.doctors_available') }}
             </p>
             <p v-if="formData.physicianName" class="mt-1 text-xs text-green-600 dark:text-green-400">
-              ✓ {{ formData.physicianName }}
+              {{ t('proforma.selected_marker') }} {{ formData.physicianName }}
             </p>
           </div>
 
           <!-- Physician Department - Autocomplete with language filter -->
           <div class="relative">
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Doktor Departmanı <span class="text-xs text-gray-500">(Opsiyonel)</span>
+              {{ t('proforma.label_physician_department') }} <span class="text-xs text-gray-500">{{
+                t('proforma.label_hospital_optional') }}</span>
             </label>
-            <input
-              v-model="branchSearch"
-              type="text"
-              class="form-input"
-              placeholder="Branş adı yazın veya boş bırakın..."
-              @focus="showBranchDropdownList"
-              @blur="hideBranchDropdown"
-            />
-            <div v-if="showBranchDropdown && filteredBranchForSearch.length > 0" class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 shadow-lg rounded-md border border-gray-200 dark:border-gray-700 max-h-60 overflow-auto">
-              <button
-                v-for="branch in filteredBranchForSearch"
-                :key="branch.id"
-                type="button"
+            <input v-model="branchSearch" type="text" class="form-input"
+              :placeholder="t('proforma.placeholder_department')" @focus="showBranchDropdownList"
+              @blur="hideBranchDropdown" />
+            <div v-if="showBranchDropdown && filteredBranchForSearch.length > 0"
+              class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 shadow-lg rounded-md border border-gray-200 dark:border-gray-700 max-h-60 overflow-auto">
+              <button v-for="branch in filteredBranchForSearch" :key="branch.id" type="button"
                 @mousedown.prevent="selectBranch(branch)"
-                class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-gray-100"
-              >
+                class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-gray-100">
                 {{ getBranchName(branch) }}
               </button>
             </div>
             <p v-if="formData.physicianDepartment" class="mt-1 text-xs text-green-600 dark:text-green-400">
-              ✓ {{ formData.physicianDepartment }}
+              {{ t('proforma.selected_marker') }} {{ formData.physicianDepartment }}
             </p>
           </div>
 
           <div>
-            <label class="form-label">Yaş</label>
-            <input v-model="formData.age" type="text" class="form-input" placeholder="79 years" />
+            <label class="form-label">{{ t('proforma.label_age') }}</label>
+            <input v-model="formData.age" type="text" class="form-input" :placeholder="t('proforma.placeholder_age')" />
           </div>
 
           <div>
-            <label class="form-label">Ülke</label>
-            <input v-model="formData.country" type="text" class="form-input" placeholder="Iraq" />
+            <label class="form-label">{{ t('proforma.label_country') }}</label>
+            <input v-model="formData.country" type="text" class="form-input"
+              :placeholder="t('proforma.placeholder_country')" />
           </div>
 
           <div>
-            <label class="form-label">COMED No</label>
+            <label class="form-label">{{ t('proforma.label_comed_no') }}</label>
             <input v-model="formData.comedNo" type="text" class="form-input" placeholder="15837004" />
           </div>
         </div>
@@ -187,17 +169,13 @@
       <!-- PHYSICIAN'S OPINION (Optional) -->
       <div class="form-section">
         <div class="section-header">
-          <h2 class="section-title">Doktor Görüşü</h2>
-          <p class="section-description">Bu alan opsiyonel</p>
+          <h2 class="section-title">{{ t('proforma.section_physician_opinion') }}</h2>
+          <p class="section-description">{{ t('proforma.section_physician_opinion_desc') }}</p>
         </div>
 
         <div>
-          <textarea
-            v-model="formData.physicianOpinion"
-            class="form-textarea"
-            rows="6"
-            placeholder="Doktorunuzun değerlendirmesinin ardından, belirtileriniz şu şekilde tanımlanmıştır..."
-          ></textarea>
+          <textarea v-model="formData.physicianOpinion" class="form-textarea" rows="6"
+            :placeholder="t('proforma.placeholder_physician_opinion')"></textarea>
         </div>
       </div>
 
@@ -206,30 +184,26 @@
         <div class="section-header">
           <div class="flex justify-between items-center">
             <div>
-              <h2 class="section-title">Önerilen Tedavi ve Tahmini Maliyet Bilgileri</h2>
-              <p class="section-description">Tedavi prosedürleri ve maliyet detayları</p>
+              <h2 class="section-title">{{ t('proforma.section_treatment_details') }}</h2>
+              <p class="section-description">{{ t('proforma.section_treatment_details_desc') }}</p>
             </div>
-            
+
             <button @click="addTreatmentItem" class="btn-secondary">
               <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
               </svg>
-              Tedavi Ekle
+              {{ t('proforma.button_add_treatment') }}
             </button>
           </div>
         </div>
 
         <div class="treatment-items-container">
-          <div
-            v-for="(item, index) in formData.treatmentItems"
-            :key="item.id || index"
-            class="treatment-item-card"
-          >
+          <div v-for="(item, index) in formData.treatmentItems" :key="item.id || index" class="treatment-item-card">
             <div class="flex justify-between items-start mb-4">
               <h3 class="font-medium text-gray-900 dark:text-white">
-                Prosedür #{{ index + 1 }}
+                {{ t('proforma.treatment_procedure_title') }} #{{ Number(index) + 1 }}
               </h3>
-              <button @click="removeTreatmentItem(index)" class="text-red-600 hover:text-red-700">
+              <button @click="removeTreatmentItem(Number(index))" class="text-red-600 hover:text-red-700">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -238,38 +212,23 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="form-label">Prosedür *</label>
-                <input
-                  v-model="item.procedure"
-                  type="text"
-                  class="form-input"
-                  placeholder="Orthopedic Surgery examination"
-                  required
-                />
+                <label class="form-label">{{ t('proforma.label_procedure') }} *</label>
+                <input v-model="item.procedure" type="text" class="form-input"
+                  :placeholder="t('proforma.placeholder_procedure')" required />
               </div>
 
               <div>
-                <label class="form-label">Ziyaret Tipi *</label>
-                <input
-                  v-model="item.visitType"
-                  type="text"
-                  class="form-input"
-                  placeholder="Consultation service"
-                  required
-                />
+                <label class="form-label">{{ t('proforma.label_visit_type') }} *</label>
+                <input v-model="item.visitType" type="text" class="form-input"
+                  :placeholder="t('proforma.placeholder_visit_type')" required />
               </div>
 
               <div>
-                <label class="form-label">Tahmini Maliyet *</label>
+                <label class="form-label">{{ t('proforma.label_estimated_cost') }} *</label>
                 <div class="relative">
-                  <input
-                    v-model="item.estimatedCost"
-                    type="text"
-                    class="form-input pr-16"
-                    placeholder="24.000"
-                    @input="handleEstimatedCostChange(index)"
-                    required
-                  />
+                  <input v-model="item.estimatedCost" type="text" class="form-input pr-16"
+                    :placeholder="t('proforma.placeholder_estimated_cost')"
+                    @input="handleEstimatedCostChange(Number(index))" required />
                   <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 font-medium">
                     {{ formData.currency }}
                   </span>
@@ -277,23 +236,20 @@
               </div>
 
               <div>
-                <label class="form-label">Notlar</label>
-                <input
-                  v-model="item.notes"
-                  type="text"
-                  class="form-input"
-                  placeholder="5-7 nights (1 night in ICU)"
-                />
+                <label class="form-label">{{ t('proforma.label_notes') }}</label>
+                <input v-model="item.notes" type="text" class="form-input"
+                  :placeholder="t('proforma.placeholder_notes')" />
               </div>
             </div>
           </div>
 
           <div v-if="formData.treatmentItems.length === 0" class="empty-treatments">
             <svg class="w-12 h-12 text-gray-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             <p class="text-gray-600 dark:text-gray-400">
-              Henüz tedavi prosedürü eklenmedi. "Tedavi Ekle" butonuna tıklayarak başlayın.
+              {{ t('proforma.empty_treatments') }}
             </p>
           </div>
         </div>
@@ -301,30 +257,21 @@
         <!-- Grand Total with Auto-Calculate -->
         <div class="grand-total-section">
           <div class="grand-total-row">
-            <span class="grand-total-label">GENEL TOPLAM:</span>
+            <span class="grand-total-label">{{ t('proforma.label_grand_total').toUpperCase() }}:</span>
             <div class="flex items-center gap-3">
-              <button
-                v-if="!manualGrandTotal"
-                @click="calculateGrandTotal"
+              <button v-if="!manualGrandTotal" @click="calculateGrandTotal"
                 class="p-2 rounded-lg text-cyan-600 hover:bg-cyan-50 dark:hover:bg-cyan-900/20"
-                title="Otomatik Hesapla"
-              >
+                title="Otomatik Hesapla">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                 </svg>
               </button>
-              <input
-                v-model.number="formData.grandTotal"
-                type="number"
-                min="0"
-                step="0.01"
-                class="form-input w-48"
-                @input="manualGrandTotal = true"
-                required
-              />
+              <input v-model.number="formData.grandTotal" type="number" min="0" step="0.01" class="form-input w-48"
+                @input="manualGrandTotal = true" required />
               <span class="text-lg font-bold text-gray-900 dark:text-white">{{ formData.currency }}</span>
               <span v-if="calculatedTotal !== formData.grandTotal && manualGrandTotal" class="text-xs text-amber-600">
-                (Hesaplanan: {{ calculatedTotal.toFixed(2) }})
+                ({{ t('proforma.label_estimated_cost') }}: {{ formatCurrency(calculatedTotal, formData.currency) }})
               </span>
             </div>
           </div>
@@ -334,22 +281,14 @@
       <!-- Services Included (Optional) -->
       <div class="form-section">
         <div class="section-header">
-          <h2 class="section-title">Tedavi Planına Dahil Olan Hizmetler</h2>
-          <p class="section-description">Dahil edilen servisler (opsiyonel)</p>
+          <h2 class="section-title">{{ t('proforma.section_services_included') }}</h2>
+          <p class="section-description">{{ t('proforma.section_services_included_desc') }}</p>
         </div>
 
         <div>
-          <textarea
-            v-model="servicesText"
-            class="form-textarea"
-            rows="6"
-            placeholder="Her satıra bir servis yazın:
-Initial Consultation and Pre-op Assessment
-Pre-operative Tests
-Anesthesia Services
-..."
-          ></textarea>
-          <p class="text-xs text-gray-500 mt-2">Her satır bir servis olarak kaydedilecek</p>
+          <textarea v-model="servicesText" class="form-textarea" rows="6"
+            :placeholder="t('proforma.placeholder_services')"></textarea>
+          <p class="text-xs text-gray-500 mt-2">{{ t('proforma.services_note') }}</p>
         </div>
       </div>
 
@@ -358,23 +297,22 @@ Anesthesia Services
         <div class="section-header">
           <div class="flex justify-between items-center">
             <div>
-              <h2 class="section-title">Banka Hesap Bilgileri – {{ formData.currency }}</h2>
-              <p class="section-description">Eksiksiz ve doğru giriniz</p>
+              <h2 class="section-title">{{ t('proforma.section_bank_info') }} – {{ formData.currency }}</h2>
+              <p class="section-description">{{ t('proforma.section_bank_info_desc') }}</p>
             </div>
-            
-            <button
-              @click="bankFieldsUnlocked = !bankFieldsUnlocked"
-              class="btn-icon-lg"
-              :class="bankFieldsUnlocked ? 'text-green-600' : 'text-gray-600'"
-            >
+
+            <button @click="bankFieldsUnlocked = !bankFieldsUnlocked" class="btn-icon-lg"
+              :class="bankFieldsUnlocked ? 'text-green-600' : 'text-gray-600'">
               <svg v-if="bankFieldsUnlocked" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
               </svg>
               <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
               <span class="ml-2 text-sm font-medium">
-                {{ bankFieldsUnlocked ? 'Kilitle' : 'Kilidi Aç' }}
+                {{ t(bankFieldsUnlocked ? 'proforma.button_lock' : 'proforma.button_unlock') }}
               </span>
             </button>
           </div>
@@ -382,80 +320,57 @@ Anesthesia Services
 
         <div class="bank-info-grid">
           <div>
-            <label class="form-label">Banka</label>
-            <input
-              v-model="formData.bankName"
-              type="text"
-              class="form-input"
-              :readonly="!bankFieldsUnlocked"
-              :class="{ 'bg-gray-100 dark:bg-gray-900': !bankFieldsUnlocked }"
-            />
+            <label class="form-label">{{ t('proforma.label_bank_name') }}</label>
+            <input v-model="formData.bankName" type="text" class="form-input" :readonly="!bankFieldsUnlocked"
+              :class="{ 'bg-gray-100 dark:bg-gray-900': !bankFieldsUnlocked }" />
           </div>
 
           <div>
-            <label class="form-label">Alıcı Adı</label>
-            <input
-              v-model="formData.receiverName"
-              type="text"
-              class="form-input"
-              :readonly="!bankFieldsUnlocked"
-              :class="{ 'bg-gray-100 dark:bg-gray-900': !bankFieldsUnlocked }"
-            />
+            <label class="form-label">{{ t('proforma.label_receiver_name') }}</label>
+            <input v-model="formData.receiverName" type="text" class="form-input" :readonly="!bankFieldsUnlocked"
+              :class="{ 'bg-gray-100 dark:bg-gray-900': !bankFieldsUnlocked }" />
           </div>
 
           <div>
-            <label class="form-label">Şube Adı</label>
-            <input
-              v-model="formData.branchName"
-              type="text"
-              class="form-input"
-              :readonly="!bankFieldsUnlocked"
-              :class="{ 'bg-gray-100 dark:bg-gray-900': !bankFieldsUnlocked }"
-            />
+            <label class="form-label">{{ t('proforma.label_branch_name') }}</label>
+            <input v-model="formData.branchName" type="text" class="form-input" :readonly="!bankFieldsUnlocked"
+              :class="{ 'bg-gray-100 dark:bg-gray-900': !bankFieldsUnlocked }" />
           </div>
 
           <div>
-            <label class="form-label">Şube Kodu</label>
-            <input
-              v-model="formData.branchCode"
-              type="text"
-              class="form-input"
-              :readonly="!bankFieldsUnlocked"
-              :class="{ 'bg-gray-100 dark:bg-gray-900': !bankFieldsUnlocked }"
-            />
+            <label class="form-label">{{ t('proforma.label_branch_code') }}</label>
+            <input v-model="formData.branchCode" type="text" class="form-input" :readonly="!bankFieldsUnlocked"
+              :class="{ 'bg-gray-100 dark:bg-gray-900': !bankFieldsUnlocked }" />
           </div>
 
           <div>
-            <label class="form-label">Para Birimi</label>
-            <input
-              v-model="formData.bankCurrency"
-              type="text"
-              class="form-input"
-              :readonly="!bankFieldsUnlocked"
-              :class="{ 'bg-gray-100 dark:bg-gray-900': !bankFieldsUnlocked }"
-            />
+            <label class="form-label">{{ t('proforma.label_currency') }}</label>
+            <input v-model="formData.bankCurrency" type="text" class="form-input" :readonly="!bankFieldsUnlocked"
+              :class="{ 'bg-gray-100 dark:bg-gray-900': !bankFieldsUnlocked }" />
+          </div>
+
+          <!-- Bank Information Section'ında IBAN alanına ekle -->
+          <div>
+            <label class="form-label">
+              {{ t('proforma.label_iban') }}
+              <span v-if="formData.hospitalId" class="ml-2 text-xs text-green-600 dark:text-green-400">
+                ✓ {{ formData.hospital }} - {{ formData.currency }}
+              </span>
+            </label>
+            <input v-model="formData.iban" type="text" class="form-input font-mono" :readonly="!bankFieldsUnlocked"
+              :class="{
+                'bg-gray-100 dark:bg-gray-900': !bankFieldsUnlocked,
+                'border-green-500 dark:border-green-400': formData.hospitalId && formData.iban
+              }" />
+            <p v-if="formData.hospitalId && formData.iban" class="mt-1 text-xs text-gray-500">
+              {{ t('proforma.iban_auto_set', 'IBAN otomatik olarak seçildi') }}
+            </p>
           </div>
 
           <div>
-            <label class="form-label">IBAN No</label>
-            <input
-              v-model="formData.iban"
-              type="text"
-              class="form-input font-mono"
-              :readonly="!bankFieldsUnlocked"
-              :class="{ 'bg-gray-100 dark:bg-gray-900': !bankFieldsUnlocked }"
-            />
-          </div>
-
-          <div>
-            <label class="form-label">SWIFT</label>
-            <input
-              v-model="formData.swiftCode"
-              type="text"
-              class="form-input font-mono"
-              :readonly="!bankFieldsUnlocked"
-              :class="{ 'bg-gray-100 dark:bg-gray-900': !bankFieldsUnlocked }"
-            />
+            <label class="form-label">{{ t('proforma.label_swift') }}</label>
+            <input v-model="formData.swiftCode" type="text" class="form-input font-mono" :readonly="!bankFieldsUnlocked"
+              :class="{ 'bg-gray-100 dark:bg-gray-900': !bankFieldsUnlocked }" />
           </div>
         </div>
       </div>
@@ -463,27 +378,23 @@ Anesthesia Services
       <!-- Hospital Contact Information - Auto-filled from selected hospital -->
       <div class="form-section">
         <div class="section-header">
-          <h2 class="section-title">Hastane İletişim Bilgileri</h2>
-          <p class="section-description">İletişim bilgileri (opsiyonel)</p>
+          <h2 class="section-title">{{ t('proforma.section_hospital_contact') }}</h2>
+          <p class="section-description">{{ t('proforma.section_hospital_contact_desc') }}</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="md:col-span-2">
-            <label class="form-label">Hastane Adresi</label>
-            <textarea
-              v-model="formData.hospitalAddress"
-              class="form-textarea"
-              rows="2"
-            ></textarea>
+            <label class="form-label">{{ t('proforma.label_hospital_address') }}</label>
+            <textarea v-model="formData.hospitalAddress" class="form-textarea" rows="2"></textarea>
           </div>
 
           <div>
-            <label class="form-label">Hastane Telefon</label>
+            <label class="form-label">{{ t('proforma.label_hospital_phone') }}</label>
             <input v-model="formData.hospitalPhone" type="tel" class="form-input" />
           </div>
 
           <div>
-            <label class="form-label">Hastane Email</label>
+            <label class="form-label">{{ t('proforma.label_hospital_email') }}</label>
             <input v-model="formData.hospitalEmail" type="email" class="form-input" />
           </div>
         </div>
@@ -499,27 +410,19 @@ Anesthesia Services
         <div class="flex items-center justify-between">
           <div>
             <p class="text-sm text-gray-700 dark:text-gray-300">
-              İndirme Durumu: 
+              İndirme Durumu:
               <span :class="formData.downloadApproved ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'">
                 {{ formData.downloadApproved ? '✓ Onaylandı' : '✗ Onaylanmadı' }}
               </span>
             </p>
             <p v-if="formData.downloadApproved && formData.approvedAt" class="text-xs text-gray-500 mt-1">
-              {{ new Date(formData.approvedAt).toLocaleDateString('tr-TR') }} tarihinde onaylandı
+              {{ formatDate(formData.approvedAt) }} tarihinde onaylandı
             </p>
           </div>
-          <button
-            v-if="!formData.downloadApproved"
-            @click="handleApproveDownload"
-            class="btn-primary"
-          >
+          <button v-if="!formData.downloadApproved" @click="handleApproveDownload" class="btn-primary">
             İndirme İznini Onayla
           </button>
-          <button
-            v-else
-            @click="handleRevokeDownload"
-            class="btn-secondary text-red-600"
-          >
+          <button v-else @click="handleRevokeDownload" class="btn-secondary text-red-600">
             İndirme İznini İptal Et
           </button>
         </div>
@@ -530,7 +433,7 @@ Anesthesia Services
     <div v-if="showPreview" class="modal-overlay" @click="showPreview = false">
       <div class="modal-content" @click.stop>
         <div class="modal-header">
-          <h3 class="text-lg font-bold">Proforma Önizleme</h3>
+          <h3 class="text-lg font-bold">{{ t('proforma.modal_preview_title') }}</h3>
           <button @click="showPreview = false" class="text-gray-500 hover:text-gray-700">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -546,7 +449,7 @@ Anesthesia Services
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useProformaStore } from '~/stores/proforma';
 
@@ -558,13 +461,14 @@ import {
 const route = useRoute();
 const router = useRouter();
 const proformaStore = useProformaStore();
+const authStore = useAuthStore()
 const { hospitals, fetchHospitals } = useHospitals()
 const { fetchDoctors } = useDoctors()
 const { branches, fetchBranches } = useBranches()
 const { t, currentLanguage, currentLanguageInfo, availableLanguages, setLanguage } = useLanguage()
 
+
 const $api = useApi()
-const currentUser = ref<any>(null)
 
 const loading = ref(false);
 const showPreview = ref(false);
@@ -587,28 +491,28 @@ const showBranchDropdown = ref(false)
 
 const isEditMode = computed(() => !!route.params.id);
 
-// İndirme izni kontrolü
+// ✅ İndirme izni kontrolü - authStore kullanarak
 const canDownload = computed(() => {
-  if (!currentUser.value) return false
-  const role = currentUser.value.role?.toLowerCase()
-  
+  if (!authStore.user) return false
+  const role = authStore.user.role?.toLowerCase()
+
   if (role === 'admin' || role === 'doctor') return true
   if (role === 'user') return formData.value.downloadApproved === true
-  
+
   return false
 })
 
 const userCanApproveDownload = computed(() => {
-  if (!currentUser.value) return false
-  const role = currentUser.value.role?.toLowerCase()
+  if (!authStore.user) return false
+  const role = authStore.user.role?.toLowerCase()
   return role === 'admin' || role === 'doctor'
 })
 
 const formData = ref({
   date: new Date().toISOString().split('T')[0],
   currency: 'USD',
-  language: 'tr',
-  
+  language: currentLanguage.value,
+
   // General Information
   patientName: '',
   hospitalId: null,
@@ -620,15 +524,15 @@ const formData = ref({
   age: '',
   country: '',
   comedNo: '',
-  
+
   // Optional
   additionalInfo: '',
   physicianOpinion: '',
-  
+
   // Treatment
   treatmentItems: [],
   grandTotal: 0,
-  
+
   // Bank Information (with defaults)
   bankName: 'DENİZ BANK',
   receiverName: 'Samsun Medikal Grup Özel Sağlık Hizmetleri A.Ş. Vadi Branch',
@@ -637,18 +541,43 @@ const formData = ref({
   bankCurrency: 'USD',
   iban: 'TR07 0013 4000 0033 4739 9000 78',
   swiftCode: 'DENITRIS',
-  
+
   // Hospital Contact
   hospitalAddress: 'Ayazağa Mahallesi, Kemerburgaz Caddesi, Vadistanbul Park Etabı, 7F Blok, 34396 Sarıyer/İstanbul',
   hospitalPhone: '',
   hospitalEmail: '',
-  
+
   status: 'draft',
   proformaNumber: '',
   downloadApproved: false,
   approvedBy: null,
   approvedAt: null,
 }) as any;
+
+// ✅ Helper Functions
+const formatCurrency = (amount: number, currency: string): string => {
+  const symbols: Record<string, string> = {
+    USD: '$',
+    EUR: '€',
+    TRY: '₺'
+  }
+
+  return `${symbols[currency] || currency} ${amount.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  })}`
+}
+
+const formatDate = (dateString: string | Date): string => {
+  if (!dateString) return ''
+
+  const date = new Date(dateString)
+  return date.toLocaleDateString('tr-TR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+}
 
 // Calculated Grand Total
 const calculatedTotal = computed(() => {
@@ -681,25 +610,65 @@ const handleEstimatedCostChange = (index: number) => {
 }
 
 const handleCurrencyChange = () => {
-  formData.value.bankCurrency = formData.value.currency
-  
+  // ✅ IBAN'ı güncelle
+  updateBankInfo()
+
+  // Treatment costs'ları formatla
   formData.value.treatmentItems.forEach((item: any) => {
     if (item.estimatedCost) {
       const numericValue = parseEstimatedCost(item.estimatedCost)
       item.estimatedCost = `${numericValue.toLocaleString()}`
     }
   })
-  
+
+  // Grand total'i yeniden hesapla
   if (!manualGrandTotal.value) {
     calculateGrandTotal()
   }
 }
 
-const getBranchName = (branch: any) => {
-  if (formData.value.language === 'en' && branch.nameEn) {
-    return branch.nameEn
+// ✅ Dil değiştiğinde branşları yeniden yükle
+const handleLanguageChange = async () => {
+  setLanguage(formData.value.language)
+
+  // Branşları seçilen dile göre yeniden yükle
+  try {
+
+    await fetchBranches({
+      limit: 1000,
+      languageId: currentLanguageInfo.value?.id
+    })
+
+    console.log(`✅ Branşlar ${formData.value.language} diline göre yüklendi`)
+  } catch (err) {
+    console.error('Failed to reload branches for language:', err)
   }
-  return branch.name
+}
+
+// ✅ Branş adını seçilen dile göre getir
+const getBranchName = (branch: any) => {
+  // Eğer branch.name zaten doğru dil ile geliyorsa direkt kullan
+  if (branch.name) {
+    return branch.name
+  }
+
+  // Fallback: translations array'inden bul
+  if (branch.translations && Array.isArray(branch.translations)) {
+    const languageIdMap: Record<string, number> = {
+      'tr': 1,
+      'en': 2,
+    }
+
+    const targetLanguageId = languageIdMap[formData.value.language] || 1
+    const translation = branch.translations.find((t: any) => t.languageId === targetLanguageId)
+
+    if (translation && translation.name) {
+      return translation.name
+    }
+  }
+
+  // Final fallback: code kullan
+  return branch.code || 'N/A'
 }
 
 const filteredBranch = computed(() => {
@@ -720,27 +689,38 @@ const filteredBranchForSearch = computed(() => {
   })
 })
 
+// ✅ Dil değiştiğinde branşları otomatik yeniden yükle (watch ile)
+watch(() => formData.value.language, async (newLanguage, oldLanguage) => {
+  if (newLanguage && newLanguage !== oldLanguage) {
+    await handleLanguageChange()
+  }
+})
+
+watch(() => currentLanguage.value, async (newLanguage, oldLanguage) => {
+  if (newLanguage && newLanguage !== oldLanguage) {
+    formData.value.language = newLanguage
+  }
+})
 
 
 
-// Sadece değiştirilen kısımlar:
-
-// 1️⃣ onMounted içinde - branşları dile göre yükle
 onMounted(async () => {
   if (isEditMode.value) {
     loading.value = true;
     const proforma = await proformaStore.fetchProforma(Number(route.params.id)) as any;
     if (proforma) {
       Object.assign(formData.value, proforma);
-      
-      // ✅ Proforma dilini set et
+
       if (proforma.language) {
         setLanguage(proforma.language)
       }
-      
+
       if (proforma.hospital) {
         hospitalSearch.value = proforma.hospital;
         hospitalId.value = proforma.hospitalId;
+
+        // ✅ IBAN'ı güncelle (edit mode'da hastane varsa)
+        updateBankInfo()
       }
       if (proforma.physicianName) {
         doctorSearch.value = proforma.physicianName;
@@ -748,11 +728,11 @@ onMounted(async () => {
       if (proforma.physicianDepartment) {
         branchSearch.value = proforma.physicianDepartment;
       }
-      
+
       if (proforma.servicesIncluded && Array.isArray(proforma.servicesIncluded)) {
         servicesText.value = proforma.servicesIncluded.join('\n');
       }
-      
+
       if (proforma.hospitalId) {
         try {
           const response = await $api(`/hospitals/${proforma.hospitalId}/doctors`) as any
@@ -763,68 +743,32 @@ onMounted(async () => {
       }
     }
     loading.value = false;
+  } else {
+    // ✅ Yeni proforma oluşturulurken default olarak LİV VADİ bilgilerini set et
+    updateBankInfo()
   }
 
   try {
-    // ✅ Branşları seçili dile göre yükle
+    const languageIdMap: Record<string, number> = {
+      'tr': 1,
+      'en': 2,
+    }
+
+    const initialLanguageId = languageIdMap[formData.value.language] || 1
+
     await Promise.all([
       fetchHospitals({ limit: 1000 }),
       fetchDoctors({ limit: 1000 }),
-      fetchBranches({ 
-        limit: 1000,
-        languageId: currentLanguageInfo.value?.id
-      }),
+      fetchBranches({ limit: 1000, languageId: initialLanguageId }),
     ])
-    
-    console.log(`✅ Branşlar ${formData.value.language} diline göre yüklendi`)
+
+    console.log(`✅ İlk yükleme: Branşlar ${formData.value.language} diline göre yüklendi`)
   } catch (err) {
     console.error('Failed to initialize form:', err)
   }
 })
 
-// 2️⃣ Dil değiştiğinde branşları yeniden yükle
-const handleLanguageChange = async () => {
-  setLanguage(formData.value.language)
-  
-  // ✅ Branşları seçilen dile göre yeniden yükle
-  try {
-    await fetchBranches({ 
-      limit: 1000,
-      languageId: currentLanguageInfo.value?.id
-    })
-    
-    console.log(`✅ Branşlar ${formData.value.language} diline göre yüklendi`)
-  } catch (err) {
-    console.error('Failed to reload branches for language:', err)
-  }
-}
 
-// 3️⃣ Watch - form dili değişince
-watch(() => formData.value.language, async (newLanguage, oldLanguage) => {
-  if (newLanguage && newLanguage !== oldLanguage) {
-    await handleLanguageChange()
-  }
-})
-
-// 4️⃣ Watch - global dil değişince
-watch(() => currentLanguage.value, async (newLanguage, oldLanguage) => {
-  if (newLanguage && newLanguage !== oldLanguage) {
-    formData.value.language = newLanguage
-  }
-})
-
-// 5️⃣ addTreatmentItem - Para birimi olmadan
-const addTreatmentItem = () => {
-  formData.value.treatmentItems.push({
-    id: `temp-${Date.now()}`,
-    procedure: '',
-    visitType: '',
-    estimatedCost: 0,
-    notes: '',
-  });
-};
-
- 
 
 const filteredHospitals = computed(() => {
   if (!hospitalSearch.value) {
@@ -836,14 +780,107 @@ const filteredHospitals = computed(() => {
   )
 })
 
-const selectHospital = async (hospital:any) => {
+
+
+// ✅ IBAN ve Banka Bilgileri Mapping
+const bankInfoMapping: Record<string, {
+  bankName: string
+  receiverName: string
+  branchName: string
+  branchCode: string
+  swiftCode: string
+  ibans: {
+    USD: string
+    EUR: string
+    TRY: string
+  }
+}> = {
+  // LİV VADİ
+  'liv': {
+    bankName: 'AKBANK',
+    receiverName: 'MLP Sağlık Hizmetleri',
+    branchName: 'PLAZA KURUMSAL',
+    branchCode: '1123',
+    swiftCode: 'AKBKTRISXXX',
+    ibans: {
+      USD: 'TR07 0013 4000 0033 4739 9000 78',
+      EUR: 'TR88 0013 4000 0033 4739 9000 75',
+      TRY: 'TR18 0013 4000 0333 4739 9000 74'
+    }
+  },
+  // LİV ULUS
+  'ulus': {
+    bankName: 'DENİZ BANK',
+    receiverName: 'Samsun Medikal Grup Özel Sağlık Hizmetleri A.Ş. Vadi Branch',
+    branchName: 'AVRUPA KURUMSAL Istanbul - Turkey',
+    branchCode: '3390',
+    swiftCode: 'DENITRIS',
+    ibans: {
+      USD: 'TR79 0004 6011 2300 1000 0121 08',
+      EUR: 'TR36 0013 4000 0024 5965 7012 19',
+      TRY: 'TR14 0004 6011 2388 8000 1476 32'
+    }
+  }
+}
+
+// ✅ Hastane adından key çıkar
+const getHospitalKey = (hospitalName: string): string => {
+  if (!hospitalName) return ''
+
+  const name = hospitalName.toLowerCase()
+
+  if (name.includes('vadi') || name.includes('vadistanbul')) {
+    return 'liv'
+  }
+
+  if (name.includes('ulus')) {
+    return 'ulus'
+  }
+
+  // Default: LİV VADİ
+  return 'liv'
+}
+
+// ✅ IBAN ve banka bilgilerini güncelle
+const updateBankInfo = () => {
+  const hospitalKey = getHospitalKey(formData.value.hospital)
+  const bankInfo = bankInfoMapping[hospitalKey]
+
+  if (!bankInfo) {
+    console.warn('Hospital bank info not found:', formData.value.hospital)
+    return
+  }
+
+  // Currency'yi normalize et (TRY yerine TL gelebilir)
+  const currency = formData.value.currency === 'TRY' ? 'TRY' : formData.value.currency
+
+  // Banka bilgilerini set et
+  formData.value.bankName = bankInfo.bankName
+  formData.value.receiverName = bankInfo.receiverName
+  formData.value.branchName = bankInfo.branchName
+  formData.value.branchCode = bankInfo.branchCode
+  formData.value.swiftCode = bankInfo.swiftCode
+  formData.value.bankCurrency = currency
+
+  // IBAN'ı currency'e göre set et
+  const iban = bankInfo.ibans[currency as 'USD' | 'EUR' | 'TRY']
+
+  if (iban) {
+    formData.value.iban = iban
+    console.log(`✅ IBAN updated: ${currency} - ${iban}`)
+  } else {
+    console.warn('IBAN not found for currency:', currency)
+  }
+}
+
+const selectHospital = async (hospital: any) => {
   formData.value.hospitalId = hospital.id
   formData.value.hospital = hospital.name
   hospitalId.value = hospital.id
   hospitalSearch.value = hospital.name
   showHospitalDropdown.value = false
-  
-  // ✅ Hastane adres bilgisini otomatik doldur
+
+  // Hospital contact bilgilerini set et
   if (hospital.address) {
     formData.value.hospitalAddress = hospital.address
   }
@@ -853,8 +890,11 @@ const selectHospital = async (hospital:any) => {
   if (hospital.email) {
     formData.value.hospitalEmail = hospital.email
   }
-  
-  // Fetch doctors for the selected hospital
+
+  // ✅ Banka bilgilerini ve IBAN'ı güncelle
+  updateBankInfo()
+
+  // Doktorları yükle
   try {
     const response = await $api(`/hospitals/${hospital.id}/doctors`) as any
     hospitalDoctors.value = Array.isArray(response) ? response : (response.data || [])
@@ -882,12 +922,12 @@ const filteredDoctorsForSearch = computed(() => {
   }
 
   const search = doctorSearch.value.toLowerCase()
-  return baseDoctors.filter((doctor:any) =>
+  return baseDoctors.filter((doctor: any) =>
     doctor.name.toLowerCase().includes(search)
   )
 }) as any
 
-const selectDoctor = (doctor:any) => {
+const selectDoctor = (doctor: any) => {
   formData.value.doctorId = doctor.id
   formData.value.physicianName = doctor.name
   doctorSearch.value = doctor.name
@@ -904,7 +944,7 @@ const selectBranch = (item: any) => {
   formData.value.branchId = item.id
   formData.value.physicianDepartment = getBranchName(item)
   branchSearch.value = getBranchName(item)
-  showBranchDropdown.value = false 
+  showBranchDropdown.value = false
 }
 
 const showBranchDropdownList = () => {
@@ -917,6 +957,15 @@ const hideBranchDropdown = () => {
   }, 200)
 }
 
+const addTreatmentItem = () => {
+  formData.value.treatmentItems.push({
+    id: `temp-${Date.now()}`,
+    procedure: '',
+    visitType: '',
+    estimatedCost: 0,
+    notes: '',
+  });
+};
 
 const removeTreatmentItem = (index: number) => {
   formData.value.treatmentItems.splice(index, 1);
@@ -927,17 +976,17 @@ const removeTreatmentItem = (index: number) => {
 
 const handleSave = async () => {
   if (!formData.value.patientName || formData.value.patientName.trim() === '') {
-    alert('Hasta adı zorunludur');
+    alert(t('proforma.validation_patient_name_required'));
     return;
   }
 
   if (formData.value.treatmentItems.length === 0) {
-    alert('En az bir tedavi prosedürü eklemelisiniz');
+    alert(t('proforma.validation_treatment_required'));
     return;
   }
 
   if (!formData.value.grandTotal || formData.value.grandTotal <= 0) {
-    alert('Genel Toplam girilmelidir');
+    alert(t('proforma.validation_grand_total_required'));
     return;
   }
 
@@ -968,7 +1017,7 @@ const handleSave = async () => {
 };
 
 const handleCancel = () => {
-  if (confirm('Değişiklikler kaydedilmemiş olabilir. Çıkmak istediğinize emin misiniz?')) {
+  if (confirm(t('proforma.confirm_cancel'))) {
     router.push('/proforma/list');
   }
 };
@@ -979,11 +1028,11 @@ const handlePreview = async () => {
       alert('Bu proformayı görüntüleme yetkiniz yok. Lütfen onay bekleyin.');
       return;
     }
-    
+
     previewUrl.value = `https://vcrmapi.mlpcare.com/proformas/${route.params.id}/preview`;
     showPreview.value = true;
   } else {
-    alert('Önizleme için önce proformayı kaydetmelisiniz');
+    alert(t('proforma.alert_preview_save_first'));
   }
 };
 
@@ -991,16 +1040,15 @@ const handleApproveDownload = async () => {
   if (!confirm('Bu proforma için indirme iznini onaylamak istediğinizden emin misiniz?')) {
     return
   }
-  
+
   try {
     await $api(`/proformas/${route.params.id}/approve-download`, {
       method: 'PATCH'
     })
-    
-    // Reload proforma data
+
     const proforma = await proformaStore.fetchProforma(Number(route.params.id)) as any
     Object.assign(formData.value, proforma)
-    
+
     alert('İndirme izni başarıyla onaylandı')
   } catch (err) {
     console.error('Failed to approve download:', err)
@@ -1012,16 +1060,15 @@ const handleRevokeDownload = async () => {
   if (!confirm('Bu proforma için indirme iznini iptal etmek istediğinizden emin misiniz?')) {
     return
   }
-  
+
   try {
     await $api(`/proformas/${route.params.id}/revoke-download`, {
       method: 'PATCH'
     })
-    
-    // Reload proforma data
+
     const proforma = await proformaStore.fetchProforma(Number(route.params.id)) as any
     Object.assign(formData.value, proforma)
-    
+
     alert('İndirme izni başarıyla iptal edildi')
   } catch (err) {
     console.error('Failed to revoke download:', err)
