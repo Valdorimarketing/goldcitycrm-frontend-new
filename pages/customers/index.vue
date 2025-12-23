@@ -964,7 +964,7 @@ useHead({ title: 'Müşteriler - Valdori CRM' })
 
 <style scoped>
 .filter-badge {
-  @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900/20 dark:text-indigo-400;
+  @apply inline-flex relative items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900/20 dark:text-indigo-400;
 }
 
 .filter-badge button {
