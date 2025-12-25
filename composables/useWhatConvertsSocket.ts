@@ -113,7 +113,7 @@ export const useWhatConvertsSocket = () => {
   const goToLead = (customerId: number) => {
     dismissNotification()
     // Customer detay sayfasına yönlendir
-    navigateTo(`/customers/${customerId}`)
+    navigateTo(`/customers/show/${customerId}`)
   }
 
   /**

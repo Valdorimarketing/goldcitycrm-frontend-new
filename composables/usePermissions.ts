@@ -53,7 +53,10 @@ export const usePermissions = () => {
         'menu.customers.new_people',
         'menu.customers.dynamic_search',
         'menu.customers.reminders',
-        'menu.doctor_review'
+        'menu.doctor_review',
+        'menu.proforma',
+        'menu.pricing',
+        'menu.sales',
       ]
       return allowedMenus.includes(menuName)
     }
