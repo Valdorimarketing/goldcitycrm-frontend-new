@@ -1,26 +1,14 @@
 <template>
-  <div 
-    class="min-h-screen bg-gray-50 dark:bg-gray-900" 
-    :dir="isRTL ? 'rtl' : 'ltr'"
-    :lang="currentLanguage"
-  >
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900" :dir="isRTL ? 'rtl' : 'ltr'" :lang="currentLanguage">
     <!-- Connection Status Overlay -->
-    <Connectionstatusoverlay 
-      ping-url="/health"
-      :ping-interval="15000"
-      :initial-delay="3000"
-      @connected="onConnected"
-      @disconnected="onDisconnected"
-    />
+    <Connectionstatusoverlay ping-url="/health" :ping-interval="15000" :initial-delay="3000" @connected="onConnected"
+      @disconnected="onDisconnected" />
 
     <!-- Sidebar -->
     <AppSidebar />
 
     <!-- Main Content -->
-    <div 
-      class="transition-all duration-300 ease-in-out" 
-      :class="getMainContentClass"
-    >
+    <div class="transition-all duration-300 ease-in-out" :class="getMainContentClass">
       <!-- Header -->
       <AppHeader />
 
@@ -31,30 +19,21 @@
     </div>
 
     <!-- Mobile Sidebar Overlay -->
-    <div 
-      v-if="mobileSidebarOpen" 
-      class="fixed inset-0 z-40 bg-gray-600 bg-opacity-75 lg:hidden"
-      @click="closeMobileSidebar"
-    ></div>
+    <div v-if="mobileSidebarOpen" class="fixed inset-0 z-40 bg-gray-600 bg-opacity-75 lg:hidden"
+      @click="closeMobileSidebar"></div>
 
     <!-- Fraud Alert Popup -->
-    <FraudAlertPopup 
-      v-if="isAdmin" 
-      :is-open="fraudAlertPopup" 
-      :alert="currentFraudAlert" 
-      :loading="fraudAlertLoading"
-      @dismiss="dismissFraudAlert" 
-      @check="checkFraudAlert" 
-    />
+    <FraudAlertPopup v-if="isAdmin" :is-open="fraudAlertPopup" :alert="currentFraudAlert" :loading="fraudAlertLoading"
+      @dismiss="dismissFraudAlert" @check="checkFraudAlert" />
 
     <!-- Reminder Popup -->
-    <ReminderPopup 
-      :is-open="reminderPopup" 
-      :reminder="currentReminder" 
-      :loading="reminderLoading"
-      @dismiss="dismissReminder" 
-      @complete="completeReminder" 
-    />
+    <!-- Reminder Popup -->
+    <ReminderPopup :is-open="reminderPopup" :reminder="currentReminder" :loading="reminderLoading"
+      @dismiss="dismissReminder" @complete="completeReminder" />
+
+    <!-- ✅ YENİ: Lead Notification Popup (Sadece Admin) -->
+    <LeadNotificationPopup v-if="isAdmin" :is-open="showLeadNotification" :lead="newLeadNotification"
+      @dismiss="dismissLeadNotification" @go-to-customer="goToCustomer" />
   </div>
 </template>
 
@@ -68,6 +47,9 @@ import ReminderPopup from '~/components/ReminderPopup.vue'
 import Connectionstatusoverlay from '~/components/Connectionstatusoverlay.vue'
 import { useApi } from '~/composables/useApi'
 import { useLanguage } from '~/composables/useLanguage'
+
+import LeadNotificationPopup from '~/components/LeadNotificationPopup.vue'
+import { useWhatConvertsSocket } from '~/composables/useWhatConvertsSocket'
 
 const { currentLanguage } = useLanguage()
 
@@ -93,11 +75,11 @@ const getMainContentClass = computed(() => {
 // HTML direction attribute'unu güncelle
 const updateHTMLDirection = (lang) => {
   const isRtl = RTL_LANGUAGES.includes(lang)
-  
+
   // HTML element'e dir attribute ekle
   document.documentElement.setAttribute('dir', isRtl ? 'rtl' : 'ltr')
   document.documentElement.setAttribute('lang', lang)
-  
+
   // Body'ye de class ekle (opsiyonel, CSS için kullanışlı)
   if (isRtl) {
     document.body.classList.add('rtl')
@@ -149,9 +131,27 @@ const {
   getUnreadCount
 } = useFraudAlerts()
 
-const { isAdmin } = usePermissions() 
+const { isAdmin } = usePermissions()
 const api = useApi()
- 
+
+
+// ✅ YENİ: WhatConverts Socket System (Sadece Admin için)
+const {
+  isConnected: socketConnected,
+  newLeadNotification,
+  showNotification: showLeadNotification,
+  connect: connectSocket,
+  disconnect: disconnectSocket,
+  dismissNotification: dismissLeadNotification,
+  goToLead,
+  requestNotificationPermission: requestLeadNotificationPermission
+} = useWhatConvertsSocket()
+
+const goToCustomer = (customerId) => {
+  goToLead(customerId)
+}
+
+
 // Reminder Notification System
 const useReminderNotifications = () => {
   const config = useRuntimeConfig()
@@ -339,30 +339,49 @@ const completeReminder = async () => {
 
 onMounted(async () => {
   updateHTMLDirection(currentLanguage.value)
+  
+  // ✅ GÜNCELLEME: Her iki notification izni de iste
   await requestNotificationPermission()
-  await checkForNewAlerts()
-  await getUnreadCount()
-  await checkForDueReminders()
-
-  if (isAdmin) {
+  await requestLeadNotificationPermission()
+  
+  // Fraud Alerts (sadece admin)
+  if (isAdmin.value) {
+    await checkForNewAlerts()
+    await getUnreadCount()
+    
     fraudAlertInterval = setInterval(async () => {
       await checkForNewAlerts()
     }, 30000)
   }
-
+  
+  // Reminders (herkes)
+  await checkForDueReminders()
+  
   reminderInterval = setInterval(async () => {
     await checkForDueReminders()
   }, 30000)
+
+  // ✅ YENİ: Socket bağlantısı (sadece admin)
+  if (isAdmin.value) {
+    console.log('🔌 Admin detected, connecting to WhatConverts socket...')
+    connectSocket()
+  }
 })
 
 onUnmounted(() => {
-  if (fraudAlertInterval && isAdmin) {
+  if (fraudAlertInterval && isAdmin.value) {
     clearInterval(fraudAlertInterval)
     fraudAlertInterval = null
   }
+  
   if (reminderInterval) {
     clearInterval(reminderInterval)
     reminderInterval = null
+  }
+
+  // ✅ YENİ: Socket bağlantısını kapat
+  if (isAdmin.value) {
+    disconnectSocket()
   }
 })
 

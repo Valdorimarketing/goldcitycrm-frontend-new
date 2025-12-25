@@ -28,6 +28,7 @@
     "dayjs": "^1.11.18",
     "nuxt": "^4.0.3",
     "pinia": "^3.0.3",
+    "socket.io-client": "^4.8.3",
     "undici": "^7.16.0",
     "vue": "^3.5.18",
     "vue-router": "^4.5.1"
