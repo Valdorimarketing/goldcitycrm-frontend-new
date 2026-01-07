@@ -16,8 +16,8 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   runtimeConfig: {
     public: {
-    apiBase: process.env.NUXT_PUBLIC_API_BASE_URL || 'https://api.goldcitycrm.com',
-    siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://goldcitycrm.com'
+    apiBase: process.env.NUXT_PUBLIC_API_BASE_URL || 'https://api1.goldcitycrm.com',
+    siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://tr1.goldcitycrm.com'
     }
   },
   app: {
