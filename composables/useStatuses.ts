@@ -1,5 +1,11 @@
+// composables/useStatuses.ts - Düzeltilmiş
 import { ref } from 'vue'
 import { useApi } from './useApi'
+import type { SubSegment } from '../types'
+
+
+
+
 
 export interface Status {
   id: number
@@ -17,6 +23,7 @@ export interface Status {
   isPricing?: boolean
   created_at?: string
   updated_at?: string
+  subSegments?: SubSegment[]
 }
 
 export interface StatusesResponse {
@@ -47,29 +54,27 @@ export const useStatuses = () => {
   const totalPages = ref(1)
   const totalItems = ref(0)
 
+  // Helper function to map camelCase to snake_case
+  const convertBooleans = (status: any) => {
+    return {
+      ...status,
+      is_remindable: status.isRemindable ?? status.is_remindable ?? false,
+      is_first: status.isFirst ?? status.is_first ?? false,
+      is_closed: status.isClosed ?? status.is_closed ?? false,
+      is_sale: status.isSale ?? status.is_sale ?? false,
+      remindingDay: status.remindingDay ?? status.reminding_day ?? null,
+      isDoctor: status.isDoctor ?? status.is_doctor ?? false,
+      isPricing: status.isPricing ?? status.is_pricing ?? false,
+      order: status.order ?? 0
+    }
+  }
+
   const fetchStatuses = async (page = 1) => {
     loading.value = true
     error.value = null
     try {
       const response: any = await $api(`/statuses?page=${page}`)
 
-      // Helper function to map camelCase to snake_case
-      const convertBooleans = (status: any) => {
-        return {
-          ...status,
-          // Map camelCase fields from API to snake_case
-          is_remindable: status.isRemindable ?? status.is_remindable ?? false,
-          is_first: status.isFirst ?? status.is_first ?? false,
-          is_closed: status.isClosed ?? status.is_closed ?? false,
-          is_sale: status.isSale ?? status.is_sale ?? false,
-          remindingDay: status.remindingDay ?? status.reminding_day ?? null,
-          isDoctor: status.isDoctor ?? status.is_doctor ?? false,
-          isPricing: status.isPricing ?? status.is_pricing ?? false,
-          order: status.order ?? 0
-        }
-      }
-
-      // Response doğrudan array olarak geliyor
       if (Array.isArray(response)) {
         statuses.value = response.map(convertBooleans)
         totalPages.value = 1
@@ -97,17 +102,53 @@ export const useStatuses = () => {
     }
   }
 
+  // Alt segmentlerle birlikte getir
+  const fetchStatusesWithSubSegments = async (activeOnly = true) => {
+    loading.value = true
+    error.value = null
+    try {
+      const queryParams = new URLSearchParams()
+      if (activeOnly) queryParams.append('active', 'true')
+      queryParams.append('withSubSegments', 'true')
+
+      const response: any = await $api(`/statuses?${queryParams.toString()}`)
+
+      if (Array.isArray(response)) {
+        statuses.value = response.map(convertBooleans)
+        totalPages.value = 1
+        totalItems.value = response.length
+        currentPage.value = 1
+      } else if (response && typeof response === 'object') {
+        const rawStatuses = response.data || response.statuses || []
+        statuses.value = rawStatuses.map(convertBooleans)
+        if (response.meta) {
+          currentPage.value = response.meta.current_page
+          totalPages.value = response.meta.last_page
+          totalItems.value = response.meta.total
+        }
+      } else {
+        statuses.value = []
+      }
+
+      return statuses.value
+    } catch (err: any) {
+      error.value = err.message || 'Durumlar yüklenemedi'
+      statuses.value = []
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
   const fetchStatus = async (id: number) => {
     loading.value = true
     error.value = null
     try {
       const response: any = await $api(`/statuses/${id}`)
-      // API returns the status directly, not wrapped in data
       const status = response
 
       return {
         ...status,
-        // Map camelCase fields from API to snake_case
         is_remindable: status.isRemindable ?? status.is_remindable ?? false,
         is_first: status.isFirst ?? status.is_first ?? false,
         is_closed: status.isClosed ?? status.is_closed ?? false,
@@ -203,6 +244,7 @@ export const useStatuses = () => {
     totalPages,
     totalItems,
     fetchStatuses,
+    fetchStatusesWithSubSegments,
     fetchStatus,
     createStatus,
     updateStatus,

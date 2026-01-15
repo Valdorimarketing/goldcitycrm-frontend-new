@@ -6,7 +6,7 @@
         <div>
           <div class="flex items-center gap-3">
             <div class="p-2.5 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl shadow-lg shadow-cyan-500/25">
-              <InboxStackIcon class="h-6 w-6 text-white" />
+              <InboxStackIcon class="h-7 w-7 text-white" />
             </div>
             <div>
               <div class="flex items-center gap-3">
@@ -46,7 +46,7 @@
           </button>
           <button 
             @click="showCreateModal = true"
-            class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all text-sm font-medium shadow-lg shadow-indigo-500/25"
+            class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r to-amber-400 to-amber-500 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all text-sm font-medium shadow-lg shadow-indigo-500/25"
           >
             <PlusIcon class="h-5 w-5" />
             {{ t('pool.new_customer', 'Yeni Müşteri') }}

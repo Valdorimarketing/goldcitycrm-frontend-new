@@ -14,7 +14,7 @@
        
         <button
           @click="initializeData()"
-          class="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 hover:from-indigo-700 hover:to-purple-700 transition-all"
+          class="inline-flex items-center justify-center rounded-lg bg-gradient-to-r to-amber-400 to-amber-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 hover:from-indigo-700 hover:to-purple-700 transition-all"
         >
           <ArrowPathIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
           {{ t('dashboard.refresh', 'Yenile') }}
@@ -22,7 +22,7 @@
 
         <button
           @click="showCreateModal = true"
-          class="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 hover:from-indigo-700 hover:to-purple-700 transition-all"
+          class="inline-flex items-center justify-center rounded-lg bg-gradient-to-r to-amber-400 to-amber-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 hover:from-indigo-700 hover:to-purple-700 transition-all"
         >
           <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
           {{ t('branches.new_branch', 'Yeni Branş') }}
@@ -108,7 +108,7 @@
             <tr v-for="branch in branches" :key="branch.id" class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center">
-                  <div class="flex-shrink-0 h-10 w-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
+                  <div class="flex-shrink-0 h-10 w-10 bg-gradient-to-br to-amber-500 to-amber-500 rounded-lg flex items-center justify-center">
                     <BuildingOfficeIcon class="h-5 w-5 text-white" />
                   </div>
                   <div class="ml-4">
@@ -183,7 +183,7 @@
                 <div class="mt-6">
                   <button
                     @click="showCreateModal = true"
-                    class="inline-flex items-center rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 hover:from-indigo-700 hover:to-purple-700 transition-all"
+                    class="inline-flex items-center rounded-lg bg-gradient-to-r to-amber-400 to-amber-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 hover:from-indigo-700 hover:to-purple-700 transition-all"
                   >
                     <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
                     {{ t('branches.add_first', 'İlk branşı ekle') }}

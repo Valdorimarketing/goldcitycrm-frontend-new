@@ -44,15 +44,15 @@
                   <div class="flex items-center space-x-3">
                     <div v-if="sale.isFullyPaid" 
                       class="flex h-10 w-10 items-center justify-center rounded-full bg-green-400/30">
-                      <CheckCircleIcon class="h-6 w-6 text-white" />
+                      <CheckCircleIcon class="h-7 w-7 text-white" />
                     </div>
                     <div v-else-if="sale.paidAmount > 0" 
                       class="flex h-10 w-10 items-center justify-center rounded-full bg-yellow-400/30">
-                      <ClockIcon class="h-6 w-6 text-white" />
+                      <ClockIcon class="h-7 w-7 text-white" />
                     </div>
                     <div v-else 
                       class="flex h-10 w-10 items-center justify-center rounded-full bg-red-400/30">
-                      <XCircleIcon class="h-6 w-6 text-white" />
+                      <XCircleIcon class="h-7 w-7 text-white" />
                     </div>
                     <div>
                       <p class="text-sm font-medium text-white">

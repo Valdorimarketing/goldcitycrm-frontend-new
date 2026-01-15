@@ -26,7 +26,7 @@
           >
             <DialogPanel class="relative w-full max-w-lg transform overflow-visible rounded-3xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-2xl transition-all">
               <!-- Header with gradient background -->
-              <div class="relative overflow-hidden rounded-t-3xl bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-6">
+              <div class="relative overflow-hidden rounded-t-3xl bg-gradient-to-r to-amber-400 to-amber-500 px-8 py-6">
                 <div class="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
                 <div class="relative">
                   <div class="flex items-center justify-between">
@@ -172,7 +172,7 @@
                     <button
                       type="submit"
                       :disabled="loading || !form.name || !form.description"
-                      class="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-all hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+                      class="inline-flex items-center justify-center rounded-xl bg-gradient-to-r to-amber-400 to-amber-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-all hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       <span v-if="loading" class="flex items-center">
                         <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

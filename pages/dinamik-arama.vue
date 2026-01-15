@@ -55,8 +55,8 @@
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
           <div class="flex items-center gap-3">
-            <div class="p-2.5 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-lg shadow-indigo-500/25">
-              <PhoneArrowUpRightIcon class="h-6 w-6 text-white" />
+            <div class="p-2.5 bg-gradient-to-br to-amber-500 to-amber-500 rounded-xl shadow-lg shadow-indigo-500/25">
+              <PhoneArrowUpRightIcon class="h-7 w-7 text-white" />
             </div>
             <div>
               <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ t('dynamic_search.title', 'Dinamik Arama') }}</h1>
@@ -97,7 +97,7 @@
         <!-- Dashboard Header -->
         <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-700">
           <div class="flex items-center gap-3">
-            <div class="h-9 w-9 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
+            <div class="h-9 w-9 rounded-xl bg-gradient-to-br from-violet-500 to-amber-500 flex items-center justify-center">
               <ChartBarIcon class="h-5 w-5 text-white" />
             </div>
             <div>
@@ -1484,7 +1484,7 @@ const getAvatarClass = (customer) => {
   if (isOverdue(customer.remindingDate)) {
     return 'bg-gradient-to-br from-red-400 to-red-600 text-white'
   }
-  return 'bg-gradient-to-br from-indigo-400 to-purple-600 text-white'
+  return 'bg-gradient-to-br from-indigo-400 to-amber-500 text-white'
 }
 
 const getStatusDotClass = (statusId) => {

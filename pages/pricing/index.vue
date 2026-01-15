@@ -4,7 +4,7 @@
     <div class="mb-8">
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div class="flex items-center gap-4">
-          <div class="p-3 bg-gradient-to-br from-violet-500 to-purple-600 rounded-2xl shadow-lg shadow-violet-500/25">
+          <div class="p-3 bg-gradient-to-br from-violet-500 to-amber-500 rounded-2xl shadow-lg shadow-violet-500/25">
             <CurrencyDollarIcon class="h-7 w-7 text-white" />
           </div>
           <div>

@@ -181,7 +181,7 @@
 
                 <img :src="path + user.avatar" v-if="user.avatar" class="h-12 w-12 rounded-full">
                 <div v-else
-                  class="h-12 w-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-semibold text-lg">
+                  class="h-12 w-12 rounded-full bg-gradient-to-br to-amber-500 to-purple-500 flex items-center justify-center text-white font-semibold text-lg">
                   {{ user.name.charAt(0) }}
                 </div>
                 <span v-if="user.activeEngagement"
@@ -315,7 +315,7 @@
               <div v-if="showUserDetailModal && selectedUser"
                 class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-2xl transition-all w-full max-w-5xl max-h-[90vh] flex flex-col">
                 <!-- Header -->
-                <div class="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-4 flex-shrink-0">
+                <div class="bg-gradient-to-r to-amber-400 to-amber-500 px-6 py-4 flex-shrink-0">
                   <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-4">
                       <div
@@ -331,7 +331,7 @@
                       </div>
                     </div>
                     <button @click="closeUserDetail" class="rounded-lg p-2 hover:bg-white/20 transition-colors">
-                      <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg class="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M6 18L18 6M6 6l12 12" />
                       </svg>
@@ -575,7 +575,7 @@
                       </p>
                     </div>
                     <button @click="closeTimelineModal" class="rounded-lg p-2 hover:bg-white/20 transition-colors">
-                      <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg class="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M6 18L18 6M6 6l12 12" />
                       </svg>

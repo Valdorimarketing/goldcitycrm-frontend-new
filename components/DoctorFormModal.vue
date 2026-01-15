@@ -30,7 +30,7 @@
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-3">
                     <div class="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
-                      <UserGroupIcon class="h-6 w-6 text-white" />
+                      <UserGroupIcon class="h-7 w-7 text-white" />
                     </div>
                     <div>
                       <DialogTitle as="h3" class="text-lg font-bold text-white">

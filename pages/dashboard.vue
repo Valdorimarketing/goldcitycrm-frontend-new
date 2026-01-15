@@ -5,7 +5,7 @@
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
           <div class="flex items-center gap-4">
-            <div class="h-14 w-14 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+            <div class="h-14 w-14 rounded-2xl bg-gradient-to-br to-amber-500 via-amber-500 to-amber-400 flex items-center justify-center shadow-lg shadow-indigo-500/30">
               <span class="text-xl font-bold text-white">
                 {{ authStore.user?.name?.charAt(0) || 'U' }}
               </span>
@@ -203,7 +203,7 @@
                   >
                     <div class="flex items-center justify-between mb-3">
                       <div class="flex items-center gap-2">
-                        <div class="h-8 w-8 rounded-lg bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center text-white text-xs font-bold">
+                        <div class="h-8 w-8 rounded-lg bg-gradient-to-br from-purple-400 to-amber-400 flex items-center justify-center text-white text-xs font-bold">
                           {{ assignment.salesRepName?.charAt(0) || '?' }}
                         </div>
                         <div>
@@ -372,11 +372,11 @@
       <!-- USER VIEW - My Assignments Hero Card -->
       <template v-else-if="isUser">
         <div class="lg:col-span-12">
-          <div class="relative overflow-hidden bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-3xl p-1">
+          <div class="relative overflow-hidden bg-gradient-to-br to-amber-500 via-amber-500 to-amber-400 rounded-3xl p-1">
             <div class="bg-white dark:bg-gray-800 rounded-[22px] p-6">
               <div class="flex items-center justify-between mb-6">
                 <div class="flex items-center gap-4">
-                  <div class="h-14 w-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                  <div class="h-14 w-14 rounded-2xl bg-gradient-to-br to-amber-500 to-amber-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
                     <ClipboardDocumentCheckIcon class="h-7 w-7 text-white" />
                   </div>
                   <div>
@@ -673,7 +673,7 @@
                   <div class="flex items-center gap-3">
                     <div class="relative">
                       <div 
-                        class="h-10 w-10 rounded-full flex items-center justify-center text-sm font-semibold shadow-sm bg-gradient-to-br from-indigo-400 to-purple-600 text-white" 
+                        class="h-10 w-10 rounded-full flex items-center justify-center text-sm font-semibold shadow-sm bg-gradient-to-br from-indigo-400 to-amber-500 text-white" 
                       >
                         {{ meeting.customerData?.name.charAt(0).toUpperCase() }}
                       </div>
@@ -805,9 +805,9 @@ const statColors = [
 ]
 
 const statGradients = [
-  'bg-gradient-to-r from-indigo-500 to-purple-500',
+  'bg-gradient-to-r to-amber-500 to-purple-500',
   'bg-gradient-to-r from-emerald-500 to-teal-500',
-  'bg-gradient-to-r from-purple-500 to-pink-500',
+  'bg-gradient-to-r from-purple-500 to-amber-400',
   'bg-gradient-to-r from-cyan-500 to-blue-500'
 ]
 

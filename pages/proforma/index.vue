@@ -96,7 +96,7 @@
             <ChartBarIcon class="h-6 w-6 text-purple-600 dark:text-purple-400" />
           </div>
         </div>
-        <div class="h-1 w-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mt-4 opacity-60"></div>
+        <div class="h-1 w-full bg-gradient-to-r from-purple-500 to-amber-400 rounded-full mt-4 opacity-60"></div>
       </div>
     </div>
 

@@ -109,7 +109,7 @@
             <td class="px-6 py-4 whitespace-nowrap">
               <div class="flex items-center">
                 <div
-                  class="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg">
+                  class="h-10 w-10 rounded-full bg-gradient-to-br to-amber-500 to-purple-500 flex items-center justify-center shadow-lg">
                   <span class="text-sm font-bold text-white">
                     {{ user.userName?.charAt(0)?.toUpperCase() || '?' }}
                   </span>

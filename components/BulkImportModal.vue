@@ -32,7 +32,7 @@
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-4">
                     <div class="h-12 w-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                      <ArrowUpTrayIcon class="h-6 w-6 text-white" />
+                      <ArrowUpTrayIcon class="h-7 w-7 text-white" />
                     </div>
                     <div>
                       <h2 class="text-xl font-bold text-white">Toplu Çeviri İçe Aktar</h2>

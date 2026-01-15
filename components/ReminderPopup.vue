@@ -31,7 +31,7 @@
                 <div class="flex items-center justify-between">
                   <div class="flex items-center space-x-3">
                     <div class="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur animate-pulse">
-                      <BellIcon class="h-6 w-6 text-white" />
+                      <BellIcon class="h-7 w-7 text-white" />
                     </div>
                     <div>
                       <h3 class="text-lg font-semibold text-white">⏰ Hatırlatma Zamanı!</h3>

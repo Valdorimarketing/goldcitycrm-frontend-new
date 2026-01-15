@@ -22,7 +22,7 @@
                 <div class="relative flex items-center justify-between">
                   <div class="flex items-center space-x-4">
                     <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm ring-1 ring-white/30">
-                      <FolderIcon class="h-6 w-6 text-white" />
+                      <FolderIcon class="h-7 w-7 text-white" />
                     </div>
                     <div>
                       <h3 class="text-xl font-bold text-white">{{ t('files_modal.title', 'Müşteri Dosyaları') }}</h3>
@@ -193,7 +193,7 @@
                         'flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center',
                         getFileIconClass(file.file)
                       ]">
-                        <component :is="getFileIcon(file.file)" class="h-6 w-6 text-white" />
+                        <component :is="getFileIcon(file.file)" class="h-7 w-7 text-white" />
                       </div>
                       
                       <!-- File Info -->

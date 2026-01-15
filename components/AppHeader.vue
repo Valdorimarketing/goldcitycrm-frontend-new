@@ -383,7 +383,7 @@ onUnmounted(() => {
                 />
                 <div
                   v-else
-                  class="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center"
+                  class="w-full h-full bg-gradient-to-br to-amber-500 to-amber-500 flex items-center justify-center"
                 >
                   <span class="text-sm font-bold text-white">
                     {{ authStore.user?.name?.charAt(0)?.toUpperCase() || 'U' }}
@@ -431,7 +431,7 @@ onUnmounted(() => {
               :class="isRTL ? 'left-0' : 'right-0'"
             >
               <!-- User Info Header -->
-              <div class="p-4 bg-gradient-to-r from-indigo-500 to-purple-600">
+              <div class="p-4 bg-gradient-to-r to-amber-500 to-amber-500">
                 <div class="flex items-center gap-3" :class="{ 'flex-row-reverse': isRTL }">
                   <div class="w-12 h-12 rounded-xl overflow-hidden ring-2 ring-white/30">
                     <img

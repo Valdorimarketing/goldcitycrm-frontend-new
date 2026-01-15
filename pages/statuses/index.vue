@@ -6,7 +6,7 @@
         <div>
           <div class="flex items-center gap-3">
             <div class="p-2.5 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl shadow-lg shadow-emerald-500/25">
-              <TagIcon class="h-6 w-6 text-white" />
+              <TagIcon class="h-7 w-7 text-white" />
             </div>
             <div>
               <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Durum Yönetimi</h1>

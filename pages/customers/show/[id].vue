@@ -52,7 +52,9 @@
 
             <!-- Cover & Avatar -->
             <div class="relative">
+              
               <div class="h-28 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500"></div>
+
               <div class="absolute -bottom-12 left-1/2 -translate-x-1/2">
                 <div class="relative">
                   <div
@@ -244,8 +246,8 @@
                 <!-- Birth Date -->
                 <div v-if="customer.birth_date"
                   class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-                  <div class="h-9 w-9 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                    <CalendarIcon class="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                  <div class="h-9 w-9 rounded-lg bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center">
+                    <CalendarIcon class="h-4 w-4 text-violet-600 dark:text-violet-400" />
                   </div>
                   <span class="text-sm text-gray-700 dark:text-gray-300">{{ formatBirthDate(customer.birth_date)
                   }}</span>
@@ -296,7 +298,7 @@
 
                 <div class="grid grid-cols-2 gap-2">
                   <button @click="showNotes"
-                    class="flex items-center justify-center gap-2 px-3 py-2.5 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 rounded-xl hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-all text-sm font-medium">
+                    class="flex items-center justify-center gap-2 px-3 py-2.5 bg-violet-50 dark:bg-violet-900/20 text-violet-700 dark:text-violet-400 rounded-xl hover:bg-violet-100 dark:hover:bg-violet-900/30 transition-all text-sm font-medium">
                     <DocumentTextIcon class="h-4 w-4" />
                     {{ t('pool.actions.notes', 'Notlar') }}
                   </button>
@@ -318,13 +320,14 @@
                 </div>
 
                 <button @click="showOperationFollowUpModal"
-                  class="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-rose-50 dark:bg-rose-900/20 text-rose-700 dark:text-rose-400 rounded-xl hover:bg-rose-100 dark:hover:bg-rose-900/30 transition-all text-sm font-medium">
+                  v-if="customer?.status === 3"
+                  class="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-rose-50 dark:bg-rose-900/20 text-rose-700 dark:text-rose-400 rounded-xl hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-all text-sm font-medium">
                   <ViewfinderCircleIcon class="h-4 w-4" />
                   {{ t('customer_show.operation_follow_up', 'Operasyon Takip') }}
                 </button>
 
                 <NuxtLink v-if="!isDoctor" :to="`/customers/edit/${$route.params.id}`"
-                  class="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all text-sm font-medium shadow-lg shadow-indigo-500/25">
+                  class="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-gradient-to-r from-violet-400 to-violet-500 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all text-sm font-medium shadow-lg shadow-indigo-500/25">
                   <PencilIcon class="h-4 w-4" />
                   {{ t('pool.actions.edit', 'Düzenle') }}
                 </NuxtLink>
@@ -336,7 +339,7 @@
                 </button>
 
                   <NuxtLink :to="`/customers/detail/${customer.id}`" 
-                   class="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all text-sm font-medium shadow-lg shadow-indigo-500/25">
+                   class="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-gradient-to-r from-violet-400 to-violet-500 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all text-sm font-medium shadow-lg shadow-indigo-500/25">
                     <MagnifyingGlassIcon class="h-4 w-4" />
                    {{ t('customer.view_details', 'Detaylı Görünüm') }}
                 </NuxtLink>
@@ -359,9 +362,14 @@
                 <div v-if="customer.description" class="mt-3">
                   <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ t('customer_show.description', 'Açıklama')
                     }}</p>
-                  <p class="text-sm text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3">
-                    {{ customer.description }}
-                  </p>
+                 
+                  
+                  <div class="max-h-[300px] overflow-y-auto custom-scrollbar">
+                    <div class="prose prose-sm dark:prose-invert max-w-none">
+                      <p class="text-xs text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">{{ customer.description }}</p>
+                    </div>
+                  </div>
+                  
                 </div>
               </div>
             </div>
@@ -384,7 +392,7 @@
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div class="flex items-center gap-4">
                     <div class="h-12 w-12 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center">
-                      <ClockIcon class="h-6 w-6 text-white" />
+                      <ClockIcon class="h-7 w-7 text-white" />
                     </div>
                     <div>
                       <h3 class="text-lg font-bold text-white">{{ t('customer_show.history.title', 'Müşteri Geçmişi') }}
@@ -418,164 +426,294 @@
               <!-- Timeline -->
               <div v-else-if="history.length > 0" class="p-6">
 
-                <!-- Add Action Button -->
+                <!-- Action Bar: Add Action + Filter -->
                 <div class="relative mb-6">
-                  <div class="flex items-center gap-4">
-                    <div class="relative">
-                      <button @click="toggleActionsDropdown"
-                        class="h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 transition-all">
-                        <PlusIcon class="h-5 w-5 text-white" />
-                      </button>
+                  <div class="flex flex-col lg:flex-row lg:items-center gap-4">
+                    
+                    <!-- Add Action Button -->
+                    <div class="flex items-center gap-4">
+                      <div class="relative">
+                        <button @click="toggleActionsDropdown"
+                          class="h-10 w-10 rounded-xl bg-gradient-to-br from-violet-500 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 transition-all">
+                          <PlusIcon class="h-5 w-5 text-white" />
+                        </button>
 
-                      <!-- Dropdown -->
-                      <Transition enter-active-class="transition ease-out duration-200"
-                        enter-from-class="opacity-0 translate-y-1" enter-to-class="opacity-100 translate-y-0"
-                        leave-active-class="transition ease-in duration-150"
-                        leave-from-class="opacity-100 translate-y-0" leave-to-class="opacity-0 translate-y-1">
-                        <div v-if="showActionsDropdown"
-                          class="absolute left-0 top-12 w-64 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden z-20">
-                          <div class="p-2">
-                            <button @click="handleDropdownAction(showNotes)"
-                              class="w-full flex items-center gap-3 px-4 py-3 text-left rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                              <div
-                                class="h-8 w-8 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                                <DocumentTextIcon class="h-4 w-4 text-amber-600 dark:text-amber-400" />
-                              </div>
-                              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{
-                                t('pool.actions.notes',
-                                'Notlar') }}</span>
-                            </button>
-                            <button @click="handleDropdownAction(showDoctorAssignment)"
-                              class="w-full flex items-center gap-3 px-4 py-3 text-left rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                              <div
-                                class="h-8 w-8 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
-                                <UserIcon class="h-4 w-4 text-purple-600 dark:text-purple-400" />
-                              </div>
-                              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{
-                                t('customer_show.dropdown.doctor_opinion', 'Doktor Görüşü') }}</span>
-                            </button>
-                            <button @click="handleDropdownAction(showServices)"
-                              class="w-full flex items-center gap-3 px-4 py-3 text-left rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                              <div
-                                class="h-8 w-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
-                                <ShoppingBagIcon class="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-                              </div>
-                              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{
-                                t('pool.actions.services',
-                                'Hizmetler') }}</span>
-                            </button>
-                            <button @click="handleDropdownAction(showFiles)"
-                              class="w-full flex items-center gap-3 px-4 py-3 text-left rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                              <div
-                                class="h-8 w-8 rounded-lg bg-cyan-100 dark:bg-cyan-900/30 flex items-center justify-center">
-                                <FolderIcon class="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
-                              </div>
-                              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{
-                                t('pool.actions.files',
-                                'Dosyalar') }}</span>
-                            </button>
-                            <div v-if="!isDoctor" class="border-t border-gray-100 dark:border-gray-700 mt-2 pt-2">
-                              <button
-                                @click="handleDropdownAction(() => router.push(`/customers/edit/${route.params.id}`))"
+                        <!-- Dropdown -->
+                        <Transition enter-active-class="transition ease-out duration-200"
+                          enter-from-class="opacity-0 translate-y-1" enter-to-class="opacity-100 translate-y-0"
+                          leave-active-class="transition ease-in duration-150"
+                          leave-from-class="opacity-100 translate-y-0" leave-to-class="opacity-0 translate-y-1">
+                          <div v-if="showActionsDropdown"
+                            class="absolute left-0 top-12 w-64 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden z-20">
+                            <div class="p-2">
+                              <button @click="handleDropdownAction(showNotes)"
                                 class="w-full flex items-center gap-3 px-4 py-3 text-left rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                 <div
-                                  class="h-8 w-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
-                                  <PencilIcon class="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                                  class="h-8 w-8 rounded-lg bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center">
+                                  <DocumentTextIcon class="h-4 w-4 text-violet-600 dark:text-violet-400" />
                                 </div>
                                 <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{
-                                  t('pool.actions.edit',
-                                  'Düzenle') }}</span>
+                                  t('pool.actions.notes',
+                                  'Notlar') }}</span>
                               </button>
+                              <button @click="handleDropdownAction(showDoctorAssignment)"
+                                class="w-full flex items-center gap-3 px-4 py-3 text-left rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                <div
+                                  class="h-8 w-8 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                                  <UserIcon class="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                                </div>
+                                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{
+                                  t('customer_show.dropdown.doctor_opinion', 'Doktor Görüşü') }}</span>
+                              </button>
+                              <button @click="handleDropdownAction(showServices)"
+                                class="w-full flex items-center gap-3 px-4 py-3 text-left rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                <div
+                                  class="h-8 w-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+                                  <ShoppingBagIcon class="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                                </div>
+                                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{
+                                  t('pool.actions.services',
+                                  'Hizmetler') }}</span>
+                              </button>
+                              <button @click="handleDropdownAction(showFiles)"
+                                class="w-full flex items-center gap-3 px-4 py-3 text-left rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                <div
+                                  class="h-8 w-8 rounded-lg bg-cyan-100 dark:bg-cyan-900/30 flex items-center justify-center">
+                                  <FolderIcon class="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
+                                </div>
+                                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{
+                                  t('pool.actions.files',
+                                  'Dosyalar') }}</span>
+                              </button>
+                              <div v-if="!isDoctor" class="border-t border-gray-100 dark:border-gray-700 mt-2 pt-2">
+                                <button
+                                  @click="handleDropdownAction(() => router.push(`/customers/edit/${route.params.id}`))"
+                                  class="w-full flex items-center gap-3 px-4 py-3 text-left rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                  <div
+                                    class="h-8 w-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
+                                    <PencilIcon class="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                                  </div>
+                                  <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{
+                                    t('pool.actions.edit',
+                                    'Düzenle') }}</span>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </Transition>
+                      </div>
+                      <p class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ t('customer_show.add_action', 'Yeni İşlem Ekle') }}</p>
+                    </div>
+
+                    <!-- Divider -->
+                    <div class="hidden lg:block w-px h-8 bg-gray-200 dark:bg-gray-700"></div>
+
+                    <!-- Filter Section -->
+                    <div class="flex-1">
+                      <div class="flex items-center gap-2">
+                        <!-- Filter Toggle Button -->
+                        <button 
+                          @click="showFilterPanel = !showFilterPanel"
+                          class="inline-flex items-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-all text-sm font-medium"
+                        >
+                          <FunnelIcon class="h-4 w-4" />
+                          <span>Filtrele</span>
+                          <span v-if="activeFiltersCount > 0" class="flex items-center justify-center h-5 w-5 bg-indigo-500 text-white text-xs font-bold rounded-full">
+                            {{ activeFiltersCount }}
+                          </span>
+                          <ChevronDownIcon class="h-4 w-4 transition-transform" :class="{ 'rotate-180': showFilterPanel }" />
+                        </button>
+
+                        <!-- Active Filter Pills (Quick View) -->
+                        <div v-if="activeFiltersCount > 0 && !showFilterPanel" class="flex flex-wrap items-center gap-2">
+                          <template v-for="filter in activityFilters" :key="filter.id">
+                            <span 
+                              v-if="selectedFilters.includes(filter.id)"
+                              class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-lg"
+                              :class="filter.bgClass"
+                            >
+                              <component :is="filter.icon" class="h-3 w-3" />
+                              {{ filter.label }}
+                              <button @click="toggleFilter(filter.id)" class="ml-0.5 hover:opacity-70">
+                                <XMarkIcon class="h-3 w-3" />
+                              </button>
+                            </span>
+                          </template>
+                          
+                          <button 
+                            @click="clearAllFilters"
+                            class="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 font-medium"
+                          >
+                            Temizle
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- Expandable Filter Panel -->
+                      <Transition 
+                        enter-active-class="transition-all duration-200 ease-out"
+                        enter-from-class="opacity-0 max-h-0"
+                        enter-to-class="opacity-100 max-h-40"
+                        leave-active-class="transition-all duration-150 ease-in"
+                        leave-from-class="opacity-100 max-h-40"
+                        leave-to-class="opacity-0 max-h-0"
+                      >
+                        <div v-if="showFilterPanel" class="mt-3 overflow-hidden">
+                          <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-200 dark:border-gray-600">
+                            <div class="flex flex-wrap gap-2">
+                              <button
+                                v-for="filter in activityFilters"
+                                :key="filter.id"
+                                @click="toggleFilter(filter.id)"
+                                class="inline-flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-all border-2"
+                                :class="[
+                                  selectedFilters.includes(filter.id)
+                                    ? `${filter.activeBgClass} ${filter.activeTextClass} border-current shadow-sm`
+                                    : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+                                ]"
+                              >
+                                <component :is="filter.icon" class="h-4 w-4" />
+                                {{ filter.label }}
+                                <span 
+                                  class="text-xs px-1.5 py-0.5 rounded-md"
+                                  :class="selectedFilters.includes(filter.id) ? 'bg-white/30' : 'bg-gray-100 dark:bg-gray-700'"
+                                >
+                                  {{ getFilterCount(filter.id) }}
+                                </span>
+                              </button>
+                            </div>
+                            
+                            <!-- Filter Actions -->
+                            <div class="flex items-center justify-between mt-4 pt-3 border-t border-gray-200 dark:border-gray-600">
+                              <p class="text-xs text-gray-500 dark:text-gray-400">
+                                {{ filteredHistory.length }} / {{ history.length }} kayıt gösteriliyor
+                              </p>
+                              <div class="flex items-center gap-2">
+                                <button 
+                                  @click="selectAllFilters"
+                                  class="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
+                                >
+                                  Tümünü Seç
+                                </button>
+                                <span class="text-gray-300 dark:text-gray-600">|</span>
+                                <button 
+                                  @click="clearAllFilters"
+                                  class="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 font-medium"
+                                >
+                                  Temizle
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </Transition>
                     </div>
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ t('customer_show.add_action', 'Yeni İşlem Ekle') }}</p>
                   </div>
                 </div>
 
-                <!-- History Items -->
+                <!-- History Items (Filtered) -->
                 <div class="space-y-4">
-                  <div v-for="(item, index) in history" :key="item.id" class="relative pl-14">
-                    <!-- Timeline Line -->
-                    <div v-if="index < history.length - 1"
-                      class="absolute left-5 top-12 bottom-0 w-0.5 bg-gradient-to-b from-gray-200 to-transparent dark:from-gray-700">
-                    </div>
-
-                    <!-- Icon -->
-                    <div class="absolute left-0 top-0">
-                      <div :class="[
-                        'h-10 w-10 rounded-xl flex items-center justify-center shadow-sm',
-                        getActionColorClasses(item.action)
-                      ]">
-                        <component :is="getActionIcon(item.action)" class="h-4 w-4" />
+                  <template v-if="filteredHistory.length > 0">
+                    <div v-for="(item, index) in filteredHistory" :key="item.id" class="relative pl-14">
+                      <!-- Timeline Line -->
+                      <div v-if="index < filteredHistory.length - 1"
+                        class="absolute left-5 top-12 bottom-0 w-0.5 bg-gradient-to-b from-gray-200 to-transparent dark:from-gray-700">
                       </div>
-                    </div>
 
-                    <!-- Content Card -->
-                    <div
-                      class="bg-gray-50 dark:bg-gray-700/50 rounded-2xl p-4 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
-                        <div class="flex-1">
-                          <p class="text-sm font-semibold text-gray-600 dark:text-gray-400">
-                            {{ item.action || t('customer_show.history.action', 'İşlem') }}
-                          </p>
-                          <p v-if="item.description"
-                            class="mt-1 text-md text-gray-900  dark:text-white leading-relaxed">
-                            {{ item.description }}
-                          </p>
-
-                          <!-- Expandable Data -->
-                          <Transition enter-active-class="transition-all duration-300 ease-out"
-                            enter-from-class="opacity-0 max-h-0" enter-to-class="opacity-100 max-h-96"
-                            leave-active-class="transition-all duration-200 ease-in"
-                            leave-from-class="opacity-100 max-h-96" leave-to-class="opacity-0 max-h-0">
-                            <div v-if="showStates[item.id]" class="mt-3 space-y-2 overflow-hidden">
-                              <div v-if="item.requestData" class="bg-white dark:bg-gray-800 rounded-lg p-3">
-                                <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">{{
-                                  t('customer_show.history.request_data', 'İstek Verisi') }}</p>
-                                <pre
-                                  class="text-xs text-gray-600 dark:text-gray-400 font-mono whitespace-pre-wrap break-words">
-                          {{ item.requestData }}</pre>
-                              </div>
-                              <div v-if="item.responseData" class="bg-white dark:bg-gray-800 rounded-lg p-3">
-                                <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">{{
-                                  t('customer_show.history.response_data', 'Yanıt Verisi') }}</p>
-                                <pre
-                                  class="text-xs text-gray-600 dark:text-gray-400 font-mono whitespace-pre-wrap break-words">
-                          {{ item.responseData }}</pre>
-                              </div>
-                            </div>
-                          </Transition>
-
-                          <button v-if="item.requestData || item.responseData" @click="toggleShow(item.id)"
-                            class="mt-2 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:underline">
-                            {{ showStates[item.id] ? t('customer_show.history.hide', 'Gizle') :
-                              t('customer_show.history.show_details', 'Detayları Göster') }}
-                          </button>
+                      <!-- Icon -->
+                      <div class="absolute left-0 top-0">
+                        <div :class="[
+                          'h-10 w-10 rounded-xl flex items-center justify-center shadow-sm',
+                          getActionColorClasses(item.action)
+                        ]">
+                          <component :is="getActionIcon(item.action)" class="h-4 w-4" />
                         </div>
+                      </div>
 
-                        <div class="flex flex-col items-end gap-1 text-right shrink-0">
-                          <p class="text-xs font-medium text-gray-900 dark:text-white">
-                            {{ formatHistoryDate(item.createdAt || item.updatesAt) }}
-                          </p>
-                          <div class="flex gap-2">
-                            <p class="text-xs text-gray-500 dark:text-gray-400">
-                              {{ formatHistoryPass(item.createdAt) }}
+                      <!-- Content Card -->
+                      <div
+                        class="bg-gray-50 dark:bg-gray-700/50 rounded-2xl p-4 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+                          <div class="flex-1">
+                            <p class="text-sm font-semibold text-gray-600 dark:text-gray-400">
+                              {{ item.action || t('customer_show.history.action', 'İşlem') }}
                             </p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">
-                              {{ formatTime(item.createdAt) }}
+                            <p v-if="item.description"
+                              class="mt-1 text-md text-gray-900  dark:text-white leading-relaxed">
+                              {{ item.description }}
+                            </p>
+
+                            <!-- Expandable Data -->
+                            <Transition enter-active-class="transition-all duration-300 ease-out"
+                              enter-from-class="opacity-0 max-h-0" enter-to-class="opacity-100 max-h-96"
+                              leave-active-class="transition-all duration-200 ease-in"
+                              leave-from-class="opacity-100 max-h-96" leave-to-class="opacity-0 max-h-0">
+                              <div v-if="showStates[item.id]" class="mt-3 space-y-2 overflow-hidden">
+                                <div v-if="item.requestData" class="bg-white dark:bg-gray-800 rounded-lg p-3">
+                                  <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">{{
+                                    t('customer_show.history.request_data', 'İstek Verisi') }}</p>
+                                  <pre
+                                    class="text-xs text-gray-600 dark:text-gray-400 font-mono whitespace-pre-wrap break-words">
+                            {{ item.requestData }}</pre>
+                                </div>
+                                <div v-if="item.responseData" class="bg-white dark:bg-gray-800 rounded-lg p-3">
+                                  <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">{{
+                                    t('customer_show.history.response_data', 'Yanıt Verisi') }}</p>
+                                  <pre
+                                    class="text-xs text-gray-600 dark:text-gray-400 font-mono whitespace-pre-wrap break-words">
+                            {{ item.responseData }}</pre>
+                                </div>
+                              </div>
+                            </Transition>
+
+                            <button v-if="item.requestData || item.responseData" @click="toggleShow(item.id)"
+                              class="mt-2 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:underline">
+                              {{ showStates[item.id] ? t('customer_show.history.hide', 'Gizle') :
+                                t('customer_show.history.show_details', 'Detayları Göster') }}
+                            </button>
+                          </div>
+
+                          <div class="flex flex-col items-end gap-1 text-right shrink-0">
+                            <p class="text-xs font-medium text-gray-900 dark:text-white">
+                              {{ formatHistoryDate(item.createdAt || item.updatesAt) }}
+                            </p>
+                            <div class="flex gap-2">
+                              <p class="text-xs text-gray-500 dark:text-gray-400">
+                                {{ formatHistoryPass(item.createdAt) }}
+                              </p>
+                              <p class="text-xs text-gray-500 dark:text-gray-400">
+                                {{ formatTime(item.createdAt) }}
+                              </p>
+                            </div>
+                            <p v-if="item.user || item.userInfo"
+                              class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                              <UserIcon class="h-3 w-3" />
+                              {{ item.user?.name || item.userInfo?.name || t('customer_show.history.system', 'Sistem') }}
                             </p>
                           </div>
-                          <p v-if="item.user || item.userInfo"
-                            class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                            <UserIcon class="h-3 w-3" />
-                            {{ item.user?.name || item.userInfo?.name || t('customer_show.history.system', 'Sistem') }}
-                          </p>
                         </div>
                       </div>
                     </div>
+                  </template>
+                  
+                  <!-- No Results After Filter -->
+                  <div v-else class="flex flex-col items-center justify-center py-12">
+                    <div class="h-16 w-16 rounded-2xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-4">
+                      <FunnelIcon class="h-8 w-8 text-amber-500" />
+                    </div>
+                    <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-1">
+                      Sonuç Bulunamadı
+                    </h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 text-center max-w-sm mb-4">
+                      Seçili filtrelere uygun kayıt bulunmuyor.
+                    </p>
+                    <button 
+                      @click="clearAllFilters"
+                      class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all text-sm font-medium"
+                    >
+                      <XMarkIcon class="h-4 w-4" />
+                      Filtreleri Temizle
+                    </button>
                   </div>
                 </div>
               </div>
@@ -598,8 +736,13 @@
             <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
               <div class="flex items-center justify-between">
                 <p class="text-sm text-gray-500 dark:text-gray-400">
-                  {{ t('dashboard.total', 'Toplam') }} <span class="font-semibold text-gray-900 dark:text-white">{{
-                    history.length }}</span> {{ t('customer_show.history.records', 'kayıt') }}
+                  <template v-if="activeFiltersCount > 0">
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ filteredHistory.length }}</span> / {{ history.length }} kayıt
+                  </template>
+                  <template v-else>
+                    {{ t('dashboard.total', 'Toplam') }} <span class="font-semibold text-gray-900 dark:text-white">{{
+                      history.length }}</span> {{ t('customer_show.history.records', 'kayıt') }}
+                  </template>
                 </p>
                 <div class="flex items-center gap-2 text-xs text-gray-400">
                   <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
@@ -613,6 +756,7 @@
     </div>
 
     <!-- Modals -->
+    <CustomerOperationFollowupModal :show="showOperationFollowUp" :customer="customer" @close="showOperationFollowUp = false" />
     <CustomerNotesModal :show="showNotesModal" :customer="customer" @close="showNotesModal = false"
       @customer-updated="refreshData" />
     <DoctorAssignmentModal :show="showDoctorModal" :customer="customer" @close="showDoctorModal = false"
@@ -620,7 +764,7 @@
     <CustomerServicesModal :show="showServicesModal" :customer="customer" @close="showServicesModal = false"
       @saved="handleServicesSaved" />
     <CustomerFilesModal :show="showFilesModal" :customer="customer" @close="showFilesModal = false" />
-    <OperationFollowUpModal :show="showOperationFollowUp" :customer="customer" @close="showOperationFollowUp = false" />
+
   </div>
 </template>
 
@@ -654,8 +798,16 @@ import {
   ChatBubbleLeftIcon,
   ClipboardDocumentCheckIcon,
   ClipboardDocumentIcon,
-  MagnifyingGlassIcon
+  MagnifyingGlassIcon,
+  FunnelIcon,
+  ChevronDownIcon,
+  XMarkIcon,
+  BellIcon,
+  CurrencyDollarIcon,
+  TagIcon,
+  UserGroupIcon
 } from '@heroicons/vue/24/outline'
+import CustomerOperationFollowupModal from '~/components/CustomerOperationFollowupModal.vue'
 import { useLanguage } from '~/composables/useLanguage'
 
 const { t, tp } = useLanguage()
@@ -664,6 +816,7 @@ const route = useRoute()
 const router = useRouter()
 const { userId, isDoctor, isUser } = usePermissions()
 const { $dayjs } = useNuxtApp()
+
 // State
 const customer = ref(null)
 const loading = ref(true)
@@ -689,6 +842,86 @@ const showServicesModal = ref(false)
 const showFilesModal = ref(false)
 const showActionsDropdown = ref(false)
 const showOperationFollowUp = ref(false)
+
+// Filter State
+const showFilterPanel = ref(false)
+const selectedFilters = ref([])
+
+// Activity Filters Definition
+const activityFilters = [
+  {
+    id: 'status_change',
+    label: 'Durum Değişikliği',
+    icon: TagIcon,
+    bgClass: 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400',
+    activeBgClass: 'bg-purple-100 dark:bg-purple-900/30',
+    activeTextClass: 'text-purple-700 dark:text-purple-400',
+    keywords: ['durum', 'status', 'segment', 'değişti', 'güncellendi']
+  },
+  {
+    id: 'note',
+    label: 'Notlar',
+    icon: DocumentTextIcon,
+    bgClass: 'bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400',
+    activeBgClass: 'bg-violet-100 dark:bg-violet-900/30',
+    activeTextClass: 'text-violet-700 dark:text-violet-400',
+    keywords: ['not', 'note', 'yorum']
+  },
+  {
+    id: 'reminder',
+    label: 'Hatırlatma',
+    icon: BellIcon,
+    bgClass: 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400',
+    activeBgClass: 'bg-amber-100 dark:bg-amber-900/30',
+    activeTextClass: 'text-amber-700 dark:text-amber-400',
+    keywords: ['hatırlatma', 'reminding', 'aranacak', 'tekrar ara']
+  },
+  {
+    id: 'doctor',
+    label: 'Doktor Görüşü',
+    icon: UserIcon,
+    bgClass: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400',
+    activeBgClass: 'bg-blue-100 dark:bg-blue-900/30',
+    activeTextClass: 'text-blue-700 dark:text-blue-400',
+    keywords: ['doktor', 'doctor', 'hekim', 'muayene', 'görüş']
+  },
+  {
+    id: 'sale',
+    label: 'Satış',
+    icon: CurrencyDollarIcon,
+    bgClass: 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400',
+    activeBgClass: 'bg-emerald-100 dark:bg-emerald-900/30',
+    activeTextClass: 'text-emerald-700 dark:text-emerald-400',
+    keywords: ['satış', 'sale', 'ödeme', 'fiyat', 'teklif', 'proforma']
+  },
+  {
+    id: 'file',
+    label: 'Dosyalar',
+    icon: FolderIcon,
+    bgClass: 'bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-400',
+    activeBgClass: 'bg-cyan-100 dark:bg-cyan-900/30',
+    activeTextClass: 'text-cyan-700 dark:text-cyan-400',
+    keywords: ['dosya', 'file', 'belge', 'döküman', 'yükle']
+  },
+  {
+    id: 'assignment',
+    label: 'Atama',
+    icon: UserGroupIcon,
+    bgClass: 'bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400',
+    activeBgClass: 'bg-rose-100 dark:bg-rose-900/30',
+    activeTextClass: 'text-rose-700 dark:text-rose-400',
+    keywords: ['atandı', 'atama', 'assign', 'kullanıcı', 'danışman']
+  },
+  {
+    id: 'create',
+    label: 'Oluşturma',
+    icon: PlusIcon,
+    bgClass: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400',
+    activeBgClass: 'bg-green-100 dark:bg-green-900/30',
+    activeTextClass: 'text-green-700 dark:text-green-400',
+    keywords: ['oluşturuldu', 'created', 'kayıt', 'yeni']
+  }
+]
 
 // Computed
 const locationText = computed(() => {
@@ -727,6 +960,57 @@ const formattedEngagementTime = computed(() => {
   if (minutes > 0) return `${minutes} dk ${seconds} sn`
   return `${seconds} sn`
 })
+
+// Filter Computed
+const activeFiltersCount = computed(() => selectedFilters.value.length)
+
+const filteredHistory = computed(() => {
+  // Eğer filtre seçili değilse tüm history'i göster
+  if (selectedFilters.value.length === 0) {
+    return history.value
+  }
+
+  return history.value.filter(item => {
+    const searchText = `${item.action || ''} ${item.description || ''}`.toLowerCase()
+    
+    // Seçili filtrelerden herhangi birine uyuyor mu?
+    return selectedFilters.value.some(filterId => {
+      const filter = activityFilters.find(f => f.id === filterId)
+      if (!filter) return false
+      
+      // Keywords içinde herhangi biri eşleşiyor mu?
+      return filter.keywords.some(keyword => searchText.includes(keyword.toLowerCase()))
+    })
+  })
+})
+
+// Filter Methods
+const toggleFilter = (filterId) => {
+  const index = selectedFilters.value.indexOf(filterId)
+  if (index === -1) {
+    selectedFilters.value.push(filterId)
+  } else {
+    selectedFilters.value.splice(index, 1)
+  }
+}
+
+const clearAllFilters = () => {
+  selectedFilters.value = []
+}
+
+const selectAllFilters = () => {
+  selectedFilters.value = activityFilters.map(f => f.id)
+}
+
+const getFilterCount = (filterId) => {
+  const filter = activityFilters.find(f => f.id === filterId)
+  if (!filter) return 0
+  
+  return history.value.filter(item => {
+    const searchText = `${item.action || ''} ${item.description || ''}`.toLowerCase()
+    return filter.keywords.some(keyword => searchText.includes(keyword.toLowerCase()))
+  }).length
+}
 
 const formatHistoryPass = (stringData) => {
   return $dayjs(stringData).fromNow();
@@ -873,7 +1157,7 @@ const getActionColorClasses = (action) => {
     'updated': 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400',
     'deleted': 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400',
     'status_changed': 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400',
-    'email_sent': 'bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400',
+    'email_sent': 'bg-violet-100 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400',
     'phone_called': 'bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400'
   }
   return colors[action] || 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
@@ -890,7 +1174,16 @@ const showNotes = () => showNotesModal.value = true
 const showDoctorAssignment = () => showDoctorModal.value = true
 const showServices = () => showServicesModal.value = true
 const showFiles = () => showFilesModal.value = true
-const showOperationFollowUpModal = () => showOperationFollowUp.value = true
+
+
+const showOperationFollowUpModal = () => {
+  console.log('🔴 Operation Follow Up button clicked')
+  console.log('🔴 Customer:', customer.value)
+  console.log('🔴 Current showOperationFollowUp value:', showOperationFollowUp.value)
+  showOperationFollowUp.value = true
+  console.log('🔴 New showOperationFollowUp value:', showOperationFollowUp.value)
+}
+
 
 const handleDoctorAssigned = () => refreshData()
 const handleServicesSaved = () => {
@@ -1054,3 +1347,18 @@ useHead({
   title: computed(() => customer.value ? `${customer.value.name} - ${t('customer_show.page_title', 'Müşteri Detayı')}` : t('customer_show.page_title', 'Müşteri Detayı'))
 })
 </script>
+
+<style scoped>
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-gray-800 rounded-full;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-gray-600 rounded-full hover:bg-gray-400 dark:hover:bg-gray-500;
+}
+</style>

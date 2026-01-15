@@ -4,7 +4,7 @@
     <div class="mb-8">
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div class="flex items-center gap-4">
-          <div class="p-3 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-lg shadow-indigo-500/25">
+          <div class="p-3 bg-gradient-to-br to-amber-500 to-amber-500 rounded-2xl shadow-lg shadow-indigo-500/25">
             <BuildingOffice2Icon class="h-7 w-7 text-white" />
           </div>
           <div>
@@ -19,7 +19,7 @@
 
         <button
           @click="showCreateModal = true"
-          class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all text-sm font-medium shadow-lg shadow-indigo-500/25"
+          class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r to-amber-400 to-amber-500 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all text-sm font-medium shadow-lg shadow-indigo-500/25"
         >
           <PlusIcon class="h-5 w-5" />
           {{ t('hospitals.actions.new_hospital', 'Yeni Hastane') }}
@@ -95,7 +95,7 @@
             <tr v-for="hospital in hospitals" :key="hospital.id" class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
               <td class="px-6 py-4">
                 <div class="flex items-center gap-3">
-                  <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-sm">
+                  <div class="h-10 w-10 rounded-xl bg-gradient-to-br to-amber-500 to-amber-500 flex items-center justify-center shadow-sm">
                     <BuildingOffice2Icon class="h-5 w-5 text-white" />
                   </div>
                   <div class="text-sm font-medium text-gray-900 dark:text-gray-100">

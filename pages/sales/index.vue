@@ -6,7 +6,7 @@
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
             <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-              <div class="p-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-lg">
+              <div class="p-2 bg-gradient-to-br to-amber-500 to-amber-500 rounded-xl shadow-lg">
                 <ChartBarIcon class="h-7 w-7 text-white" />
               </div>
               {{ t('sales_management.title', 'Satış & Finans Yönetimi') }}

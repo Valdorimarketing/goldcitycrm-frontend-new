@@ -6,7 +6,7 @@
         class="relative backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 rounded-full shadow-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden transition-all duration-300 hover:shadow-3xl hover:scale-105"
       >
         <!-- Background Gradient Animation -->
-        <div class="absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 animate-gradient-x"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-amber-500/10 via-amber-500/10 to-amber-400/10 animate-gradient-x"></div>
         
         <!-- Content -->
         <div class="relative flex items-center gap-6 px-6 py-3">
@@ -27,7 +27,7 @@
               />
               <div
                 v-else
-                class="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg"
+                class="w-full h-full bg-gradient-to-br from-amber-500 to-amber-500 flex items-center justify-center text-white font-bold text-lg"
               >
                 {{ user?.name?.charAt(0).toUpperCase() }}
               </div>

@@ -32,7 +32,7 @@
       >
         <div class="flex items-center gap-3" :class="{ 'flex-row-reverse': isRTL }">
           <div class="relative">
-            <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/25">
+            <div class="w-10 h-10 bg-gradient-to-br to-amber-500 to-amber-500 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/25">
               <span class="text-white font-bold text-lg">V</span>
             </div>
             <div 
@@ -174,7 +174,7 @@
             :class="[
               'group flex items-center w-full px-3 py-2.5 rounded-xl transition-all duration-200',
               route.path === item.href
-                ? 'bg-gradient-to-r from-indigo-500/20 to-purple-500/20 text-white shadow-lg shadow-indigo-500/10'
+                ? 'bg-gradient-to-r to-amber-500/20 to-purple-500/20 text-white shadow-lg shadow-indigo-500/10'
                 : 'text-slate-400 hover:bg-slate-800/50 hover:text-white',
               !sidebarOpen && 'justify-center',
               isRTL && sidebarOpen && 'flex-row-reverse'
@@ -255,7 +255,7 @@
               />
               <div 
                 v-else 
-                class="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center"
+                class="w-full h-full bg-gradient-to-br to-amber-500 to-amber-500 flex items-center justify-center"
               >
                 <span class="text-sm font-bold text-white">
                   {{ authStore.user?.name?.charAt(0)?.toUpperCase() || 'U' }}

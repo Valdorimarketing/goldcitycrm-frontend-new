@@ -4,7 +4,7 @@
     <div class="mb-8">
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div class="flex items-center gap-4">
-          <div class="p-3 bg-gradient-to-br from-violet-500 to-purple-600 rounded-2xl shadow-lg shadow-violet-500/25">
+          <div class="p-3 bg-gradient-to-br from-violet-500 to-amber-500 rounded-2xl shadow-lg shadow-violet-500/25">
             <UsersIcon class="h-7 w-7 text-white" />
           </div>
           <div>
@@ -27,7 +27,7 @@
           </button>
           <button
             @click="openModal"
-            class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-violet-600 to-purple-600 text-white rounded-xl hover:from-violet-700 hover:to-purple-700 transition-all text-sm font-medium shadow-lg shadow-violet-500/25"
+            class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-violet-600 to-amber-500 text-white rounded-xl hover:from-violet-700 hover:to-purple-700 transition-all text-sm font-medium shadow-lg shadow-violet-500/25"
           >
             <PlusIcon class="h-5 w-5" />
             {{ t('users.actions.new_user', 'Yeni Kullanıcı') }}

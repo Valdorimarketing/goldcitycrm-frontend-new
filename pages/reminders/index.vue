@@ -200,11 +200,11 @@
             >
               <div v-if="showEditModal" class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-2xl transition-all sm:w-full sm:max-w-lg">
                 <!-- Header -->
-                <div class="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-4">
+                <div class="bg-gradient-to-r to-amber-400 to-amber-500 px-6 py-4">
                   <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
                       <div class="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur">
-                        <PencilIcon class="h-6 w-6 text-white" />
+                        <PencilIcon class="h-7 w-7 text-white" />
                       </div>
                       <div>
                         <h3 class="text-lg font-semibold text-white">{{ t('reminders.modal.title', 'Notu Düzenle') }}</h3>

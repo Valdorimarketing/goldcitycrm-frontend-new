@@ -139,7 +139,7 @@
             </div>
 
             <div class="mt-3 w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-              <div class="bg-gradient-to-r from-indigo-500 to-purple-500 h-2 rounded-full transition-all duration-1000"
+              <div class="bg-gradient-to-r to-amber-500 to-purple-500 h-2 rounded-full transition-all duration-1000"
                 :style="{ width: item.percentage + '%' }"></div>
             </div>
           </div>

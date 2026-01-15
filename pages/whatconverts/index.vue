@@ -4,7 +4,7 @@
     <div class="sm:flex sm:items-center sm:justify-between mb-8">
       <div>
         <h1 class="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-          <div class="p-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-lg">
+          <div class="p-2 bg-gradient-to-br to-amber-500 to-amber-500 rounded-xl shadow-lg">
             <ChartBarIcon class="h-8 w-8 text-white" />
           </div>
           WhatConverts
@@ -31,12 +31,12 @@
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
       <!-- Toplam Lead -->
-      <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 p-6 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
+      <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br to-amber-500 to-amber-500 p-6 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
         <div class="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-white/10 blur-2xl group-hover:bg-white/20 transition-all duration-500"></div>
         <div class="relative">
           <div class="flex items-center justify-between mb-4">
             <div class="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-              <UsersIcon class="h-6 w-6 text-white" />
+              <UsersIcon class="h-7 w-7 text-white" />
             </div>
             <span class="text-xs font-medium text-indigo-100 bg-white/20 px-2 py-1 rounded-full">
               Son {{ statsDays }} gün
@@ -53,7 +53,7 @@
         <div class="relative">
           <div class="flex items-center justify-between mb-4">
             <div class="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-              <CheckCircleIcon class="h-6 w-6 text-white" />
+              <CheckCircleIcon class="h-7 w-7 text-white" />
             </div>
             <span class="text-xs font-medium text-emerald-100 bg-white/20 px-2 py-1 rounded-full">
               %{{ successRate }}
@@ -76,7 +76,7 @@
         <div class="relative">
           <div class="flex items-center justify-between mb-4">
             <div class="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-              <XCircleIcon class="h-6 w-6 text-white" />
+              <XCircleIcon class="h-7 w-7 text-white" />
             </div>
           </div>
           <p class="text-white dark:text-red-100 text-sm font-medium mb-1">Hatalı</p>
@@ -90,7 +90,7 @@
         <div class="relative">
           <div class="flex items-center justify-between mb-4">
             <div class="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-              <ForwardIcon class="h-6 w-6 text-white" />
+              <ForwardIcon class="h-7 w-7 text-white" />
             </div>
           </div>
           <p class="text-amber-100 text-sm font-medium mb-1">Atlanan</p>
@@ -129,7 +129,7 @@
             </div>
             <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
               <div 
-                class="bg-gradient-to-r from-indigo-500 to-purple-500 h-2.5 rounded-full transition-all duration-1000"
+                class="bg-gradient-to-r to-amber-500 to-purple-500 h-2.5 rounded-full transition-all duration-1000"
                 :style="{ width: getBarWidth(item.count, stats.byType) + '%' }"
               ></div>
             </div>
