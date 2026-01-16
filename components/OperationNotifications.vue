@@ -66,7 +66,7 @@
 
                 <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700 text-center">
                     <NuxtLink to="/operations" @click="closeDropdown"
-                        class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 font-medium">
+                        class="text-sm text-rose-600 dark:text-rose-400 hover:text-rose-500 dark:hover:text-rose-300 font-medium">
                         Tümünü Gör →
                     </NuxtLink>
                 </div>

@@ -25,7 +25,7 @@
 
     <!-- Loading State -->
     <div v-if="loading" class="flex justify-center py-12">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-600"></div>
     </div>
 
     <!-- Summary Cards -->
@@ -39,8 +39,8 @@
               {{ totalAssignments }}
             </p>
           </div>
-          <div class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
-            <UsersIcon class="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+          <div class="h-10 w-10 rounded-full bg-rose-100 dark:bg-rose-900 flex items-center justify-center">
+            <UsersIcon class="h-5 w-5 text-rose-600 dark:text-rose-400" />
           </div>
         </div>
       </div>
@@ -95,12 +95,12 @@
         <div class="flex items-center justify-between">
           <div>
             <p class="text-xs font-medium text-gray-600 dark:text-gray-400">Aktif Satışçı</p>
-            <p class="text-2xl font-bold text-purple-600 dark:text-purple-400 mt-1">
+            <p class="text-2xl font-bold text-rose-600 dark:text-rose-400 mt-1">
               {{ assignments.length }}
             </p>
           </div>
-          <div class="h-10 w-10 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
-            <UserGroupIcon class="h-5 w-5 text-purple-600 dark:text-purple-400" />
+          <div class="h-10 w-10 rounded-full bg-rose-100 dark:bg-rose-900 flex items-center justify-center">
+            <UserGroupIcon class="h-5 w-5 text-rose-600 dark:text-rose-400" />
           </div>
         </div>
       </div>
@@ -154,8 +154,8 @@
               </div>
 
               <!-- User Avatar -->
-              <div class="h-14 w-14 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
-                <span class="text-base font-semibold text-purple-600 dark:text-purple-400">
+              <div class="h-14 w-14 rounded-full bg-rose-100 dark:bg-rose-900 flex items-center justify-center">
+                <span class="text-base font-semibold text-rose-600 dark:text-rose-400">
                   {{ assignment.salesRepName?.charAt(0) || '?' }}
                 </span>
               </div>
@@ -173,7 +173,7 @@
 
             <!-- Total Count Badge -->
             <div class="flex items-center gap-3">
-              <span class="inline-flex items-center px-4 py-2 rounded-full text-lg font-bold bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200">
+              <span class="inline-flex items-center px-4 py-2 rounded-full text-lg font-bold bg-rose-100 dark:bg-rose-900 text-rose-800 dark:text-rose-200">
                 {{ assignment.totalCount }}
               </span>
               
@@ -290,7 +290,7 @@
 
             <!-- Loading State -->
             <div v-if="loadingCustomers" class="flex justify-center py-8">
-              <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+              <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-600"></div>
             </div>
 
             <!-- Customers List -->
@@ -334,7 +334,7 @@
                   </span>
                   <NuxtLink
                     :to="`/customers/show/${customer.id}`"
-                    class="inline-flex items-center justify-center rounded-md bg-indigo-600 p-2 text-white hover:bg-indigo-500 transition-colors"
+                    class="inline-flex items-center justify-center rounded-md bg-rose-600 p-2 text-white hover:bg-rose-500 transition-colors"
                   >
                     <EyeIcon class="h-4 w-4" />
                   </NuxtLink>

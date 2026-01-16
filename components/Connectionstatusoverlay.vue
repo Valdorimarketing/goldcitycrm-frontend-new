@@ -16,7 +16,7 @@
         <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
           <div class="absolute inset-0 overflow-hidden">
             <div class="absolute top-1/4 -left-20 w-96 h-96 bg-blue-600/15 rounded-full filter blur-3xl animate-float"></div>
-            <div class="absolute bottom-1/4 -right-20 w-96 h-96 bg-indigo-600/15 rounded-full filter blur-3xl animate-float-delayed"></div>
+            <div class="absolute bottom-1/4 -right-20 w-96 h-96 bg-rose-600/15 rounded-full filter blur-3xl animate-float-delayed"></div>
           </div>
         </div>
 
@@ -28,7 +28,7 @@
             <div class="mb-8 flex justify-center">
               <div class="relative">
                 <div class="absolute -inset-4 bg-blue-500/20 rounded-full animate-ping-slow"></div>
-                <div class="relative w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center shadow-xl">
+                <div class="relative w-20 h-20 bg-gradient-to-br from-red-500 to-rose-600 rounded-full flex items-center justify-center shadow-xl">
                   <svg class="w-10 h-10 text-white animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                   </svg>
@@ -50,10 +50,10 @@
             <!-- Status Indicator -->
             <div class="flex items-center justify-center gap-3 mb-6">
               <span class="relative flex h-3 w-3">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-rose-500"></span>
               </span>
-              <span class="text-amber-400 text-sm font-medium">Yeniden bağlanılıyor...</span>
+              <span class="text-rose-400 text-sm font-medium">Yeniden bağlanılıyor...</span>
             </div>
 
             <!-- Retry Counter -->

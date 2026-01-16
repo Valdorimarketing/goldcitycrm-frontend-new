@@ -55,7 +55,7 @@
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
           <div class="flex items-center gap-3">
-            <div class="p-2.5 bg-gradient-to-br to-amber-500 to-amber-500 rounded-xl shadow-lg shadow-indigo-500/25">
+            <div class="p-2.5 bg-gradient-to-br to-rose-500 to-rose-500 rounded-xl shadow-lg shadow-rose-500/25">
               <PhoneArrowUpRightIcon class="h-7 w-7 text-white" />
             </div>
             <div>
@@ -75,9 +75,9 @@
               {{ tp('dynamic_search.stats.overdue', { count: stats.overdue }, '{count} Gecikmiş') }}
             </span>
           </div>
-          <div class="flex items-center gap-2 px-4 py-2 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl">
-            <div class="w-2 h-2 bg-amber-500 rounded-full"></div>
-            <span class="text-sm font-medium text-amber-700 dark:text-amber-400">
+          <div class="flex items-center gap-2 px-4 py-2 bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800 rounded-xl">
+            <div class="w-2 h-2 bg-rose-500 rounded-full"></div>
+            <span class="text-sm font-medium text-rose-700 dark:text-rose-400">
               {{ tp('dynamic_search.stats.today', { count: stats.today }, '{count} Bugün') }}
             </span>
           </div>
@@ -97,7 +97,7 @@
         <!-- Dashboard Header -->
         <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-700">
           <div class="flex items-center gap-3">
-            <div class="h-9 w-9 rounded-xl bg-gradient-to-br from-violet-500 to-amber-500 flex items-center justify-center">
+            <div class="h-9 w-9 rounded-xl bg-gradient-to-br from-red-500 to-rose-500 flex items-center justify-center">
               <ChartBarIcon class="h-5 w-5 text-white" />
             </div>
             <div>
@@ -107,7 +107,7 @@
           </div>
           <button 
             @click="showPerformanceDetails = !showPerformanceDetails"
-            class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
+            class="text-sm text-rose-600 dark:text-rose-400 hover:underline font-medium"
           >
             {{ showPerformanceDetails ? t('dynamic_search.performance.toggle_hide', 'Gizle') : t('dynamic_search.performance.toggle_details', 'Detaylar') }}
           </button>
@@ -130,20 +130,20 @@
             </div>
 
             <!-- Warning Users -->
-            <div class="relative overflow-hidden bg-gradient-to-br from-amber-50 to-orange-100 dark:from-amber-900/20 dark:to-orange-800/20 rounded-xl p-4 border border-amber-200 dark:border-amber-800">
-              <div class="absolute top-0 right-0 w-16 h-16 bg-amber-200/50 dark:bg-amber-700/20 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+            <div class="relative overflow-hidden bg-gradient-to-br from-rose-50 to-orange-100 dark:from-rose-900/20 dark:to-orange-800/20 rounded-xl p-4 border border-rose-200 dark:border-rose-800">
+              <div class="absolute top-0 right-0 w-16 h-16 bg-rose-200/50 dark:bg-rose-700/20 rounded-full -translate-y-1/2 translate-x-1/2"></div>
               <div class="relative">
                 <div class="flex items-center gap-2 mb-2">
-                  <ExclamationCircleIcon class="h-5 w-5 text-amber-600 dark:text-amber-400" />
-                  <span class="text-xs font-medium text-amber-600 dark:text-amber-400 uppercase tracking-wide">{{ t('dynamic_search.performance.warning', 'Uyarı') }}</span>
+                  <ExclamationCircleIcon class="h-5 w-5 text-rose-600 dark:text-rose-400" />
+                  <span class="text-xs font-medium text-rose-600 dark:text-rose-400 uppercase tracking-wide">{{ t('dynamic_search.performance.warning', 'Uyarı') }}</span>
                 </div>
-                <p class="text-3xl font-bold text-amber-700 dark:text-amber-300">{{ performanceSummary.warning }}</p>
-                <p class="text-xs text-amber-600/70 dark:text-amber-400/70 mt-1">{{ t('dynamic_search.performance.warning_count', '40-69 kayıt') }}</p>
+                <p class="text-3xl font-bold text-rose-700 dark:text-rose-300">{{ performanceSummary.warning }}</p>
+                <p class="text-xs text-rose-600/70 dark:text-rose-400/70 mt-1">{{ t('dynamic_search.performance.warning_count', '40-69 kayıt') }}</p>
               </div>
             </div>
 
             <!-- Normal Users -->
-            <div class="relative overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-800/20 rounded-xl p-4 border border-blue-200 dark:border-blue-800">
+            <div class="relative overflow-hidden bg-gradient-to-br from-blue-50 to-rose-100 dark:from-blue-900/20 dark:to-rose-800/20 rounded-xl p-4 border border-blue-200 dark:border-blue-800">
               <div class="absolute top-0 right-0 w-16 h-16 bg-blue-200/50 dark:bg-blue-700/20 rounded-full -translate-y-1/2 translate-x-1/2"></div>
               <div class="relative">
                 <div class="flex items-center gap-2 mb-2">
@@ -194,7 +194,7 @@
                       :class="[
                         'absolute top-3 right-3 w-3 h-3 rounded-full',
                         user.total >= 70 ? 'bg-red-500 animate-ping' : 
-                        user.total >= 40 ? 'bg-amber-500' : 
+                        user.total >= 40 ? 'bg-rose-500' : 
                         user.total >= 20 ? 'bg-blue-500' : 'bg-emerald-500'
                       ]"
                     ></div>
@@ -202,7 +202,7 @@
                       :class="[
                         'absolute top-3 right-3 w-3 h-3 rounded-full',
                         user.total >= 70 ? 'bg-red-500' : 
-                        user.total >= 40 ? 'bg-amber-500' : 
+                        user.total >= 40 ? 'bg-rose-500' : 
                         user.total >= 20 ? 'bg-blue-500' : 'bg-emerald-500'
                       ]"
                     ></div>
@@ -242,7 +242,7 @@
                         <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('dynamic_search.performance.user_status.overdue_label', 'Gecikmiş') }}</p>
                       </div>
                       <div class="bg-white/50 dark:bg-gray-800/50 rounded-lg p-2">
-                        <p class="text-lg font-bold text-amber-600 dark:text-amber-400">{{ user.today }}</p>
+                        <p class="text-lg font-bold text-rose-600 dark:text-rose-400">{{ user.today }}</p>
                         <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('dynamic_search.performance.user_status.today_label', 'Bugün') }}</p>
                       </div>
                       <div class="bg-white/50 dark:bg-gray-800/50 rounded-lg p-2">
@@ -267,9 +267,9 @@
           userStats.total >= 70 
             ? 'bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border-red-300 dark:border-red-700' 
             : userStats.total >= 40 
-              ? 'bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 border-amber-300 dark:border-amber-700'
+              ? 'bg-gradient-to-br from-rose-50 to-yellow-50 dark:from-rose-900/20 dark:to-yellow-900/20 border-rose-300 dark:border-rose-700'
               : userStats.total >= 20
-                ? 'bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-300 dark:border-blue-700'
+                ? 'bg-gradient-to-br from-blue-50 to-rose-50 dark:from-blue-900/20 dark:to-rose-900/20 border-blue-300 dark:border-blue-700'
                 : 'bg-gradient-to-br from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 border-emerald-300 dark:border-emerald-700'
         ]"
       >
@@ -279,7 +279,7 @@
               :class="[
                 'h-16 w-16 rounded-2xl flex items-center justify-center',
                 userStats.total >= 70 ? 'bg-red-500 animate-pulse' : 
-                userStats.total >= 40 ? 'bg-amber-500' : 
+                userStats.total >= 40 ? 'bg-rose-500' : 
                 userStats.total >= 20 ? 'bg-blue-500' : 'bg-emerald-500'
               ]"
             >
@@ -295,7 +295,7 @@
                   :class="[
                     'px-2 py-0.5 text-xs font-bold rounded-full',
                     userStats.total >= 70 ? 'bg-red-500 text-white' : 
-                    userStats.total >= 40 ? 'bg-amber-500 text-white' : 
+                    userStats.total >= 40 ? 'bg-rose-500 text-white' : 
                     userStats.total >= 20 ? 'bg-blue-500 text-white' : 'bg-emerald-500 text-white'
                   ]"
                 >
@@ -320,7 +320,7 @@
                 <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('dynamic_search.performance.user_status.overdue_label', 'Gecikmiş') }}</p>
               </div>
               <div class="text-center">
-                <p class="text-xl font-bold text-amber-600 dark:text-amber-400">{{ userStats.today }}</p>
+                <p class="text-xl font-bold text-rose-600 dark:text-rose-400">{{ userStats.today }}</p>
                 <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('dynamic_search.performance.user_status.today_label', 'Bugün') }}</p>
               </div>
               <div class="text-center">
@@ -368,14 +368,14 @@
           <span class="font-medium text-gray-700 dark:text-gray-300">{{ t('dynamic_search.filters.title', 'Filtreler') }}</span>
           <span 
             v-if="relevantUserFilter"
-            class="px-2 py-0.5 text-xs font-medium bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-full"
+            class="px-2 py-0.5 text-xs font-medium bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 rounded-full"
           >
             {{ t('dynamic_search.filters.user_filtered', 'Kullanıcı filtreli') }}
           </span>
         </div>
         <button 
           @click="resetFilters" 
-          class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium flex items-center gap-1 transition-colors"
+          class="text-sm text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 font-medium flex items-center gap-1 transition-colors"
         >
           <ArrowPathIcon class="h-4 w-4" />
           {{ t('dynamic_search.filters.clear', 'Temizle') }}
@@ -392,7 +392,7 @@
               <input 
                 v-model="searchTerm" 
                 type="text" 
-                class="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                class="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all"
                 :placeholder="t('dynamic_search.filters.search_placeholder', 'İsim, email veya telefon...')"
               />
             </div>
@@ -403,7 +403,7 @@
             <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">{{ t('dynamic_search.filters.status', 'Durum') }}</label>
             <select 
               v-model="statusFilter" 
-              class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all appearance-none cursor-pointer"
+              class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all appearance-none cursor-pointer"
             >
               <option value="">{{ t('dynamic_search.filters.all_statuses', 'Tüm Durumlar') }}</option>
               <option v-for="status in statusOptions" :key="status.value" :value="status.value">{{ status.label }}</option>
@@ -415,7 +415,7 @@
             <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">{{ t('dynamic_search.filters.assigned_user', 'Atanan Kullanıcı') }}</label>
             <select 
               v-model="relevantUserFilter" 
-              class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all appearance-none cursor-pointer"
+              class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all appearance-none cursor-pointer"
             >
               <option value="">{{ t('dynamic_search.filters.all_users', 'Tümü') }}</option>
               <option v-for="item in relevantUserList" :key="item.value" :value="item.value">{{ item.name }}</option>
@@ -428,7 +428,7 @@
             <select 
               v-model="dateFilter" 
               @change="handleDateFilterChange"
-              class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all appearance-none cursor-pointer"
+              class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all appearance-none cursor-pointer"
             >
               <option value="today">{{ t('dynamic_search.filters.date_today', 'Bugün ve Öncesi') }}</option>
               <option value="today-only">{{ t('dynamic_search.filters.date_today_only', 'Sadece Bugün') }}</option>
@@ -454,11 +454,11 @@
           <div v-if="dateFilter === 'custom'" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
             <div>
               <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">{{ t('dynamic_search.filters.start_date', 'Başlangıç') }}</label>
-              <input v-model="customStartDate" type="date" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all" />
+              <input v-model="customStartDate" type="date" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all" />
             </div>
             <div>
               <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">{{ t('dynamic_search.filters.end_date', 'Bitiş') }}</label>
-              <input v-model="customEndDate" type="date" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all" />
+              <input v-model="customEndDate" type="date" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all" />
             </div>
           </div>
         </Transition>
@@ -468,8 +468,8 @@
     <!-- Loading State -->
     <div v-if="loading" class="flex flex-col items-center justify-center py-16">
       <div class="relative">
-        <div class="w-12 h-12 rounded-full border-4 border-indigo-100 dark:border-indigo-900"></div>
-        <div class="absolute top-0 left-0 w-12 h-12 rounded-full border-4 border-transparent border-t-indigo-600 animate-spin"></div>
+        <div class="w-12 h-12 rounded-full border-4 border-rose-100 dark:border-rose-900"></div>
+        <div class="absolute top-0 left-0 w-12 h-12 rounded-full border-4 border-transparent border-t-rose-600 animate-spin"></div>
       </div>
       <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">{{ t('dynamic_search.loading', 'Yükleniyor...') }}</p>
     </div>
@@ -487,7 +487,7 @@
             :class="[
               'p-2 rounded-lg transition-all',
               viewMode === 'table' 
-                ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400' 
+                ? 'bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400' 
                 : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
             ]"
           >
@@ -498,7 +498,7 @@
             :class="[
               'p-2 rounded-lg transition-all',
               viewMode === 'cards' 
-                ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400' 
+                ? 'bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400' 
                 : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
             ]"
           >
@@ -557,7 +557,7 @@
                     <div>
                       <NuxtLink 
                         :to="`/customers/show/${customer.id}`"
-                        class="font-medium text-gray-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                        class="font-medium text-gray-900 dark:text-white hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
                       >
                         {{ customer.name }}
                       </NuxtLink>
@@ -619,8 +619,8 @@
                 <td v-if="isAdmin" class="px-4 py-4">
                   <div v-if="customer.relevantUser" class="flex items-center gap-2">
                     <img v-if="customer.relevantUser?.avatar" :src="path + customer.relevantUser?.avatar" alt="Avatar" class="object-cover h-7 w-7 rounded-lg" />
-                    <div v-else class="h-7 w-7 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
-                      <span class="text-xs font-medium text-purple-600 dark:text-purple-400">
+                    <div v-else class="h-7 w-7 rounded-lg bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center">
+                      <span class="text-xs font-medium text-rose-600 dark:text-rose-400">
                         {{ customer.relevantUser?.name?.charAt(0)?.toUpperCase() }}
                       </span>
                     </div>
@@ -634,14 +634,14 @@
                   <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <NuxtLink 
                       :to="`/customers/show/${customer.id}`"
-                      class="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition-all"
+                      class="p-2 text-gray-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-lg transition-all"
                       :title="t('dynamic_search.actions.view', 'Görüntüle')"
                     >
                       <EyeIcon class="h-5 w-5" />
                     </NuxtLink>
                     <button 
                       @click="showNotes(customer)"
-                      class="p-2 text-gray-400 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/30 rounded-lg transition-all"
+                      class="p-2 text-gray-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-lg transition-all"
                       :title="t('dynamic_search.actions.notes', 'Notlar')"
                     >
                       <DocumentTextIcon class="h-5 w-5" />
@@ -709,7 +709,7 @@
                     :class="[
                       'min-w-[36px] h-9 px-3 rounded-lg text-sm font-medium transition-all',
                       pagination.page === pageNum
-                        ? 'bg-indigo-600 text-white shadow-sm'
+                        ? 'bg-rose-600 text-white shadow-sm'
                         : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                     ]"
                   >
@@ -734,7 +734,7 @@
             <select 
               v-model="pagination.limit" 
               @change="handleLimitChange"
-              class="px-3 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500"
+              class="px-3 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-rose-500"
             >
               <option :value="10">{{ tp('dynamic_search.pagination.per_page', { count: 10 }, '10 / sayfa') }}</option>
               <option :value="25">{{ tp('dynamic_search.pagination.per_page', { count: 25 }, '25 / sayfa') }}</option>
@@ -750,7 +750,7 @@
         <div 
           v-for="customer in customersData" 
           :key="customer.id"
-          class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md hover:border-indigo-200 dark:hover:border-indigo-800 transition-all group"
+          class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md hover:border-rose-200 dark:hover:border-rose-800 transition-all group"
         >
           <!-- Card Header -->
           <div class="flex items-start justify-between mb-4">
@@ -764,7 +764,7 @@
               <div>
                 <NuxtLink 
                   :to="`/customers/show/${customer.id}`"
-                  class="font-semibold text-gray-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                  class="font-semibold text-gray-900 dark:text-white hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
                 >
                   {{ customer.name }}
                 </NuxtLink>
@@ -815,8 +815,8 @@
           <div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
             <div v-if="isAdmin && customer.relevantUser" class="flex items-center gap-2">
                <img v-if="customer.relevantUser?.avatar" :src="path + customer.relevantUser?.avatar" alt="Avatar" class="object-cover h-6 w-6 rounded-lg" />
-                <div v-else class="h-6 w-6 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
-                  <span class="text-xs font-medium text-purple-600 dark:text-purple-400">
+                <div v-else class="h-6 w-6 rounded-lg bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center">
+                  <span class="text-xs font-medium text-rose-600 dark:text-rose-400">
                     {{ customer.relevantUser?.name?.charAt(0)?.toUpperCase() }}
                   </span>
                 </div>
@@ -827,13 +827,13 @@
             <div class="flex items-center gap-1">
               <NuxtLink 
                 :to="`/customers/show/${customer.id}`"
-                class="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition-all"
+                class="p-2 text-gray-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-lg transition-all"
               >
                 <EyeIcon class="h-4 w-4" />
               </NuxtLink>
               <button 
                 @click="showNotes(customer)"
-                class="p-2 text-gray-400 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/30 rounded-lg transition-all"
+                class="p-2 text-gray-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-lg transition-all"
               >
                 <DocumentTextIcon class="h-4 w-4" />
               </button>
@@ -929,8 +929,8 @@
                   :to="`/customers/show/${showStates.activeId}`"
                   class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
                 >
-                  <div class="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg">
-                    <EyeIcon class="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+                  <div class="p-2 bg-rose-100 dark:bg-rose-900/30 rounded-lg">
+                    <EyeIcon class="h-5 w-5 text-rose-600 dark:text-rose-400" />
                   </div>
                   <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('dynamic_search.actions.view', 'Görüntüle') }}</span>
                 </NuxtLink>
@@ -949,8 +949,8 @@
                   @click="showNotes(getCustomerById(showStates.activeId))"
                   class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
                 >
-                  <div class="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
-                    <DocumentTextIcon class="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                  <div class="p-2 bg-rose-100 dark:bg-rose-900/30 rounded-lg">
+                    <DocumentTextIcon class="h-5 w-5 text-rose-600 dark:text-rose-400" />
                   </div>
                   <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('dynamic_search.actions.notes', 'Notlar') }}</span>
                 </button>
@@ -959,8 +959,8 @@
                   @click="showDoctorAssignment(getCustomerById(showStates.activeId))"
                   class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
                 >
-                  <div class="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-                    <UsersIcon class="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                  <div class="p-2 bg-rose-100 dark:bg-rose-900/30 rounded-lg">
+                    <UsersIcon class="h-5 w-5 text-rose-600 dark:text-rose-400" />
                   </div>
                   <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('dynamic_search.actions.doctor', 'Doktor') }}</span>
                 </button>
@@ -1361,29 +1361,29 @@ const getCountryName = (phone) => {
 // Helper Functions for Performance UI
 const getUserCardClass = (total) => {
   if (total >= 70) return 'bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border-red-300 dark:border-red-700 hover:border-red-400'
-  if (total >= 40) return 'bg-gradient-to-br from-amber-50 to-orange-100 dark:from-amber-900/20 dark:to-orange-800/20 border-amber-300 dark:border-amber-700 hover:border-amber-400'
-  if (total >= 20) return 'bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-800/20 border-blue-300 dark:border-blue-700 hover:border-blue-400'
+  if (total >= 40) return 'bg-gradient-to-br from-rose-50 to-orange-100 dark:from-rose-900/20 dark:to-orange-800/20 border-rose-300 dark:border-rose-700 hover:border-rose-400'
+  if (total >= 20) return 'bg-gradient-to-br from-blue-50 to-rose-100 dark:from-blue-900/20 dark:to-rose-800/20 border-blue-300 dark:border-blue-700 hover:border-blue-400'
   return 'bg-gradient-to-br from-emerald-50 to-green-100 dark:from-emerald-900/20 dark:to-green-800/20 border-emerald-300 dark:border-emerald-700 hover:border-emerald-400'
 }
 
 const getUserAvatarClass = (total) => {
   if (total >= 70) return 'bg-gradient-to-br from-red-500 to-red-600 text-white'
-  if (total >= 40) return 'bg-gradient-to-br from-amber-500 to-orange-500 text-white'
-  if (total >= 20) return 'bg-gradient-to-br from-blue-500 to-indigo-500 text-white'
+  if (total >= 40) return 'bg-gradient-to-br from-rose-500 to-orange-500 text-white'
+  if (total >= 20) return 'bg-gradient-to-br from-red-500 to-rose-500 text-white'
   return 'bg-gradient-to-br from-emerald-500 to-green-500 text-white'
 }
 
 const getUserTextClass = (total) => {
   if (total >= 70) return 'text-red-600 dark:text-red-400'
-  if (total >= 40) return 'text-amber-600 dark:text-amber-400'
+  if (total >= 40) return 'text-rose-600 dark:text-rose-400'
   if (total >= 20) return 'text-blue-600 dark:text-blue-400'
   return 'text-emerald-600 dark:text-emerald-400'
 }
 
 const getUserProgressClass = (total) => {
   if (total >= 70) return 'bg-gradient-to-r from-red-500 to-red-600'
-  if (total >= 40) return 'bg-gradient-to-r from-amber-500 to-orange-500'
-  if (total >= 20) return 'bg-gradient-to-r from-blue-500 to-indigo-500'
+  if (total >= 40) return 'bg-gradient-to-r from-rose-500 to-orange-500'
+  if (total >= 20) return 'bg-gradient-to-r from-red-500 to-rose-500'
   return 'bg-gradient-to-r from-emerald-500 to-green-500'
 }
 
@@ -1484,7 +1484,7 @@ const getAvatarClass = (customer) => {
   if (isOverdue(customer.remindingDate)) {
     return 'bg-gradient-to-br from-red-400 to-red-600 text-white'
   }
-  return 'bg-gradient-to-br from-indigo-400 to-amber-500 text-white'
+  return 'bg-gradient-to-br from-rose-400 to-rose-500 text-white'
 }
 
 const getStatusDotClass = (statusId) => {

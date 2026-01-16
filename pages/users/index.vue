@@ -4,7 +4,7 @@
     <div class="mb-8">
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div class="flex items-center gap-4">
-          <div class="p-3 bg-gradient-to-br from-violet-500 to-amber-500 rounded-2xl shadow-lg shadow-violet-500/25">
+          <div class="p-3 bg-gradient-to-br from-red-500 to-rose-500 rounded-2xl shadow-lg shadow-red-500/25">
             <UsersIcon class="h-7 w-7 text-white" />
           </div>
           <div>
@@ -27,7 +27,7 @@
           </button>
           <button
             @click="openModal"
-            class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-violet-600 to-amber-500 text-white rounded-xl hover:from-violet-700 hover:to-purple-700 transition-all text-sm font-medium shadow-lg shadow-violet-500/25"
+            class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-red-600 to-rose-500 text-white rounded-xl hover:from-red-700 hover:to-rose-700 transition-all text-sm font-medium shadow-lg shadow-red-500/25"
           >
             <PlusIcon class="h-5 w-5" />
             {{ t('users.actions.new_user', 'Yeni Kullanıcı') }}
@@ -45,7 +45,7 @@
           :class="[
             'px-4 py-2.5 rounded-xl text-sm font-medium transition-all',
             onlineFilter === null
-              ? 'bg-violet-600 text-white shadow-lg shadow-violet-500/25'
+              ? 'bg-red-600 text-white shadow-lg shadow-red-500/25'
               : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
           ]"
         >
@@ -92,7 +92,7 @@
           :class="[
             'px-4 py-2.5 rounded-xl text-sm font-medium transition-all',
             !activeRole
-              ? 'bg-violet-600 text-white shadow-lg shadow-violet-500/25'
+              ? 'bg-red-600 text-white shadow-lg shadow-red-500/25'
               : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
           ]"
         >
@@ -199,7 +199,7 @@
 
           <span
             v-if="user?.userTeam?.name"
-            class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300"
+            class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium bg-rose-50 dark:bg-rose-900/20 text-rose-700 dark:text-rose-300"
           >
             <UsersIcon class="h-3.5 w-3.5 mr-1.5" />
             {{ user.userTeam.name }}
@@ -246,7 +246,7 @@
           </button>
           <NuxtLink
             :to="`/profile/${user.id}`"
-            class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium rounded-xl transition-colors bg-violet-50 text-violet-700 hover:bg-violet-100 dark:bg-violet-900/20 dark:text-violet-300 dark:hover:bg-violet-900/30"
+            class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium rounded-xl transition-colors bg-red-50 text-red-700 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-300 dark:hover:bg-red-900/30"
           >
             <UserIcon class="h-3.5 w-3.5" />
             {{ t('users.actions.profile', 'Profil') }}

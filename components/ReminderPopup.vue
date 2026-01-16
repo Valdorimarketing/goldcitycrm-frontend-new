@@ -27,7 +27,7 @@
           >
             <div v-if="isOpen && reminder" class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-2xl transition-all sm:w-full sm:max-w-lg">
               <!-- Header with gradient -->
-              <div class="bg-gradient-to-r from-amber-500 to-orange-600 px-6 py-4">
+              <div class="bg-gradient-to-r from-rose-500 to-orange-600 px-6 py-4">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center space-x-3">
                     <div class="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur animate-pulse">
@@ -35,7 +35,7 @@
                     </div>
                     <div>
                       <h3 class="text-lg font-semibold text-white">⏰ Hatırlatma Zamanı!</h3>
-                      <p class="text-sm text-amber-100">{{ timeRemaining }}</p>
+                      <p class="text-sm text-rose-100">{{ timeRemaining }}</p>
                     </div>
                   </div>
                   <button
@@ -52,7 +52,7 @@
                 <!-- Customer Info -->
                 <div class="mb-4 pb-4 border-b dark:border-gray-700">
                   <div class="flex items-center space-x-3">
-                    <UserIcon class="h-5 w-5 text-amber-600" />
+                    <UserIcon class="h-5 w-5 text-rose-600" />
                     <div>
                       <h4 class="font-semibold text-gray-900 dark:text-white">
                         {{ customerName }}
@@ -63,7 +63,7 @@
                 </div>
 
                 <!-- Note Content -->
-                <div class="bg-amber-50 dark:bg-gray-700/50 rounded-lg p-4 mb-4">
+                <div class="bg-rose-50 dark:bg-gray-700/50 rounded-lg p-4 mb-4">
                   <p class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{{ reminder.note }}</p>
                 </div>
 
@@ -87,7 +87,7 @@
                   <button
                     @click="$emit('complete')"
                     :disabled="loading"
-                    class="inline-flex items-center rounded-lg bg-gradient-to-r from-amber-500 to-orange-600 px-4 py-2 text-sm font-medium text-white hover:from-amber-600 hover:to-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-amber-500/25"
+                    class="inline-flex items-center rounded-lg bg-gradient-to-r from-rose-500 to-orange-600 px-4 py-2 text-sm font-medium text-white hover:from-rose-600 hover:to-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-rose-500/25"
                   >
                     <CheckIcon class="mr-2 h-4 w-4" />
                     {{ loading ? 'İşleniyor...' : 'Tamamlandı' }}

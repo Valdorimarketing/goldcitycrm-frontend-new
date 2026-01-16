@@ -4,7 +4,7 @@
     <div class="mb-8">
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div class="flex items-center gap-4">
-          <div class="p-3 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl shadow-lg shadow-purple-500/25">
+          <div class="p-3 bg-gradient-to-br from-rose-500 to-rose-600 rounded-2xl shadow-lg shadow-rose-500/25">
             <UserGroupIcon class="h-7 w-7 text-white" />
           </div>
           <div>
@@ -34,24 +34,24 @@
             <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Toplam</p>
             <p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ sentPagination.total + waitingPagination.total }}</p>
           </div>
-          <div class="h-12 w-12 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <UsersIcon class="h-6 w-6 text-purple-600 dark:text-purple-400" />
+          <div class="h-12 w-12 rounded-xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <UsersIcon class="h-6 w-6 text-rose-600 dark:text-rose-400" />
           </div>
         </div>
-        <div class="h-1 w-full bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full mt-4 opacity-60"></div>
+        <div class="h-1 w-full bg-gradient-to-r from-rose-500 to-rose-500 rounded-full mt-4 opacity-60"></div>
       </div>
 
       <div class="group bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
         <div class="flex items-center justify-between">
           <div>
             <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Gönderilen</p>
-            <p class="text-2xl font-bold text-amber-600 dark:text-amber-400 mt-1">{{ sentPagination.total }}</p>
+            <p class="text-2xl font-bold text-rose-600 dark:text-rose-400 mt-1">{{ sentPagination.total }}</p>
           </div>
-          <div class="h-12 w-12 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <PaperAirplaneIcon class="h-6 w-6 text-amber-600 dark:text-amber-400" />
+          <div class="h-12 w-12 rounded-xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <PaperAirplaneIcon class="h-6 w-6 text-rose-600 dark:text-rose-400" />
           </div>
         </div>
-        <div class="h-1 w-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-full mt-4 opacity-60"></div>
+        <div class="h-1 w-full bg-gradient-to-r from-rose-500 to-orange-500 rounded-full mt-4 opacity-60"></div>
       </div>
 
       <div class="group bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
@@ -64,7 +64,7 @@
             <ClockIcon class="h-6 w-6 text-blue-600 dark:text-blue-400" />
           </div>
         </div>
-        <div class="h-1 w-full bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full mt-4 opacity-60"></div>
+        <div class="h-1 w-full bg-gradient-to-r from-red-500 to-cyan-500 rounded-full mt-4 opacity-60"></div>
       </div>
 
       <div class="group bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
@@ -91,7 +91,7 @@
         <button 
           v-if="searchTerm || relevantUserFilter || dateFilter !== 'all'"
           @click="resetFilters"
-          class="text-sm text-purple-600 dark:text-purple-400 hover:text-purple-700 font-medium"
+          class="text-sm text-rose-600 dark:text-rose-400 hover:text-rose-700 font-medium"
         >
           Temizle
         </button>
@@ -109,7 +109,7 @@
               <input 
                 v-model="searchTerm" 
                 type="text" 
-                class="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                class="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all"
                 placeholder="İsim, email, telefon..."
               />
             </div>
@@ -122,7 +122,7 @@
             </label>
             <select 
               v-model="relevantUserFilter" 
-              class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all appearance-none cursor-pointer"
+              class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all appearance-none cursor-pointer"
             >
               <option value="">Tüm Kullanıcılar</option>
               <option v-for="user in usersList" :key="user.id" :value="user.id">
@@ -138,7 +138,7 @@
             </label>
             <select 
               v-model="dateFilter" 
-              class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all appearance-none cursor-pointer"
+              class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all appearance-none cursor-pointer"
             >
               <option value="all">Tümü</option>
               <option value="today">Bugün</option>
@@ -163,8 +163,8 @@
     <!-- Loading State -->
     <div v-if="loading" class="flex flex-col items-center justify-center py-16">
       <div class="relative">
-        <div class="w-14 h-14 rounded-full border-4 border-purple-100 dark:border-purple-900"></div>
-        <div class="absolute top-0 left-0 w-14 h-14 rounded-full border-4 border-transparent border-t-purple-600 animate-spin"></div>
+        <div class="w-14 h-14 rounded-full border-4 border-rose-100 dark:border-rose-900"></div>
+        <div class="absolute top-0 left-0 w-14 h-14 rounded-full border-4 border-transparent border-t-rose-600 animate-spin"></div>
       </div>
       <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">Yükleniyor...</p>
     </div>
@@ -176,7 +176,7 @@
       <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col">
         <!-- Column Header -->
         <div class="relative overflow-hidden">
-          <div class="absolute inset-0 bg-gradient-to-r from-amber-500 to-orange-500"></div>
+          <div class="absolute inset-0 bg-gradient-to-r from-rose-500 to-orange-500"></div>
          
           <div class="relative px-5 py-4">
             <div class="flex items-center justify-between">
@@ -200,8 +200,8 @@
         <div class="flex-1 overflow-y-auto max-h-[500px] divide-y divide-gray-100 dark:divide-gray-700">
           <!-- Empty State -->
           <div v-if="sentToDoctor.length === 0" class="flex flex-col items-center justify-center py-12 px-4">
-            <div class="h-16 w-16 rounded-2xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-4">
-              <UserGroupIcon class="h-8 w-8 text-amber-500" />
+            <div class="h-16 w-16 rounded-2xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center mb-4">
+              <UserGroupIcon class="h-8 w-8 text-rose-500" />
             </div>
             <p class="text-sm font-medium text-gray-900 dark:text-white mb-1">Müşteri Yok</p>
             <p class="text-xs text-gray-500 dark:text-gray-400 text-center">
@@ -219,7 +219,7 @@
             <div class="flex items-start gap-4">
               <!-- Avatar -->
               <div class="relative flex-shrink-0">
-                <div class="h-12 w-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
+                <div class="h-12 w-12 rounded-xl bg-gradient-to-br from-rose-500 to-orange-600 flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
                   <span class="text-sm font-bold text-white">
                     {{ getInitials(customer.name) }}
                   </span>
@@ -230,14 +230,14 @@
               <div class="flex-1 min-w-0">
                 <div class="flex items-start justify-between gap-2">
                   <div>
-                    <p class="font-medium text-gray-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                    <p class="font-medium text-gray-900 dark:text-white group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">
                       {{ customer.name }} {{ customer.surname }}
                     </p>
                     <p class="text-sm text-gray-500 dark:text-gray-400 truncate mt-0.5">
                       {{ customer.email || customer.phone || '-' }}
                     </p>
                   </div>
-                  <ChevronRightIcon class="h-5 w-5 text-gray-300 dark:text-gray-600 group-hover:text-amber-500 group-hover:translate-x-1 transition-all flex-shrink-0" />
+                  <ChevronRightIcon class="h-5 w-5 text-gray-300 dark:text-gray-600 group-hover:text-rose-500 group-hover:translate-x-1 transition-all flex-shrink-0" />
                 </div>
 
                 <!-- Meta Info -->
@@ -246,7 +246,7 @@
                     <CalendarIcon class="h-3.5 w-3.5" />
                     {{ formatDate(customer.createdAt) }}
                   </span>
-                  <span v-if="customer.relevantUserData" class="inline-flex items-center gap-1.5 px-2 py-1 bg-purple-100 dark:bg-purple-900/30 rounded-lg text-xs text-purple-600 dark:text-purple-400">
+                  <span v-if="customer.relevantUserData" class="inline-flex items-center gap-1.5 px-2 py-1 bg-rose-100 dark:bg-rose-900/30 rounded-lg text-xs text-rose-600 dark:text-rose-400">
                     <UserIcon class="h-3.5 w-3.5" />
                     {{ customer.relevantUserData.name }}
                   </span>
@@ -284,7 +284,7 @@
       <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col">
         <!-- Column Header -->
         <div class="relative overflow-hidden">
-          <div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
+          <div class="absolute inset-0 bg-gradient-to-r from-red-500 to-cyan-500"></div>
     <div
   class="absolute inset-0 opacity-30"
   style="background-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2020%2020%22%3E%3Ccircle%20cx%3D%221%22%20cy%3D%221%22%20r%3D%221%22%20fill%3D%22white%22%20fill-opacity%3D%220.3%22%2F%3E%3C%2Fsvg%3E');"
@@ -332,7 +332,7 @@
             <div class="flex items-start gap-4">
               <!-- Avatar -->
               <div class="relative flex-shrink-0">
-                <div class="h-12 w-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
+                <div class="h-12 w-12 rounded-xl bg-gradient-to-br from-red-500 to-cyan-600 flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
                   <span class="text-sm font-bold text-white">
                     {{ getInitials(customer.name) }}
                   </span>
@@ -363,7 +363,7 @@
                     <CalendarIcon class="h-3.5 w-3.5" />
                     {{ formatDate(customer.createdAt) }}
                   </span>
-                  <span v-if="customer.relevantUserData" class="inline-flex items-center gap-1.5 px-2 py-1 bg-purple-100 dark:bg-purple-900/30 rounded-lg text-xs text-purple-600 dark:text-purple-400">
+                  <span v-if="customer.relevantUserData" class="inline-flex items-center gap-1.5 px-2 py-1 bg-rose-100 dark:bg-rose-900/30 rounded-lg text-xs text-rose-600 dark:text-rose-400">
                     <UserIcon class="h-3.5 w-3.5" />
                     {{ customer.relevantUserData.name }}
                   </span>

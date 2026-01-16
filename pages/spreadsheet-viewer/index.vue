@@ -27,7 +27,7 @@
             v-if="spreadsheetInfo?.spreadsheetId"
             :href="`https://docs.google.com/spreadsheets/d/${spreadsheetInfo.spreadsheetId}/edit`"
             target="_blank"
-            class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium"
+            class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-lg font-medium"
           >
             <i class="i-lucide-external-link mr-2"></i>
             Google'da Aç

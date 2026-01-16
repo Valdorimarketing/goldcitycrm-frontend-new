@@ -46,7 +46,7 @@
           </button>
           <button 
             @click="showCreateModal = true"
-            class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r to-amber-400 to-amber-500 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all text-sm font-medium shadow-lg shadow-indigo-500/25"
+            class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r to-rose-400 to-rose-500 text-white rounded-xl hover:from-rose-700 hover:to-rose-700 transition-all text-sm font-medium shadow-lg shadow-rose-500/25"
           >
             <PlusIcon class="h-5 w-5" />
             {{ t('pool.new_customer', 'Yeni Müşteri') }}
@@ -65,8 +65,8 @@
             </p>
             <p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ stats.unassigned }}</p>
           </div>
-          <div class="p-3 bg-amber-100 dark:bg-amber-900/30 rounded-xl">
-            <ClockIcon class="h-6 w-6 text-amber-600 dark:text-amber-400" />
+          <div class="p-3 bg-rose-100 dark:bg-rose-900/30 rounded-xl">
+            <ClockIcon class="h-6 w-6 text-rose-600 dark:text-rose-400" />
           </div>
         </div>
       </div>
@@ -107,8 +107,8 @@
             </p>
             <p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ stats.avgWait }}</p>
           </div>
-          <div class="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-xl">
-            <ChartBarIcon class="h-6 w-6 text-purple-600 dark:text-purple-400" />
+          <div class="p-3 bg-rose-100 dark:bg-rose-900/30 rounded-xl">
+            <ChartBarIcon class="h-6 w-6 text-rose-600 dark:text-rose-400" />
           </div>
         </div>
       </div>
@@ -122,7 +122,7 @@
           :class="[
             'flex-1 sm:flex-none px-6 py-4 text-sm font-medium transition-all relative',
             activeTab === 'unassigned'
-              ? 'text-indigo-600 dark:text-indigo-400'
+              ? 'text-rose-600 dark:text-rose-400'
               : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
           ]"
         >
@@ -132,14 +132,14 @@
             <span 
               v-if="stats.unassigned > 0"
               class="ml-1 px-2 py-0.5 text-xs font-semibold rounded-full"
-              :class="activeTab === 'unassigned' ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300' : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'"
+              :class="activeTab === 'unassigned' ? 'bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300' : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'"
             >
               {{ stats.unassigned }}
             </span>
           </div>
           <div 
             v-if="activeTab === 'unassigned'" 
-            class="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600 dark:bg-indigo-400"
+            class="absolute bottom-0 left-0 right-0 h-0.5 bg-rose-600 dark:bg-rose-400"
           ></div>
         </button>
 
@@ -148,7 +148,7 @@
           :class="[
             'flex-1 sm:flex-none px-6 py-4 text-sm font-medium transition-all relative',
             activeTab === 'assigned'
-              ? 'text-indigo-600 dark:text-indigo-400'
+              ? 'text-rose-600 dark:text-rose-400'
               : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
           ]"
         >
@@ -158,14 +158,14 @@
             <span 
               v-if="stats.assigned > 0"
               class="ml-1 px-2 py-0.5 text-xs font-semibold rounded-full"
-              :class="activeTab === 'assigned' ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300' : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'"
+              :class="activeTab === 'assigned' ? 'bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300' : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'"
             >
               {{ stats.assigned }}
             </span>
           </div>
           <div 
             v-if="activeTab === 'assigned'" 
-            class="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600 dark:bg-indigo-400"
+            class="absolute bottom-0 left-0 right-0 h-0.5 bg-rose-600 dark:bg-rose-400"
           ></div>
         </button>
       </div>
@@ -177,7 +177,7 @@
           <input 
             v-model="columnFilters.name" 
             type="text"
-            class="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+            class="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all"
             :placeholder="t('pool.search_placeholder', 'Ad, soyad, email, telefon, paket veya URL ile ara...')"
           />
           <button 
@@ -193,8 +193,8 @@
       <!-- Loading -->
       <div v-if="loading" class="flex flex-col items-center justify-center py-16">
         <div class="relative">
-          <div class="w-12 h-12 rounded-full border-4 border-indigo-100 dark:border-indigo-900"></div>
-          <div class="absolute top-0 left-0 w-12 h-12 rounded-full border-4 border-transparent border-t-indigo-600 animate-spin"></div>
+          <div class="w-12 h-12 rounded-full border-4 border-rose-100 dark:border-rose-900"></div>
+          <div class="absolute top-0 left-0 w-12 h-12 rounded-full border-4 border-transparent border-t-rose-600 animate-spin"></div>
         </div>
         <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
           {{ t('pool.loading', 'Veriler yükleniyor...') }}
@@ -250,7 +250,7 @@
                   <div>
                     <NuxtLink 
                       :to="`/customers/show/${customer.id}`"
-                      class="font-medium text-gray-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                      class="font-medium text-gray-900 dark:text-white hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
                     >
                       {{ customer.name }}
                     </NuxtLink>
@@ -328,7 +328,7 @@
                     <select 
                       v-model="rowAssignments[customer.id].selectedGroupId" 
                       @change="onGroupChange(customer.id)"
-                      class="text-xs py-2 px-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 min-w-[120px]"
+                      class="text-xs py-2 px-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-rose-500 min-w-[120px]"
                     >
                       <option value="">{{ t('pool.select_group', 'Grup Seç') }}</option>
                       <option v-for="group in userGroups" :key="group.id" :value="group.id">
@@ -338,7 +338,7 @@
                     <select 
                       v-model="rowAssignments[customer.id].selectedUserId"
                       :disabled="!rowAssignments[customer.id].selectedGroupId"
-                      class="text-xs py-2 px-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 min-w-[120px] disabled:opacity-50"
+                      class="text-xs py-2 px-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-rose-500 min-w-[120px] disabled:opacity-50"
                     >
                       <option value="">{{ t('pool.select_user', 'Kullanıcı Seç') }}</option>
                       <option v-for="user in getGroupUsers(customer.id)" :key="user.id" :value="user.id">
@@ -349,7 +349,7 @@
                   <button 
                     @click="assignCustomerToUser(customer)"
                     :disabled="!rowAssignments[customer.id].selectedUserId"
-                    class="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                    class="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-white bg-rose-600 hover:bg-rose-700 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                   >
                     <UserPlusIcon class="h-4 w-4" />
                     {{ t('pool.assign', 'Ata') }}
@@ -363,7 +363,7 @@
                   <div v-if="customer.relevantUserData?.avatar" class="h-10 w-10 rounded-full overflow-hidden ring-2 ring-white dark:ring-gray-800 shadow">
                     <img :src="path + customer.relevantUserData.avatar" alt="Avatar" class="h-full w-full object-cover" />
                   </div>
-                  <div v-else class="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white font-medium text-sm shadow">
+                  <div v-else class="h-10 w-10 rounded-full bg-gradient-to-br from-rose-400 to-rose-500 flex items-center justify-center text-white font-medium text-sm shadow">
                     {{ customer.relevantUserData?.name?.charAt(0) || 'A' }}
                   </div>
                   <div>
@@ -383,14 +383,14 @@
                 <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                   <NuxtLink 
                     :to="`/customers/show/${customer.id}`"
-                    class="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition-all"
+                    class="p-2 text-gray-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-lg transition-all"
                     :title="t('pool.actions.view', 'Görüntüle')"
                   >
                     <EyeIcon class="h-5 w-5" />
                   </NuxtLink>
                   <button 
                     @click="showNotes(customer)"
-                    class="p-2 text-gray-400 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/30 rounded-lg transition-all"
+                    class="p-2 text-gray-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-lg transition-all"
                     :title="t('pool.actions.notes', 'Notlar')"
                   >
                     <DocumentTextIcon class="h-5 w-5" />
@@ -450,7 +450,7 @@
                   :class="[
                     'min-w-[36px] h-9 px-3 rounded-lg text-sm font-medium transition-all',
                     pagination.page === pageNum
-                      ? 'bg-indigo-600 text-white shadow-sm'
+                      ? 'bg-rose-600 text-white shadow-sm'
                       : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                   ]"
                 >
@@ -519,8 +519,8 @@
                   :to="`/customers/show/${showStates.activeId}`"
                   class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
                 >
-                  <div class="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg">
-                    <EyeIcon class="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+                  <div class="p-2 bg-rose-100 dark:bg-rose-900/30 rounded-lg">
+                    <EyeIcon class="h-5 w-5 text-rose-600 dark:text-rose-400" />
                   </div>
                   <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('pool.actions.view', 'Görüntüle') }}</span>
                 </NuxtLink>
@@ -539,8 +539,8 @@
                   @click="showNotes(getCustomerById(showStates.activeId))"
                   class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
                 >
-                  <div class="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
-                    <DocumentTextIcon class="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                  <div class="p-2 bg-rose-100 dark:bg-rose-900/30 rounded-lg">
+                    <DocumentTextIcon class="h-5 w-5 text-rose-600 dark:text-rose-400" />
                   </div>
                   <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('pool.actions.notes', 'Notlar') }}</span>
                 </button>
@@ -549,8 +549,8 @@
                   @click="showDoctorAssignment(getCustomerById(showStates.activeId))"
                   class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
                 >
-                  <div class="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-                    <UsersIcon class="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                  <div class="p-2 bg-rose-100 dark:bg-rose-900/30 rounded-lg">
+                    <UsersIcon class="h-5 w-5 text-rose-600 dark:text-rose-400" />
                   </div>
                   <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('pool.actions.doctor', 'Doktor') }}</span>
                 </button>
@@ -795,7 +795,7 @@ const getWaitingClass = (dateString) => {
   if (!dateString) return 'bg-gradient-to-br from-gray-400 to-gray-500 text-white'
   const hours = (Date.now() - new Date(dateString).getTime()) / (1000 * 60 * 60)
   if (hours > 24) return 'bg-gradient-to-br from-red-400 to-red-600 text-white'
-  if (hours > 4) return 'bg-gradient-to-br from-amber-400 to-orange-500 text-white'
+  if (hours > 4) return 'bg-gradient-to-br from-rose-400 to-orange-500 text-white'
   return 'bg-gradient-to-br from-emerald-400 to-teal-500 text-white'
 }
 
@@ -803,7 +803,7 @@ const getWaitingBadgeClass = (dateString) => {
   if (!dateString) return 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
   const hours = (Date.now() - new Date(dateString).getTime()) / (1000 * 60 * 60)
   if (hours > 24) return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
-  if (hours > 4) return 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+  if (hours > 4) return 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400'
   return 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
 }
 

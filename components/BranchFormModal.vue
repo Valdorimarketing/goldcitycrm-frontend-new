@@ -26,7 +26,7 @@
           >
             <DialogPanel class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-2xl">
               <!-- Header -->
-              <div class="bg-gradient-to-r to-amber-400 to-amber-500 px-6 py-5">
+              <div class="bg-gradient-to-r to-rose-400 to-rose-500 px-6 py-5">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-3">
                     <div class="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
@@ -36,7 +36,7 @@
                       <DialogTitle as="h3" class="text-lg font-bold text-white">
                         {{ branch ? 'Branş Düzenle' : 'Yeni Branş' }}
                       </DialogTitle>
-                      <p class="text-sm text-indigo-100 mt-0.5">
+                      <p class="text-sm text-rose-100 mt-0.5">
                         {{ branch ? 'Branş bilgilerini güncelleyin' : 'Yeni branş bilgilerini girin' }}
                       </p>
                     </div>
@@ -100,7 +100,7 @@
                         required
                         placeholder="Örn: KARD"
                         :class="[
-                          'w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all',
+                          'w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border rounded-xl text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all',
                           fieldErrors.code 
                             ? 'border-red-300 dark:border-red-700' 
                             : 'border-gray-200 dark:border-gray-600'
@@ -127,7 +127,7 @@
                           type="checkbox"
                           :value="hospital.id"
                           v-model="formData.hospitalIds"
-                          class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                          class="rounded border-gray-300 text-rose-600 focus:ring-rose-500"
                         />
                         <span class="text-sm text-gray-700 dark:text-gray-300">{{ hospital.name }}</span>
                       </label>
@@ -144,7 +144,7 @@
                       v-model="formData.description"
                       rows="3"
                       placeholder="Branş açıklaması..."
-                      class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none"
+                      class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all resize-none"
                     ></textarea>
                   </div>
 
@@ -171,7 +171,7 @@
                           </span>
                           <span
                             v-if="language.isDefault"
-                            class="ml-auto text-xs bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 px-2 py-1 rounded"
+                            class="ml-auto text-xs bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 px-2 py-1 rounded"
                           >
                             Varsayılan
                           </span>
@@ -182,7 +182,7 @@
                           :required="language.isDefault"
                           :placeholder="`${language.name} için branş adı`"
                           :class="[
-                            'w-full px-4 py-2 bg-white dark:bg-gray-800 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all',
+                            'w-full px-4 py-2 bg-white dark:bg-gray-800 border rounded-lg text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all',
                             fieldErrors[`translation_${language.id}`]
                               ? 'border-red-300 dark:border-red-700'
                               : 'border-gray-200 dark:border-gray-600'
@@ -209,7 +209,7 @@
                   <button
                     type="submit"
                     :disabled="saving"
-                    class="flex-1 px-4 py-3 bg-gradient-to-r to-amber-400 to-amber-500 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm shadow-lg shadow-indigo-500/25"
+                    class="flex-1 px-4 py-3 bg-gradient-to-r to-rose-400 to-rose-500 text-white rounded-xl font-semibold hover:from-rose-700 hover:to-rose-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm shadow-lg shadow-rose-500/25"
                   >
                     <span v-if="saving" class="flex items-center justify-center gap-2">
                       <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

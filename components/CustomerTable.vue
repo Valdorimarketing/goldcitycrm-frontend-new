@@ -9,7 +9,7 @@
               class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
               <div class="flex items-center gap-1.5">
                 {{ t(col.labelKey, col.label) }}
-                <span v-if="sortColumn === col.key" class="text-indigo-600 dark:text-indigo-400">
+                <span v-if="sortColumn === col.key" class="text-rose-600 dark:text-rose-400">
                   <ChevronUpIcon v-if="sortDirection === 'asc'" class="w-4 h-4" />
                   <ChevronDownIcon v-else class="w-4 h-4" />
                 </span>
@@ -35,7 +35,7 @@
             <div class="flex items-center gap-3">
               <div class="relative">
                 <div
-                  class="h-11 w-11 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-sm">
+                  class="h-11 w-11 rounded-xl bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center shadow-sm">
                   <span class="text-sm font-bold text-white">
                     {{ customer.name?.charAt(0)?.toUpperCase() || '?' }}
                   </span>
@@ -117,7 +117,7 @@
               </div>
               <div class="flex-1">
                 <p
-                  class="text-sm text-gray-700 dark:text-gray-300 group-hover/user:text-indigo-600 dark:group-hover/user:text-indigo-400 transition-colors">
+                  class="text-sm text-gray-700 dark:text-gray-300 group-hover/user:text-rose-600 dark:group-hover/user:text-rose-400 transition-colors">
                   {{ customer.relevantUserData?.name }}
                 </p>
                 <p v-if="customer.relevantUserData?.lastActiveTime"
@@ -187,8 +187,8 @@
               <div class="p-4 grid grid-cols-3 gap-2">
                 <NuxtLink :to="`/customers/show/${showStates.activeId}`"
                   class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">
-                  <div class="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg">
-                    <EyeIcon class="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+                  <div class="p-2 bg-rose-100 dark:bg-rose-900/30 rounded-lg">
+                    <EyeIcon class="h-5 w-5 text-rose-600 dark:text-rose-400" />
                   </div>
                   <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('pool.actions.view', 'Görüntüle') }}</span>
                 </NuxtLink>
@@ -203,16 +203,16 @@
 
                 <button @click="emitAction('show-notes')"
                   class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">
-                  <div class="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
-                    <DocumentTextIcon class="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                  <div class="p-2 bg-rose-100 dark:bg-rose-900/30 rounded-lg">
+                    <DocumentTextIcon class="h-5 w-5 text-rose-600 dark:text-rose-400" />
                   </div>
                   <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('pool.actions.notes', 'Notlar') }}</span>
                 </button>
 
                 <button @click="emitAction('show-doctor')"
                   class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">
-                  <div class="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-                    <UsersIcon class="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                  <div class="p-2 bg-rose-100 dark:bg-rose-900/30 rounded-lg">
+                    <UsersIcon class="h-5 w-5 text-rose-600 dark:text-rose-400" />
                   </div>
                   <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('pool.actions.doctor', 'Doktor') }}</span>
                 </button>
@@ -244,7 +244,7 @@
                 <NuxtLink v-if="isEditable" :to="`/customers/detail/${showStates.activeId}`"
                   class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">
                   <div class="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
-                    <MagnifyingGlassIcon class="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+                    <MagnifyingGlassIcon class="h-5 w-5 text-rose-600 dark:text-rose-400" />
                   </div>
                   <span class="text-xs text-gray-600 dark:text-gray-300">{{ t('customer.view_details', 'Detaylı Görünüm') }}</span>
                 </NuxtLink>

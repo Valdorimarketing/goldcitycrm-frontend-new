@@ -68,7 +68,7 @@
               <div class="flex items-start">
                 <ExclamationTriangleIcon 
                   :class="[
-                    alert.isRead ? 'text-gray-400' : 'text-amber-500',
+                    alert.isRead ? 'text-gray-400' : 'text-rose-500',
                     'h-5 w-5 mt-0.5 flex-shrink-0'
                   ]"
                 /> 
@@ -95,7 +95,7 @@
           <NuxtLink
             to="/fraud-alerts"
             @click="closeDropdown"
-            class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 font-medium"
+            class="text-sm text-rose-600 dark:text-rose-400 hover:text-rose-500 dark:hover:text-rose-300 font-medium"
           >
             Tümünü Gör →
           </NuxtLink>

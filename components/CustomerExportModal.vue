@@ -31,13 +31,13 @@
                   type="radio"
                   v-model="exportScope"
                   value="filtered"
-                  class="mt-1 h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                  class="mt-1 h-4 w-4 text-rose-600 border-gray-300 focus:ring-rose-500"
                 />
                 <div>
                   <span class="text-sm font-medium text-gray-900 dark:text-white">Filtrelenmiş Tüm Kayıtlar</span>
                   <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                     Mevcut filtrelere uyan tüm kayıtları dışa aktar
-                    <span v-if="totalFiltered" class="text-indigo-600 dark:text-indigo-400 font-medium">
+                    <span v-if="totalFiltered" class="text-rose-600 dark:text-rose-400 font-medium">
                       ({{ totalFiltered }} kayıt)
                     </span>
                   </p>
@@ -49,13 +49,13 @@
                   type="radio"
                   v-model="exportScope"
                   value="currentPage"
-                  class="mt-1 h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                  class="mt-1 h-4 w-4 text-rose-600 border-gray-300 focus:ring-rose-500"
                 />
                 <div>
                   <span class="text-sm font-medium text-gray-900 dark:text-white">Sadece Mevcut Sayfa</span>
                   <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                     Şu an görüntülenen sayfadaki kayıtları dışa aktar
-                    <span v-if="currentPageCount" class="text-indigo-600 dark:text-indigo-400 font-medium">
+                    <span v-if="currentPageCount" class="text-rose-600 dark:text-rose-400 font-medium">
                       ({{ currentPageCount }} kayıt)
                     </span>
                   </p>
@@ -67,13 +67,13 @@
             <div v-if="hasActiveFilters" class="mt-4 pt-3 border-t border-gray-200 dark:border-gray-600">
               <p class="text-xs text-gray-600 dark:text-gray-400 mb-2">Aktif Filtreler:</p>
               <div class="flex flex-wrap gap-2">
-                <span v-if="filters.search" class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
+                <span v-if="filters.search" class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-200">
                   Arama: "{{ filters.search }}"
                 </span>
                 <span v-if="filters.statusName" class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
                   Durum: {{ filters.statusName }}
                 </span>
-                <span v-if="filters.userName" class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
+                <span v-if="filters.userName" class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-200">
                   Kullanıcı: {{ filters.userName }}
                 </span>
               </div>
@@ -85,7 +85,7 @@
             <div class="flex items-center gap-3">
               <button
                 @click="selectAll"
-                class="px-3 py-1.5 text-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition"
+                class="px-3 py-1.5 text-sm bg-rose-600 text-white rounded-md hover:bg-rose-700 transition"
               >
                 Tümünü Seç
               </button>
@@ -113,7 +113,7 @@
                 type="checkbox"
                 :value="column.key"
                 v-model="selectedColumns"
-                class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                class="h-4 w-4 text-rose-600 border-gray-300 rounded focus:ring-rose-500"
               />
               <label
                 :for="column.key"
@@ -143,7 +143,7 @@
             <button
               @click="exportData('excel')"
               :disabled="selectedColumns.length === 0 || exporting"
-              class="px-4 py-2 text-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center gap-2"
+              class="px-4 py-2 text-sm bg-rose-600 text-white rounded-md hover:bg-rose-700 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center gap-2"
             >
               <ArrowPathIcon v-if="exporting && exportFormat === 'excel'" class="h-4 w-4 animate-spin" />
               <DocumentChartBarIcon v-else class="h-4 w-4" />

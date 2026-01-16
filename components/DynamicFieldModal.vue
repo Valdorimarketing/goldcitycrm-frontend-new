@@ -7,8 +7,8 @@
         <form @submit.prevent="handleSubmit">
           <div class="bg-white dark:bg-gray-800 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
             <div class="sm:flex sm:items-start">
-              <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-900 sm:mx-0 sm:h-10 sm:w-10">
-                <CogIcon class="h-6 w-6 text-indigo-600 dark:text-indigo-300" />
+              <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-rose-100 dark:bg-rose-900 sm:mx-0 sm:h-10 sm:w-10">
+                <CogIcon class="h-6 w-6 text-rose-600 dark:text-rose-300" />
               </div>
               <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
                 <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-white">
@@ -25,7 +25,7 @@
                       v-model="form.name"
                       type="text"
                       required
-                      class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-rose-500 focus:ring-rose-500 sm:text-sm"
                       placeholder="Örn: Şirket Türü, Bütçe, vs."
                     />
                     <p v-if="errors.name" class="mt-1 text-sm text-red-600">{{ errors.name }}</p>
@@ -40,7 +40,7 @@
                       id="type"
                       v-model="form.type"
                       required
-                      class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-rose-500 focus:ring-rose-500 sm:text-sm"
                     >
                       <option value="">Tip seçin</option>
                       <option value="text">Metin</option>
@@ -67,7 +67,7 @@
                       type="number"
                       min="1"
                       required
-                      class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-rose-500 focus:ring-rose-500 sm:text-sm"
                       placeholder="1"
                     />
                     <p v-if="errors.order" class="mt-1 text-sm text-red-600">{{ errors.order }}</p>
@@ -79,7 +79,7 @@
                       id="is_required"
                       v-model="form.is_required"
                       type="checkbox"
-                      class="h-4 w-4 text-indigo-600 focus:ring-indigo-600 border-gray-300 rounded"
+                      class="h-4 w-4 text-rose-600 focus:ring-rose-600 border-gray-300 rounded"
                     />
                     <label for="is_required" class="ml-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                       Zorunlu Alan
@@ -96,7 +96,7 @@
                         <input
                           v-model="selectOptions[index]"
                           type="text"
-                          class="flex-1 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                          class="flex-1 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-rose-500 focus:ring-rose-500 sm:text-sm"
                           placeholder="Seçenek değeri"
                         />
                         <button
@@ -110,7 +110,7 @@
                       <button
                         type="button"
                         @click="addOption"
-                        class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
                       >
                         <PlusIcon class="-ml-0.5 mr-1.5 h-4 w-4" />
                         Seçenek Ekle
@@ -135,7 +135,7 @@
             <button
               type="submit"
               :disabled="loading"
-              class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed sm:ml-3 sm:w-auto"
+              class="inline-flex w-full justify-center rounded-md bg-rose-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-rose-500 disabled:opacity-50 disabled:cursor-not-allowed sm:ml-3 sm:w-auto"
             >
               <span v-if="loading" class="flex items-center">
                 <svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

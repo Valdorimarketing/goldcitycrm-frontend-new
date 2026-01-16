@@ -2,7 +2,7 @@
   <div class="relative">
     <button
       @click="toggleDropdown"
-      class="relative p-2.5 rounded-xl text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 dark:text-slate-400 dark:hover:text-indigo-400 dark:hover:bg-indigo-900/20 transition-all group"
+      class="relative p-2.5 rounded-xl text-gray-500 hover:text-rose-600 hover:bg-rose-50 dark:text-slate-400 dark:hover:text-rose-400 dark:hover:bg-rose-900/20 transition-all group"
       :title="t('header.language.title', 'Dil Seçimi')"
     >
       <LanguageIcon class="w-5 h-5" />
@@ -10,7 +10,7 @@
       <!-- Current Language Badge -->
       <span
         v-if="currentLanguageInfo"
-        class="absolute -top-1 -right-1 px-1.5 py-0.5 bg-indigo-500 text-white text-[10px] font-bold rounded uppercase"
+        class="absolute -top-1 -right-1 px-1.5 py-0.5 bg-rose-500 text-white text-[10px] font-bold rounded uppercase"
       >
         {{ currentLanguageInfo.code }}
       </span>
@@ -55,7 +55,7 @@
             :class="[
               'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all',
               language.code === currentLanguage
-                ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400'
+                ? 'bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400'
                 : 'text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700',
               (isChanging || language.code === currentLanguage) && 'cursor-not-allowed opacity-50',
               isRTL && 'flex-row-reverse'
@@ -66,7 +66,7 @@
               :class="[
                 'w-8 h-8 rounded-lg flex items-center justify-center text-lg',
                 language.code === currentLanguage
-                  ? 'bg-indigo-100 dark:bg-indigo-900/50'
+                  ? 'bg-rose-100 dark:bg-rose-900/50'
                   : 'bg-gray-100 dark:bg-slate-700'
               ]"
             >
@@ -84,13 +84,13 @@
             <!-- Active Indicator -->
             <div
               v-if="language.code === currentLanguage"
-              class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"
+              class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"
             ></div>
 
             <!-- Loading Indicator -->
             <div
               v-if="isChanging && changingTo === language.code"
-              class="w-4 h-4 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"
+              class="w-4 h-4 border-2 border-rose-500 border-t-transparent rounded-full animate-spin"
             ></div>
           </button>
         </div>

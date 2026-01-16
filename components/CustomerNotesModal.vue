@@ -26,7 +26,7 @@
           >
             <!-- Modal Header -->
             <div class="relative overflow-hidden flex-shrink-0">
-              <div class="absolute inset-0 bg-gradient-to-r from-amber-500 to-orange-600"></div>
+              <div class="absolute inset-0 bg-gradient-to-r from-rose-500 to-orange-600"></div>
               <div
                 class="absolute inset-0 opacity-30"
                 style="background-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2020%2020%22%3E%3Ccircle%20cx%3D%221%22%20cy%3D%221%22%20r%3D%221%22%20fill%3D%22white%22%20fill-opacity%3D%220.3%22%2F%3E%3C%2Fsvg%3E');"
@@ -105,7 +105,7 @@
                   <TagIcon class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                   <select
                     v-model="selectedStatus"
-                    class="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all appearance-none cursor-pointer"
+                    class="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all appearance-none cursor-pointer"
                   >
                     <option :value="null" disabled>{{ t('notes_modal.select_status', 'Durum seçiniz...') }}</option>
                     <option v-for="status in availableStatuses" :key="status.id" :value="status.id">
@@ -134,15 +134,15 @@
                   enter-from-class="opacity-0 -translate-y-2"
                   enter-to-class="opacity-100 translate-y-0"
                 >
-                  <div v-if="showReminderInfo" class="mt-3 flex items-center gap-3 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl">
-                    <div class="h-8 w-8 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center flex-shrink-0">
-                      <CalendarDaysIcon class="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                  <div v-if="showReminderInfo" class="mt-3 flex items-center gap-3 p-3 bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800 rounded-xl">
+                    <div class="h-8 w-8 rounded-lg bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center flex-shrink-0">
+                      <CalendarDaysIcon class="h-4 w-4 text-rose-600 dark:text-rose-400" />
                     </div>
                     <div>
-                      <p class="text-sm font-medium text-amber-800 dark:text-amber-200">
+                      <p class="text-sm font-medium text-rose-800 dark:text-rose-200">
                         {{ tp('notes_modal.reminder_days', { days: reminderDays }, '{days} gün sonra aranacak.') }}
                       </p>
-                      <p v-if="reminderDate" class="text-xs text-amber-600 dark:text-amber-400">
+                      <p v-if="reminderDate" class="text-xs text-rose-600 dark:text-rose-400">
                         {{ reminderDate }}
                       </p>
                     </div>
@@ -155,7 +155,7 @@
                 <textarea
                   v-model="newNote.note"
                   rows="3"
-                  class="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all resize-none"
+                  class="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all resize-none"
                   :placeholder="t('notes_modal.note_placeholder', 'Yeni not ekleyin...')"
                 ></textarea>
                 
@@ -172,9 +172,9 @@
                     v-if="autoSaveStatus"
                     class="absolute top-2 right-2 flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-sm"
                   >
-                    <div v-if="autoSaveStatus === 'saving'" class="h-2 w-2 rounded-full bg-amber-500 animate-pulse"></div>
+                    <div v-if="autoSaveStatus === 'saving'" class="h-2 w-2 rounded-full bg-rose-500 animate-pulse"></div>
                     <div v-else-if="autoSaveStatus === 'saved'" class="h-2 w-2 rounded-full bg-green-500"></div>
-                    <span class="text-xs font-medium" :class="autoSaveStatus === 'saving' ? 'text-amber-600 dark:text-amber-400' : 'text-green-600 dark:text-green-400'">
+                    <span class="text-xs font-medium" :class="autoSaveStatus === 'saving' ? 'text-rose-600 dark:text-rose-400' : 'text-green-600 dark:text-green-400'">
                       {{ autoSaveStatus === 'saving' ? t('notes_modal.saving', 'Kaydediliyor...') : t('notes_modal.saved', 'Kaydedildi') }}
                     </span>
                   </div>
@@ -192,7 +192,7 @@
                         type="checkbox"
                         class="sr-only peer"
                       />
-                      <div class="w-9 h-5 bg-gray-200 dark:bg-gray-700 rounded-full peer-checked:bg-amber-500 transition-colors"></div>
+                      <div class="w-9 h-5 bg-gray-200 dark:bg-gray-700 rounded-full peer-checked:bg-rose-500 transition-colors"></div>
                       <div class="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow peer-checked:translate-x-4 transition-transform"></div>
                     </div>
                     <span class="text-sm text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
@@ -211,7 +211,7 @@
                       v-if="newNote.isReminding"
                       v-model="newNote.remindingAt"
                       type="datetime-local"
-                      class="px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+                      class="px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all"
                     />
                   </Transition>
                 </div>
@@ -229,7 +229,7 @@
                   <button
                     @click="addNote"
                     :disabled="!newNote.note.trim() || addingNote"
-                    class="inline-flex items-center gap-2 px-4 py-2.5 bg-amber-600 text-white text-sm font-medium rounded-xl hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                    class="inline-flex items-center gap-2 px-4 py-2.5 bg-rose-600 text-white text-sm font-medium rounded-xl hover:bg-rose-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                   >
                     <PlusIcon class="h-4 w-4" />
                     {{ addingNote ? t('notes_modal.adding', 'Ekleniyor...') : t('notes_modal.add_note', 'Not Ekle') }}
@@ -243,8 +243,8 @@
               <!-- Loading State -->
               <div v-if="loading" class="flex flex-col items-center justify-center py-12">
                 <div class="relative">
-                  <div class="w-12 h-12 rounded-full border-4 border-amber-100 dark:border-amber-900"></div>
-                  <div class="absolute top-0 left-0 w-12 h-12 rounded-full border-4 border-transparent border-t-amber-600 animate-spin"></div>
+                  <div class="w-12 h-12 rounded-full border-4 border-rose-100 dark:border-rose-900"></div>
+                  <div class="absolute top-0 left-0 w-12 h-12 rounded-full border-4 border-transparent border-t-rose-600 animate-spin"></div>
                 </div>
                 <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">{{ t('notes_modal.loading', 'Notlar yükleniyor...') }}</p>
               </div>
@@ -259,7 +259,7 @@
                   <!-- Note Header -->
                   <div class="flex items-start justify-between mb-3">
                     <div class="flex items-center gap-3">
-                      <div class="h-9 w-9 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
+                      <div class="h-9 w-9 rounded-lg bg-gradient-to-br from-rose-500 to-orange-600 flex items-center justify-center">
                         <span class="text-xs font-bold text-white">
                           {{ note.userInfo?.name?.charAt(0)?.toUpperCase() || 'S' }}
                         </span>
@@ -283,7 +283,7 @@
                     <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button
                         @click="cloneNote(note)"
-                        class="p-2 text-gray-400 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20 rounded-lg transition-all"
+                        class="p-2 text-gray-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg transition-all"
                         :title="t('notes_modal.clone', 'Klonla')"
                       >
                         <DocumentDuplicateIcon class="h-4 w-4" />
@@ -311,14 +311,14 @@
                     <textarea
                       v-model="editingNote.note"
                       rows="3"
-                      class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all resize-none"
+                      class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all resize-none"
                     ></textarea>
                     <div class="flex items-center justify-between">
                       <label class="flex items-center gap-2 cursor-pointer">
                         <input
                           v-model="editingNote.isReminding"
                           type="checkbox"
-                          class="h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-amber-500"
+                          class="h-4 w-4 rounded border-gray-300 text-rose-600 focus:ring-rose-500"
                         />
                         <span class="text-sm text-gray-600 dark:text-gray-300">{{ t('notes_modal.reminder', 'Hatırlatıcı') }}</span>
                       </label>
@@ -332,7 +332,7 @@
                         <button
                           @click="saveEdit"
                           :disabled="!editingNote.note.trim()"
-                          class="px-3 py-1.5 bg-amber-600 text-white text-sm font-medium rounded-lg hover:bg-amber-700 disabled:opacity-50 transition-all"
+                          class="px-3 py-1.5 bg-rose-600 text-white text-sm font-medium rounded-lg hover:bg-rose-700 disabled:opacity-50 transition-all"
                         >
                           {{ t('notes_modal.save', 'Kaydet') }}
                         </button>
@@ -348,7 +348,7 @@
 
                     <!-- Reminder Badge -->
                     <div v-if="note.isReminding" class="mt-3 flex items-center gap-2">
-                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 rounded-lg text-xs font-medium">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400 rounded-lg text-xs font-medium">
                         <BellIcon class="h-3.5 w-3.5" />
                         {{ formatDateTime(note.remindingAt) }}
                       </span>
@@ -386,8 +386,8 @@
                     {{ t('dashboard.total', 'Toplam') }} <span class="font-medium text-gray-700 dark:text-gray-300">{{ notes.length }}</span> {{ t('notes_modal.note', 'not') }}
                   </span>
                   <span v-if="reminderCount > 0" class="flex items-center gap-1">
-                    <BellIcon class="h-4 w-4 text-amber-500" />
-                    <span class="font-medium text-amber-600 dark:text-amber-400">{{ reminderCount }}</span> {{ t('notes_modal.reminder_count', 'hatırlatıcı') }}
+                    <BellIcon class="h-4 w-4 text-rose-500" />
+                    <span class="font-medium text-rose-600 dark:text-rose-400">{{ reminderCount }}</span> {{ t('notes_modal.reminder_count', 'hatırlatıcı') }}
                   </span>
                 </div>
                 <button

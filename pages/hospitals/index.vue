@@ -4,7 +4,7 @@
     <div class="mb-8">
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div class="flex items-center gap-4">
-          <div class="p-3 bg-gradient-to-br to-amber-500 to-amber-500 rounded-2xl shadow-lg shadow-indigo-500/25">
+          <div class="p-3 bg-gradient-to-br to-rose-500 to-rose-500 rounded-2xl shadow-lg shadow-rose-500/25">
             <BuildingOffice2Icon class="h-7 w-7 text-white" />
           </div>
           <div>
@@ -19,7 +19,7 @@
 
         <button
           @click="showCreateModal = true"
-          class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r to-amber-400 to-amber-500 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all text-sm font-medium shadow-lg shadow-indigo-500/25"
+          class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r to-rose-400 to-rose-500 text-white rounded-xl hover:from-rose-700 hover:to-rose-700 transition-all text-sm font-medium shadow-lg shadow-rose-500/25"
         >
           <PlusIcon class="h-5 w-5" />
           {{ t('hospitals.actions.new_hospital', 'Yeni Hastane') }}
@@ -41,7 +41,7 @@
               v-model="searchTerm"
               type="text"
               :placeholder="t('hospitals.filters.search_placeholder', 'İsim veya kod ile ara...')"
-              class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+              class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all"
             />
           </div>
         </div>
@@ -59,8 +59,8 @@
     <!-- Loading State -->
     <div v-if="loading" class="flex flex-col items-center justify-center py-16">
       <div class="relative">
-        <div class="w-14 h-14 rounded-full border-4 border-indigo-100 dark:border-indigo-900"></div>
-        <div class="absolute top-0 left-0 w-14 h-14 rounded-full border-4 border-transparent border-t-indigo-600 animate-spin"></div>
+        <div class="w-14 h-14 rounded-full border-4 border-rose-100 dark:border-rose-900"></div>
+        <div class="absolute top-0 left-0 w-14 h-14 rounded-full border-4 border-transparent border-t-rose-600 animate-spin"></div>
       </div>
       <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">Yükleniyor...</p>
     </div>
@@ -95,7 +95,7 @@
             <tr v-for="hospital in hospitals" :key="hospital.id" class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
               <td class="px-6 py-4">
                 <div class="flex items-center gap-3">
-                  <div class="h-10 w-10 rounded-xl bg-gradient-to-br to-amber-500 to-amber-500 flex items-center justify-center shadow-sm">
+                  <div class="h-10 w-10 rounded-xl bg-gradient-to-br to-rose-500 to-rose-500 flex items-center justify-center shadow-sm">
                     <BuildingOffice2Icon class="h-5 w-5 text-white" />
                   </div>
                   <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
@@ -159,7 +159,7 @@
                   <button
                     v-if="!searchTerm"
                     @click="showCreateModal = true"
-                    class="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all text-sm font-medium"
+                    class="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-rose-600 text-white rounded-xl hover:bg-rose-700 transition-all text-sm font-medium"
                   >
                     <PlusIcon class="h-4 w-4" />
                     {{ t('hospitals.empty.add_first', 'İlk hastaneyi ekle') }}
@@ -198,7 +198,7 @@
                 :class="[
                   'min-w-[36px] h-9 px-3 rounded-lg text-sm font-medium transition-all',
                   pagination.page === page
-                    ? 'bg-indigo-600 text-white shadow-sm'
+                    ? 'bg-rose-600 text-white shadow-sm'
                     : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                 ]"
               >

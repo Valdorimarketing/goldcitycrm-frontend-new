@@ -6,7 +6,7 @@
         class="relative backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 rounded-full shadow-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden transition-all duration-300 hover:shadow-3xl hover:scale-105"
       >
         <!-- Background Gradient Animation -->
-        <div class="absolute inset-0 bg-gradient-to-r from-amber-500/10 via-amber-500/10 to-amber-400/10 animate-gradient-x"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-rose-500/10 via-rose-500/10 to-rose-400/10 animate-gradient-x"></div>
         
         <!-- Content -->
         <div class="relative flex items-center gap-6 px-6 py-3">
@@ -27,7 +27,7 @@
               />
               <div
                 v-else
-                class="w-full h-full bg-gradient-to-br from-amber-500 to-amber-500 flex items-center justify-center text-white font-bold text-lg"
+                class="w-full h-full bg-gradient-to-br from-rose-500 to-rose-500 flex items-center justify-center text-white font-bold text-lg"
               >
                 {{ user?.name?.charAt(0).toUpperCase() }}
               </div>
@@ -43,7 +43,7 @@
             <!-- Speed Stat -->
             <div class="group cursor-pointer">
               <div class="flex items-center gap-2 transition-transform duration-300 group-hover:-translate-y-1">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg group-hover:shadow-purple-500/50 transition-shadow">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-rose-500 to-rose-600 flex items-center justify-center shadow-lg group-hover:shadow-rose-500/50 transition-shadow">
                   <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
@@ -63,7 +63,7 @@
             <!-- Daily Leads -->
             <div class="group cursor-pointer">
               <div class="flex items-center gap-2 transition-transform duration-300 group-hover:-translate-y-1">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center shadow-lg group-hover:shadow-blue-500/50 transition-shadow">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-cyan-600 flex items-center justify-center shadow-lg group-hover:shadow-blue-500/50 transition-shadow">
                   <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
@@ -103,7 +103,7 @@
             <!-- Conversion Rate -->
             <div class="group cursor-pointer">
               <div class="flex items-center gap-2 transition-transform duration-300 group-hover:-translate-y-1">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg group-hover:shadow-amber-500/50 transition-shadow">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-rose-500 to-orange-600 flex items-center justify-center shadow-lg group-hover:shadow-rose-500/50 transition-shadow">
                   <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                   </svg>

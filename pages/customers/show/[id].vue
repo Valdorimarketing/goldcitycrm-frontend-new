@@ -6,7 +6,7 @@
       <!-- Breadcrumb -->
       <nav class="flex items-center gap-2 mb-6 text-sm">
         <NuxtLink to="/customers"
-          class="flex items-center gap-1.5 text-gray-500 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors">
+          class="flex items-center gap-1.5 text-gray-500 hover:text-rose-600 dark:text-gray-400 dark:hover:text-rose-400 transition-colors">
           <UsersIcon class="h-4 w-4" />
           {{ t('customers.title', 'Müşteriler') }}
         </NuxtLink>
@@ -18,9 +18,9 @@
       <!-- Loading State -->
       <div v-if="loading" class="flex flex-col items-center justify-center py-24">
         <div class="relative">
-          <div class="w-16 h-16 rounded-full border-4 border-indigo-100 dark:border-indigo-900/50"></div>
+          <div class="w-16 h-16 rounded-full border-4 border-rose-100 dark:border-rose-900/50"></div>
           <div
-            class="absolute top-0 left-0 w-16 h-16 rounded-full border-4 border-transparent border-t-indigo-600 animate-spin">
+            class="absolute top-0 left-0 w-16 h-16 rounded-full border-4 border-transparent border-t-rose-600 animate-spin">
           </div>
         </div>
         <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
@@ -53,7 +53,7 @@
             <!-- Cover & Avatar -->
             <div class="relative">
               
-              <div class="h-28 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500"></div>
+              <div class="h-28 bg-gradient-to-br from-rose-500 via-rose-500 to-pink-500"></div>
 
               <div class="absolute -bottom-12 left-1/2 -translate-x-1/2">
                 <div class="relative">
@@ -62,7 +62,7 @@
                     <img v-if="customer.image" :src="getImageUrl(customer.image)" :alt="customer.name"
                       class="h-full w-full object-cover" />
                     <div v-else
-                      class="h-full w-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center">
+                      class="h-full w-full bg-gradient-to-br from-rose-400 to-rose-500 flex items-center justify-center">
                       <span class="text-2xl font-bold text-white">
                         {{ customer.name?.charAt(0)?.toUpperCase() }}{{ customer.surname?.charAt(0)?.toUpperCase() }}
                       </span>
@@ -104,7 +104,7 @@
                   'Pasif') }}
                 </span>
                 <span v-if="customerStatus"
-                  class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400">
+                  class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400">
                   {{ customerStatus.name }}
                 </span>
               </div>
@@ -129,16 +129,16 @@
               <!-- Quick Stats -->
               <div class="grid grid-cols-2 gap-3 mb-6">
                 <div
-                  class="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-3 text-center">
-                  <ClockIcon class="h-5 w-5 text-indigo-600 dark:text-indigo-400 mx-auto mb-1" />
+                  class="bg-gradient-to-br from-blue-50 to-rose-50 dark:from-blue-900/20 dark:to-rose-900/20 rounded-xl p-3 text-center">
+                  <ClockIcon class="h-5 w-5 text-rose-600 dark:text-rose-400 mx-auto mb-1" />
                   <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('customer_show.quick_stats.created', 'Kayıt')
                     }}</p>
                   <p class="text-xs font-medium text-gray-900 dark:text-white">{{ formatShortDate(customer.createdAt) }}
                   </p>
                 </div>
                 <div
-                  class="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-3 text-center">
-                  <ArrowPathIcon class="h-5 w-5 text-purple-600 dark:text-purple-400 mx-auto mb-1" />
+                  class="bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-900/20 dark:to-pink-900/20 rounded-xl p-3 text-center">
+                  <ArrowPathIcon class="h-5 w-5 text-rose-600 dark:text-rose-400 mx-auto mb-1" />
                   <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('customer_show.quick_stats.updated',
                     'Güncelleme') }}</p>
                   <p class="text-xs font-medium text-gray-900 dark:text-white">{{ formatShortDate(customer.updatesAt) }}
@@ -156,7 +156,7 @@
                 <div v-if="customer.relevantUserData"
                   class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
                   <div
-                    class="h-9 w-9 rounded-lg bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center text-white text-sm font-medium shadow">
+                    class="h-9 w-9 rounded-lg bg-gradient-to-br from-red-400 to-rose-500 flex items-center justify-center text-white text-sm font-medium shadow">
                     {{ customer.relevantUserData.name?.charAt(0) }}
                   </div>
                   <div class="flex-1 min-w-0">
@@ -171,7 +171,7 @@
                 <div class="flex-1 flex items-center gap-2">
                   <template v-if="!phoneRevealed && isUser">
                     <button @click="revealPhone"
-                      class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
+                      class="text-sm text-rose-600 dark:text-rose-400 hover:underline font-medium">
                       {{ t('customer_show.contact.show_phone', 'Telefonu Göster') }}
                     </button>
                   </template>
@@ -179,7 +179,7 @@
                     <div class="flex justify-center w-full items-center gap-3">
                       <!-- Telefon linki -->
                       <a :href="`tel:${customer.phone}`"
-                        class="text-sm font-medium text-gray-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                        class="text-sm font-medium text-gray-900 dark:text-white hover:text-rose-600 dark:hover:text-rose-400 transition-colors">
                         {{ customer.phone }}
                       </a>
 
@@ -206,15 +206,15 @@
 
                 <!-- Engagement Timer -->
                 <div v-if="customer.phone && activeEngagement && isEngagementOwner"
-                  class="flex items-center gap-3 p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl border border-indigo-200 dark:border-indigo-800">
-                  <div class="h-9 w-9 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
-                    <ClockIcon class="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                  class="flex items-center gap-3 p-3 bg-rose-50 dark:bg-rose-900/20 rounded-xl border border-rose-200 dark:border-rose-800">
+                  <div class="h-9 w-9 rounded-lg bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center">
+                    <ClockIcon class="h-4 w-4 text-rose-600 dark:text-rose-400" />
                   </div>
                   <div class="flex-1">
-                    <p class="text-sm font-bold text-indigo-600 dark:text-indigo-400">
+                    <p class="text-sm font-bold text-rose-600 dark:text-rose-400">
                       {{ formattedEngagementTime }}
                     </p>
-                    <p class="text-xs text-indigo-500 dark:text-indigo-300">
+                    <p class="text-xs text-rose-500 dark:text-rose-300">
                       {{ activeEngagement.role === 'SALES' ? t('customer_show.engagement.sales', 'Satış Görüşmesi') :
                         t('customer_show.engagement.doctor', 'Doktor Görüşmesi') }}
                     </p>
@@ -228,7 +228,7 @@
                     <EnvelopeIcon class="h-4 w-4 text-blue-600 dark:text-blue-400" />
                   </div>
                   <a :href="`mailto:${customer.email}`"
-                    class="text-sm font-medium text-gray-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors truncate">
+                    class="text-sm font-medium text-gray-900 dark:text-white hover:text-rose-600 dark:hover:text-rose-400 transition-colors truncate">
                     {{ customer.email }}
                   </a>
                 </div>
@@ -246,8 +246,8 @@
                 <!-- Birth Date -->
                 <div v-if="customer.birth_date"
                   class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-                  <div class="h-9 w-9 rounded-lg bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center">
-                    <CalendarIcon class="h-4 w-4 text-violet-600 dark:text-violet-400" />
+                  <div class="h-9 w-9 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+                    <CalendarIcon class="h-4 w-4 text-red-600 dark:text-red-400" />
                   </div>
                   <span class="text-sm text-gray-700 dark:text-gray-300">{{ formatBirthDate(customer.birth_date)
                   }}</span>
@@ -298,12 +298,12 @@
 
                 <div class="grid grid-cols-2 gap-2">
                   <button @click="showNotes"
-                    class="flex items-center justify-center gap-2 px-3 py-2.5 bg-violet-50 dark:bg-violet-900/20 text-violet-700 dark:text-violet-400 rounded-xl hover:bg-violet-100 dark:hover:bg-violet-900/30 transition-all text-sm font-medium">
+                    class="flex items-center justify-center gap-2 px-3 py-2.5 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 rounded-xl hover:bg-red-100 dark:hover:bg-red-900/30 transition-all text-sm font-medium">
                     <DocumentTextIcon class="h-4 w-4" />
                     {{ t('pool.actions.notes', 'Notlar') }}
                   </button>
                   <button @click="showDoctorAssignment"
-                    class="flex items-center justify-center gap-2 px-3 py-2.5 bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-400 rounded-xl hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-all text-sm font-medium">
+                    class="flex items-center justify-center gap-2 px-3 py-2.5 bg-rose-50 dark:bg-rose-900/20 text-rose-700 dark:text-rose-400 rounded-xl hover:bg-rose-100 dark:hover:bg-rose-900/30 transition-all text-sm font-medium">
                     <UserIcon class="h-4 w-4" />
                     {{ t('pool.actions.doctor', 'Doktor') }}
                   </button>
@@ -327,7 +327,7 @@
                 </button>
 
                 <NuxtLink v-if="!isDoctor" :to="`/customers/edit/${$route.params.id}`"
-                  class="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-gradient-to-r from-violet-400 to-violet-500 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all text-sm font-medium shadow-lg shadow-indigo-500/25">
+                  class="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-gradient-to-r from-red-400 to-red-500 text-white rounded-xl hover:from-rose-700 hover:to-rose-700 transition-all text-sm font-medium shadow-lg shadow-rose-500/25">
                   <PencilIcon class="h-4 w-4" />
                   {{ t('pool.actions.edit', 'Düzenle') }}
                 </NuxtLink>
@@ -339,7 +339,7 @@
                 </button>
 
                   <NuxtLink :to="`/customers/detail/${customer.id}`" 
-                   class="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-gradient-to-r from-violet-400 to-violet-500 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all text-sm font-medium shadow-lg shadow-indigo-500/25">
+                   class="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-gradient-to-r from-red-400 to-red-500 text-white rounded-xl hover:from-rose-700 hover:to-rose-700 transition-all text-sm font-medium shadow-lg shadow-rose-500/25">
                     <MagnifyingGlassIcon class="h-4 w-4" />
                    {{ t('customer.view_details', 'Detaylı Görünüm') }}
                 </NuxtLink>
@@ -383,7 +383,7 @@
 
             <!-- Header -->
             <div class="relative overflow-hidden">
-              <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700"></div>
+              <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-rose-600 to-rose-700"></div>
               <div
                 class="absolute inset-0 bg-white/5 bg-[length:20px_20px] bg-[radial-gradient(circle,_rgba(255,255,255,0.1)_1px,_transparent_1px)]">
               </div>
@@ -415,9 +415,9 @@
               <!-- Loading -->
               <div v-if="loadingHistory" class="flex flex-col items-center justify-center py-16">
                 <div class="relative">
-                  <div class="w-12 h-12 rounded-full border-4 border-indigo-100 dark:border-indigo-900/50"></div>
+                  <div class="w-12 h-12 rounded-full border-4 border-rose-100 dark:border-rose-900/50"></div>
                   <div
-                    class="absolute top-0 left-0 w-12 h-12 rounded-full border-4 border-transparent border-t-indigo-600 animate-spin">
+                    class="absolute top-0 left-0 w-12 h-12 rounded-full border-4 border-transparent border-t-rose-600 animate-spin">
                   </div>
                 </div>
                 <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">{{ t('customer_show.history.loading', 'Geçmiş yükleniyor...') }}</p>
@@ -434,7 +434,7 @@
                     <div class="flex items-center gap-4">
                       <div class="relative">
                         <button @click="toggleActionsDropdown"
-                          class="h-10 w-10 rounded-xl bg-gradient-to-br from-violet-500 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 transition-all">
+                          class="h-10 w-10 rounded-xl bg-gradient-to-br from-red-500 to-red-500 flex items-center justify-center shadow-lg shadow-rose-500/30 hover:shadow-rose-500/50 transition-all">
                           <PlusIcon class="h-5 w-5 text-white" />
                         </button>
 
@@ -449,8 +449,8 @@
                               <button @click="handleDropdownAction(showNotes)"
                                 class="w-full flex items-center gap-3 px-4 py-3 text-left rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                 <div
-                                  class="h-8 w-8 rounded-lg bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center">
-                                  <DocumentTextIcon class="h-4 w-4 text-violet-600 dark:text-violet-400" />
+                                  class="h-8 w-8 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+                                  <DocumentTextIcon class="h-4 w-4 text-red-600 dark:text-red-400" />
                                 </div>
                                 <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{
                                   t('pool.actions.notes',
@@ -459,8 +459,8 @@
                               <button @click="handleDropdownAction(showDoctorAssignment)"
                                 class="w-full flex items-center gap-3 px-4 py-3 text-left rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                 <div
-                                  class="h-8 w-8 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
-                                  <UserIcon class="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                                  class="h-8 w-8 rounded-lg bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center">
+                                  <UserIcon class="h-4 w-4 text-rose-600 dark:text-rose-400" />
                                 </div>
                                 <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{
                                   t('customer_show.dropdown.doctor_opinion', 'Doktor Görüşü') }}</span>
@@ -490,8 +490,8 @@
                                   @click="handleDropdownAction(() => router.push(`/customers/edit/${route.params.id}`))"
                                   class="w-full flex items-center gap-3 px-4 py-3 text-left rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                   <div
-                                    class="h-8 w-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
-                                    <PencilIcon class="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                                    class="h-8 w-8 rounded-lg bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center">
+                                    <PencilIcon class="h-4 w-4 text-rose-600 dark:text-rose-400" />
                                   </div>
                                   <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{
                                     t('pool.actions.edit',
@@ -518,7 +518,7 @@
                         >
                           <FunnelIcon class="h-4 w-4" />
                           <span>Filtrele</span>
-                          <span v-if="activeFiltersCount > 0" class="flex items-center justify-center h-5 w-5 bg-indigo-500 text-white text-xs font-bold rounded-full">
+                          <span v-if="activeFiltersCount > 0" class="flex items-center justify-center h-5 w-5 bg-rose-500 text-white text-xs font-bold rounded-full">
                             {{ activeFiltersCount }}
                           </span>
                           <ChevronDownIcon class="h-4 w-4 transition-transform" :class="{ 'rotate-180': showFilterPanel }" />
@@ -591,7 +591,7 @@
                               <div class="flex items-center gap-2">
                                 <button 
                                   @click="selectAllFilters"
-                                  class="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
+                                  class="text-xs text-rose-600 dark:text-rose-400 hover:underline font-medium"
                                 >
                                   Tümünü Seç
                                 </button>
@@ -667,7 +667,7 @@
                             </Transition>
 
                             <button v-if="item.requestData || item.responseData" @click="toggleShow(item.id)"
-                              class="mt-2 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:underline">
+                              class="mt-2 text-xs font-medium text-rose-600 dark:text-rose-400 hover:underline">
                               {{ showStates[item.id] ? t('customer_show.history.hide', 'Gizle') :
                                 t('customer_show.history.show_details', 'Detayları Göster') }}
                             </button>
@@ -698,8 +698,8 @@
                   
                   <!-- No Results After Filter -->
                   <div v-else class="flex flex-col items-center justify-center py-12">
-                    <div class="h-16 w-16 rounded-2xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-4">
-                      <FunnelIcon class="h-8 w-8 text-amber-500" />
+                    <div class="h-16 w-16 rounded-2xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center mb-4">
+                      <FunnelIcon class="h-8 w-8 text-rose-500" />
                     </div>
                     <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-1">
                       Sonuç Bulunamadı
@@ -709,7 +709,7 @@
                     </p>
                     <button 
                       @click="clearAllFilters"
-                      class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all text-sm font-medium"
+                      class="inline-flex items-center gap-2 px-4 py-2 bg-rose-600 text-white rounded-xl hover:bg-rose-700 transition-all text-sm font-medium"
                     >
                       <XMarkIcon class="h-4 w-4" />
                       Filtreleri Temizle
@@ -764,7 +764,7 @@
     <CustomerServicesModal :show="showServicesModal" :customer="customer" @close="showServicesModal = false"
       @saved="handleServicesSaved" />
     <CustomerFilesModal :show="showFilesModal" :customer="customer" @close="showFilesModal = false" />
-
+ 
   </div>
 </template>
 
@@ -817,7 +817,7 @@ const router = useRouter()
 const { userId, isDoctor, isUser } = usePermissions()
 const { $dayjs } = useNuxtApp()
 
-// State
+
 const customer = ref(null)
 const loading = ref(true)
 const error = ref('')
@@ -853,27 +853,27 @@ const activityFilters = [
     id: 'status_change',
     label: 'Durum Değişikliği',
     icon: TagIcon,
-    bgClass: 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400',
-    activeBgClass: 'bg-purple-100 dark:bg-purple-900/30',
-    activeTextClass: 'text-purple-700 dark:text-purple-400',
+    bgClass: 'bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400',
+    activeBgClass: 'bg-rose-100 dark:bg-rose-900/30',
+    activeTextClass: 'text-rose-700 dark:text-rose-400',
     keywords: ['durum', 'status', 'segment', 'değişti', 'güncellendi']
   },
   {
     id: 'note',
     label: 'Notlar',
     icon: DocumentTextIcon,
-    bgClass: 'bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400',
-    activeBgClass: 'bg-violet-100 dark:bg-violet-900/30',
-    activeTextClass: 'text-violet-700 dark:text-violet-400',
+    bgClass: 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400',
+    activeBgClass: 'bg-red-100 dark:bg-red-900/30',
+    activeTextClass: 'text-red-700 dark:text-red-400',
     keywords: ['not', 'note', 'yorum']
   },
   {
     id: 'reminder',
     label: 'Hatırlatma',
     icon: BellIcon,
-    bgClass: 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400',
-    activeBgClass: 'bg-amber-100 dark:bg-amber-900/30',
-    activeTextClass: 'text-amber-700 dark:text-amber-400',
+    bgClass: 'bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400',
+    activeBgClass: 'bg-rose-100 dark:bg-rose-900/30',
+    activeTextClass: 'text-rose-700 dark:text-rose-400',
     keywords: ['hatırlatma', 'reminding', 'aranacak', 'tekrar ara']
   },
   {
@@ -1156,8 +1156,8 @@ const getActionColorClasses = (action) => {
     'created': 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400',
     'updated': 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400',
     'deleted': 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400',
-    'status_changed': 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400',
-    'email_sent': 'bg-violet-100 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400',
+    'status_changed': 'bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400',
+    'email_sent': 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400',
     'phone_called': 'bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400'
   }
   return colors[action] || 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'

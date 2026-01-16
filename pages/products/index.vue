@@ -11,14 +11,14 @@
       <div class="mt-4 sm:mt-0 flex flex-wrap gap-2">
         <button
           @click="loadProducts(pagination.page)"
-          class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+          class="inline-flex items-center justify-center rounded-md bg-rose-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-rose-500"
         >
           <ArrowPathIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
           Yenile
         </button>
         <button
           @click="showCreateModal = true"
-          class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+          class="inline-flex items-center justify-center rounded-md bg-rose-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-rose-500"
         >
           <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
           Yeni Ürün
@@ -78,7 +78,7 @@
 
     <!-- Loading State -->
     <div v-if="loading" class="flex justify-center py-12">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-600"></div>
     </div>
 
     <!-- Products Grid -->
@@ -92,8 +92,8 @@
         <!-- Product Header -->
         <div class="flex items-center justify-between mb-4">
           <div class="flex items-center space-x-3">
-            <div class="h-10 w-10 rounded-lg bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
-              <CubeIcon class="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+            <div class="h-10 w-10 rounded-lg bg-rose-100 dark:bg-rose-900 flex items-center justify-center">
+              <CubeIcon class="h-5 w-5 text-rose-600 dark:text-rose-400" />
             </div>
             <div>
               <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ product.name }}</h3>
@@ -128,7 +128,7 @@
           <div class="flex space-x-2">
             <button
               @click="editProduct(product)"
-              class="flex-1 text-center bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 py-2 px-3 rounded-md text-sm font-medium hover:bg-indigo-200 dark:hover:bg-indigo-800"
+              class="flex-1 text-center bg-rose-100 dark:bg-rose-900 text-rose-700 dark:text-rose-300 py-2 px-3 rounded-md text-sm font-medium hover:bg-rose-200 dark:hover:bg-rose-800"
             >
               Düzenle
             </button>
@@ -148,7 +148,7 @@
             </button>
             <button
               @click="openActionListModal(product)"
-              class="flex-1 text-center bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 py-2 px-3 rounded-md text-sm font-medium hover:bg-purple-200 dark:hover:bg-purple-800"
+              class="flex-1 text-center bg-rose-100 dark:bg-rose-900 text-rose-700 dark:text-rose-300 py-2 px-3 rounded-md text-sm font-medium hover:bg-rose-200 dark:hover:bg-rose-800"
             >
               Aksiyonları Listele
             </button>
@@ -168,7 +168,7 @@
           <div class="mt-6">
             <button
               @click="showCreateModal = true"
-              class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+              class="inline-flex items-center rounded-md bg-rose-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-rose-500"
             >
               <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
               İlk ürünü ekle
@@ -223,7 +223,7 @@
                   @click="changePage(page)"
                   :class="[
                     page === pagination.page
-                      ? 'bg-indigo-600 text-white'
+                      ? 'bg-rose-600 text-white'
                       : 'text-gray-900 dark:text-gray-300 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700',
                     'relative inline-flex items-center px-4 py-2 text-sm font-semibold'
                   ]"

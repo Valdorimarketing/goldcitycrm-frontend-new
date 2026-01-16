@@ -11,7 +11,7 @@
       <div class="mt-4 sm:mt-0 space-x-3">
         <NuxtLink
           :to="`/meetings/${meetingId}/edit`"
-          class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+          class="inline-flex items-center justify-center rounded-md bg-rose-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-rose-500"
         >
           Düzenle
         </NuxtLink>
@@ -26,7 +26,7 @@
 
     <!-- Loading State -->
     <div v-if="loading" class="flex justify-center py-12">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-600"></div>
     </div>
 
     <!-- Meeting Details -->
@@ -43,7 +43,7 @@
               <NuxtLink 
                 v-if="meeting.customerInfo"
                 :to="`/customers/${meeting.customer}`"
-                class="text-indigo-600 hover:text-indigo-900"
+                class="text-rose-600 hover:text-rose-900"
               >
                 {{ meeting.customerInfo.name }} {{ meeting.customerInfo.surname }}
               </NuxtLink>
@@ -56,8 +56,8 @@
             <dt class="text-sm font-medium text-gray-500">İlgili Satış Ürünü</dt>
             <dd class="mt-1 text-sm text-gray-900">
               <span v-if="meeting.salesProduct" class="inline-flex items-center">
-                <CubeIcon class="h-4 w-4 mr-1 text-indigo-600" />
-                <span class="font-medium text-indigo-600">{{ meeting.salesProduct.name }}</span>
+                <CubeIcon class="h-4 w-4 mr-1 text-rose-600" />
+                <span class="font-medium text-rose-600">{{ meeting.salesProduct.name }}</span>
                 <span class="ml-2 text-gray-500">₺{{ formatCurrency(meeting.salesProduct.price) }}</span>
               </span>
               <span v-else>-</span>
@@ -152,7 +152,7 @@
     <!-- Error State -->
     <div v-else class="text-center py-12">
       <p class="text-gray-500">Toplantı bulunamadı.</p>
-      <NuxtLink to="/meetings" class="text-indigo-600 hover:text-indigo-900 mt-2 inline-block">
+      <NuxtLink to="/meetings" class="text-rose-600 hover:text-rose-900 mt-2 inline-block">
         Toplantı listesine dön
       </NuxtLink>
     </div>

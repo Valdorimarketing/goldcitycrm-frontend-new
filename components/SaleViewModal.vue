@@ -76,7 +76,7 @@
               <div class="max-h-[60vh] overflow-y-auto px-6 py-6 space-y-6">
                 
                 <!-- Customer Info -->
-                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-4 border border-blue-200 dark:border-blue-800">
+                <div class="bg-gradient-to-r from-blue-50 to-rose-50 dark:from-blue-900/20 dark:to-rose-900/20 rounded-xl p-4 border border-blue-200 dark:border-blue-800">
                   <div class="flex items-start space-x-3">
                     <UserCircleIcon class="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
                     <div class="flex-1">
@@ -232,7 +232,7 @@
                   
                   <div v-if="sale.responsibleUser" class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3">
                     <div class="flex items-center space-x-2 mb-1">
-                      <UserIcon class="h-4 w-4 text-purple-500" />
+                      <UserIcon class="h-4 w-4 text-rose-500" />
                       <label class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">
                         Sorumlu
                       </label>

@@ -282,7 +282,7 @@ onUnmounted(() => {
               <component
                 v-if="breadcrumbInfo.current.icon"
                 :is="breadcrumbInfo.current.icon"
-                class="w-4 h-4 text-indigo-500 dark:text-indigo-400"
+                class="w-4 h-4 text-rose-500 dark:text-rose-400"
               />
               <span class="font-medium text-gray-700 dark:text-slate-200">
                 {{ breadcrumbInfo.current.name }}
@@ -304,7 +304,7 @@ onUnmounted(() => {
             :placeholder="t('header.quick_search.placeholder', 'Hızlı ara... (⌘K)')"
             @focus="openQuickSearch"
             readonly
-            class="w-full py-2 bg-gray-100 dark:bg-slate-800 border border-transparent hover:border-gray-200 dark:hover:border-slate-700 rounded-xl text-sm text-gray-600 dark:text-slate-300 placeholder-gray-400 dark:placeholder-slate-500 cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
+            class="w-full py-2 bg-gray-100 dark:bg-slate-800 border border-transparent hover:border-gray-200 dark:hover:border-slate-700 rounded-xl text-sm text-gray-600 dark:text-slate-300 placeholder-gray-400 dark:placeholder-slate-500 cursor-pointer focus:outline-none focus:ring-2 focus:ring-rose-500/50 transition-all"
             :class="isRTL ? 'pr-10 pl-4' : 'pl-10 pr-4'"
           />
           <kbd
@@ -339,7 +339,7 @@ onUnmounted(() => {
         <!-- Lock Screen -->
         <button
           @click="lockScreen"
-          class="relative p-2.5 rounded-xl text-gray-500 hover:text-amber-600 hover:bg-amber-50 dark:text-slate-400 dark:hover:text-amber-400 dark:hover:bg-amber-900/20 transition-all group"
+          class="relative p-2.5 rounded-xl text-gray-500 hover:text-rose-600 hover:bg-rose-50 dark:text-slate-400 dark:hover:text-rose-400 dark:hover:bg-rose-900/20 transition-all group"
           :title="t('header.lock_screen.title', 'Ekranı Kilitle (Ctrl+L)')"
         >
           <LockClosedIcon class="w-5 h-5" />
@@ -354,7 +354,7 @@ onUnmounted(() => {
         <!-- Theme Toggle -->
         <button
           @click="toggleDarkMode"
-          class="relative p-2.5 rounded-xl text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 dark:text-slate-400 dark:hover:text-indigo-400 dark:hover:bg-indigo-900/20 transition-all overflow-hidden"
+          class="relative p-2.5 rounded-xl text-gray-500 hover:text-rose-600 hover:bg-rose-50 dark:text-slate-400 dark:hover:text-rose-400 dark:hover:bg-rose-900/20 transition-all overflow-hidden"
         >
           <Transition name="theme-toggle" mode="out-in">
             <SunIcon v-if="isDarkMode" key="sun" class="w-5 h-5" />
@@ -383,7 +383,7 @@ onUnmounted(() => {
                 />
                 <div
                   v-else
-                  class="w-full h-full bg-gradient-to-br to-amber-500 to-amber-500 flex items-center justify-center"
+                  class="w-full h-full bg-gradient-to-br to-rose-500 to-rose-500 flex items-center justify-center"
                 >
                   <span class="text-sm font-bold text-white">
                     {{ authStore.user?.name?.charAt(0)?.toUpperCase() || 'U' }}
@@ -431,7 +431,7 @@ onUnmounted(() => {
               :class="isRTL ? 'left-0' : 'right-0'"
             >
               <!-- User Info Header -->
-              <div class="p-4 bg-gradient-to-r to-amber-500 to-amber-500">
+              <div class="p-4 bg-gradient-to-r to-rose-500 to-rose-500">
                 <div class="flex items-center gap-3" :class="{ 'flex-row-reverse': isRTL }">
                   <div class="w-12 h-12 rounded-xl overflow-hidden ring-2 ring-white/30">
                     <img
@@ -470,8 +470,8 @@ onUnmounted(() => {
                   :class="{ 'flex-row-reverse': isRTL }"
                   @click="userMenuOpen = false"
                 >
-                  <div class="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
-                    <UserIcon class="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                  <div class="w-8 h-8 rounded-lg bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center">
+                    <UserIcon class="w-4 h-4 text-rose-600 dark:text-rose-400" />
                   </div>
                   <div class="flex-1" :class="isRTL ? 'text-right' : ''">
                     <p class="text-sm font-medium">{{ t('header.user_menu.profile', 'Profilim') }}</p>
@@ -490,8 +490,8 @@ onUnmounted(() => {
                   class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
                   :class="{ 'flex-row-reverse': isRTL }"
                 >
-                  <div class="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                    <LockClosedIcon class="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                  <div class="w-8 h-8 rounded-lg bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center">
+                    <LockClosedIcon class="w-4 h-4 text-rose-600 dark:text-rose-400" />
                   </div>
                   <div class="flex-1" :class="isRTL ? 'text-right' : 'text-left'">
                     <p class="text-sm font-medium">{{ t('header.lock_screen.button', 'Ekranı Kilitle') }}</p>
@@ -587,14 +587,14 @@ onUnmounted(() => {
                     :class="{ 'flex-row-reverse text-right': isRTL }"
                   >
                     <div
-                      class="h-10 w-10 shrink-0 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white font-semibold text-sm shadow-sm group-hover:scale-105 transition-transform"
+                      class="h-10 w-10 shrink-0 rounded-full bg-gradient-to-br from-rose-400 to-rose-500 flex items-center justify-center text-white font-semibold text-sm shadow-sm group-hover:scale-105 transition-transform"
                     >
                       {{ customer.name?.charAt(0).toUpperCase() || '?' }}
                     </div>
 
                     <div class="flex-1 min-w-0">
                       <p
-                        class="font-medium text-gray-900 dark:text-white truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400"
+                        class="font-medium text-gray-900 dark:text-white truncate group-hover:text-rose-600 dark:group-hover:text-rose-400"
                       >
                         {{ customer.name }} {{ customer.surname }}
                       </p>
@@ -629,9 +629,9 @@ onUnmounted(() => {
                     :class="{ 'flex-row-reverse': isRTL }"
                   >
                     <div
-                      class="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center"
+                      class="w-8 h-8 rounded-lg bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center"
                     >
-                      <UsersIcon class="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                      <UsersIcon class="w-4 h-4 text-rose-600 dark:text-rose-400" />
                     </div>
                     <div class="flex-1">
                       <p class="text-sm font-medium text-gray-700 dark:text-slate-300">

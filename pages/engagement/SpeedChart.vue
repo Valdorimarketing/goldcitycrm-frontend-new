@@ -1,7 +1,7 @@
 <template>
   <div class="mb-6">
     <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-      <svg class="h-5 w-5 mr-2 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg class="h-5 w-5 mr-2 text-rose-600 dark:text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
       </svg>
       İlk Temas Hızı Performansı
@@ -21,10 +21,10 @@
             <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Hızlı (0-3dk)</div>
             <div class="text-xs text-green-600 dark:text-green-400 font-medium">{{ fastPercentage }}%</div>
           </div>
-          <div class="text-center p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
-            <div class="text-2xl font-bold text-amber-600 dark:text-amber-400">{{ normalCount }}</div>
+          <div class="text-center p-3 bg-rose-50 dark:bg-rose-900/20 rounded-lg">
+            <div class="text-2xl font-bold text-rose-600 dark:text-rose-400">{{ normalCount }}</div>
             <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Normal (4-10dk)</div>
-            <div class="text-xs text-amber-600 dark:text-amber-400 font-medium">{{ normalPercentage }}%</div>
+            <div class="text-xs text-rose-600 dark:text-rose-400 font-medium">{{ normalPercentage }}%</div>
           </div>
           <div class="text-center p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
             <div class="text-2xl font-bold text-red-600 dark:text-red-400">{{ slowCount }}</div>

@@ -15,7 +15,7 @@
           <NuxtLink
             v-if="!isOwnProfile"
             to="/profile"
-            class="inline-flex items-center px-4 py-2 text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300"
+            class="inline-flex items-center px-4 py-2 text-sm font-medium text-rose-600 dark:text-rose-400 hover:text-rose-500 dark:hover:text-rose-300"
           >
             ← Kendi Profilim
           </NuxtLink>
@@ -24,7 +24,7 @@
 
       <!-- Loading State -->
       <div v-if="loadingProfile" class="flex justify-center py-12">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-rose-600"></div>
       </div>
 
       <!-- User Not Found -->
@@ -37,7 +37,7 @@
         <div class="mt-6">
           <NuxtLink
             to="/profile"
-            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-rose-600 hover:bg-rose-700"
           >
             Kendi Profilime Dön
           </NuxtLink>
@@ -57,11 +57,11 @@
                     v-if="profileUser?.avatar"
                     :src="path + profileUser.avatar"
                     alt="Avatar"
-                    class="w-24 h-24 rounded-full object-cover border-4 border-indigo-500 shadow-md"
+                    class="w-24 h-24 rounded-full object-cover border-4 border-rose-500 shadow-md"
                   />
                   <div
                     v-else
-                    class="w-24 h-24 rounded-full bg-indigo-600 flex items-center justify-center text-2xl font-bold text-white border-4 border-indigo-500 shadow-md"
+                    class="w-24 h-24 rounded-full bg-rose-600 flex items-center justify-center text-2xl font-bold text-white border-4 border-rose-500 shadow-md"
                   >
                     {{ profileUser?.name?.charAt(0) || 'U' }}
                   </div>
@@ -86,7 +86,7 @@
                 {{ profileUser?.name || 'Bilinmeyen Kullanıcı' }}
               </h2>
 
-              <p class="text-indigo-500 dark:text-indigo-400 mb-1 text-sm font-medium">
+              <p class="text-rose-500 dark:text-rose-400 mb-1 text-sm font-medium">
                 {{ getRoleLabel(profileUser?.role) }}
               </p>
 
@@ -156,7 +156,7 @@
                   v-model="searchQuery"
                   type="text"
                   placeholder="Müşteri adı ile ara..."
-                  class="pl-10 w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 py-2 pr-10 transition-colors"
+                  class="pl-10 w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-rose-500 py-2 pr-10 transition-colors"
                 />
                 <MagnifyingGlassIcon class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <button
@@ -177,7 +177,7 @@
                   :class="[
                     'px-3 py-1.5 text-xs font-medium rounded-md transition-colors',
                     selectedTimeFilter === filter.value
-                      ? 'bg-indigo-600 text-white'
+                      ? 'bg-rose-600 text-white'
                       : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                   ]"
                 >
@@ -194,7 +194,7 @@
                   :class="[
                     'px-3 py-1.5 text-xs font-medium rounded-md transition-colors',
                     selectedFilter === filter.value
-                      ? 'bg-purple-600 text-white'
+                      ? 'bg-rose-600 text-white'
                       : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                   ]"
                 >
@@ -215,7 +215,7 @@
 
             <!-- Loading -->
             <div v-if="loadingTimeline" class="flex justify-center py-12">
-              <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+              <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-600"></div>
             </div>
 
             <!-- Empty State -->
@@ -292,14 +292,14 @@
                         <div class="mt-2 text-sm text-gray-700 dark:text-gray-300">
                           <!-- Customer Info -->
                           <div v-if="event.customer" class="flex items-center gap-2 mb-2">
-                            <div class="h-8 w-8 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
-                              <span class="text-xs font-medium text-indigo-600 dark:text-indigo-400">
+                            <div class="h-8 w-8 rounded-full bg-rose-100 dark:bg-rose-900 flex items-center justify-center">
+                              <span class="text-xs font-medium text-rose-600 dark:text-rose-400">
                                 {{ event.customerData?.name?.charAt(0) || 'M' }}
                               </span>
                             </div>
                             <NuxtLink
                               :to="`/customers/show/${event.customer}`"
-                              class="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300"
+                              class="font-medium text-rose-600 dark:text-rose-400 hover:text-rose-500 dark:hover:text-rose-300"
                             >
                               <span v-if="event.customerData">
                                 {{ event.customerData.name }} {{ event.customerData.surname }}
@@ -358,10 +358,10 @@
                 <button
                   @click="loadMoreTimeline"
                   :disabled="loadingMore"
-                  class="inline-flex items-center px-4 py-2 text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 disabled:opacity-50"
+                  class="inline-flex items-center px-4 py-2 text-sm font-medium text-rose-600 dark:text-rose-400 hover:text-rose-500 dark:hover:text-rose-300 disabled:opacity-50"
                 >
                   <template v-if="loadingMore">
-                    <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-indigo-600 mr-2"></div>
+                    <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-rose-600 mr-2"></div>
                     Yükleniyor...
                   </template>
                   <template v-else>
@@ -565,7 +565,7 @@ const getEventColor = (action) => {
     'Müşteri Güncellendi': 'bg-blue-500',
     'Durum Değiştirildi': 'bg-orange-500',
     'Not Eklendi': 'bg-yellow-500',
-    'Satış Oluşturuldu': 'bg-purple-500'
+    'Satış Oluşturuldu': 'bg-rose-500'
   }
   return colors[action] || 'bg-gray-500'
 }

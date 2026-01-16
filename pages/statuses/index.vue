@@ -79,10 +79,10 @@
         <div class="flex items-center justify-between">
           <div>
             <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Satış</p>
-            <p class="text-2xl font-bold text-purple-600 dark:text-purple-400 mt-1">{{ saleCount }}</p>
+            <p class="text-2xl font-bold text-rose-600 dark:text-rose-400 mt-1">{{ saleCount }}</p>
           </div>
-          <div class="h-10 w-10 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
-            <CurrencyDollarIcon class="h-5 w-5 text-purple-600 dark:text-purple-400" />
+          <div class="h-10 w-10 rounded-xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center">
+            <CurrencyDollarIcon class="h-5 w-5 text-rose-600 dark:text-rose-400" />
           </div>
         </div>
       </div>
@@ -242,7 +242,7 @@
             <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
               <button 
                 @click="openEditModal(status)"
-                class="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition-all"
+                class="p-2 text-gray-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-lg transition-all"
                 title="Düzenle"
               >
                 <PencilIcon class="h-4 w-4" />
@@ -284,7 +284,7 @@
             </span>
             <span 
               v-if="status.isSale"
-              class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-lg bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400"
+              class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-lg bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400"
             >
               <CurrencyDollarIcon class="h-3 w-3" />
               Satış
@@ -305,7 +305,7 @@
             </span>
             <span 
               v-if="status.isPricing"
-              class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-lg bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
+              class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-lg bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400"
             >
               <CalculatorIcon class="h-3 w-3" />
               Fiyatlandırma

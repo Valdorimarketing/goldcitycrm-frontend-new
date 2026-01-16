@@ -34,8 +34,8 @@
               <span class="h-2 w-2 rounded-full bg-blue-600 dark:bg-blue-400 mr-1.5"></span>
               Satışçı: {{ kpiData.salesActive }}
             </span>
-            <span class="inline-flex items-center text-purple-600 dark:text-purple-400">
-              <span class="h-2 w-2 rounded-full bg-purple-600 dark:bg-purple-400 mr-1.5"></span>
+            <span class="inline-flex items-center text-rose-600 dark:text-rose-400">
+              <span class="h-2 w-2 rounded-full bg-rose-600 dark:bg-rose-400 mr-1.5"></span>
               Doktor: {{ kpiData.doctorActive }}
             </span>
           </div>
@@ -65,14 +65,14 @@
         <!-- Ortalama Cevap Süresi -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
           <div class="flex items-center justify-between mb-4">
-            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
-              <svg class="h-6 w-6 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24"
+            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-rose-100 dark:bg-rose-900/30">
+              <svg class="h-6 w-6 text-rose-600 dark:text-rose-400" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
               </svg>
             </div>
-            <span class="text-xs font-medium text-amber-600 dark:text-amber-400">🟡 ORTA</span>
+            <span class="text-xs font-medium text-rose-600 dark:text-rose-400">🟡 ORTA</span>
           </div>
           <div class="space-y-1">
             <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ kpiData.avgFirstCall }}</p>
@@ -86,14 +86,14 @@
         <!-- Bu Hafta Kapanan -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
           <div class="flex items-center justify-between mb-4">
-            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-900/30">
-              <svg class="h-6 w-6 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24"
+            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-rose-100 dark:bg-rose-900/30">
+              <svg class="h-6 w-6 text-rose-600 dark:text-rose-400" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <span class="text-xs font-medium text-indigo-600 dark:text-indigo-400">↑ %12</span>
+            <span class="text-xs font-medium text-rose-600 dark:text-rose-400">↑ %12</span>
           </div>
           <div class="space-y-1">
             <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ kpiData.closedThisWeek }}</p>
@@ -118,13 +118,13 @@
                 </svg>
               </div>
               <input v-model="searchQuery" type="text" placeholder="Kullanıcı ara..."
-                class="block w-full rounded-lg border-0 py-2 pl-10 pr-3 text-gray-900 dark:text-white ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 text-sm" />
+                class="block w-full rounded-lg border-0 py-2 pl-10 pr-3 text-gray-900 dark:text-white ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 text-sm" />
             </div>
           </div>
 
           <!-- Role Filter -->
           <select v-model="roleFilter"
-            class="rounded-lg border-0 py-2 pl-3 pr-10 text-gray-900 dark:text-white ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 text-sm">
+            class="rounded-lg border-0 py-2 pl-3 pr-10 text-gray-900 dark:text-white ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 text-sm">
             <option value="all">Tüm Roller</option>
             <option value="sales">Sales</option>
             <option value="doctor">Doctor</option>
@@ -132,7 +132,7 @@
 
           <!-- Sort -->
           <select v-model="sortBy"
-            class="rounded-lg border-0 py-2 pl-3 pr-10 text-gray-900 dark:text-white ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 text-sm">
+            class="rounded-lg border-0 py-2 pl-3 pr-10 text-gray-900 dark:text-white ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 text-sm">
             <option value="slowest">En Yavaş</option>
             <option value="fastest">En Hızlı</option>
             <option value="alphabetic">Alfabetik</option>
@@ -164,7 +164,7 @@
       <!-- Loading State -->
       <div v-if="loading" class="flex justify-center items-center py-20">
         <div class="text-center">
-          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-rose-600 mx-auto mb-4"></div>
           <p class="text-gray-600 dark:text-gray-400">Veriler yükleniyor...</p>
         </div>
       </div>
@@ -181,7 +181,7 @@
 
                 <img :src="path + user.avatar" v-if="user.avatar" class="h-12 w-12 rounded-full">
                 <div v-else
-                  class="h-12 w-12 rounded-full bg-gradient-to-br to-amber-500 to-purple-500 flex items-center justify-center text-white font-semibold text-lg">
+                  class="h-12 w-12 rounded-full bg-gradient-to-br to-rose-500 to-rose-500 flex items-center justify-center text-white font-semibold text-lg">
                   {{ user.name.charAt(0) }}
                 </div>
                 <span v-if="user.activeEngagement"
@@ -192,7 +192,7 @@
                 <span :class="[
                   user.role === 'sales'
                     ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
-                    : 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400',
+                    : 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-400',
                   'inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium'
                 ]">
                   {{ user.role.toUpperCase() == 'SALES' ? 'Satışçı' : 'Doktor' }}
@@ -315,7 +315,7 @@
               <div v-if="showUserDetailModal && selectedUser"
                 class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-2xl transition-all w-full max-w-5xl max-h-[90vh] flex flex-col">
                 <!-- Header -->
-                <div class="bg-gradient-to-r to-amber-400 to-amber-500 px-6 py-4 flex-shrink-0">
+                <div class="bg-gradient-to-r to-rose-400 to-rose-500 px-6 py-4 flex-shrink-0">
                   <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-4">
                       <div
@@ -324,7 +324,7 @@
                       </div>
                       <div>
                         <h3 class="text-xl font-semibold text-white">{{ selectedUser.name }}</h3>
-                        <p class="text-sm text-indigo-100">
+                        <p class="text-sm text-rose-100">
                           {{ selectedUser.role === 'sales' ? 'Sales Temsilcisi' : 'Doktor' }} • Performans
                           Detayı
                         </p>
@@ -344,7 +344,7 @@
                   <!-- Summary Metrics -->
                   <div class="mb-6">
                     <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-                      <svg class="h-5 w-5 mr-2 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24"
+                      <svg class="h-5 w-5 mr-2 text-rose-600 dark:text-rose-400" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -390,7 +390,7 @@
                           {{ selectedUser.stats.activeCount }}
                         </span>
                       </h4>
-                      <button class="text-xs text-indigo-600 dark:text-indigo-400 hover:underline">
+                      <button class="text-xs text-rose-600 dark:text-rose-400 hover:underline">
                         Tümünü Gör
                       </button>
                     </div>
@@ -439,7 +439,7 @@
                   <div class="mt-6">
                     <div class="flex items-center justify-between mb-4">
                       <h4 class="text-sm font-semibold text-gray-900 dark:text-white flex items-center">
-                        <svg class="h-5 w-5 mr-2 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24"
+                        <svg class="h-5 w-5 mr-2 text-rose-600 dark:text-rose-400" fill="none" viewBox="0 0 24 24"
                           stroke="currentColor">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -447,7 +447,7 @@
                         Geçmiş (Son 20 Engagement)
                       </h4>
                       <select v-model="historyFilter"
-                        class="rounded-lg border-0 py-1.5 pl-3 pr-8 text-xs text-gray-900 dark:text-white ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700">
+                        class="rounded-lg border-0 py-1.5 pl-3 pr-8 text-xs text-gray-900 dark:text-white ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700">
                         <option value="all">Tümü</option>
                         <option value="completed">Tamamlanan</option>
                         <option value="cancelled">İptal</option>
@@ -532,7 +532,7 @@
                     </p>
                     <div class="flex items-center space-x-2">
                       <button @click="closeUserDetail"
-                        class="inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 transition-colors">
+                        class="inline-flex items-center rounded-lg bg-rose-600 px-4 py-2 text-sm font-medium text-white hover:bg-rose-700 transition-colors">
                         Kapat
                       </button>
                     </div>
@@ -677,7 +677,7 @@
 
                   <!-- Performance Summary -->
                   <div
-                    class="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-6 border border-blue-200 dark:border-blue-800">
+                    class="mt-8 bg-gradient-to-r from-blue-50 to-rose-50 dark:from-blue-900/20 dark:to-rose-900/20 rounded-xl p-6 border border-blue-200 dark:border-blue-800">
                     <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
                       <svg class="h-5 w-5 mr-2 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
@@ -723,7 +723,7 @@
                       Müşteri Profiline Git
                     </NuxtLink>
                     <button @click="closeTimelineModal"
-                      class="inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 transition-colors">
+                      class="inline-flex items-center rounded-lg bg-rose-600 px-4 py-2 text-sm font-medium text-white hover:bg-rose-700 transition-colors">
                       Kapat
                     </button>
                   </div>
@@ -929,7 +929,7 @@ const filteredUsers = computed(() => {
 const getSpeedColor = (minutes) => {
   if (!minutes || minutes === 0) return 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400';
   
-  if (minutes < 1) return 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-400';
+  if (minutes < 1) return 'bg-rose-100 dark:bg-rose-900/30 text-rose-800 dark:text-rose-400';
   if (minutes < 5) return 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400';
   if (minutes < 15) return 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400';
   if (minutes < 30) return 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400';
@@ -1042,10 +1042,10 @@ const getEventColorClass = (event) => {
     const typeColors = {
       'meeting': 'bg-blue-500',
       'call': 'bg-green-500',
-      'task': 'bg-purple-500',
+      'task': 'bg-rose-500',
       'reminder': 'bg-yellow-500',
       'follow-up': 'bg-orange-500',
-      'appointment': 'bg-indigo-500',
+      'appointment': 'bg-rose-500',
       'deadline': 'bg-red-500',
     };
     return typeColors[event.type] || 'bg-gray-500';

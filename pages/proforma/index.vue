@@ -66,7 +66,7 @@
             <ClockIcon class="h-6 w-6 text-orange-600 dark:text-orange-400" />
           </div>
         </div>
-        <div class="h-1 w-full bg-gradient-to-r from-orange-500 to-amber-500 rounded-full mt-4 opacity-60"></div>
+        <div class="h-1 w-full bg-gradient-to-r from-orange-500 to-rose-500 rounded-full mt-4 opacity-60"></div>
       </div>
 
       <div
@@ -89,14 +89,14 @@
         <div class="flex items-center justify-between">
           <div>
             <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">{{ t('proforma_tracking.stats.conversion', 'Dönüşüm') }}</p>
-            <p class="text-2xl font-bold text-purple-600 dark:text-purple-400 mt-1">{{ conversionRate }}%</p>
+            <p class="text-2xl font-bold text-rose-600 dark:text-rose-400 mt-1">{{ conversionRate }}%</p>
           </div>
           <div
-            class="h-12 w-12 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <ChartBarIcon class="h-6 w-6 text-purple-600 dark:text-purple-400" />
+            class="h-12 w-12 rounded-xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <ChartBarIcon class="h-6 w-6 text-rose-600 dark:text-rose-400" />
           </div>
         </div>
-        <div class="h-1 w-full bg-gradient-to-r from-purple-500 to-amber-400 rounded-full mt-4 opacity-60"></div>
+        <div class="h-1 w-full bg-gradient-to-r from-rose-500 to-rose-400 rounded-full mt-4 opacity-60"></div>
       </div>
     </div>
 
@@ -187,7 +187,7 @@
         class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col">
         <!-- Column Header -->
         <div class="relative overflow-hidden">
-          <div class="absolute inset-0 bg-gradient-to-r from-orange-500 to-amber-500"></div>
+          <div class="absolute inset-0 bg-gradient-to-r from-orange-500 to-rose-500"></div>
           <div class="absolute inset-0 opacity-30"
             style="background-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2020%2020%22%3E%3Ccircle%20cx%3D%221%22%20cy%3D%221%22%20r%3D%221%22%20fill%3D%22white%22%20fill-opacity%3D%220.3%22%2F%3E%3C%2Fsvg%3E');">
           </div>
@@ -231,7 +231,7 @@
               <!-- Avatar -->
               <div class="relative flex-shrink-0">
                 <div
-                  class="h-12 w-12 rounded-xl bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
+                  class="h-12 w-12 rounded-xl bg-gradient-to-br from-orange-500 to-rose-600 flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
                   <span class="text-sm font-bold text-white">
                     {{ getInitials(customer.name) }}
                   </span>
@@ -267,7 +267,7 @@
                     {{ formatDate(customer.createdAt) }}
                   </span>
                   <span v-if="customer.relevantUserData"
-                    class="inline-flex items-center gap-1.5 px-2 py-1 bg-purple-100 dark:bg-purple-900/30 rounded-lg text-xs text-purple-600 dark:text-purple-400">
+                    class="inline-flex items-center gap-1.5 px-2 py-1 bg-rose-100 dark:bg-rose-900/30 rounded-lg text-xs text-rose-600 dark:text-rose-400">
                     <UserIcon class="h-3.5 w-3.5" />
                     {{ customer.relevantUserData.name }}
                   </span>
@@ -387,7 +387,7 @@
                     {{ formatDate(customer.createdAt) }}
                   </span>
                   <span v-if="customer.relevantUserData"
-                    class="inline-flex items-center gap-1.5 px-2 py-1 bg-purple-100 dark:bg-purple-900/30 rounded-lg text-xs text-purple-600 dark:text-purple-400">
+                    class="inline-flex items-center gap-1.5 px-2 py-1 bg-rose-100 dark:bg-rose-900/30 rounded-lg text-xs text-rose-600 dark:text-rose-400">
                     <UserIcon class="h-3.5 w-3.5" />
                     {{ customer.relevantUserData.name }}
                   </span>

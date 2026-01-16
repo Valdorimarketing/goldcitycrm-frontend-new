@@ -13,12 +13,12 @@
         class="fixed inset-0 z-[9998] flex items-center justify-center overflow-hidden"
       >
         <!-- Animated Gradient Background -->
-        <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900">
+        <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-rose-950 to-slate-900">
           <!-- Animated Orbs -->
           <div class="absolute inset-0 overflow-hidden">
             <div class="absolute top-1/4 -left-20 w-96 h-96 bg-blue-600/20 rounded-full filter blur-3xl animate-float"></div>
-            <div class="absolute bottom-1/4 -right-20 w-96 h-96 bg-purple-600/20 rounded-full filter blur-3xl animate-float-delayed"></div>
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-600/10 rounded-full filter blur-3xl animate-pulse-slow"></div>
+            <div class="absolute bottom-1/4 -right-20 w-96 h-96 bg-rose-600/20 rounded-full filter blur-3xl animate-float-delayed"></div>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-rose-600/10 rounded-full filter blur-3xl animate-pulse-slow"></div>
           </div>
           
           <!-- Grid Pattern Overlay -->
@@ -33,8 +33,8 @@
             <div class="flex justify-center mb-6">
               <div class="relative">
                 <!-- Avatar Ring Animation -->
-                <div class="absolute -inset-2 bg-gradient-to-r from-blue-500 via-amber-500 to-amber-400 rounded-full animate-spin-slow opacity-75 blur-sm"></div>
-                <div class="absolute -inset-2 bg-gradient-to-r from-blue-500 via-amber-500 to-amber-400 rounded-full animate-spin-slow opacity-50"></div>
+                <div class="absolute -inset-2 bg-gradient-to-r from-red-500 via-rose-500 to-rose-400 rounded-full animate-spin-slow opacity-75 blur-sm"></div>
+                <div class="absolute -inset-2 bg-gradient-to-r from-red-500 via-rose-500 to-rose-400 rounded-full animate-spin-slow opacity-50"></div>
                 
                 <!-- Avatar Image -->
                 <div class="relative w-28 h-28 rounded-full overflow-hidden border-4 border-white/20 shadow-xl">
@@ -46,7 +46,7 @@
                   />
                   <div 
                     v-else 
-                    class="w-full h-full bg-gradient-to-br to-amber-500 to-amber-500 flex items-center justify-center"
+                    class="w-full h-full bg-gradient-to-br to-rose-500 to-rose-500 flex items-center justify-center"
                   >
                     <span class="text-4xl font-bold text-white">
                       {{ user?.name?.charAt(0) || 'U' }}
@@ -55,7 +55,7 @@
                 </div>
 
                 <!-- Lock Badge -->
-                <div class="absolute -bottom-1 -right-1 w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg border-2 border-white/20">
+                <div class="absolute -bottom-1 -right-1 w-10 h-10 bg-gradient-to-br from-rose-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg border-2 border-white/20">
                   <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
@@ -91,8 +91,8 @@
               class="group relative w-full py-4 px-6 overflow-hidden rounded-2xl font-semibold text-white transition-all duration-300"
             >
               <!-- Button Background -->
-              <div class="absolute inset-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-amber-500 transition-transform duration-300 group-hover:scale-105"></div>
-              <div class="absolute inset-0 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div class="absolute inset-0 bg-gradient-to-r from-blue-600 via-rose-600 to-rose-500 transition-transform duration-300 group-hover:scale-105"></div>
+              <div class="absolute inset-0 bg-gradient-to-r from-red-500 via-rose-500 to-rose-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               
               <!-- Shine Effect -->
               <div class="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-300">

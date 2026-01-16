@@ -135,9 +135,9 @@ defineEmits(['click', 'move-prev', 'move-next'])
 // Color mappings
 const colorClasses = {
   purple: {
-    avatar: 'bg-purple-100 dark:bg-purple-900/50',
-    avatarText: 'text-purple-600 dark:text-purple-400',
-    priceInfo: 'bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300'
+    avatar: 'bg-rose-100 dark:bg-rose-900/50',
+    avatarText: 'text-rose-600 dark:text-rose-400',
+    priceInfo: 'bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300'
   },
   emerald: {
     avatar: 'bg-emerald-100 dark:bg-emerald-900/50',
@@ -150,9 +150,9 @@ const colorClasses = {
     priceInfo: 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
   },
   amber: {
-    avatar: 'bg-amber-100 dark:bg-amber-900/50',
-    avatarText: 'text-amber-600 dark:text-amber-400',
-    priceInfo: 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300'
+    avatar: 'bg-rose-100 dark:bg-rose-900/50',
+    avatarText: 'text-rose-600 dark:text-rose-400',
+    priceInfo: 'bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300'
   },
   gray: {
     avatar: 'bg-gray-100 dark:bg-gray-700',

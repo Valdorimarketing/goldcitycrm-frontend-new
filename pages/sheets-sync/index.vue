@@ -73,9 +73,9 @@
             </div>
 
             <!-- Last Token Refresh -->
-            <div class="p-4 rounded-lg bg-purple-50 dark:bg-purple-900/30">
+            <div class="p-4 rounded-lg bg-rose-50 dark:bg-rose-900/30">
               <div class="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Token Yenileme</div>
-              <div class="text-sm font-bold text-purple-600 dark:text-purple-400">
+              <div class="text-sm font-bold text-rose-600 dark:text-rose-400">
                 {{ status.lastTokenRefresh ? formatDate(status.lastTokenRefresh) : 'Henüz yok' }}
               </div>
             </div>
@@ -327,7 +327,7 @@
                   <a 
                     :href="`https://docs.google.com/spreadsheets/d/${sheet.spreadsheetId}/edit`"
                     target="_blank"
-                    class="p-2 text-purple-500 hover:bg-purple-50 dark:hover:bg-purple-900/30 rounded-lg"
+                    class="p-2 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-lg"
                     title="Google Sheets'te Aç"
                   >
                     <ArrowTopRightOnSquareIcon class="w-5 h-5" />

@@ -5,7 +5,7 @@
         <!-- Logo/Title -->
         <div class="text-center mb-8">
           <div class="flex items-center justify-center mb-4">
-            <div class="flex items-center justify-center w-12 h-12 bg-indigo-600 rounded-xl">
+            <div class="flex items-center justify-center w-12 h-12 bg-rose-600 rounded-xl">
               <span class="text-white font-bold text-xl">V</span>
             </div>
           </div>

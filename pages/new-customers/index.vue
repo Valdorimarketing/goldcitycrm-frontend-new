@@ -4,7 +4,7 @@
     <div class="mb-8">
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div class="flex items-center gap-4">
-          <div class="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl shadow-lg shadow-blue-500/25">
+          <div class="p-3 bg-gradient-to-br from-red-500 to-rose-600 rounded-2xl shadow-lg shadow-blue-500/25">
             <UserPlusIcon class="h-7 w-7 text-white" />
           </div>
           <div>
@@ -29,7 +29,7 @@
           <button 
             v-if="authStore.user?.role !== 'user'" 
             @click="showCreateModal = true"
-            class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all text-sm font-medium shadow-lg shadow-blue-500/25"
+            class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-rose-600 text-white rounded-xl hover:from-blue-700 hover:to-rose-700 transition-all text-sm font-medium shadow-lg shadow-blue-500/25"
           >
             <PlusIcon class="h-5 w-5" />
             {{ t('new_customers.actions.new_customer', 'Yeni Müşteri') }}
@@ -52,7 +52,7 @@
             <UsersIcon class="h-6 w-6 text-blue-600 dark:text-blue-400" />
           </div>
         </div>
-        <div class="h-1 w-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full mt-4 opacity-60"></div>
+        <div class="h-1 w-full bg-gradient-to-r from-red-500 to-rose-500 rounded-full mt-4 opacity-60"></div>
       </div>
 
       <div class="group bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
@@ -76,13 +76,13 @@
             <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
               {{ t('new_customers.stats.today', 'Bugün Eklenen') }}
             </p>
-            <p class="text-2xl font-bold text-purple-600 dark:text-purple-400 mt-1">{{ todayCount }}</p>
+            <p class="text-2xl font-bold text-rose-600 dark:text-rose-400 mt-1">{{ todayCount }}</p>
           </div>
-          <div class="h-12 w-12 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <CalendarIcon class="h-6 w-6 text-purple-600 dark:text-purple-400" />
+          <div class="h-12 w-12 rounded-xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <CalendarIcon class="h-6 w-6 text-rose-600 dark:text-rose-400" />
           </div>
         </div>
-        <div class="h-1 w-full bg-gradient-to-r from-purple-500 to-amber-400 rounded-full mt-4 opacity-60"></div>
+        <div class="h-1 w-full bg-gradient-to-r from-rose-500 to-rose-400 rounded-full mt-4 opacity-60"></div>
       </div>
 
       <div class="group bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
@@ -113,7 +113,7 @@
         <button 
           v-if="searchTerm || statusFilter" 
           @click="resetFilters"
-          class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 font-medium"
+          class="text-sm text-rose-600 dark:text-rose-400 hover:text-rose-700 font-medium"
         >
           {{ t('new_customers.filters.clear', 'Temizle') }}
         </button>
@@ -231,7 +231,7 @@
               <td class="px-6 py-4">
                 <div class="flex items-center gap-3">
                   <div class="relative">
-                    <div class="h-11 w-11 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-sm">
+                    <div class="h-11 w-11 rounded-xl bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center shadow-sm">
                       <span class="text-sm font-bold text-white">
                         {{ customer.name?.charAt(0)?.toUpperCase() || '?' }}
                       </span>
@@ -300,9 +300,9 @@
                   />
                   <div 
                     v-else
-                    class="h-7 w-7 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center"
+                    class="h-7 w-7 rounded-lg bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center"
                   >
-                    <span class="text-xs font-medium text-purple-600 dark:text-purple-400">
+                    <span class="text-xs font-medium text-rose-600 dark:text-rose-400">
                       {{ customer.relevantUser?.name?.charAt(0)?.toUpperCase() }}
                     </span>
                   </div>
@@ -442,7 +442,7 @@
               <!-- Modal Header -->
               <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700">
                 <div class="flex items-center gap-3">
-                  <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+                  <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center">
                     <span class="text-sm font-bold text-white">
                       {{ getActiveCustomer?.name?.charAt(0)?.toUpperCase() }}
                     </span>
@@ -468,8 +468,8 @@
                   :to="`/customers/show/${showStates.activeId}`"
                   class="flex flex-col items-center gap-2 p-4 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all group"
                 >
-                  <div class="h-12 w-12 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <EyeIcon class="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
+                  <div class="h-12 w-12 rounded-xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <EyeIcon class="h-6 w-6 text-rose-600 dark:text-rose-400" />
                   </div>
                   <span class="text-xs font-medium text-gray-700 dark:text-gray-300">
                     {{ t('new_customers.actions_modal.view', 'Görüntüle') }}
@@ -492,8 +492,8 @@
                   @click="showNotes(getActiveCustomer)"
                   class="flex flex-col items-center gap-2 p-4 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all group"
                 >
-                  <div class="h-12 w-12 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <DocumentTextIcon class="h-6 w-6 text-amber-600 dark:text-amber-400" />
+                  <div class="h-12 w-12 rounded-xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <DocumentTextIcon class="h-6 w-6 text-rose-600 dark:text-rose-400" />
                   </div>
                   <span class="text-xs font-medium text-gray-700 dark:text-gray-300">
                     {{ t('new_customers.actions_modal.notes', 'Notlar') }}
@@ -504,8 +504,8 @@
                   @click="showDoctorAssignment(getActiveCustomer)"
                   class="flex flex-col items-center gap-2 p-4 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all group"
                 >
-                  <div class="h-12 w-12 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <UsersIcon class="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                  <div class="h-12 w-12 rounded-xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <UsersIcon class="h-6 w-6 text-rose-600 dark:text-rose-400" />
                   </div>
                   <span class="text-xs font-medium text-gray-700 dark:text-gray-300">
                     {{ t('new_customers.actions_modal.doctor', 'Doktor') }}

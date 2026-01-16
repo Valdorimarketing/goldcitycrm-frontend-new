@@ -120,14 +120,14 @@
       <div class="flex space-x-3">
         <button
           @click="editPayment"
-          class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+          class="inline-flex items-center justify-center rounded-md bg-rose-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-rose-500"
         >
           <ArrowPathIcon class="mr-2 h-4 w-4" />
           Düzenle
         </button>
         <button
           @click="downloadReceipt"
-          class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+          class="inline-flex items-center justify-center rounded-md bg-rose-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-rose-500"
         >
           <ArrowDownTrayIcon class="mr-2 h-4 w-4" />
           Makbuz İndir

@@ -11,7 +11,7 @@
       <div class="mt-4 sm:mt-0">
         <button
           @click="showCreateModal = true"
-          class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+          class="inline-flex items-center justify-center rounded-md bg-rose-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-rose-500"
         >
           <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
           Yeni Müşteri
@@ -63,7 +63,7 @@
 
     <!-- Loading State -->
     <div v-if="loading" class="flex justify-center py-12">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-600"></div>
     </div>
 
     <!-- Customers Table -->
@@ -93,15 +93,15 @@
               </td>
               <td class="table-cell">
                 <div class="flex items-center">
-                  <div class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
-                    <span class="text-sm font-medium text-indigo-600 dark:text-indigo-300">
+                  <div class="h-10 w-10 rounded-full bg-rose-100 dark:bg-rose-900 flex items-center justify-center">
+                    <span class="text-sm font-medium text-rose-600 dark:text-rose-300">
                       {{ customer.name.charAt(0).toUpperCase() }}
                     </span>
                   </div>
                   <div class="ml-4">
                     <NuxtLink
                       :to="`/customers/show/${customer.customerId}`"
-                      class="text-sm font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
+                      class="text-sm font-medium text-gray-900 dark:text-gray-100 hover:text-rose-600 dark:hover:text-rose-400 transition-colors cursor-pointer"
                     >
                       {{ customer.name }}
                     </NuxtLink>
@@ -142,7 +142,7 @@
                     class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     title="Görüntüle"
                   >
-                    <EyeIcon class="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                    <EyeIcon class="h-4 w-4 text-rose-600 dark:text-rose-400" />
                     <span class="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 dark:bg-gray-700 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
                       Görüntüle
                     </span>
@@ -162,7 +162,7 @@
                     class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     title="Notlar"
                   >
-                    <DocumentTextIcon class="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                    <DocumentTextIcon class="h-4 w-4 text-rose-600 dark:text-rose-400" />
                     <span class="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 dark:bg-gray-700 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
                       Notlar
                     </span>
@@ -172,7 +172,7 @@
                     class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     title="Doktor Görüşüne Gönder"
                   >
-                    <UserIcon class="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                    <UserIcon class="h-4 w-4 text-rose-600 dark:text-rose-400" />
                     <span class="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 dark:bg-gray-700 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
                       Doktor Görüşüne Gönder
                     </span>
@@ -280,7 +280,7 @@
                 @click="changePage(page)"
                 :class="[
                   page === pagination.page
-                    ? 'bg-indigo-600 text-white'
+                    ? 'bg-rose-600 text-white'
                     : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50',
                   'relative inline-flex items-center px-4 py-2 text-sm font-semibold'
                 ]"

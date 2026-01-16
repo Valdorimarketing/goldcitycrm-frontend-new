@@ -21,7 +21,7 @@
         <div class="inline-flex rounded-md shadow-sm">
           <button @click="viewMode = 'calendar'" :class="[
             viewMode === 'calendar'
-              ? 'bg-indigo-600 text-white'
+              ? 'bg-rose-600 text-white'
               : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600',
             'inline-flex items-center justify-center rounded-l-md px-3 py-2 text-sm font-semibold border border-gray-300 dark:border-gray-600'
           ]">
@@ -30,7 +30,7 @@
           </button>
           <button @click="viewMode = 'table'" :class="[
             viewMode === 'table'
-              ? 'bg-indigo-600 text-white'
+              ? 'bg-rose-600 text-white'
               : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600',
             'inline-flex items-center justify-center rounded-r-md px-3 py-2 text-sm font-semibold border border-l-0 border-gray-300 dark:border-gray-600'
           ]">
@@ -43,7 +43,7 @@
           {{ t('meetings.actions.clear_filters', 'Filtreleri Temizle') }}
         </button>
         <button @click="openCreateModal"
-          class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+          class="inline-flex items-center justify-center rounded-md bg-rose-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-rose-500">
           <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
           {{ t('meetings.actions.new_meeting', 'Yeni Görüşme') }}
         </button>
@@ -90,7 +90,7 @@
 
     <!-- Loading State -->
     <div v-if="loading" class="flex justify-center py-12">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-600"></div>
     </div>
 
     <!-- Calendar View -->
@@ -172,7 +172,7 @@
                   <button @click="viewMeeting(meeting)"
                     class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     :title="t('meetings.actions.view', 'Görüntüle')">
-                    <EyeIcon class="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                    <EyeIcon class="h-4 w-4 text-rose-600 dark:text-rose-400" />
                   </button>
                   <NuxtLink :to="`/meetings/edit/${meeting.id}`"
                     class="relative group p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
@@ -237,7 +237,7 @@
 
               <button v-for="page in visiblePages" :key="page" @click="changePage(page)" :class="[
                 page === meta.page
-                  ? 'bg-indigo-600 text-white'
+                  ? 'bg-rose-600 text-white'
                   : 'text-gray-900 dark:text-gray-300 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700',
                 'relative inline-flex items-center px-4 py-2 text-sm font-semibold'
               ]">
@@ -387,7 +387,7 @@
           </div>
           <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
             <NuxtLink :to="`/meetings/edit/${selectedMeeting.id}`"
-              class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto">
+              class="inline-flex w-full justify-center rounded-md bg-rose-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-rose-500 sm:ml-3 sm:w-auto">
               {{ t('meetings.view_modal.edit_button', 'Düzenle') }}
             </NuxtLink>
             <button @click="showViewModal = false"

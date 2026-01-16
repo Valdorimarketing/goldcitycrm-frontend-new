@@ -15,11 +15,11 @@
     <!-- Decorative Elements -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
       <div 
-        class="absolute -top-24 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl"
+        class="absolute -top-24 w-48 h-48 bg-rose-500/10 rounded-full blur-3xl"
         :class="isRTL ? '-left-24' : '-right-24'"
       ></div>
       <div 
-        class="absolute -bottom-24 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl"
+        class="absolute -bottom-24 w-48 h-48 bg-rose-500/10 rounded-full blur-3xl"
         :class="isRTL ? '-right-24' : '-left-24'"
       ></div>
     </div>
@@ -32,7 +32,7 @@
       >
         <div class="flex items-center gap-3" :class="{ 'flex-row-reverse': isRTL }">
           <div class="relative">
-            <div class="w-10 h-10 bg-gradient-to-br to-amber-500 to-amber-500 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/25">
+            <div class="w-10 h-10 bg-gradient-to-br from-red-500 to-rose-500 rounded-xl flex items-center justify-center shadow-lg shadow-rose-500/25">
               <span class="text-white font-bold text-lg">V</span>
             </div>
             <div 
@@ -47,7 +47,7 @@
               :class="isRTL ? 'text-right' : 'text-left'"
             >
               <h1 class="text-lg font-bold text-white tracking-tight">Valdori</h1>
-              <p class="text-xs text-slate-400 -mt-0.5">CRM Platform</p>
+              <p class="text-xs text-slate-400 -mt-0.5">CRM Platform TR1</p>
             </div>
           </Transition>
         </div>
@@ -103,7 +103,7 @@
               <div :class="[
                 'flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-200',
                 hasActiveChild(item.items)
-                  ? 'bg-indigo-500/20 text-indigo-400'
+                  ? 'bg-rose-500/20 text-rose-400'
                   : 'text-slate-400 group-hover:text-white'
               ]">
                 <component :is="item.icon" class="w-5 h-5" />
@@ -142,7 +142,7 @@
                   :class="[
                     'group flex items-center w-full px-3 py-2 rounded-lg transition-all duration-200 text-sm',
                     route.path === subItem.href
-                      ? 'bg-indigo-500/20 text-indigo-400 font-medium'
+                      ? 'bg-rose-500/20 text-rose-400 font-medium'
                       : 'text-slate-400 hover:bg-slate-800/50 hover:text-white',
                     isRTL && 'flex-row-reverse'
                   ]"
@@ -159,7 +159,7 @@
                   <!-- Active Indicator -->
                   <div 
                     v-if="route.path === subItem.href"
-                    class="w-1.5 h-1.5 rounded-full bg-indigo-400"
+                    class="w-1.5 h-1.5 rounded-full bg-rose-400"
                     :class="isRTL ? 'mr-auto' : 'ml-auto'"
                   ></div>
                 </button>
@@ -174,7 +174,7 @@
             :class="[
               'group flex items-center w-full px-3 py-2.5 rounded-xl transition-all duration-200',
               route.path === item.href
-                ? 'bg-gradient-to-r to-amber-500/20 to-purple-500/20 text-white shadow-lg shadow-indigo-500/10'
+                ? 'bg-gradient-to-r to-rose-500/20 to-rose-500/20 text-white shadow-lg shadow-rose-500/10'
                 : 'text-slate-400 hover:bg-slate-800/50 hover:text-white',
               !sidebarOpen && 'justify-center',
               isRTL && sidebarOpen && 'flex-row-reverse'
@@ -185,7 +185,7 @@
             <div :class="[
               'relative flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-200',
               route.path === item.href
-                ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/30'
+                ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/30'
                 : 'text-slate-400 group-hover:text-white group-hover:bg-slate-700/50'
             ]">
               <component :is="item.icon" class="w-5 h-5" />
@@ -213,7 +213,7 @@
                   v-if="route.path === item.href"
                   class="flex items-center gap-1"
                 >
-                  <div class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></div>
+                  <div class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></div>
                 </div>
               </div>
             </Transition>
@@ -255,7 +255,7 @@
               />
               <div 
                 v-else 
-                class="w-full h-full bg-gradient-to-br to-amber-500 to-amber-500 flex items-center justify-center"
+                class="w-full h-full bg-gradient-to-br to-rose-500 to-rose-500 flex items-center justify-center"
               >
                 <span class="text-sm font-bold text-white">
                   {{ authStore.user?.name?.charAt(0)?.toUpperCase() || 'U' }}
@@ -286,7 +286,7 @@
                 class="flex items-center gap-2 mt-1"
                 :class="isRTL ? 'flex-row-reverse justify-end' : ''"
               >
-                <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-indigo-500/20 text-indigo-400">
+                <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-rose-500/20 text-rose-400">
                   {{ getRoleLabel(authStore.user?.role) }}
                 </span>
                 <span class="text-[10px] text-slate-500">#{{ authStore.user?.id }}</span>

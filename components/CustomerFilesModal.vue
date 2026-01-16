@@ -17,7 +17,7 @@
               class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-gray-900 shadow-2xl transition-all sm:w-full sm:max-w-4xl">
               
               <!-- Header -->
-              <div class="relative bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-700 px-6 py-5">
+              <div class="relative bg-gradient-to-br from-red-600 via-rose-600 to-rose-700 px-6 py-5">
                 <div class="absolute inset-0 bg-grid-white/10"></div>
                 <div class="relative flex items-center justify-between">
                   <div class="flex items-center space-x-4">
@@ -26,7 +26,7 @@
                     </div>
                     <div>
                       <h3 class="text-xl font-bold text-white">{{ t('files_modal.title', 'Müşteri Dosyaları') }}</h3>
-                      <p class="text-sm text-purple-200">{{ customer?.name }} {{ customer?.surname }}</p>
+                      <p class="text-sm text-rose-200">{{ customer?.name }} {{ customer?.surname }}</p>
                     </div>
                   </div>
                   <button @click="$emit('close')" 
@@ -48,8 +48,8 @@
                   :class="[
                     'relative rounded-2xl border-2 border-dashed transition-all duration-300 cursor-pointer',
                     isDragging 
-                      ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20 scale-[1.02]' 
-                      : 'border-gray-300 dark:border-gray-600 hover:border-purple-400 dark:hover:border-purple-500 hover:bg-purple-50/50 dark:hover:bg-purple-900/10',
+                      ? 'border-rose-500 bg-rose-50 dark:bg-rose-900/20 scale-[1.02]' 
+                      : 'border-gray-300 dark:border-gray-600 hover:border-rose-400 dark:hover:border-rose-500 hover:bg-rose-50/50 dark:hover:bg-rose-900/10',
                     selectedFile ? 'bg-green-50 dark:bg-green-900/20 border-green-400' : ''
                   ]"
                   @click="triggerFileInput"
@@ -72,10 +72,10 @@
                       leave-from-class="opacity-100 scale-100"
                       leave-to-class="opacity-0 scale-95"
                     >
-                      <div v-if="isDragging" class="absolute inset-0 flex items-center justify-center bg-purple-500/10 rounded-2xl backdrop-blur-sm">
+                      <div v-if="isDragging" class="absolute inset-0 flex items-center justify-center bg-rose-500/10 rounded-2xl backdrop-blur-sm">
                         <div class="text-center">
-                          <ArrowDownTrayIcon class="mx-auto h-16 w-16 text-purple-500 animate-bounce" />
-                          <p class="mt-2 text-lg font-semibold text-purple-600 dark:text-purple-400">
+                          <ArrowDownTrayIcon class="mx-auto h-16 w-16 text-rose-500 animate-bounce" />
+                          <p class="mt-2 text-lg font-semibold text-rose-600 dark:text-rose-400">
                             {{ t('files_modal.drop_here', 'Dosyayı buraya bırakın') }}
                           </p>
                         </div>
@@ -105,7 +105,7 @@
 
                     <!-- Default Upload UI -->
                     <div v-else-if="!isDragging" class="space-y-3">
-                      <div class="mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-500/30">
+                      <div class="mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br from-rose-500 to-rose-600 flex items-center justify-center shadow-lg shadow-rose-500/30">
                         <CloudArrowUpIcon class="h-8 w-8 text-white" />
                       </div>
                       <div>
@@ -129,7 +129,7 @@
                     <textarea 
                       v-model="newFile.description" 
                       rows="2"
-                      class="block w-full rounded-xl border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-purple-500 dark:bg-gray-800 text-sm resize-none"
+                      class="block w-full rounded-xl border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-500 dark:bg-gray-800 text-sm resize-none"
                       :placeholder="t('files_modal.description_placeholder', 'Dosya açıklaması ekleyin (opsiyonel)...')"
                     ></textarea>
                   </div>
@@ -138,11 +138,11 @@
                   <div v-if="isUploading" class="space-y-2">
                     <div class="flex items-center justify-between text-sm">
                       <span class="text-gray-600 dark:text-gray-400">{{ t('files_modal.uploading', 'Yükleniyor...') }}</span>
-                      <span class="font-semibold text-purple-600 dark:text-purple-400">{{ uploadProgress }}%</span>
+                      <span class="font-semibold text-rose-600 dark:text-rose-400">{{ uploadProgress }}%</span>
                     </div>
                     <div class="h-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                       <div 
-                        class="h-full bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full transition-all duration-300 ease-out"
+                        class="h-full bg-gradient-to-r from-rose-500 to-rose-500 rounded-full transition-all duration-300 ease-out"
                         :style="{ width: uploadProgress + '%' }"
                       ></div>
                     </div>
@@ -159,7 +159,7 @@
                       'w-full py-3 px-4 rounded-xl font-semibold text-white transition-all duration-200 flex items-center justify-center gap-2',
                       isUploading 
                         ? 'bg-gray-400 cursor-not-allowed' 
-                        : 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 shadow-lg shadow-purple-500/30 hover:shadow-purple-500/40 hover:scale-[1.02]'
+                        : 'bg-gradient-to-r from-rose-600 to-rose-600 hover:from-rose-700 hover:to-rose-700 shadow-lg shadow-rose-500/30 hover:shadow-rose-500/40 hover:scale-[1.02]'
                     ]"
                   >
                     <ArrowUpTrayIcon v-if="!isUploading" class="h-5 w-5" />
@@ -176,7 +176,7 @@
               <div class="max-h-[40vh] overflow-y-auto">
                 <!-- Loading State -->
                 <div v-if="loading" class="flex flex-col items-center justify-center py-12">
-                  <div class="w-12 h-12 rounded-full border-4 border-purple-200 border-t-purple-600 animate-spin"></div>
+                  <div class="w-12 h-12 rounded-full border-4 border-rose-200 border-t-rose-600 animate-spin"></div>
                   <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">{{ t('files_modal.loading_files', 'Dosyalar yükleniyor...') }}</p>
                 </div>
 
@@ -185,7 +185,7 @@
                   <div 
                     v-for="file in files" 
                     :key="file.id"
-                    class="group relative bg-white dark:bg-gray-800 rounded-xl p-4 ring-1 ring-gray-200 dark:ring-gray-700 hover:ring-purple-300 dark:hover:ring-purple-600 hover:shadow-lg transition-all duration-200"
+                    class="group relative bg-white dark:bg-gray-800 rounded-xl p-4 ring-1 ring-gray-200 dark:ring-gray-700 hover:ring-rose-300 dark:hover:ring-rose-600 hover:shadow-lg transition-all duration-200"
                   >
                     <div class="flex items-start gap-3">
                       <!-- File Icon -->
@@ -200,7 +200,7 @@
                       <div class="flex-1 min-w-0">
                         <button 
                           @click="openFile(file)"
-                          class="text-sm font-medium text-gray-900 dark:text-white hover:text-purple-600 dark:hover:text-purple-400 transition-colors truncate block w-full text-left"
+                          class="text-sm font-medium text-gray-900 dark:text-white hover:text-rose-600 dark:hover:text-rose-400 transition-colors truncate block w-full text-left"
                         >
                           {{ getFileName(file.file) }}
                         </button>
@@ -216,7 +216,7 @@
                       <div class="flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button 
                           @click="downloadFile(file)"
-                          class="p-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-purple-100 dark:hover:bg-purple-900/50 text-gray-500 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+                          class="p-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-rose-100 dark:hover:bg-rose-900/50 text-gray-500 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
                           :title="t('files_modal.download_tooltip', 'İndir')"
                         >
                           <ArrowDownTrayIcon class="h-4 w-4" />
@@ -251,8 +251,8 @@
               <div class="border-t border-gray-200 dark:border-gray-700/50 bg-gray-50 dark:bg-gray-800/50 px-6 py-4">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-2">
-                    <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/50">
-                      <DocumentIcon class="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                    <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-rose-100 dark:bg-rose-900/50">
+                      <DocumentIcon class="h-4 w-4 text-rose-600 dark:text-rose-400" />
                     </div>
                     <span class="text-sm text-gray-600 dark:text-gray-400">
                       {{ tp('files_modal.total_files', { count: files.length }, 'Toplam {count} dosya') }}
@@ -475,10 +475,10 @@ const getFileIcon = (filePath) => {
 const getFileIconClass = (filePath) => {
   const ext = filePath?.split('.').pop()?.toLowerCase()
   if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) return 'bg-gradient-to-br from-pink-500 to-rose-500'
-  if (['mp4', 'mov', 'avi', 'mkv', 'webm'].includes(ext)) return 'bg-gradient-to-br from-purple-500 to-indigo-500'
-  if (['zip', 'rar', '7z', 'tar', 'gz'].includes(ext)) return 'bg-gradient-to-br from-amber-500 to-orange-500'
+  if (['mp4', 'mov', 'avi', 'mkv', 'webm'].includes(ext)) return 'bg-gradient-to-br from-rose-500 to-rose-500'
+  if (['zip', 'rar', '7z', 'tar', 'gz'].includes(ext)) return 'bg-gradient-to-br from-rose-500 to-orange-500'
   if (['pdf'].includes(ext)) return 'bg-gradient-to-br from-red-500 to-rose-600'
-  if (['doc', 'docx'].includes(ext)) return 'bg-gradient-to-br from-blue-500 to-indigo-500'
+  if (['doc', 'docx'].includes(ext)) return 'bg-gradient-to-br from-red-500 to-rose-500'
   if (['xls', 'xlsx'].includes(ext)) return 'bg-gradient-to-br from-green-500 to-emerald-500'
   return 'bg-gradient-to-br from-gray-500 to-slate-500'
 }

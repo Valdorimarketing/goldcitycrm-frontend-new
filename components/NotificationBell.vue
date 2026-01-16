@@ -3,7 +3,7 @@
     <!-- Notification Bell Button -->
     <button
       @click="toggleNotifications"
-      class="relative p-2 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700"
+      class="relative p-2 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-rose-500 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700"
       :title="'Bildirimler' + (notificationCount > 0 ? ` (${notificationCount})` : '')"
     >
       <BellIcon class="w-6 h-6" />
@@ -45,7 +45,7 @@
         <!-- Notification List -->
         <div class="max-h-96 overflow-y-auto">
           <div v-if="loading" class="px-4 py-8 text-center">
-            <div class="inline-block w-6 h-6 border-2 border-gray-300 border-t-indigo-600 rounded-full animate-spin"></div>
+            <div class="inline-block w-6 h-6 border-2 border-gray-300 border-t-rose-600 rounded-full animate-spin"></div>
             <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Yükleniyor...</p>
           </div>
 
@@ -82,7 +82,7 @@
         >
           <button
             @click="viewAllNotifications"
-            class="w-full text-sm text-center text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 font-medium"
+            class="w-full text-sm text-center text-rose-600 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300 font-medium"
           >
             Tümünü Görüntüle
           </button>

@@ -14,7 +14,7 @@
        
         <button
           @click="initializeData()"
-          class="inline-flex items-center justify-center rounded-lg bg-gradient-to-r to-amber-400 to-amber-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 hover:from-indigo-700 hover:to-purple-700 transition-all"
+          class="inline-flex items-center justify-center rounded-lg bg-gradient-to-r to-rose-400 to-rose-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-rose-500/25 hover:from-rose-700 hover:to-rose-700 transition-all"
         >
           <ArrowPathIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
           {{ t('dashboard.refresh', 'Yenile') }}
@@ -22,7 +22,7 @@
 
         <button
           @click="showCreateModal = true"
-          class="inline-flex items-center justify-center rounded-lg bg-gradient-to-r to-amber-400 to-amber-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 hover:from-indigo-700 hover:to-purple-700 transition-all"
+          class="inline-flex items-center justify-center rounded-lg bg-gradient-to-r to-rose-400 to-rose-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-rose-500/25 hover:from-rose-700 hover:to-rose-700 transition-all"
         >
           <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
           {{ t('branches.new_branch', 'Yeni Branş') }}
@@ -42,7 +42,7 @@
               id="search"
               v-model="searchTerm"
               type="text"
-              class="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+              class="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all"
               :placeholder="t('branches.search_placeholder', 'İsim veya kod ile ara...')"
             />
             <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -57,7 +57,7 @@
           <select
             id="hospital"
             v-model="hospitalFilter"
-            class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+            class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all"
           >
             <option :value="undefined">{{ t('branches.all_hospitals', 'Tüm Hastaneler') }}</option>
             <option v-for="hospital in hospitals" :key="hospital.id" :value="hospital.id">
@@ -78,7 +78,7 @@
 
     <!-- Loading State -->
     <div v-if="loading" class="flex justify-center py-12">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-600"></div>
     </div>
 
     <!-- Branches Table -->
@@ -108,7 +108,7 @@
             <tr v-for="branch in branches" :key="branch.id" class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center">
-                  <div class="flex-shrink-0 h-10 w-10 bg-gradient-to-br to-amber-500 to-amber-500 rounded-lg flex items-center justify-center">
+                  <div class="flex-shrink-0 h-10 w-10 bg-gradient-to-br to-rose-500 to-rose-500 rounded-lg flex items-center justify-center">
                     <BuildingOfficeIcon class="h-5 w-5 text-white" />
                   </div>
                   <div class="ml-4">
@@ -119,7 +119,7 @@
                 </div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-100 dark:bg-rose-900/30 text-rose-800 dark:text-rose-300">
                   {{ branch.code || '-' }}
                 </span>
               </td>
@@ -183,7 +183,7 @@
                 <div class="mt-6">
                   <button
                     @click="showCreateModal = true"
-                    class="inline-flex items-center rounded-lg bg-gradient-to-r to-amber-400 to-amber-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 hover:from-indigo-700 hover:to-purple-700 transition-all"
+                    class="inline-flex items-center rounded-lg bg-gradient-to-r to-rose-400 to-rose-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-rose-500/25 hover:from-rose-700 hover:to-rose-700 transition-all"
                   >
                     <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
                     {{ t('branches.add_first', 'İlk branşı ekle') }}
@@ -240,7 +240,7 @@
                 @click="changePage(page)"
                 :class="[
                   page === pagination.page
-                    ? 'bg-indigo-600 text-white'
+                    ? 'bg-rose-600 text-white'
                     : 'text-gray-900 dark:text-gray-300 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700',
                   'relative inline-flex items-center px-4 py-2 text-sm font-semibold'
                 ]"

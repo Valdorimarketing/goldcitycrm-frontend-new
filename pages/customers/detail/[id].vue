@@ -5,7 +5,7 @@
       <!-- Breadcrumb -->
       <nav class="flex items-center gap-2 mb-6 text-sm">
         <NuxtLink to="/customers"
-          class="flex items-center gap-1.5 text-gray-500 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors">
+          class="flex items-center gap-1.5 text-gray-500 hover:text-rose-600 dark:text-gray-400 dark:hover:text-rose-400 transition-colors">
           <UsersIcon class="h-4 w-4" />
           <span>{{ t('customers.title', 'Müşteriler') }}</span>
         </NuxtLink>
@@ -90,7 +90,7 @@
                 <div class="flex items-center gap-6">
                   <!-- Avatar -->
                   <div class="relative group">
-                    <div class="h-20 w-20 rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 overflow-hidden ring-2 ring-gray-200 dark:ring-gray-700 transition-all group-hover:ring-4 group-hover:ring-indigo-500/20">
+                    <div class="h-20 w-20 rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 overflow-hidden ring-2 ring-gray-200 dark:ring-gray-700 transition-all group-hover:ring-4 group-hover:ring-rose-500/20">
                       <img v-if="customer.image" :src="getImageUrl(customer.image)" :alt="customer.name" class="h-full w-full object-cover" />
                       <div v-else class="h-full w-full flex items-center justify-center">
                         <span class="text-2xl font-bold text-gray-600 dark:text-gray-400">
@@ -123,7 +123,7 @@
                         {{ customer.id }}
                       </span>
                       <span v-if="customerStatus" class="flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+                        <span class="w-2 h-2 rounded-full bg-rose-500"></span>
                         {{ customerStatus.name }}
                       </span>
                       <span v-if="customer.relevantUserData" class="flex items-center gap-1.5">
@@ -138,7 +138,7 @@
                 <div class="flex flex-wrap gap-2">
                     
                   <NuxtLink :to="`/customers/show/${$route.params.id}`" 
-                    class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors">
+                    class="inline-flex items-center gap-2 px-4 py-2 bg-rose-600 text-white rounded-lg text-sm font-medium hover:bg-rose-700 transition-colors">
                     <EyeIcon class="h-4 w-4" />
                     <span class="hidden sm:inline">{{ t('pool.actions.view', 'Görüntüle') }}</span>
                   </NuxtLink>
@@ -158,7 +158,7 @@
                     <span class="hidden sm:inline">{{ t('customer_detail.files', 'Dosyalar') }}</span>
                   </button>
                   <NuxtLink v-if="!isDoctor" :to="`/customers/edit/${$route.params.id}`" 
-                    class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors">
+                    class="inline-flex items-center gap-2 px-4 py-2 bg-rose-600 text-white rounded-lg text-sm font-medium hover:bg-rose-700 transition-colors">
                     <PencilIcon class="h-4 w-4" />
                     <span class="hidden sm:inline">{{ t('customer_detail.edit', 'Düzenle') }}</span>
                   </NuxtLink>
@@ -174,10 +174,10 @@
           <!-- Stats Grid -->
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <!-- Created -->
-            <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 hover:border-indigo-300 dark:hover:border-indigo-800 transition-all duration-300 group">
+            <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 hover:border-rose-300 dark:hover:border-rose-800 transition-all duration-300 group">
               <div class="flex items-center justify-between mb-4">
-                <div class="h-10 w-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/30 transition-colors">
-                  <CalendarIcon class="h-5 w-5 text-gray-600 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400" />
+                <div class="h-10 w-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center group-hover:bg-rose-100 dark:group-hover:bg-rose-900/30 transition-colors">
+                  <CalendarIcon class="h-5 w-5 text-gray-600 dark:text-gray-400 group-hover:text-rose-600 dark:group-hover:text-rose-400" />
                 </div>
                 <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ t('customer_detail.created', 'Kayıt') }}</span>
               </div>
@@ -188,10 +188,10 @@
             </div>
 
             <!-- Updated -->
-            <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 hover:border-indigo-300 dark:hover:border-indigo-800 transition-all duration-300 group">
+            <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 hover:border-rose-300 dark:hover:border-rose-800 transition-all duration-300 group">
               <div class="flex items-center justify-between mb-4">
-                <div class="h-10 w-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/30 transition-colors">
-                  <ArrowPathIcon class="h-5 w-5 text-gray-600 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400" />
+                <div class="h-10 w-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center group-hover:bg-rose-100 dark:group-hover:bg-rose-900/30 transition-colors">
+                  <ArrowPathIcon class="h-5 w-5 text-gray-600 dark:text-gray-400 group-hover:text-rose-600 dark:group-hover:text-rose-400" />
                 </div>
                 <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ t('customer_detail.updated', 'Güncelleme') }}</span>
               </div>
@@ -202,10 +202,10 @@
             </div>
 
             <!-- Reminder -->
-            <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 hover:border-indigo-300 dark:hover:border-indigo-800 transition-all duration-300 group">
+            <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 hover:border-rose-300 dark:hover:border-rose-800 transition-all duration-300 group">
               <div class="flex items-center justify-between mb-4">
-                <div class="h-10 w-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/30 transition-colors">
-                  <BellAlertIcon class="h-5 w-5 text-gray-600 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400" />
+                <div class="h-10 w-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center group-hover:bg-rose-100 dark:group-hover:bg-rose-900/30 transition-colors">
+                  <BellAlertIcon class="h-5 w-5 text-gray-600 dark:text-gray-400 group-hover:text-rose-600 dark:group-hover:text-rose-400" />
                 </div>
                 <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ t('customer_detail.reminder', 'Hatırlatma') }}</span>
               </div>
@@ -256,13 +256,13 @@
                   <div class="space-y-4">
                     <!-- Phone -->
                     <div v-if="customer.phone" class="flex items-start gap-3 group">
-                      <div class="h-9 w-9 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0 group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/30 transition-colors">
-                        <PhoneIcon class="h-4 w-4 text-gray-600 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400" />
+                      <div class="h-9 w-9 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0 group-hover:bg-rose-100 dark:group-hover:bg-rose-900/30 transition-colors">
+                        <PhoneIcon class="h-4 w-4 text-gray-600 dark:text-gray-400 group-hover:text-rose-600 dark:group-hover:text-rose-400" />
                       </div>
                       <div class="flex-1 min-w-0">
                         <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">{{ t('customer_detail.phone', 'Telefon') }}</p>
                         <div class="flex items-center gap-2 flex-wrap">
-                          <a :href="`tel:${customer.phone}`" class="text-sm font-medium text-gray-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                          <a :href="`tel:${customer.phone}`" class="text-sm font-medium text-gray-900 dark:text-white hover:text-rose-600 dark:hover:text-rose-400 transition-colors">
                             {{ customer.phone }}
                           </a>
                           <div class="flex items-center gap-1">
@@ -283,7 +283,7 @@
                     <!-- Email -->
                     <InfoRow v-if="customer.email" :icon="EnvelopeIcon" :label="t('customer_detail.email', 'E-posta')">
                       <template #value>
-                        <a :href="`mailto:${customer.email}`" class="text-sm font-medium text-gray-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors break-all">
+                        <a :href="`mailto:${customer.email}`" class="text-sm font-medium text-gray-900 dark:text-white hover:text-rose-600 dark:hover:text-rose-400 transition-colors break-all">
                           {{ customer.email }}
                         </a>
                       </template>
@@ -292,7 +292,7 @@
                     <!-- URL -->
                     <InfoRow v-if="customer.url" :icon="GlobeAltIcon" :label="t('customer_detail.website', 'Web Sitesi')">
                       <template #value>
-                        <a :href="customer.url" target="_blank" class="text-sm font-medium text-gray-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors break-all">
+                        <a :href="customer.url" target="_blank" class="text-sm font-medium text-gray-900 dark:text-white hover:text-rose-600 dark:hover:text-rose-400 transition-colors break-all">
                           {{ truncateUrl(customer.url, 40) }}
                         </a>
                       </template>

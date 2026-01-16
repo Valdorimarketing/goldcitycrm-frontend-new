@@ -18,12 +18,12 @@
               class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-2xl transition-all sm:w-full sm:max-w-4xl">
               <!-- Progress Bar -->
               <div class="absolute top-0 left-0 right-0 h-1 bg-gray-200 dark:bg-gray-700">
-                <div class="h-full bg-gradient-to-r to-amber-500 to-amber-500 transition-all duration-500"
+                <div class="h-full bg-gradient-to-r to-rose-500 to-rose-500 transition-all duration-500"
                   :style="{ width: `${(currentStep / totalSteps) * 100}%` }"></div>
               </div>
 
               <!-- Header -->
-              <div class="relative bg-gradient-to-r to-amber-400 to-amber-500 px-6 py-8 text-white">
+              <div class="relative bg-gradient-to-r to-rose-400 to-rose-500 px-6 py-8 text-white">
                 <button @click="$emit('close')"
                   class="absolute right-4 top-4 rounded-lg p-2 hover:bg-white/20 transition-colors">
                   <XMarkIcon class="h-5 w-5" />
@@ -35,7 +35,7 @@
                   </div>
                   <div>
                     <h2 class="text-2xl font-bold">Yeni Müşteri Ekle</h2>
-                    <p class="text-indigo-100">Adım {{ currentStep }} / {{ totalSteps }}</p>
+                    <p class="text-rose-100">Adım {{ currentStep }} / {{ totalSteps }}</p>
                   </div>
                 </div>
 
@@ -46,7 +46,7 @@
                       <div class="flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all"
                         :class="[
                           currentStep >= step.id
-                            ? 'bg-white text-indigo-600 border-white'
+                            ? 'bg-white text-rose-600 border-white'
                             : 'border-white/50 text-white/70'
                         ]">
                         <component v-if="currentStep > step.id" :is="CheckIcon" class="h-5 w-5" />
@@ -81,7 +81,7 @@
                             <!-- Image Preview -->
                             <div v-if="imagePreview" class="mb-4">
                               <img :src="imagePreview" alt="Preview"
-                                class="h-32 w-32 rounded-full object-cover border-4 border-indigo-200 dark:border-indigo-700" />
+                                class="h-32 w-32 rounded-full object-cover border-4 border-rose-200 dark:border-rose-700" />
                             </div>
                             <div v-else class="mb-4">
                               <div
@@ -91,7 +91,7 @@
                             </div>
                             <!-- File Input -->
                             <input id="image" type="file" accept="image/*" @change="handleImageUpload"
-                              class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-indigo-900 dark:file:text-indigo-200" />
+                              class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-rose-50 file:text-rose-700 hover:file:bg-rose-100 dark:file:bg-rose-900 dark:file:text-rose-200" />
                             <button v-if="imagePreview" type="button" @click="removeImage"
                               class="mt-2 text-sm text-red-600 hover:text-red-800 dark:text-red-400">
                               Fotoğrafı Kaldır
@@ -108,7 +108,7 @@
                             Ad <span class="text-red-500">*</span>
                           </label>
                           <input id="name" v-model="form.name" type="text" required
-                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all"
+                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all"
                             placeholder="Müşteri adı" />
                           <p v-if="errors.name" class="mt-2 text-sm text-red-600 dark:text-red-400">{{ errors.name }}
                           </p>
@@ -121,7 +121,7 @@
                             Soyad <span class="text-red-500">*</span>
                           </label>
                           <input id="surname" v-model="form.surname" type="text" required
-                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all"
+                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all"
                             placeholder="Müşteri soyadı" />
                           <p v-if="errors.surname" class="mt-2 text-sm text-red-600 dark:text-red-400">{{ errors.surname
                           }}</p>
@@ -134,7 +134,7 @@
                             E-posta <span class="text-red-500">*</span>
                           </label>
                           <input id="email" v-model="form.email" type="email" required
-                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all"
+                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all"
                             placeholder="ornek@email.com" />
                           <p v-if="errors.email" class="mt-2 text-sm text-red-600 dark:text-red-400">{{ errors.email }}
                           </p>
@@ -151,18 +151,18 @@
                           <div class="relative">
                             <input id="phone" v-model="form.phone" type="tel" required @input="handlePhoneInput"
                               :disabled="checkingPhone" :class="[
-                                'block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed',
+                                'block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed',
                                 phoneStatus.exists && phoneStatus.exactMatch
                                   ? 'ring-red-500 dark:ring-red-600'
                                   : phoneStatus.exists && phoneStatus.similarMatches.length > 0
                                     ? 'ring-yellow-500 dark:ring-yellow-600'
                                     : 'ring-gray-300 dark:ring-gray-600',
-                                'focus:ring-2 focus:ring-indigo-500 focus:border-transparent'
+                                'focus:ring-2 focus:ring-rose-500 focus:border-transparent'
                               ]" placeholder="Mobil telefon numarası" maxlength="16" />
 
                             <!-- Loading Spinner -->
                             <div v-if="checkingPhone" class="absolute inset-y-0 right-0 flex items-center pr-3">
-                              <svg class="animate-spin h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg"
+                              <svg class="animate-spin h-5 w-5 text-rose-600" xmlns="http://www.w3.org/2000/svg"
                                 fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
                                   stroke-width="4"></circle>
@@ -273,7 +273,7 @@
                             Hastalık
                           </label>
                           <input id="patient" v-model="form.patient" type="text"
-                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all" />
+                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all" />
                         </div>
 
                         <!-- Birth Date -->
@@ -284,7 +284,7 @@
                             Doğum Tarihi
                           </label>
                           <input id="birth_date" v-model="form.birth_date" type="date"
-                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all" />
+                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all" />
                         </div>
 
                         <!-- Gender -->
@@ -296,17 +296,17 @@
                           <div class="flex space-x-4">
                             <label class="flex items-center">
                               <input v-model="form.gender" type="radio" value="male"
-                                class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-600" />
+                                class="h-4 w-4 text-rose-600 border-gray-300 focus:ring-rose-600" />
                               <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Erkek</span>
                             </label>
                             <label class="flex items-center">
                               <input v-model="form.gender" type="radio" value="female"
-                                class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-600" />
+                                class="h-4 w-4 text-rose-600 border-gray-300 focus:ring-rose-600" />
                               <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Kadın</span>
                             </label>
                             <label class="flex items-center">
                               <input v-model="form.gender" type="radio" value="other"
-                                class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-600" />
+                                class="h-4 w-4 text-rose-600 border-gray-300 focus:ring-rose-600" />
                               <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Diğer</span>
                             </label>
                           </div>
@@ -332,7 +332,7 @@
                             Ünvan
                           </label>
                           <input id="title" v-model="form.title" type="text"
-                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all"
+                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all"
                             placeholder="Genel Müdür, Müdür, vs." />
                         </div>
 
@@ -343,7 +343,7 @@
                             Meslek
                           </label>
                           <input id="job" v-model="form.job" type="text"
-                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all"
+                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all"
                             placeholder="Yazılım Geliştirici, Tasarımcı, vs." />
                         </div>
 
@@ -354,7 +354,7 @@
                             Şirket
                           </label>
                           <input id="company" v-model="form.company" type="text"
-                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all"
+                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all"
                             placeholder="ABC Teknoloji Ltd. Şti." />
                         </div>
 
@@ -365,7 +365,7 @@
                             Website
                           </label>
                           <input id="website" v-model="form.website" type="url"
-                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all"
+                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all"
                             placeholder="https://www.example.com" />
                           <p v-if="errors.website" class="mt-2 text-sm text-red-600 dark:text-red-400">{{ errors.website
                           }}</p>
@@ -378,7 +378,7 @@
                             Müşteri Kaynağı
                           </label>
                           <select id="source" v-model="form.sourceId"
-                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all">
+                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all">
                             <option value="">Kaynak seçin</option>
                             <option v-for="source in sources" :key="source.id" :value="source.id">
                               {{ source.name }}
@@ -416,7 +416,7 @@
                               class="absolute z-20 mt-1 max-h-56 w-full overflow-auto rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg">
                               <li v-for="reference in filteredReferances" :key="reference.id"
                                 @click="selectReference(reference)"
-                                class="px-4 py-2 cursor-pointer hover:bg-indigo-100 dark:hover:bg-gray-700">
+                                class="px-4 py-2 cursor-pointer hover:bg-rose-100 dark:hover:bg-gray-700">
                                 {{ reference.name }}
                               </li>
                             </ul>
@@ -435,7 +435,7 @@
                         </div>
                         <button type="button" @click="form.isActive = !form.isActive" :class="[
                           'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
-                          form.isActive ? 'bg-indigo-600' : 'bg-gray-200 dark:bg-gray-600'
+                          form.isActive ? 'bg-rose-600' : 'bg-gray-200 dark:bg-gray-600'
                         ]">
                           <span :class="[
                             'inline-block h-4 w-4 transform rounded-full bg-white transition-transform',
@@ -459,7 +459,7 @@
                             Ülke
                           </label>
                           <select id="country" v-model="form.country" @change="onCountryChange"
-                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all"
+                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all"
                             :disabled="loadingCountries">
                             <option value="">Ülke seçin</option>
                             <option v-for="country in countries" :key="country.id" :value="country.id">
@@ -475,7 +475,7 @@
                             Eyalet/İl
                           </label>
                           <select id="state" v-model="form.state" @change="onStateChange"
-                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all"
+                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all"
                             :disabled="!form.country || loadingStates">
                             <option value="">{{ form.country ? 'Eyalet/İl seçin' : 'Önce ülke seçin' }}</option>
                             <option v-for="state in states" :key="state.id" :value="state.id">
@@ -491,7 +491,7 @@
                             Şehir
                           </label>
                           <select id="city" v-model="form.city" @change="onCityChange"
-                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all"
+                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all"
                             :disabled="!form.state || loadingCities">
                             <option value="">{{ form.state ? 'Şehir seçin' : 'Önce eyalet/il seçin' }}</option>
                             <option v-for="city in cities" :key="city.id" :value="city.id">
@@ -507,7 +507,7 @@
                             İlçe
                           </label>
                           <input id="district" v-model="form.district" type="text"
-                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all"
+                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all"
                             placeholder="İlçe adını giriniz" />
                         </div>
 
@@ -519,7 +519,7 @@
                             Posta Kodu
                           </label>
                           <input id="postal_code" v-model="form.postalCode" type="text"
-                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all"
+                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all"
                             placeholder="34000" />
                         </div>
                       </div>
@@ -531,7 +531,7 @@
                           Adres
                         </label>
                         <textarea id="address" v-model="form.address" rows="3"
-                          class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all"
+                          class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all"
                           placeholder="Detaylı adres bilgisi..."></textarea>
                       </div>
 
@@ -543,7 +543,7 @@
                           Notlar
                         </label>
                         <textarea id="description" v-model="form.description" rows="3"
-                          class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all"
+                          class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all"
                           placeholder="Müşteri hakkında özel notlar..."></textarea>
                       </div>
 
@@ -555,7 +555,7 @@
                           İlgili İşlem
                         </label>
                         <textarea id="relatedTransaction" v-model="form.relatedTransaction" rows="3"
-                          class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all"
+                          class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all"
                           placeholder="İlgili işlem bilgisi..."></textarea>
                       </div>
                     </div>
@@ -567,7 +567,7 @@
                     leave-from-class="opacity-100 translate-x-0" leave-to-class="opacity-0 -translate-x-4">
                     <div v-if="currentStep === 4" class="space-y-6">
                       <div v-if="loadingDynamicFields" class="text-center py-8">
-                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-rose-600 mx-auto"></div>
                         <p class="text-gray-600 dark:text-gray-400 mt-3">Dinamik alanlar yükleniyor...</p>
                       </div>
 
@@ -589,42 +589,42 @@
                           <!-- Text Input -->
                           <input v-if="field.type === 'text'" :id="`dynamic-${field.id}`"
                             v-model="dynamicFieldValues[field.id]" type="text" :required="field.is_required"
-                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all"
+                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all"
                             :placeholder="`${field.name} giriniz`" />
 
                           <!-- Number Input -->
                           <input v-else-if="field.type === 'number'" :id="`dynamic-${field.id}`"
                             v-model.number="dynamicFieldValues[field.id]" type="number" :required="field.is_required"
-                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all"
+                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all"
                             :placeholder="`${field.name} giriniz`" />
 
                           <!-- Email Input -->
                           <input v-else-if="field.type === 'email'" :id="`dynamic-${field.id}`"
                             v-model="dynamicFieldValues[field.id]" type="email" :required="field.is_required"
-                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all"
+                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all"
                             :placeholder="`${field.name} giriniz`" />
 
                           <!-- Phone Input -->
                           <input v-else-if="field.type === 'phone'" :id="`dynamic-${field.id}`"
                             v-model="dynamicFieldValues[field.id]" type="tel" :required="field.is_required"
-                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all"
+                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all"
                             :placeholder="`${field.name} giriniz`" />
 
                           <!-- URL Input -->
                           <input v-else-if="field.type === 'url'" :id="`dynamic-${field.id}`"
                             v-model="dynamicFieldValues[field.id]" type="url" :required="field.is_required"
-                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all"
+                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all"
                             :placeholder="`${field.name} giriniz`" />
 
                           <!-- Date Input -->
                           <input v-else-if="field.type === 'date'" :id="`dynamic-${field.id}`"
                             v-model="dynamicFieldValues[field.id]" type="date" :required="field.is_required"
-                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all" />
+                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all" />
 
                           <!-- Select Dropdown -->
                           <select v-else-if="field.type === 'select'" :id="`dynamic-${field.id}`"
                             v-model="dynamicFieldValues[field.id]" :required="field.is_required"
-                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all">
+                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all">
                             <option value="">Seçiniz</option>
                             <option v-for="option in parseOptionsData(field.options_data)" :key="option"
                               :value="option">
@@ -635,13 +635,13 @@
                           <!-- Textarea -->
                           <textarea v-else-if="field.type === 'textarea'" :id="`dynamic-${field.id}`"
                             v-model="dynamicFieldValues[field.id]" rows="3" :required="field.is_required"
-                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all"
+                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all"
                             :placeholder="`${field.name} giriniz`"></textarea>
 
                           <!-- File Input -->
                           <input v-else-if="field.type === 'file'" :id="`dynamic-${field.id}`" type="file"
                             :required="field.is_required" @change="handleFileUpload($event, field.id)"
-                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition-all" />
+                            class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-rose-50 file:text-rose-700 hover:file:bg-rose-100 transition-all" />
                         </div>
                       </div>
                     </div>
@@ -683,13 +683,13 @@
                     </button>
 
                     <button v-if="currentStep < totalSteps" type="button" @click="nextStep"
-                      class="inline-flex items-center rounded-lg bg-indigo-600 px-6 py-2 text-sm font-medium text-white hover:bg-indigo-700 transition-colors">
+                      class="inline-flex items-center rounded-lg bg-rose-600 px-6 py-2 text-sm font-medium text-white hover:bg-rose-700 transition-colors">
                       İleri
                       <ArrowRightIcon class="ml-2 h-4 w-4" />
                     </button>
 
                     <button v-else type="submit" :disabled="loading"
-                      class="inline-flex items-center rounded-lg bg-gradient-to-r to-amber-400 to-amber-500 px-6 py-2 text-sm font-medium text-white hover:from-indigo-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                      class="inline-flex items-center rounded-lg bg-gradient-to-r to-rose-400 to-rose-500 px-6 py-2 text-sm font-medium text-white hover:from-rose-700 hover:to-rose-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
                       <CheckIcon v-if="!loading" class="mr-2 h-4 w-4" />
                       <svg v-else class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 24 24">

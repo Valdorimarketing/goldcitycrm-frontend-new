@@ -7,7 +7,7 @@
       <!-- Modal -->
       <div class="inline-block transform overflow-visible rounded-3xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 text-left align-bottom shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
         <!-- Header with gradient background -->
-        <div class="relative overflow-hidden rounded-t-3xl bg-gradient-to-r from-orange-500 to-amber-600 px-8 py-6">
+        <div class="relative overflow-hidden rounded-t-3xl bg-gradient-to-r from-orange-500 to-rose-600 px-8 py-6">
           <div class="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
           <div class="relative">
             <div class="flex items-center justify-between">
@@ -166,7 +166,7 @@
               <button
                 type="submit"
                 :disabled="loading || !hasChanges"
-                class="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-orange-500 to-amber-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-all hover:from-orange-600 hover:to-amber-700 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+                class="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-orange-500 to-rose-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-all hover:from-orange-600 hover:to-rose-700 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <span v-if="loading" class="flex items-center">
                   <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

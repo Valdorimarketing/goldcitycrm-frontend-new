@@ -55,7 +55,7 @@
                   <button
                     type="submit"
                     :disabled="saving"
-                    class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 sm:ml-3 sm:w-auto"
+                    class="inline-flex w-full justify-center rounded-md bg-rose-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-rose-500 disabled:opacity-50 sm:ml-3 sm:w-auto"
                   >
                     {{ saving ? 'Kaydediliyor...' : 'Kaydet' }}
                   </button>

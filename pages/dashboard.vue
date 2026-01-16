@@ -5,7 +5,7 @@
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
           <div class="flex items-center gap-4">
-            <div class="h-14 w-14 rounded-2xl bg-gradient-to-br to-amber-500 via-amber-500 to-amber-400 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+            <div class="h-14 w-14 rounded-2xl bg-gradient-to-br to-rose-500 via-rose-500 to-rose-400 flex items-center justify-center shadow-lg shadow-rose-500/30">
               <span class="text-xl font-bold text-white">
                 {{ authStore.user?.name?.charAt(0) || 'U' }}
               </span>
@@ -101,7 +101,7 @@
                 </div>
                 <NuxtLink 
                   to="/pool-data?tab=unassigned"
-                  class="text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:underline"
+                  class="text-xs font-medium text-rose-600 dark:text-rose-400 hover:underline"
                 >
                   {{ t('dashboard.view_all', 'Tümü →') }}
                 </NuxtLink>
@@ -127,11 +127,11 @@
                     @click="navigateTo(`/customers/show/${customer.id}`)"
                     class="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors group"
                   >
-                    <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white text-sm font-medium shadow-sm">
+                    <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-400 to-rose-500 flex items-center justify-center text-white text-sm font-medium shadow-sm">
                       {{ customer.name?.charAt(0) || '?' }}
                     </div>
                     <div class="flex-1 min-w-0">
-                      <p class="text-sm font-medium text-gray-900 dark:text-white truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                      <p class="text-sm font-medium text-gray-900 dark:text-white truncate group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">
                         {{ customer.name || t('dashboard.unassigned.no_name', 'İsimsiz') }}
                       </p>
                       <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
@@ -168,8 +168,8 @@
             <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden">
               <div class="px-5 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                  <div class="h-9 w-9 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
-                    <ClipboardDocumentListIcon class="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                  <div class="h-9 w-9 rounded-xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center">
+                    <ClipboardDocumentListIcon class="h-5 w-5 text-rose-600 dark:text-rose-400" />
                   </div>
                   <div>
                     <h3 class="font-semibold text-gray-900 dark:text-white text-sm">
@@ -182,7 +182,7 @@
                 </div>
                 <NuxtLink 
                   to="/assignments?tab=today"
-                  class="text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:underline"
+                  class="text-xs font-medium text-rose-600 dark:text-rose-400 hover:underline"
                 >
                   {{ t('dashboard.view_all', 'Tümü →') }}
                 </NuxtLink>
@@ -203,7 +203,7 @@
                   >
                     <div class="flex items-center justify-between mb-3">
                       <div class="flex items-center gap-2">
-                        <div class="h-8 w-8 rounded-lg bg-gradient-to-br from-purple-400 to-amber-400 flex items-center justify-center text-white text-xs font-bold">
+                        <div class="h-8 w-8 rounded-lg bg-gradient-to-br from-rose-400 to-rose-400 flex items-center justify-center text-white text-xs font-bold">
                           {{ assignment.salesRepName?.charAt(0) || '?' }}
                         </div>
                         <div>
@@ -213,7 +213,7 @@
                           </p>
                         </div>
                       </div>
-                      <span class="px-2.5 py-1 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-sm font-bold rounded-lg">
+                      <span class="px-2.5 py-1 bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 text-sm font-bold rounded-lg">
                         {{ assignment.totalCount }}
                       </span>
                     </div>
@@ -225,8 +225,8 @@
                           {{ t('dashboard.assignments_today.new', 'Yeni') }}
                         </p>
                       </div>
-                      <div class="text-center p-2 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
-                        <p class="text-lg font-bold text-amber-600 dark:text-amber-400">{{ assignment.dynamicSearchCount }}</p>
+                      <div class="text-center p-2 bg-rose-50 dark:bg-rose-900/20 rounded-lg">
+                        <p class="text-lg font-bold text-rose-600 dark:text-rose-400">{{ assignment.dynamicSearchCount }}</p>
                         <p class="text-xs text-gray-500 dark:text-gray-400">
                           {{ t('dashboard.assignments_today.dynamic', 'Dinamik') }}
                         </p>
@@ -241,7 +241,7 @@
                   </div>
 
                   <!-- Totals -->
-                  <div class="p-4 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-xl border border-indigo-100 dark:border-indigo-800">
+                  <div class="p-4 bg-gradient-to-r from-rose-50 to-rose-50 dark:from-rose-900/20 dark:to-rose-900/20 rounded-xl border border-rose-100 dark:border-rose-800">
                     <div class="flex items-center justify-between mb-2">
                       <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
                         {{ t('dashboard.assignments_today.total_assignment', 'Toplam Atama') }}
@@ -256,7 +256,7 @@
                         </span>
                       </div>
                       <div>
-                        <span class="font-semibold text-amber-600 dark:text-amber-400">{{ totalDynamicSearch }}</span>
+                        <span class="font-semibold text-rose-600 dark:text-rose-400">{{ totalDynamicSearch }}</span>
                         <span class="text-gray-500 dark:text-gray-400 ml-1">
                           {{ t('dashboard.assignments_today.dynamic', 'Dinamik') }}
                         </span>
@@ -290,8 +290,8 @@
           <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden h-full">
             <div class="px-5 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
               <div class="flex items-center gap-3">
-                <div class="h-9 w-9 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                  <ClockIcon class="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                <div class="h-9 w-9 rounded-xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center">
+                  <ClockIcon class="h-5 w-5 text-rose-600 dark:text-rose-400" />
                 </div>
                 <div>
                   <h3 class="font-semibold text-gray-900 dark:text-white text-sm">
@@ -304,7 +304,7 @@
               </div>
               <NuxtLink 
                 to="/pool-data?tab=assigned"
-                class="text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:underline"
+                class="text-xs font-medium text-rose-600 dark:text-rose-400 hover:underline"
               >
                 {{ t('dashboard.view_all', 'Tümü →') }}
               </NuxtLink>
@@ -330,14 +330,14 @@
                   @click="navigateTo(`/customers/show/${customer.id}`)"
                   class="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors group"
                 >
-                  <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-sm font-medium shadow-sm">
+                  <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-rose-400 to-orange-500 flex items-center justify-center text-white text-sm font-medium shadow-sm">
                     {{ customer.name?.charAt(0) || '?' }}
                   </div>
                   <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium text-gray-900 dark:text-white truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                    <p class="text-sm font-medium text-gray-900 dark:text-white truncate group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">
                       {{ customer.name || t('dashboard.unassigned.no_name', 'İsimsiz') }}
                     </p>
-                    <p class="text-xs text-indigo-600 dark:text-indigo-400 truncate">
+                    <p class="text-xs text-rose-600 dark:text-rose-400 truncate">
                       {{ customer.relevantUserInfo?.name || t('dashboard.assigned_waiting.unknown', 'Bilinmiyor') }}
                     </p>
                   </div>
@@ -372,11 +372,11 @@
       <!-- USER VIEW - My Assignments Hero Card -->
       <template v-else-if="isUser">
         <div class="lg:col-span-12">
-          <div class="relative overflow-hidden bg-gradient-to-br to-amber-500 via-amber-500 to-amber-400 rounded-3xl p-1">
+          <div class="relative overflow-hidden bg-gradient-to-br to-rose-500 via-rose-500 to-rose-400 rounded-3xl p-1">
             <div class="bg-white dark:bg-gray-800 rounded-[22px] p-6">
               <div class="flex items-center justify-between mb-6">
                 <div class="flex items-center gap-4">
-                  <div class="h-14 w-14 rounded-2xl bg-gradient-to-br to-amber-500 to-amber-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                  <div class="h-14 w-14 rounded-2xl bg-gradient-to-br to-rose-500 to-rose-500 flex items-center justify-center shadow-lg shadow-rose-500/30">
                     <ClipboardDocumentCheckIcon class="h-7 w-7 text-white" />
                   </div>
                   <div>
@@ -393,8 +393,8 @@
               <!-- Loading -->
               <div v-if="loadingMyAssignments" class="flex items-center justify-center py-12">
                 <div class="relative">
-                  <div class="w-12 h-12 rounded-full border-4 border-indigo-100 dark:border-indigo-900/50"></div>
-                  <div class="absolute top-0 left-0 w-12 h-12 rounded-full border-4 border-transparent border-t-indigo-600 animate-spin"></div>
+                  <div class="w-12 h-12 rounded-full border-4 border-rose-100 dark:border-rose-900/50"></div>
+                  <div class="absolute top-0 left-0 w-12 h-12 rounded-full border-4 border-transparent border-t-rose-600 animate-spin"></div>
                 </div>
               </div>
 
@@ -403,8 +403,8 @@
                 <!-- Total -->
                 <div class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 rounded-2xl p-5 border border-gray-200 dark:border-gray-600">
                   <div class="flex items-center justify-between mb-3">
-                    <div class="h-10 w-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
-                      <UsersIcon class="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+                    <div class="h-10 w-10 rounded-xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center">
+                      <UsersIcon class="h-5 w-5 text-rose-600 dark:text-rose-400" />
                     </div>
                     <span class="text-3xl font-bold text-gray-900 dark:text-white">{{ myAssignments.totalCount }}</span>
                   </div>
@@ -431,17 +431,17 @@
                 </div>
 
                 <!-- Dynamic Search -->
-                <div class="bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-2xl p-5 border-l-4 border-amber-500">
+                <div class="bg-gradient-to-br from-rose-50 to-yellow-50 dark:from-rose-900/20 dark:to-yellow-900/20 rounded-2xl p-5 border-l-4 border-rose-500">
                   <div class="flex items-center justify-between mb-3">
-                    <div class="h-10 w-10 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                      <MagnifyingGlassIcon class="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                    <div class="h-10 w-10 rounded-xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center">
+                      <MagnifyingGlassIcon class="h-5 w-5 text-rose-600 dark:text-rose-400" />
                     </div>
-                    <span class="text-3xl font-bold text-amber-600 dark:text-amber-400">{{ myAssignments.dynamicSearchCount }}</span>
+                    <span class="text-3xl font-bold text-rose-600 dark:text-rose-400">{{ myAssignments.dynamicSearchCount }}</span>
                   </div>
                   <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
                     {{ t('dashboard.my_assignments.dynamic_search', 'Dinamik Arama') }}
                   </p>
-                  <p class="text-xs text-amber-600 dark:text-amber-400 mt-1 flex items-center gap-1">
+                  <p class="text-xs text-rose-600 dark:text-rose-400 mt-1 flex items-center gap-1">
                     <BoltIcon class="h-3 w-3" />
                     {{ t('dashboard.my_assignments.dynamic_search_description', 'Hızlı takip gerekli') }}
                   </p>
@@ -495,8 +495,8 @@
       <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden lg:col-span-6">
         <div class="px-5 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <div class="h-9 w-9 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
-              <UsersIcon class="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+            <div class="h-9 w-9 rounded-xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center">
+              <UsersIcon class="h-5 w-5 text-rose-600 dark:text-rose-400" />
             </div>
             <h3 class="font-semibold text-gray-900 dark:text-white">
               {{ t('dashboard.recent_customers.title', 'Son Müşteriler') }}
@@ -504,7 +504,7 @@
           </div>
           <NuxtLink 
             to="/customers"
-            class="text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:underline"
+            class="text-xs font-medium text-rose-600 dark:text-rose-400 hover:underline"
           >
             {{ t('dashboard.recent_customers.view_all', 'Tümünü gör →') }}
           </NuxtLink>
@@ -530,11 +530,11 @@
               @click="navigateTo(`/customers/show/${customer.id}`)"
               class="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors group"
             >
-              <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-sm font-medium shadow-sm">
+              <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-rose-400 to-rose-500 flex items-center justify-center text-white text-sm font-medium shadow-sm">
                 {{ customer.name?.charAt(0) || '?' }}
               </div>
               <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium text-gray-900 dark:text-white truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                <p class="text-sm font-medium text-gray-900 dark:text-white truncate group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">
                   {{ customer.name || t('dashboard.unassigned.no_name', 'İsimsiz') }} {{ customer.surname || '' }}
                 </p>
                 <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
@@ -563,8 +563,8 @@
       <!-- <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden  lg:col-span-3">
         <div class="px-5 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <div class="h-9 w-9 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-              <BellAlertIcon class="h-5 w-5 text-amber-600 dark:text-amber-400" />
+            <div class="h-9 w-9 rounded-xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center">
+              <BellAlertIcon class="h-5 w-5 text-rose-600 dark:text-rose-400" />
             </div>
             <h3 class="font-semibold text-gray-900 dark:text-white">
               {{ t('dashboard.reminders.title', 'Yaklaşan Hatırlatmalar') }}
@@ -590,17 +590,17 @@
               @click="reminder.customer && navigateTo(`/customers/show/${reminder.customer}`)"
               class="flex items-start gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors group"
             >
-              <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-sm font-medium shadow-sm flex-shrink-0">
+              <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-rose-400 to-orange-500 flex items-center justify-center text-white text-sm font-medium shadow-sm flex-shrink-0">
                 {{ reminder.customerInfo?.name?.charAt(0) || '?' }}
               </div>
               <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium text-gray-900 dark:text-white truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                <p class="text-sm font-medium text-gray-900 dark:text-white truncate group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">
                   {{ reminder.customerInfo?.name || t('dashboard.reminders.unknown_customer', 'Bilinmeyen') }}
                 </p>
                 <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
                   {{ reminder.note }}
                 </p>
-                <p class="text-xs text-amber-600 dark:text-amber-400 mt-1 flex items-center gap-1">
+                <p class="text-xs text-rose-600 dark:text-rose-400 mt-1 flex items-center gap-1">
                   <ClockIcon class="h-3 w-3" />
                   {{ formatDateTime(reminder.remindingAt) }}
                 </p>
@@ -632,7 +632,7 @@
         </div>
         <NuxtLink 
           to="/meetings"
-          class="text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:underline"
+          class="text-xs font-medium text-rose-600 dark:text-rose-400 hover:underline"
         >
           {{ t('dashboard.recent_customers.view_all', 'Tümünü gör →') }}
         </NuxtLink>
@@ -673,7 +673,7 @@
                   <div class="flex items-center gap-3">
                     <div class="relative">
                       <div 
-                        class="h-10 w-10 rounded-full flex items-center justify-center text-sm font-semibold shadow-sm bg-gradient-to-br from-indigo-400 to-amber-500 text-white" 
+                        class="h-10 w-10 rounded-full flex items-center justify-center text-sm font-semibold shadow-sm bg-gradient-to-br from-rose-400 to-rose-500 text-white" 
                       >
                         {{ meeting.customerData?.name.charAt(0).toUpperCase() }}
                       </div>
@@ -681,7 +681,7 @@
                     <div>
                       <NuxtLink 
                         :to="`/customers/show/${meeting.customerData?.id}`"
-                        class="font-medium text-gray-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                        class="font-medium text-gray-900 dark:text-white hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
                       >
                         {{ meeting.customerData?.name }}
                       </NuxtLink>
@@ -798,16 +798,16 @@ const myAssignments = ref(null) as any
 
 // Stat card colors
 const statColors = [
-  'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400',
+  'bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400',
   'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400',
-  'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400',
+  'bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400',
   'bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400'
 ]
 
 const statGradients = [
-  'bg-gradient-to-r to-amber-500 to-purple-500',
+  'bg-gradient-to-r to-rose-500 to-rose-500',
   'bg-gradient-to-r from-emerald-500 to-teal-500',
-  'bg-gradient-to-r from-purple-500 to-amber-400',
+  'bg-gradient-to-r from-rose-500 to-rose-400',
   'bg-gradient-to-r from-cyan-500 to-blue-500'
 ]
 

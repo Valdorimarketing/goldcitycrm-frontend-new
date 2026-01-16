@@ -4,7 +4,7 @@
     <div class="sm:flex sm:items-center sm:justify-between mb-8">
       <div>
         <h1 class="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-          <div class="p-2 bg-gradient-to-br to-amber-500 to-amber-500 rounded-xl shadow-lg">
+          <div class="p-2 bg-gradient-to-br to-rose-500 to-rose-500 rounded-xl shadow-lg">
             <ChartBarIcon class="h-8 w-8 text-white" />
           </div>
           WhatConverts
@@ -31,18 +31,18 @@
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
       <!-- Toplam Lead -->
-      <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br to-amber-500 to-amber-500 p-6 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
+      <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br to-rose-500 to-rose-500 p-6 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
         <div class="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-white/10 blur-2xl group-hover:bg-white/20 transition-all duration-500"></div>
         <div class="relative">
           <div class="flex items-center justify-between mb-4">
             <div class="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
               <UsersIcon class="h-7 w-7 text-white" />
             </div>
-            <span class="text-xs font-medium text-indigo-100 bg-white/20 px-2 py-1 rounded-full">
+            <span class="text-xs font-medium text-rose-100 bg-white/20 px-2 py-1 rounded-full">
               Son {{ statsDays }} gün
             </span>
           </div>
-          <p class="text-indigo-100 text-sm font-medium mb-1">Toplam Lead</p>
+          <p class="text-rose-100 text-sm font-medium mb-1">Toplam Lead</p>
           <p class="text-3xl font-bold text-white mb-2">{{ stats.total || 0 }}</p>
         </div>
       </div>
@@ -85,7 +85,7 @@
       </div>
 
       <!-- Atlanan -->
-      <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 p-6 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
+      <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-rose-500 to-orange-500 p-6 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
         <div class="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-white/10 blur-2xl group-hover:bg-white/20 transition-all duration-500"></div>
         <div class="relative">
           <div class="flex items-center justify-between mb-4">
@@ -93,9 +93,9 @@
               <ForwardIcon class="h-7 w-7 text-white" />
             </div>
           </div>
-          <p class="text-amber-100 text-sm font-medium mb-1">Atlanan</p>
+          <p class="text-rose-100 text-sm font-medium mb-1">Atlanan</p>
           <p class="text-3xl font-bold text-white mb-2">{{ skippedCount }}</p>
-          <div class="flex items-center text-amber-100 text-xs">
+          <div class="flex items-center text-rose-100 text-xs">
             <span>Spam: {{ getStatByStatus('spam') }} | Duplicate: {{ getStatByStatus('duplicate') }}</span>
           </div>
         </div>
@@ -107,8 +107,8 @@
       <!-- Lead Tiplerine Göre -->
       <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-100 dark:border-gray-700">
         <div class="flex items-center gap-3 mb-6">
-          <div class="p-2 bg-indigo-100 dark:bg-indigo-900/50 rounded-xl">
-            <PhoneIcon class="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
+          <div class="p-2 bg-rose-100 dark:bg-rose-900/50 rounded-xl">
+            <PhoneIcon class="h-6 w-6 text-rose-600 dark:text-rose-400" />
           </div>
           <div>
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Lead Tiplerine Göre</h3>
@@ -129,7 +129,7 @@
             </div>
             <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
               <div 
-                class="bg-gradient-to-r to-amber-500 to-purple-500 h-2.5 rounded-full transition-all duration-1000"
+                class="bg-gradient-to-r to-rose-500 to-rose-500 h-2.5 rounded-full transition-all duration-1000"
                 :style="{ width: getBarWidth(item.count, stats.byType) + '%' }"
               ></div>
             </div>
@@ -182,8 +182,8 @@
       <div class="p-6 border-b border-gray-200 dark:border-gray-700">
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div class="flex items-center gap-3">
-            <div class="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-xl">
-              <ClipboardDocumentListIcon class="h-6 w-6 text-purple-600 dark:text-purple-400" />
+            <div class="p-2 bg-rose-100 dark:bg-rose-900/50 rounded-xl">
+              <ClipboardDocumentListIcon class="h-6 w-6 text-rose-600 dark:text-rose-400" />
             </div>
             <div>
               <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Webhook Logları</h3>
@@ -228,8 +228,8 @@
       <!-- Loading State -->
       <div v-if="loading" class="flex flex-col items-center justify-center py-16">
         <div class="relative">
-          <div class="w-16 h-16 border-4 border-indigo-200 dark:border-indigo-900 rounded-full animate-spin"></div>
-          <div class="absolute top-0 left-0 w-16 h-16 border-4 border-transparent border-t-indigo-600 rounded-full animate-spin"></div>
+          <div class="w-16 h-16 border-4 border-rose-200 dark:border-rose-900 rounded-full animate-spin"></div>
+          <div class="absolute top-0 left-0 w-16 h-16 border-4 border-transparent border-t-rose-600 rounded-full animate-spin"></div>
         </div>
         <p class="mt-4 text-gray-600 dark:text-gray-400 animate-pulse">Veriler yükleniyor...</p>
       </div>
@@ -307,7 +307,7 @@
                 <NuxtLink 
                   v-if="log.customerId" 
                   :to="`/customers/show/${log.customerId}`"
-                  class="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors"
+                  class="text-sm font-medium text-rose-600 dark:text-rose-400 hover:text-rose-800 dark:hover:text-rose-300 transition-colors"
                 >
                   #{{ log.customerId }}
                 </NuxtLink>
@@ -323,15 +323,15 @@
                     v-if="log.status === 'error'"
                     @click="retryWebhook(log.id)"
                     :disabled="retrying === log.id"
-                    class="p-2 text-amber-600 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-900/30 rounded-lg transition-colors disabled:opacity-50"
+                    class="p-2 text-rose-600 hover:text-rose-800 dark:text-rose-400 dark:hover:text-rose-300 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-lg transition-colors disabled:opacity-50"
                     title="Yeniden Dene"
                   >
                     <ArrowPathIcon v-if="retrying !== log.id" class="h-5 w-5" />
-                    <div v-else class="h-5 w-5 border-2 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
+                    <div v-else class="h-5 w-5 border-2 border-rose-500 border-t-transparent rounded-full animate-spin"></div>
                   </button>
                   <button
                     @click="showLogDetail(log)"
-                    class="p-2 text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition-colors"
+                    class="p-2 text-rose-600 hover:text-rose-800 dark:text-rose-400 dark:hover:text-rose-300 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-lg transition-colors"
                     title="Detay"
                   >
                     <EyeIcon class="h-5 w-5" />
@@ -397,7 +397,7 @@
             <!-- Modal Header -->
             <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
               <h2 class="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                <Cog6ToothIcon class="h-6 w-6 text-indigo-500" />
+                <Cog6ToothIcon class="h-6 w-6 text-rose-500" />
                 Entegrasyon Ayarları
               </h2>
               <button 
@@ -476,12 +476,12 @@
                   Webhook URL
                 </label>
                 <div class="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                  <code class="flex-1 text-sm text-indigo-600 dark:text-indigo-400 truncate">
+                  <code class="flex-1 text-sm text-rose-600 dark:text-rose-400 truncate">
                     {{ webhookUrl }}
                   </code>
                   <button 
                     @click="copyWebhookUrl"
-                    class="p-2 text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-white dark:hover:bg-gray-800 rounded-lg transition-colors"
+                    class="p-2 text-gray-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-white dark:hover:bg-gray-800 rounded-lg transition-colors"
                   >
                     <ClipboardIcon v-if="!copied" class="h-5 w-5" />
                     <CheckIcon v-else class="h-5 w-5 text-emerald-500" />
@@ -560,7 +560,7 @@
                   <NuxtLink 
                     v-if="selectedLog.customerId" 
                     :to="`/customers/show/${selectedLog.customerId}`"
-                    class="text-sm font-medium text-indigo-600 dark:text-indigo-400"
+                    class="text-sm font-medium text-rose-600 dark:text-rose-400"
                   >
                     #{{ selectedLog.customerId }}
                   </NuxtLink>
@@ -755,7 +755,7 @@ function getStatusClass(status) {
   const classes = {
     'success': 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300',
     'error': 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300',
-    'skipped': 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300',
+    'skipped': 'bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-300',
     'duplicate': 'bg-orange-100 text-orange-800 dark:bg-orange-900/50 dark:text-orange-300',
     'spam': 'bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-300'
   }

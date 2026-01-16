@@ -26,7 +26,7 @@
           >
             <DialogPanel class="relative w-full max-w-lg transform overflow-visible rounded-3xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-2xl transition-all">
               <!-- Header with gradient background -->
-              <div class="relative overflow-hidden rounded-t-3xl bg-gradient-to-r to-amber-400 to-amber-500 px-8 py-6">
+              <div class="relative overflow-hidden rounded-t-3xl bg-gradient-to-r to-rose-400 to-rose-500 px-8 py-6">
                 <div class="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
                 <div class="relative">
                   <div class="flex items-center justify-between">
@@ -38,7 +38,7 @@
                         <DialogTitle as="h3" class="text-xl font-bold text-white">
                           Yeni Aksiyon Ekle
                         </DialogTitle>
-                        <p class="mt-1 text-sm text-indigo-100">
+                        <p class="mt-1 text-sm text-rose-100">
                           Ürününüz için planlı bir aksiyon oluşturun
                         </p>
                       </div>
@@ -58,7 +58,7 @@
                 <!-- Planned Date with enhanced styling -->
                 <div class="space-y-3">
                   <div class="flex items-center space-x-2">
-                    <CalendarDaysIcon class="h-5 w-5 text-indigo-600" />
+                    <CalendarDaysIcon class="h-5 w-5 text-rose-600" />
                     <label class="text-sm font-semibold text-gray-700 dark:text-gray-200">
                       Planlanan Tarih
                     </label>
@@ -67,7 +67,7 @@
                     <div class="relative">
                       <select
                         v-model="form.dateType"
-                        class="w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-3 pr-10 text-sm font-medium text-gray-700 transition-all hover:border-indigo-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
+                        class="w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-3 pr-10 text-sm font-medium text-gray-700 transition-all hover:border-rose-400 focus:border-rose-500 focus:outline-none focus:ring-2 focus:ring-rose-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
                         required
                       >
                         <option value="before">📅 Önce</option>
@@ -81,15 +81,15 @@
                         type="number"
                         min="1"
                         placeholder="Gün sayısı"
-                        class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 transition-all hover:border-indigo-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
+                        class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 transition-all hover:border-rose-400 focus:border-rose-500 focus:outline-none focus:ring-2 focus:ring-rose-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
                         required
                       />
                       <span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-gray-400">gün</span>
                     </div>
                   </div>
-                  <div class="flex items-center space-x-2 rounded-xl bg-indigo-50 dark:bg-indigo-900/20 p-3">
-                    <InformationCircleIcon class="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
-                    <p class="text-xs text-indigo-600 dark:text-indigo-400">
+                  <div class="flex items-center space-x-2 rounded-xl bg-rose-50 dark:bg-rose-900/20 p-3">
+                    <InformationCircleIcon class="h-4 w-4 text-rose-600 dark:text-rose-400" />
+                    <p class="text-xs text-rose-600 dark:text-rose-400">
                       Aksiyon {{ form.dateType === 'before' ? 'öncesinde' : 'sonrasında' }} {{ form.days }} gün {{ form.dateType === 'before' ? 'önce' : 'sonra' }} tetiklenecek
                     </p>
                   </div>
@@ -98,7 +98,7 @@
                 <!-- Name with enhanced styling -->
                 <div class="space-y-3">
                   <div class="flex items-center space-x-2">
-                    <DocumentTextIcon class="h-5 w-5 text-indigo-600" />
+                    <DocumentTextIcon class="h-5 w-5 text-rose-600" />
                     <label for="name" class="text-sm font-semibold text-gray-700 dark:text-gray-200">
                       Aksiyon Adı
                     </label>
@@ -109,7 +109,7 @@
                       v-model="form.name"
                       type="text"
                       required
-                      class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 pl-12 text-sm font-medium text-gray-700 transition-all hover:border-indigo-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
+                      class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 pl-12 text-sm font-medium text-gray-700 transition-all hover:border-rose-400 focus:border-rose-500 focus:outline-none focus:ring-2 focus:ring-rose-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
                       placeholder="Örn: Müşteri ile görüşme"
                     />
                     <TagIcon class="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
@@ -119,7 +119,7 @@
                 <!-- Description with enhanced styling -->
                 <div class="space-y-3">
                   <div class="flex items-center space-x-2">
-                    <ChatBubbleBottomCenterTextIcon class="h-5 w-5 text-indigo-600" />
+                    <ChatBubbleBottomCenterTextIcon class="h-5 w-5 text-rose-600" />
                     <label for="description" class="text-sm font-semibold text-gray-700 dark:text-gray-200">
                       Açıklama
                     </label>
@@ -130,7 +130,7 @@
                       v-model="form.description"
                       rows="4"
                       required
-                      class="w-full resize-none rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 transition-all hover:border-indigo-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
+                      class="w-full resize-none rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 transition-all hover:border-rose-400 focus:border-rose-500 focus:outline-none focus:ring-2 focus:ring-rose-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
                       placeholder="Bu aksiyonun detaylarını ve amacını açıklayın..."
                     />
                     <div class="absolute bottom-2 right-2 text-xs text-gray-400">
@@ -172,7 +172,7 @@
                     <button
                       type="submit"
                       :disabled="loading || !form.name || !form.description"
-                      class="inline-flex items-center justify-center rounded-xl bg-gradient-to-r to-amber-400 to-amber-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-all hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+                      class="inline-flex items-center justify-center rounded-xl bg-gradient-to-r to-rose-400 to-rose-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-all hover:from-rose-700 hover:to-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-500/20 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       <span v-if="loading" class="flex items-center">
                         <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

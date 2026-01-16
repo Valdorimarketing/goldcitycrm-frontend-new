@@ -580,14 +580,14 @@
                     leave-active-class="transition ease-in duration-150"
                     leave-from-class="opacity-100 translate-y-0"
                     leave-to-class="opacity-0 -translate-y-2">
-                    <div v-if="showReminderFields" class="mt-6 p-6 bg-amber-50 dark:bg-amber-900/20 rounded-2xl border border-amber-200 dark:border-amber-800">
+                    <div v-if="showReminderFields" class="mt-6 p-6 bg-rose-50 dark:bg-rose-900/20 rounded-2xl border border-rose-200 dark:border-rose-800">
                       <div class="flex items-center gap-3 mb-4">
-                        <div class="p-2 bg-amber-100 dark:bg-amber-900/50 rounded-xl">
-                          <BellIcon class="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                        <div class="p-2 bg-rose-100 dark:bg-rose-900/50 rounded-xl">
+                          <BellIcon class="h-5 w-5 text-rose-600 dark:text-rose-400" />
                         </div>
                         <div>
                           <h4 class="font-semibold text-slate-900 dark:text-white">{{ t('customer_edit.reminder.title', 'Hatırlatma Bilgisi') }}</h4>
-                          <p class="text-sm text-amber-700 dark:text-amber-300">
+                          <p class="text-sm text-rose-700 dark:text-rose-300">
                             {{ tp('customer_edit.reminder.days_later', { days: selectedReminderDays }, '{days} gün sonra aranacak') }}
                           </p>
                         </div>
@@ -595,7 +595,7 @@
 
                       <div v-if="!showReminderInputs">
                         <button type="button" @click="showReminderInputs = true"
-                          class="inline-flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-xl transition-colors">
+                          class="inline-flex items-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-medium rounded-xl transition-colors">
                           <PlusIcon class="h-4 w-4" />
                           {{ t('customer_edit.reminder.add_button', 'Hatırlatma da ekle') }}
                         </button>
@@ -1110,7 +1110,7 @@ const setSaveStatus = (status, type) => {
     ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400'
     : type === 'error'
     ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
-    : 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400'
+    : 'bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400'
   saveStatusIcon.value = type === 'success' ? CheckCircleIcon : type === 'error' ? ExclamationCircleIcon : ArrowPathIcon
 
   if (type !== 'loading') {

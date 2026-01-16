@@ -12,7 +12,7 @@
         <div class="flex items-center space-x-4">
           <button
             @click="markAllAsDone"
-            class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline disabled:opacity-50"
+            class="text-sm text-rose-600 dark:text-rose-400 hover:underline disabled:opacity-50"
             :disabled="!undoneNotifications.length"
           >
             Tümünü tamamla

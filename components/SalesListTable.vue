@@ -25,9 +25,9 @@
     <!-- Loading State -->
     <div v-if="loading" class="flex flex-col items-center justify-center py-16">
       <div class="relative">
-        <div class="w-16 h-16 border-4 border-indigo-200 dark:border-indigo-900 rounded-full animate-spin"></div>
+        <div class="w-16 h-16 border-4 border-rose-200 dark:border-rose-900 rounded-full animate-spin"></div>
         <div
-          class="absolute top-0 left-0 w-16 h-16 border-4 border-transparent border-t-indigo-600 rounded-full animate-spin">
+          class="absolute top-0 left-0 w-16 h-16 border-4 border-transparent border-t-rose-600 rounded-full animate-spin">
         </div>
       </div>
       <p class="mt-4 text-gray-600 dark:text-gray-400 animate-pulse">Satışlar yükleniyor...</p>
@@ -95,14 +95,14 @@
             <td class="px-6 py-4 whitespace-nowrap">
               <div class="flex items-center">
                 <div
-                  class="h-10 w-10 rounded-full bg-gradient-to-br to-amber-500 to-purple-500 flex items-center justify-center shadow-lg">
+                  class="h-10 w-10 rounded-full bg-gradient-to-br to-rose-500 to-rose-500 flex items-center justify-center shadow-lg">
                   <span class="text-sm font-bold text-white">
                     {{ sale.customer?.name?.charAt(0)?.toUpperCase() || '?' }}
                   </span>
                 </div>
                 <div class="ml-4">
                   <NuxtLink :to="`/customers/show/${sale.customer?.id}`"
-                    class="text-sm font-semibold text-gray-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                    class="text-sm font-semibold text-gray-900 dark:text-white hover:text-rose-600 dark:hover:text-rose-400 transition-colors">
                     {{ sale.customer?.name || 'Bilinmeyen' }}
                   </NuxtLink>
                   <p class="text-xs text-gray-500 dark:text-gray-400">ID: {{ sale.customer?.id }}</p>
@@ -131,7 +131,7 @@
                   class="text-xs text-gray-600 dark:text-gray-400 truncate max-w-xs">
                   {{ product.productDetails?.name || 'Bilinmeyen' }}
                 </span>
-                <span v-if="sale.products?.length > 2" class="text-xs text-indigo-600 dark:text-indigo-400">
+                <span v-if="sale.products?.length > 2" class="text-xs text-rose-600 dark:text-rose-400">
                   +{{ sale.products.length - 2 }} daha
                 </span>
               </div>
@@ -154,7 +154,7 @@
             <!-- Remaining Amount -->
             <td class="px-6 py-4 whitespace-nowrap">
               <span class="text-sm font-semibold"
-                :class="sale.remainingAmount > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-gray-400'">
+                :class="sale.remainingAmount > 0 ? 'text-rose-600 dark:text-rose-400' : 'text-gray-400'">
                 {{ formatMoney(sale.remainingAmount, sale.currency) }}
               </span>
             </td>
@@ -167,7 +167,7 @@
                 Tamamlandı
               </span>
               <span v-else-if="sale.paidAmount > 0"
-                class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300">
+                class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-300">
                 <ClockIcon class="w-3.5 h-3.5 mr-1" />
                 Kısmi Ödeme
               </span>
@@ -189,7 +189,7 @@
             <!-- Actions -->
             <td class="px-6 py-4 whitespace-nowrap text-right">
               <button @click="$emit('view-detail', sale)"
-                class="p-2 text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 rounded-lg transition-colors"
+                class="p-2 text-rose-600 hover:text-rose-900 dark:text-rose-400 dark:hover:text-rose-300 hover:bg-rose-50 dark:hover:bg-rose-900/50 rounded-lg transition-colors"
                 title="Detayları Görüntüle">
                 <EyeIcon class="h-5 w-5" />
               </button>
@@ -232,7 +232,7 @@
         </div>
         <div>
           <p class="text-xs text-gray-500 dark:text-gray-400">Bekleyen</p>
-          <p class="text-sm font-semibold text-amber-600 dark:text-amber-400">{{ totalRemaining }}</p>
+          <p class="text-sm font-semibold text-rose-600 dark:text-rose-400">{{ totalRemaining }}</p>
         </div>
       </div>
     </div>

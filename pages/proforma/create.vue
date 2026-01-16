@@ -335,7 +335,7 @@
               <input v-model.number="formData.grandTotal" type="number" min="0" step="0.01" class="form-input w-48"
                 @input="manualGrandTotal = true" required />
               <span class="text-lg font-bold text-gray-900 dark:text-white">{{ formData.currency }}</span>
-              <span v-if="calculatedTotal !== formData.grandTotal && manualGrandTotal" class="text-xs text-amber-600">
+              <span v-if="calculatedTotal !== formData.grandTotal && manualGrandTotal" class="text-xs text-rose-600">
                 ({{ t('proforma.label_estimated_cost') }}: {{ formatCurrency(calculatedTotal, formData.currency) }})
               </span>
             </div>

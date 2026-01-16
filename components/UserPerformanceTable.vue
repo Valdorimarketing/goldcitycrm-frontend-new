@@ -23,15 +23,15 @@
       </div>
 
       <div
-        class="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl p-4">
-        <p class="text-xs font-medium text-purple-600 dark:text-purple-400 uppercase mb-1">Ortalama Satış</p>
+        class="bg-gradient-to-br from-rose-50 to-rose-100 dark:from-rose-900/20 dark:to-rose-800/20 rounded-xl p-4">
+        <p class="text-xs font-medium text-rose-600 dark:text-rose-400 uppercase mb-1">Ortalama Satış</p>
         <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ avgSalesPerUser }}</p>
         <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">satış/temsilci</p>
       </div>
 
       <div
-        class="bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 rounded-xl p-4">
-        <p class="text-xs font-medium text-amber-600 dark:text-amber-400 uppercase mb-1">En Yüksek Başarı</p>
+        class="bg-gradient-to-br from-rose-50 to-rose-100 dark:from-rose-900/20 dark:to-rose-800/20 rounded-xl p-4">
+        <p class="text-xs font-medium text-rose-600 dark:text-rose-400 uppercase mb-1">En Yüksek Başarı</p>
         <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ topConversionRate }}%</p>
         <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">tamamlanma oranı</p>
       </div>
@@ -40,7 +40,7 @@
     <!-- Loading State -->
     <div v-if="loading" class="flex items-center justify-center py-16">
       <div class="text-center">
-        <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-indigo-600"></div>
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-rose-600"></div>
         <p class="mt-4 text-gray-600 dark:text-gray-400">Kullanıcı verileri yükleniyor...</p>
       </div>
     </div>
@@ -109,7 +109,7 @@
             <td class="px-6 py-4 whitespace-nowrap">
               <div class="flex items-center">
                 <div
-                  class="h-10 w-10 rounded-full bg-gradient-to-br to-amber-500 to-purple-500 flex items-center justify-center shadow-lg">
+                  class="h-10 w-10 rounded-full bg-gradient-to-br to-rose-500 to-rose-500 flex items-center justify-center shadow-lg">
                   <span class="text-sm font-bold text-white">
                     {{ user.userName?.charAt(0)?.toUpperCase() || '?' }}
                   </span>
@@ -150,7 +150,7 @@
             <!-- Partial -->
             <td class="px-6 py-4 whitespace-nowrap text-center">
               <div class="inline-flex flex-col items-center">
-                <span class="text-sm font-semibold text-amber-600 dark:text-amber-400">
+                <span class="text-sm font-semibold text-rose-600 dark:text-rose-400">
                   {{ user.partialSales }}
                 </span>
                 <span class="text-xs text-gray-500 dark:text-gray-400">
@@ -200,7 +200,7 @@
             <!-- Actions -->
             <td class="px-6 py-4 whitespace-nowrap text-right">
               <button @click="$emit('select-user', user.userId)"
-                class="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg bg-indigo-100 text-indigo-700 hover:bg-indigo-200 dark:bg-indigo-900/50 dark:text-indigo-300 dark:hover:bg-indigo-900 transition-colors">
+                class="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg bg-rose-100 text-rose-700 hover:bg-rose-200 dark:bg-rose-900/50 dark:text-rose-300 dark:hover:bg-rose-900 transition-colors">
                 <FunnelIcon class="h-3.5 w-3.5 mr-1" />
                 Filtrele
               </button>
@@ -237,7 +237,7 @@
             <div class="relative pt-1">
               <div class="flex mb-2 items-center justify-between">
                 <div>
-                  <span class="text-xs font-semibold inline-block text-indigo-600 dark:text-indigo-400">
+                  <span class="text-xs font-semibold inline-block text-rose-600 dark:text-rose-400">
                     {{ user.totalSales }} satış
                   </span>
                 </div>
@@ -245,7 +245,7 @@
               <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-200 dark:bg-gray-600">
                 <div class="bg-emerald-500 transition-all duration-1000"
                   :style="{ width: formatPercentage(user.completedSales, user.totalSales) + '%' }"></div>
-                <div class="bg-amber-500 transition-all duration-1000"
+                <div class="bg-rose-500 transition-all duration-1000"
                   :style="{ width: formatPercentage(user.partialSales, user.totalSales) + '%' }"></div>
                 <div class="bg-red-500 transition-all duration-1000"
                   :style="{ width: formatPercentage(user.unpaidSales, user.totalSales) + '%' }"></div>

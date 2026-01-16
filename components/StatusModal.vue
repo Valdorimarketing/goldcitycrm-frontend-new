@@ -27,7 +27,7 @@
                         Durum Adı <span class="text-red-500">*</span>
                       </label>
                       <input id="name" v-model="formData.name" type="text" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-rose-500 focus:border-rose-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         placeholder="Örn: Yeni Müşteri" />
                     </div>
 
@@ -36,7 +36,7 @@
                         Açıklama
                       </label>
                       <textarea id="description" v-model="formData.description" rows="3"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-rose-500 focus:border-rose-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         placeholder="Durum açıklaması..." />
                     </div>
 
@@ -48,7 +48,7 @@
                         <input id="color" v-model="formData.color" type="color" required
                           class="h-10 w-20 border border-gray-300 rounded-md cursor-pointer" />
                         <input v-model="formData.color" type="text" pattern="^#[0-9A-Fa-f]{6}$" placeholder="#000000"
-                          class="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+                          class="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-rose-500 focus:border-rose-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
                       </div>
                       <div class="mt-2 flex flex-wrap gap-2">
                         <button v-for="color in presetColors" :key="color" type="button" @click="formData.color = color"
@@ -68,7 +68,7 @@
                         Sıra
                       </label>
                       <input id="order" v-model.number="formData.order" type="number" min="0"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-rose-500 focus:border-rose-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         placeholder="0" />
                     </div>
 
@@ -79,7 +79,7 @@
 
                       <div class="flex items-center">
                         <input id="is_remindable" v-model="formData.isRemindable" type="checkbox"
-                          class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
+                          class="h-4 w-4 text-rose-600 focus:ring-rose-500 border-gray-300 rounded" />
                         <label for="is_remindable" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                           Zorunlu Arama
                         </label>
@@ -91,13 +91,13 @@
                           Zorunlu Arama Günü
                         </label>
                         <input id="remindingDay" v-model.number="formData.remindingDay" type="number" min="0"
-                          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-rose-500 focus:border-rose-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                           placeholder="Örn: 7" />
                       </div>
 
                       <div class="flex items-center">
                         <input id="isFirst" v-model="formData.isFirst" type="checkbox"
-                          class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
+                          class="h-4 w-4 text-rose-600 focus:ring-rose-500 border-gray-300 rounded" />
                         <label for="isFirst" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                           İlk durum
                         </label>
@@ -105,7 +105,7 @@
 
                       <div class="flex items-center">
                         <input id="is_closed" v-model="formData.isClosed" type="checkbox"
-                          class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
+                          class="h-4 w-4 text-rose-600 focus:ring-rose-500 border-gray-300 rounded" />
                         <label for="is_closed" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                           Kapalı durum
                         </label>
@@ -113,7 +113,7 @@
 
                       <div class="flex items-center">
                         <input id="is_sale" v-model="formData.isSale" type="checkbox"
-                          class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
+                          class="h-4 w-4 text-rose-600 focus:ring-rose-500 border-gray-300 rounded" />
                         <label for="is_sale" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                           Satış durumu
                         </label>
@@ -121,7 +121,7 @@
 
                       <div class="flex items-center">
                         <input id="isDoctor" v-model="formData.isDoctor" type="checkbox"
-                          class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
+                          class="h-4 w-4 text-rose-600 focus:ring-rose-500 border-gray-300 rounded" />
                         <label for="isDoctor" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                           Doktor Kontrolü Gerekli
                         </label>
@@ -129,7 +129,7 @@
 
                       <div class="flex items-center">
                         <input id="isPricing" v-model="formData.isPricing" type="checkbox"
-                          class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
+                          class="h-4 w-4 text-rose-600 focus:ring-rose-500 border-gray-300 rounded" />
                         <label for="isPricing" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                           Fiyatlandırma Gerekli
                         </label>
@@ -144,7 +144,7 @@
                     İptal
                   </button>
                   <button type="submit" :disabled="loading"
-                    class="inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed">
+                    class="inline-flex justify-center rounded-md bg-rose-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-rose-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-600 disabled:opacity-50 disabled:cursor-not-allowed">
                     <span v-if="loading" class="flex items-center">
                       <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg"
                         fill="none" viewBox="0 0 24 24">

@@ -26,7 +26,7 @@
           >
             <DialogPanel class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-xl">
               <!-- Header -->
-              <div class="bg-gradient-to-r to-amber-400 to-amber-500 px-6 py-5">
+              <div class="bg-gradient-to-r to-rose-400 to-rose-500 px-6 py-5">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-3">
                     <div class="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
@@ -36,7 +36,7 @@
                       <DialogTitle as="h3" class="text-lg font-bold text-white">
                         {{ hospital ? t('hospital_modal.title_edit', 'Hastane Düzenle') : t('hospital_modal.title_new', 'Yeni Hastane Ekle') }}
                       </DialogTitle>
-                      <p class="text-sm text-indigo-100 mt-0.5">
+                      <p class="text-sm text-rose-100 mt-0.5">
                         {{ hospital ? 'Hastane bilgilerini güncelleyin' : 'Yeni hastane bilgilerini girin' }}
                       </p>
                     </div>
@@ -67,7 +67,7 @@
                         type="text"
                         required
                         :placeholder="t('hospital_modal.name_placeholder', 'Örn: Acıbadem Hastanesi')"
-                        class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                        class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all"
                       />
                     </div>
                   </div>
@@ -85,7 +85,7 @@
                         type="text"
                         required
                         :placeholder="t('hospital_modal.code_placeholder', 'Örn: ACB-001')"
-                        class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                        class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all"
                       />
                     </div>
                   </div>
@@ -102,7 +102,7 @@
                         v-model="formData.address"
                         rows="3"
                         :placeholder="t('hospital_modal.address_placeholder', 'Hastane adresini girin...')"
-                        class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none"
+                        class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all resize-none"
                       />
                     </div>
                   </div>
@@ -119,7 +119,7 @@
                         v-model="formData.description"
                         rows="3"
                         :placeholder="t('hospital_modal.description_placeholder', 'Hastane hakkında ek bilgiler...')"
-                        class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none"
+                        class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all resize-none"
                       />
                     </div>
                   </div>
@@ -137,7 +137,7 @@
                   <button
                     type="submit"
                     :disabled="saving"
-                    class="flex-1 px-4 py-3 bg-gradient-to-r to-amber-400 to-amber-500 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm shadow-lg shadow-indigo-500/25"
+                    class="flex-1 px-4 py-3 bg-gradient-to-r to-rose-400 to-rose-500 text-white rounded-xl font-semibold hover:from-rose-700 hover:to-rose-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm shadow-lg shadow-rose-500/25"
                   >
                     <span v-if="saving" class="flex items-center justify-center gap-2">
                       <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

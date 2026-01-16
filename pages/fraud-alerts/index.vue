@@ -18,7 +18,7 @@
         </button>
         <button
           @click="refreshAlerts"
-          class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+          class="inline-flex items-center justify-center rounded-md bg-rose-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-rose-500"
         >
           <ArrowPathIcon class="h-4 w-4 mr-1" />
           Yenile
@@ -85,7 +85,7 @@
       <div class="card">
         <div class="flex items-center">
           <div class="flex-shrink-0">
-            <ExclamationTriangleIcon class="h-8 w-8 text-amber-600" />
+            <ExclamationTriangleIcon class="h-8 w-8 text-rose-600" />
           </div>
           <div class="ml-5 w-0 flex-1">
             <dl>
@@ -162,7 +162,7 @@
           v-for="alert in alerts"
           :key="alert.id"
           :class="[
-            alert.isRead ? 'bg-white dark:bg-gray-800' : 'bg-amber-50 dark:bg-amber-900/10',
+            alert.isRead ? 'bg-white dark:bg-gray-800' : 'bg-rose-50 dark:bg-rose-900/10',
             'hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer'
           ]"
           @click="viewAlert(alert)"
@@ -172,13 +172,13 @@
               <div class="flex items-center">
                 <div
                   :class="[
-                    alert.isRead ? 'bg-gray-100 dark:bg-gray-700' : 'bg-amber-100 dark:bg-amber-900/50',
+                    alert.isRead ? 'bg-gray-100 dark:bg-gray-700' : 'bg-rose-100 dark:bg-rose-900/50',
                     'flex-shrink-0 h-10 w-10 rounded-full flex items-center justify-center'
                   ]"
                 >
                   <ExclamationTriangleIcon
                     :class="[
-                      alert.isRead ? 'text-gray-500' : 'text-amber-600 dark:text-amber-400',
+                      alert.isRead ? 'text-gray-500' : 'text-rose-600 dark:text-rose-400',
                       'h-6 w-6'
                     ]"
                   />
@@ -277,7 +277,7 @@
                 @click="changePage(page)"
                 :class="[
                   page === meta.page
-                    ? 'bg-indigo-600 text-white'
+                    ? 'bg-rose-600 text-white'
                     : 'text-gray-900 dark:text-gray-300 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700',
                   'relative inline-flex items-center px-4 py-2 text-sm font-semibold'
                 ]"

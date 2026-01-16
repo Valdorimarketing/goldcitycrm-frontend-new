@@ -51,7 +51,7 @@
                     </h4>
                     <button 
                       @click="startNew"
-                      class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700 transition flex items-center gap-2"
+                      class="bg-rose-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-rose-700 transition flex items-center gap-2"
                     >
                       <PlusIcon class="h-4 w-4" />
                       {{ t('operation_followup.list.add_new', 'Yeni Operasyon') }}
@@ -59,7 +59,7 @@
                   </div>
 
                   <div v-if="loading" class="flex items-center justify-center py-8">
-                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-600"></div>
                     <span class="ml-3 text-gray-500">{{ t('operation_followup.list.loading', 'Yükleniyor...') }}</span>
                   </div>
 
@@ -84,7 +84,7 @@
                             </span>
                           </div>
                         </div>
-                        <ChevronRightIcon class="h-5 w-5 text-gray-400 group-hover:text-indigo-600 transition" />
+                        <ChevronRightIcon class="h-5 w-5 text-gray-400 group-hover:text-rose-600 transition" />
                       </div>
                     </div>
                   </div>
@@ -94,7 +94,7 @@
                     <p class="text-gray-500 dark:text-gray-400">{{ t('operation_followup.list.empty', 'Henüz operasyon kaydı bulunamadı.') }}</p>
                     <button 
                       @click="startNew"
-                      class="mt-4 text-indigo-600 hover:text-indigo-700 text-sm font-medium"
+                      class="mt-4 text-rose-600 hover:text-rose-700 text-sm font-medium"
                     >
                       {{ t('operation_followup.list.add_first', 'İlk operasyonu ekleyin →') }}
                     </button>
@@ -109,7 +109,7 @@
                     </h4>
                     <button 
                       @click="backToList"
-                      class="text-sm text-gray-600 dark:text-gray-300 hover:text-indigo-600 transition flex items-center gap-1"
+                      class="text-sm text-gray-600 dark:text-gray-300 hover:text-rose-600 transition flex items-center gap-1"
                     >
                       <ArrowLeftIcon class="h-4 w-4" />
                       {{ t('operation_followup.detail.back_to_list', 'Listeye Dön') }}
@@ -128,7 +128,7 @@
                           type="text"
                           v-model="selectedDateDisplay"
                           readonly
-                          class="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-2.5 bg-white dark:bg-gray-700 text-gray-900 dark:text-white cursor-pointer focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                          class="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-2.5 bg-white dark:bg-gray-700 text-gray-900 dark:text-white cursor-pointer focus:ring-2 focus:ring-rose-500 focus:border-transparent"
                           :placeholder="t('operation_followup.form.select_date', 'Tarih seçin')"
                         />
                         <CalendarIcon class="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
@@ -142,7 +142,7 @@
                       </label>
                       <select 
                         v-model="selectedOperationType"
-                        class="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-2.5 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        class="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-2.5 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-rose-500 focus:border-transparent"
                       >
                         <option value="" disabled>{{ t('operation_followup.form.select_type', 'İşlem tipi seçin') }}</option>
                         <option v-for="opType in operationTypes" :key="opType.id" :value="opType.id">
@@ -184,7 +184,7 @@
                     <button 
                       @click="onSave" 
                       :disabled="isSaving || !selectedDate || !selectedOperationType"
-                      class="px-5 py-2.5 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center gap-2"
+                      class="px-5 py-2.5 rounded-lg bg-rose-600 text-white text-sm font-medium hover:bg-rose-700 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center gap-2"
                     >
                       <span v-if="isSaving" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
                       {{ isSaving ? t('operation_followup.actions.saving', 'Kaydediliyor...') : t('operation_followup.actions.save', 'Kaydet') }}
@@ -214,7 +214,7 @@
                       </button>
                       <button 
                         @click="backToList"
-                        class="text-sm text-gray-600 dark:text-gray-300 hover:text-indigo-600 transition flex items-center gap-1"
+                        class="text-sm text-gray-600 dark:text-gray-300 hover:text-rose-600 transition flex items-center gap-1"
                       >
                         <ArrowLeftIcon class="h-4 w-4" />
                         {{ t('operation_followup.detail.back_to_list', 'Listeye Dön') }}
@@ -232,13 +232,13 @@
                       <p class="text-2xl font-bold text-green-600 dark:text-green-400">{{ monthsDoneCount }}/{{ monthList.length }}</p>
                       <p class="text-xs text-green-600/70 dark:text-green-400/70 mt-1">Ay Takibi</p>
                     </div>
-                    <div class="bg-amber-50 dark:bg-amber-900/20 rounded-xl p-4 text-center">
-                      <p class="text-2xl font-bold text-amber-600 dark:text-amber-400">{{ pendingCount }}</p>
-                      <p class="text-xs text-amber-600/70 dark:text-amber-400/70 mt-1">Bekleyen</p>
+                    <div class="bg-rose-50 dark:bg-rose-900/20 rounded-xl p-4 text-center">
+                      <p class="text-2xl font-bold text-rose-600 dark:text-rose-400">{{ pendingCount }}</p>
+                      <p class="text-xs text-rose-600/70 dark:text-rose-400/70 mt-1">Bekleyen</p>
                     </div>
-                    <div class="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-4 text-center">
-                      <p class="text-2xl font-bold text-purple-600 dark:text-purple-400">%{{ completionPercentage }}</p>
-                      <p class="text-xs text-purple-600/70 dark:text-purple-400/70 mt-1">Tamamlanma</p>
+                    <div class="bg-rose-50 dark:bg-rose-900/20 rounded-xl p-4 text-center">
+                      <p class="text-2xl font-bold text-rose-600 dark:text-rose-400">%{{ completionPercentage }}</p>
+                      <p class="text-xs text-rose-600/70 dark:text-rose-400/70 mt-1">Tamamlanma</p>
                     </div>
                   </div>
 
@@ -303,7 +303,7 @@
                                 class="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium"
                                 :class="item.done 
                                   ? 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300' 
-                                  : 'bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300'"
+                                  : 'bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300'"
                               >
                                 <CheckCircleIcon v-if="item.done" class="h-3.5 w-3.5" />
                                 <ClockIcon v-else class="h-3.5 w-3.5" />
@@ -358,7 +358,7 @@
                                     v-model="editingNotes[`day-${item.offset}`]"
                                     rows="3"
                                     :placeholder="t('operation_followup.table.note_placeholder', 'Not ekleyin...')"
-                                    class="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+                                    class="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-rose-500 focus:border-transparent resize-none"
                                   ></textarea>
                                 </div>
                                 
@@ -368,7 +368,7 @@
                                     @click="toggleDone(item)"
                                     class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition"
                                     :class="item.done 
-                                      ? 'bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-900/50 dark:text-amber-300' 
+                                      ? 'bg-rose-100 text-rose-700 hover:bg-rose-200 dark:bg-rose-900/50 dark:text-rose-300' 
                                       : 'bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/50 dark:text-green-300'"
                                   >
                                     <template v-if="item.done">
@@ -384,7 +384,7 @@
                                   <button 
                                     @click="saveNote(item)"
                                     :disabled="savingNote === `day-${item.offset}`"
-                                    class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                                    class="inline-flex items-center gap-2 px-4 py-2 bg-rose-600 text-white rounded-lg text-sm font-medium hover:bg-rose-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
                                   >
                                     <template v-if="savingNote === `day-${item.offset}`">
                                       <span class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
@@ -465,7 +465,7 @@
                                 class="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium"
                                 :class="item.done 
                                   ? 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300' 
-                                  : 'bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300'"
+                                  : 'bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300'"
                               >
                                 <CheckCircleIcon v-if="item.done" class="h-3.5 w-3.5" />
                                 <ClockIcon v-else class="h-3.5 w-3.5" />
@@ -520,7 +520,7 @@
                                     v-model="editingNotes[`month-${item.offset}`]"
                                     rows="3"
                                     :placeholder="t('operation_followup.table.note_placeholder', 'Not ekleyin...')"
-                                    class="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+                                    class="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-rose-500 focus:border-transparent resize-none"
                                   ></textarea>
                                 </div>
                                 
@@ -530,7 +530,7 @@
                                     @click="toggleDone(item)"
                                     class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition"
                                     :class="item.done 
-                                      ? 'bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-900/50 dark:text-amber-300' 
+                                      ? 'bg-rose-100 text-rose-700 hover:bg-rose-200 dark:bg-rose-900/50 dark:text-rose-300' 
                                       : 'bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/50 dark:text-green-300'"
                                   >
                                     <template v-if="item.done">
@@ -546,7 +546,7 @@
                                   <button 
                                     @click="saveNote(item)"
                                     :disabled="savingNote === `month-${item.offset}`"
-                                    class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                                    class="inline-flex items-center gap-2 px-4 py-2 bg-rose-600 text-white rounded-lg text-sm font-medium hover:bg-rose-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
                                   >
                                     <template v-if="savingNote === `month-${item.offset}`">
                                       <span class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
@@ -1004,7 +1004,7 @@ function getProgress(item) {
 function getSegmentClass(status) {
   const statusLower = (status.name || '')?.toLowerCase()
   if (statusLower.includes('vip') || statusLower.includes('premium')) {
-    return 'bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300'
+    return 'bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300'
   }
   if (statusLower.includes('gold') || statusLower.includes('altın')) {
     return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/50 dark:text-yellow-300'

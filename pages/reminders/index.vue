@@ -66,7 +66,7 @@
 
     <!-- Loading State -->
     <div v-if="loading" class="flex justify-center py-12">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-600"></div>
     </div>
 
     <!-- Reminders List -->
@@ -80,20 +80,20 @@
           <div class="flex-1">
             <!-- Customer Info -->
             <div class="flex items-center space-x-3 mb-2">
-              <UserIcon class="h-5 w-5 text-indigo-600" />
+              <UserIcon class="h-5 w-5 text-rose-600" />
               <div class="flex-1">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white">
                   <NuxtLink
                     v-if="customerMap.get(reminder.customer)"
                     :to="`/customers/show/${reminder.customer}`"
-                    class="hover:text-indigo-600"
+                    class="hover:text-rose-600"
                   >
                     {{ customerMap.get(reminder.customer).name }} {{ customerMap.get(reminder.customer).surname }}
                   </NuxtLink>
                   <NuxtLink
                     v-else-if="reminder.customerInfo"
                     :to="`/customers/show/${reminder.customer}`"
-                    class="hover:text-indigo-600"
+                    class="hover:text-rose-600"
                   >
                     {{ reminder.customerInfo.name }} {{ reminder.customerInfo.surname }}
                   </NuxtLink>
@@ -145,7 +145,7 @@
             </button>
             <button
               @click="editReminder(reminder)"
-              class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium"
+              class="text-rose-600 hover:text-rose-900 dark:text-rose-400 dark:hover:text-rose-300 text-sm font-medium"
               :title="t('reminders.actions.edit', 'Düzenle')"
             >
               <PencilIcon class="h-5 w-5" />
@@ -200,7 +200,7 @@
             >
               <div v-if="showEditModal" class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-2xl transition-all sm:w-full sm:max-w-lg">
                 <!-- Header -->
-                <div class="bg-gradient-to-r to-amber-400 to-amber-500 px-6 py-4">
+                <div class="bg-gradient-to-r to-rose-400 to-rose-500 px-6 py-4">
                   <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
                       <div class="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur">
@@ -208,7 +208,7 @@
                       </div>
                       <div>
                         <h3 class="text-lg font-semibold text-white">{{ t('reminders.modal.title', 'Notu Düzenle') }}</h3>
-                        <p class="text-sm text-indigo-100">{{ t('reminders.modal.subtitle', 'Hatırlatma notunu düzenleyin') }}</p>
+                        <p class="text-sm text-rose-100">{{ t('reminders.modal.subtitle', 'Hatırlatma notunu düzenleyin') }}</p>
                       </div>
                     </div>
                     <button
@@ -231,7 +231,7 @@
                       <textarea
                         v-model="editingNote.note"
                         rows="4"
-                        class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 transition-all"
+                        class="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700 transition-all"
                         :placeholder="t('reminders.modal.note_placeholder', 'Not içeriğini giriniz...')"
                       ></textarea>
                     </div>
@@ -242,7 +242,7 @@
                         <input
                           v-model="editingNote.isReminding"
                           type="checkbox"
-                          class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                          class="h-4 w-4 rounded border-gray-300 text-rose-600 focus:ring-rose-600"
                         />
                         <span class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                           <BellIcon class="inline h-4 w-4 mr-1" />
@@ -265,7 +265,7 @@
                           <input
                             v-model="editingNote.remindingAt"
                             type="datetime-local"
-                            class="block w-full rounded-lg border-0 px-3 py-2 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700"
+                            class="block w-full rounded-lg border-0 px-3 py-2 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-rose-600 dark:bg-gray-700"
                           />
                         </div>
                       </Transition>
@@ -285,7 +285,7 @@
                     <button
                       @click="saveEditedNote"
                       :disabled="!editingNote.note?.trim() || savingNote"
-                      class="inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      class="inline-flex items-center rounded-lg bg-rose-600 px-4 py-2 text-sm font-medium text-white hover:bg-rose-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
                       <CheckIcon class="mr-2 h-4 w-4" />
                       {{ savingNote ? t('reminders.modal.saving', 'Kaydediliyor...') : t('reminders.modal.save', 'Kaydet') }}

@@ -359,7 +359,7 @@ const getStatusText = (status: string) => {
 
 /* Bank Information Card */
 .bank-info-card {
-  @apply bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border-l-4 border-amber-500;
+  @apply bg-gradient-to-br from-yellow-50 to-rose-50 dark:from-yellow-900/20 dark:to-rose-900/20 border-l-4 border-rose-500;
 }
 
 .bank-info-grid {
@@ -367,15 +367,15 @@ const getStatusText = (status: string) => {
 }
 
 .bank-info-item {
-  @apply flex justify-between items-center pb-3 border-b border-amber-200 dark:border-amber-800/50 last:border-0;
+  @apply flex justify-between items-center pb-3 border-b border-rose-200 dark:border-rose-800/50 last:border-0;
 }
 
 .bank-label {
-  @apply text-sm font-semibold text-amber-900 dark:text-amber-200;
+  @apply text-sm font-semibold text-rose-900 dark:text-rose-200;
 }
 
 .bank-value {
-  @apply text-sm text-amber-800 dark:text-amber-100;
+  @apply text-sm text-rose-800 dark:text-rose-100;
 }
 
 /* Services List */

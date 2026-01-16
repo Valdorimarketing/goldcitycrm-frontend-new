@@ -23,7 +23,7 @@
 
     <!-- Loading State -->
     <div v-if="loading" class="flex justify-center py-12">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-600"></div>
     </div>
 
     <!-- Calendar Grid -->
@@ -50,7 +50,7 @@
               ? 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700'
               : 'bg-gray-50 dark:bg-gray-900 border-gray-100 dark:border-gray-800',
             day.isToday
-              ? 'ring-2 ring-indigo-500'
+              ? 'ring-2 ring-rose-500'
               : ''
           ]"
         >
@@ -62,7 +62,7 @@
                   ? 'text-gray-900 dark:text-white'
                   : 'text-gray-400 dark:text-gray-600',
                 day.isToday
-                  ? 'text-indigo-600 dark:text-indigo-400 font-bold'
+                  ? 'text-rose-600 dark:text-rose-400 font-bold'
                   : ''
               ]"
             >

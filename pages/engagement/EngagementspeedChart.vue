@@ -21,8 +21,8 @@
             <div class="text-lg font-bold text-green-600">{{ firstTouchData.fast }}</div>
             <div class="text-xs text-gray-600 dark:text-gray-400">Hızlı (0-3dk)</div>
           </div>
-          <div class="text-center p-2 bg-amber-50 dark:bg-amber-900/20 rounded">
-            <div class="text-lg font-bold text-amber-600">{{ firstTouchData.normal }}</div>
+          <div class="text-center p-2 bg-rose-50 dark:bg-rose-900/20 rounded">
+            <div class="text-lg font-bold text-rose-600">{{ firstTouchData.normal }}</div>
             <div class="text-xs text-gray-600 dark:text-gray-400">Normal (4-10dk)</div>
           </div>
           <div class="text-center p-2 bg-red-50 dark:bg-red-900/20 rounded">
@@ -37,7 +37,7 @@
     <!-- 2. İlk Arama Hızı -->
     <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
       <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-        <svg class="h-5 w-5 mr-2 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24"
+        <svg class="h-5 w-5 mr-2 text-rose-600 dark:text-rose-400" fill="none" viewBox="0 0 24 24"
           stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
@@ -54,8 +54,8 @@
             <div class="text-lg font-bold text-green-600">{{ firstCallData.fast }}</div>
             <div class="text-xs text-gray-600 dark:text-gray-400">Hızlı (0-5dk)</div>
           </div>
-          <div class="text-center p-2 bg-amber-50 dark:bg-amber-900/20 rounded">
-            <div class="text-lg font-bold text-amber-600">{{ firstCallData.normal }}</div>
+          <div class="text-center p-2 bg-rose-50 dark:bg-rose-900/20 rounded">
+            <div class="text-lg font-bold text-rose-600">{{ firstCallData.normal }}</div>
             <div class="text-xs text-gray-600 dark:text-gray-400">Normal (6-15dk)</div>
           </div>
           <div class="text-center p-2 bg-red-50 dark:bg-red-900/20 rounded">
@@ -93,8 +93,8 @@
             <div class="text-lg font-bold text-green-600">{{ closingData.fast }}</div>
             <div class="text-xs text-gray-600 dark:text-gray-400">Hızlı (0-30dk)</div>
           </div>
-          <div class="text-center p-2 bg-amber-50 dark:bg-amber-900/20 rounded">
-            <div class="text-lg font-bold text-amber-600">{{ closingData.normal }}</div>
+          <div class="text-center p-2 bg-rose-50 dark:bg-rose-900/20 rounded">
+            <div class="text-lg font-bold text-rose-600">{{ closingData.normal }}</div>
             <div class="text-xs text-gray-600 dark:text-gray-400">Normal (31-60dk)</div>
           </div>
           <div class="text-center p-2 bg-red-50 dark:bg-red-900/20 rounded">

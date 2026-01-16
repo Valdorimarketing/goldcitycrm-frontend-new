@@ -27,10 +27,10 @@
               class="relative transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
             >
               <!-- Header with warning icon -->
-              <div class="bg-amber-50 dark:bg-amber-900/20 px-4 pb-4 pt-5 sm:p-6">
+              <div class="bg-rose-50 dark:bg-rose-900/20 px-4 pb-4 pt-5 sm:p-6">
                 <div class="flex items-start">
-                  <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/50 sm:mx-0 sm:h-10 sm:w-10">
-                    <ExclamationTriangleIcon class="h-6 w-6 text-amber-600 dark:text-amber-400" />
+                  <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-rose-100 dark:bg-rose-900/50 sm:mx-0 sm:h-10 sm:w-10">
+                    <ExclamationTriangleIcon class="h-6 w-6 text-rose-600 dark:text-rose-400" />
                   </div>
                   <div class="ml-3 mt-0 text-left">
                     <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-white">
@@ -45,7 +45,7 @@
               
               <!-- Alert message content -->
               <div class="bg-white dark:bg-gray-800 px-4 pb-4 pt-3 sm:px-6">
-                <div class="fraud-alert-message p-4 bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800 rounded-md">
+                <div class="fraud-alert-message p-4 bg-rose-50 dark:bg-rose-900/10 border border-rose-200 dark:border-rose-800 rounded-md">
                   <p class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
                     {{ alert?.message || 'Fraud alert içeriği yüklenemedi.' }}
                   </p>

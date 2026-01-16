@@ -111,7 +111,7 @@
                             service.isPayCompleted 
                               ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400'
                               : parseFloat(service.paidAmount) > 0
-                                ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400'
+                                ? 'bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400'
                                 : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
                           ]"
                         >
@@ -387,11 +387,11 @@
               <!-- Pending Services List -->
               <div v-if="services.length > 0">
                 <div class="flex items-center gap-2 mb-4">
-                  <div class="h-8 w-8 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                    <ClockIcon class="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                  <div class="h-8 w-8 rounded-lg bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center">
+                    <ClockIcon class="h-4 w-4 text-rose-600 dark:text-rose-400" />
                   </div>
                   <h3 class="font-semibold text-gray-900 dark:text-white">{{ t('services_modal.pending_services', 'Eklenecek Hizmetler') }}</h3>
-                  <span class="px-2 py-0.5 text-xs font-medium bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-full">
+                  <span class="px-2 py-0.5 text-xs font-medium bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 rounded-full">
                     {{ services.length }}
                   </span>
                 </div>
@@ -400,10 +400,10 @@
                   <div 
                     v-for="(service, index) in services" 
                     :key="index"
-                    class="flex items-center justify-between p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl"
+                    class="flex items-center justify-between p-3 bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800 rounded-xl"
                   >
                     <div class="flex items-center gap-3">
-                      <div class="h-9 w-9 rounded-lg bg-amber-500 flex items-center justify-center">
+                      <div class="h-9 w-9 rounded-lg bg-rose-500 flex items-center justify-center">
                         <span class="text-xs font-bold text-white">
                           {{ service.productName?.charAt(0)?.toUpperCase() }}
                         </span>
@@ -417,7 +417,7 @@
                     </div>
                     <button 
                       @click="removeService(index)"
-                      class="p-1.5 text-amber-600 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all"
+                      class="p-1.5 text-rose-600 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all"
                     >
                       <XMarkIcon class="h-4 w-4" />
                     </button>
@@ -425,7 +425,7 @@
                 </div>
 
                 <!-- Pending Services Summary -->
-                <div class="mt-4 p-4 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl border border-amber-200 dark:border-amber-800">
+                <div class="mt-4 p-4 bg-gradient-to-r from-rose-50 to-orange-50 dark:from-rose-900/20 dark:to-orange-900/20 rounded-xl border border-rose-200 dark:border-rose-800">
                   <div class="grid grid-cols-3 gap-4">
                     <div class="text-center">
                       <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ t('services_modal.summary.total_offer', 'Toplam Teklif') }}</p>

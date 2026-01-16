@@ -54,7 +54,7 @@
                 <input
                   v-model="form.isDefault"
                   type="checkbox"
-                  class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 dark:border-gray-600 dark:bg-gray-700"
+                  class="h-4 w-4 rounded border-gray-300 text-rose-600 focus:ring-rose-600 dark:border-gray-600 dark:bg-gray-700"
                 />
                 <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">
                   Varsayılan dil olarak ayarla
@@ -68,7 +68,7 @@
                 <input
                   v-model="form.isActive"
                   type="checkbox"
-                  class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 dark:border-gray-600 dark:bg-gray-700"
+                  class="h-4 w-4 rounded border-gray-300 text-rose-600 focus:ring-rose-600 dark:border-gray-600 dark:bg-gray-700"
                 />
                 <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">
                   Aktif
@@ -81,7 +81,7 @@
             <button
               type="submit"
               :disabled="saving"
-              class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto disabled:opacity-50"
+              class="inline-flex w-full justify-center rounded-md bg-rose-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-rose-500 sm:ml-3 sm:w-auto disabled:opacity-50"
             >
               {{ saving ? 'Kaydediliyor...' : 'Kaydet' }}
             </button>

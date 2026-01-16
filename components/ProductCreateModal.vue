@@ -7,8 +7,8 @@
         <form @submit.prevent="handleSubmit">
           <div class="bg-white dark:bg-gray-800 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
             <div class="sm:flex sm:items-start">
-              <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-900 sm:mx-0 sm:h-10 sm:w-10">
-                <PlusIcon class="h-6 w-6 text-indigo-600 dark:text-indigo-300" />
+              <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-rose-100 dark:bg-rose-900 sm:mx-0 sm:h-10 sm:w-10">
+                <PlusIcon class="h-6 w-6 text-rose-600 dark:text-rose-300" />
               </div>
 
               <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
@@ -79,7 +79,7 @@
             <button
               type="submit"
               :disabled="loading"
-              class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed sm:ml-3 sm:w-auto"
+              class="inline-flex w-full justify-center rounded-md bg-rose-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-rose-500 disabled:opacity-50 disabled:cursor-not-allowed sm:ml-3 sm:w-auto"
             >
               <span v-if="loading" class="flex items-center">
                 <svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

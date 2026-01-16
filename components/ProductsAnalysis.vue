@@ -10,8 +10,8 @@
 
     <!-- Summary Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-      <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/20 dark:to-indigo-800/20 rounded-xl p-4">
-        <p class="text-xs font-medium text-indigo-600 dark:text-indigo-400 uppercase mb-1">Toplam Ürün</p>
+      <div class="bg-gradient-to-br from-rose-50 to-rose-100 dark:from-rose-900/20 dark:to-rose-800/20 rounded-xl p-4">
+        <p class="text-xs font-medium text-rose-600 dark:text-rose-400 uppercase mb-1">Toplam Ürün</p>
         <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ products.length }}</p>
       </div>
 
@@ -21,13 +21,13 @@
         <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">{{ topProduct?.salesCount || 0 }} satış</p>
       </div>
 
-      <div class="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl p-4">
-        <p class="text-xs font-medium text-purple-600 dark:text-purple-400 uppercase mb-1">Toplam Ciro</p>
+      <div class="bg-gradient-to-br from-rose-50 to-rose-100 dark:from-rose-900/20 dark:to-rose-800/20 rounded-xl p-4">
+        <p class="text-xs font-medium text-rose-600 dark:text-rose-400 uppercase mb-1">Toplam Ciro</p>
         <p class="text-lg font-bold text-gray-900 dark:text-white">{{ totalRevenue }}</p>
       </div>
 
-      <div class="bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 rounded-xl p-4">
-        <p class="text-xs font-medium text-amber-600 dark:text-amber-400 uppercase mb-1">Ort. Satış Değeri</p>
+      <div class="bg-gradient-to-br from-rose-50 to-rose-100 dark:from-rose-900/20 dark:to-rose-800/20 rounded-xl p-4">
+        <p class="text-xs font-medium text-rose-600 dark:text-rose-400 uppercase mb-1">Ort. Satış Değeri</p>
         <p class="text-lg font-bold text-gray-900 dark:text-white">{{ avgProductRevenue }}</p>
       </div>
     </div>
@@ -35,7 +35,7 @@
     <!-- Loading State -->
     <div v-if="loading" class="flex items-center justify-center py-16">
       <div class="text-center">
-        <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-indigo-600"></div>
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-rose-600"></div>
         <p class="mt-4 text-gray-600 dark:text-gray-400">Ürün verileri yükleniyor...</p>
       </div>
     </div>
@@ -83,7 +83,7 @@
             <!-- Progress Bar -->
             <div class="flex-shrink-0 w-20">
               <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                <div class="bg-indigo-500 h-2 rounded-full transition-all duration-1000"
+                <div class="bg-rose-500 h-2 rounded-full transition-all duration-1000"
                   :style="{ width: getProductPercentage(product.salesCount) + '%' }"></div>
               </div>
             </div>
@@ -113,7 +113,7 @@
                   {{ getCurrencyLabel(item.currency) }}
                 </span>
               </div>
-              <span class="text-xs px-2 py-1 rounded-full bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300">
+              <span class="text-xs px-2 py-1 rounded-full bg-rose-100 dark:bg-rose-900 text-rose-700 dark:text-rose-300">
                 {{ item.productCount }} ürün
               </span>
             </div>
@@ -129,7 +129,7 @@
               </div>
 
               <div class="text-right">
-                <p class="text-sm font-semibold text-indigo-600 dark:text-indigo-400">
+                <p class="text-sm font-semibold text-rose-600 dark:text-rose-400">
                   {{ item.percentage.toFixed(1) }}%
                 </p>
                 <p class="text-xs text-gray-500 dark:text-gray-400">
@@ -139,7 +139,7 @@
             </div>
 
             <div class="mt-3 w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-              <div class="bg-gradient-to-r to-amber-500 to-purple-500 h-2 rounded-full transition-all duration-1000"
+              <div class="bg-gradient-to-r to-rose-500 to-rose-500 h-2 rounded-full transition-all duration-1000"
                 :style="{ width: item.percentage + '%' }"></div>
             </div>
           </div>
@@ -153,7 +153,7 @@
         <div class="flex items-center justify-between">
           <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Tüm Ürünler</h4>
           <input v-model="productSearch" type="text" placeholder="Ürün ara..."
-            class="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white">
+            class="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-rose-500 dark:bg-gray-700 dark:text-white">
         </div>
       </div>
 
@@ -188,8 +188,8 @@
               class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
               <td class="px-6 py-4">
                 <div class="flex items-center">
-                  <div class="h-8 w-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center mr-3">
-                    <CubeIcon class="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                  <div class="h-8 w-8 rounded-lg bg-rose-100 dark:bg-rose-900/50 flex items-center justify-center mr-3">
+                    <CubeIcon class="h-4 w-4 text-rose-600 dark:text-rose-400" />
                   </div>
                   <div>
                     <p class="text-sm font-semibold text-gray-900 dark:text-white">

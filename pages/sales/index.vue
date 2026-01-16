@@ -6,7 +6,7 @@
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
             <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-              <div class="p-2 bg-gradient-to-br to-amber-500 to-amber-500 rounded-xl shadow-lg">
+              <div class="p-2 bg-gradient-to-br to-rose-500 to-rose-500 rounded-xl shadow-lg">
                 <ChartBarIcon class="h-7 w-7 text-white" />
               </div>
               {{ t('sales_management.title', 'Satış & Finans Yönetimi') }}
@@ -25,7 +25,7 @@
                 @click="applyDatePreset(preset.value)"
                 class="px-3 py-1.5 text-xs font-medium rounded-md transition-all"
                 :class="activeDatePreset === preset.value
-                  ? 'bg-white dark:bg-gray-600 text-indigo-600 dark:text-indigo-400 shadow-sm'
+                  ? 'bg-white dark:bg-gray-600 text-rose-600 dark:text-rose-400 shadow-sm'
                   : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'"
               >
                 {{ preset.label }}
@@ -75,8 +75,8 @@
         <!-- Active Customers -->
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-shadow">
           <div class="flex items-center justify-between mb-4">
-            <div class="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-xl">
-              <UsersIcon class="h-6 w-6 text-purple-600 dark:text-purple-400" />
+            <div class="p-3 bg-rose-100 dark:bg-rose-900/30 rounded-xl">
+              <UsersIcon class="h-6 w-6 text-rose-600 dark:text-rose-400" />
             </div>
             <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
               {{ t('sales_management.metrics.customers_label', 'Müşteriler') }}
@@ -121,8 +121,8 @@
         <!-- Conversion Rate -->
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-shadow">
           <div class="flex items-center justify-between mb-4">
-            <div class="p-3 bg-amber-100 dark:bg-amber-900/30 rounded-xl">
-              <ChartPieIcon class="h-6 w-6 text-amber-600 dark:text-amber-400" />
+            <div class="p-3 bg-rose-100 dark:bg-rose-900/30 rounded-xl">
+              <ChartPieIcon class="h-6 w-6 text-rose-600 dark:text-rose-400" />
             </div>
             <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
               {{ t('sales_management.metrics.success_label', 'Başarı') }}
@@ -136,7 +136,7 @@
           </p>
           <div class="mt-3 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
             <div 
-              class="bg-amber-500 h-1.5 rounded-full transition-all duration-1000"
+              class="bg-rose-500 h-1.5 rounded-full transition-all duration-1000"
               :style="{ width: overallStats.conversionRate + '%' }"
             ></div>
           </div>
@@ -177,7 +177,7 @@
               <button 
                 @click="refreshExchangeRates" 
                 :disabled="loadingRates"
-                class="mt-1 text-xs text-indigo-400 hover:text-indigo-300 transition-colors"
+                class="mt-1 text-xs text-rose-400 hover:text-rose-300 transition-colors"
               >
                 {{ t('sales_management.grand_total.refresh_rates', 'Kurları Güncelle') }}
               </button>
@@ -221,14 +221,14 @@
 
             <div class="bg-slate-800/50 rounded-xl p-5 backdrop-blur border border-slate-700/50">
               <div class="flex items-center gap-3 mb-3">
-                <div class="p-2 bg-amber-500/20 rounded-lg">
-                  <ClockIcon class="h-5 w-5 text-amber-400" />
+                <div class="p-2 bg-rose-500/20 rounded-lg">
+                  <ClockIcon class="h-5 w-5 text-rose-400" />
                 </div>
                 <span class="text-sm text-slate-400">
                   {{ t('sales_management.grand_total.pending_payment', 'Beklenen Ödeme') }}
                 </span>
               </div>
-              <p class="text-2xl font-bold text-amber-400">
+              <p class="text-2xl font-bold text-rose-400">
                 {{ formatMoney(grandTotal.totalRemainingInUsd, 'USD') }}
               </p>
             </div>
@@ -274,7 +274,7 @@
           </h3>
           <button 
             @click="resetAllFilters"
-            class="ml-auto text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium"
+            class="ml-auto text-sm text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 font-medium"
           >
             {{ t('sales_management.filters.clear_all', 'Tümünü Temizle') }}
           </button>
@@ -363,7 +363,7 @@
               @click="activeTab = tab.id"
               class="py-4 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap"
               :class="activeTab === tab.id
-                ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
+                ? 'border-rose-500 text-rose-600 dark:text-rose-400'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'"
             >
               <component :is="tab.icon" class="h-5 w-5 inline-block mr-2" />
@@ -402,7 +402,7 @@
 
                   <div class="flex items-center justify-between">
                     <div class="flex items-center gap-2">
-                      <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+                      <div class="w-3 h-3 rounded-full bg-rose-500"></div>
                       <span class="text-sm text-gray-600 dark:text-gray-400">
                         {{ t('sales_management.payment_distribution.partial', 'Kısmi Ödeme') }}
                       </span>
@@ -413,7 +413,7 @@
                   </div>
                   <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                     <div 
-                      class="bg-amber-500 h-2 rounded-full transition-all duration-1000"
+                      class="bg-rose-500 h-2 rounded-full transition-all duration-1000"
                       :style="{ width: getStatsByCurrency(activeCurrency).partialPercentage + '%' }"
                     ></div>
                   </div>
@@ -467,8 +467,8 @@
               <div 
                 v-for="curr in availableCurrencies" 
                 :key="'summary-' + curr"
-                class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-lg p-5 border border-gray-100 dark:border-gray-600 hover:border-indigo-300 dark:hover:border-indigo-500 transition-all duration-300 cursor-pointer hover:scale-105"
-                :class="{ 'ring-2 ring-indigo-500': activeCurrency === curr }" 
+                class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-lg p-5 border border-gray-100 dark:border-gray-600 hover:border-rose-300 dark:hover:border-rose-500 transition-all duration-300 cursor-pointer hover:scale-105"
+                :class="{ 'ring-2 ring-rose-500': activeCurrency === curr }" 
                 @click="activeCurrency = curr"
               >
                 <div class="flex items-center justify-between mb-4">
@@ -479,7 +479,7 @@
                   <span 
                     class="text-xs px-2 py-1 rounded-full"
                     :class="activeCurrency === curr 
-                      ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300' 
+                      ? 'bg-rose-100 text-rose-700 dark:bg-rose-900 dark:text-rose-300' 
                       : 'bg-gray-100 text-gray-600 dark:bg-gray-600 dark:text-gray-400'"
                   >
                     {{ tp('sales_management.currency_summary.sales_count', { count: getStatsByCurrency(curr).salesCount }, '{count} satış') }}
@@ -504,10 +504,10 @@
                     </span>
                   </div>
                   <div class="flex justify-between items-center">
-                    <span class="text-sm text-amber-600 dark:text-amber-400">
+                    <span class="text-sm text-rose-600 dark:text-rose-400">
                       {{ t('sales_management.currency_summary.pending', 'Beklenen') }}
                     </span>
-                    <span class="font-semibold text-amber-600 dark:text-amber-400">
+                    <span class="font-semibold text-rose-600 dark:text-rose-400">
                       {{ formatMoney(getStatsByCurrency(curr).totalRemaining, curr) }}
                     </span>
                   </div>
