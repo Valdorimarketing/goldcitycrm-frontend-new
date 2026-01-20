@@ -6,7 +6,7 @@
         class="relative backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 rounded-full shadow-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden transition-all duration-300 hover:shadow-3xl hover:scale-105"
       >
         <!-- Background Gradient Animation -->
-        <div class="absolute inset-0 bg-gradient-to-r from-rose-500/10 via-rose-500/10 to-rose-400/10 animate-gradient-x"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-rose-500/10 via-rose-500/10 from-rose-400/10 animate-gradient-x"></div>
         
         <!-- Content -->
         <div class="relative flex items-center gap-6 px-6 py-3">

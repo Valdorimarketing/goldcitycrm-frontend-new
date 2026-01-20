@@ -23,7 +23,7 @@
               </div>
 
               <!-- Header -->
-              <div class="relative bg-gradient-to-r to-rose-400 to-rose-500 px-6 py-8 text-white">
+              <div class="relative bg-gradient-to-r from-rose-400 to-rose-500 px-6 py-8 text-white">
                 <button @click="$emit('close')"
                   class="absolute right-4 top-4 rounded-lg p-2 hover:bg-white/20 transition-colors">
                   <XMarkIcon class="h-5 w-5" />
@@ -689,7 +689,7 @@
                     </button>
 
                     <button v-else type="submit" :disabled="loading"
-                      class="inline-flex items-center rounded-lg bg-gradient-to-r to-rose-400 to-rose-500 px-6 py-2 text-sm font-medium text-white hover:from-rose-700 hover:to-rose-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                      class="inline-flex items-center rounded-lg bg-gradient-to-r from-rose-400 to-rose-500 px-6 py-2 text-sm font-medium text-white hover:from-rose-700 hover:to-rose-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
                       <CheckIcon v-if="!loading" class="mr-2 h-4 w-4" />
                       <svg v-else class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 24 24">

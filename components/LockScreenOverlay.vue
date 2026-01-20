@@ -33,8 +33,8 @@
             <div class="flex justify-center mb-6">
               <div class="relative">
                 <!-- Avatar Ring Animation -->
-                <div class="absolute -inset-2 bg-gradient-to-r from-red-500 via-rose-500 to-rose-400 rounded-full animate-spin-slow opacity-75 blur-sm"></div>
-                <div class="absolute -inset-2 bg-gradient-to-r from-red-500 via-rose-500 to-rose-400 rounded-full animate-spin-slow opacity-50"></div>
+                <div class="absolute -inset-2 bg-gradient-to-r from-red-500 via-rose-500 from-rose-400 rounded-full animate-spin-slow opacity-75 blur-sm"></div>
+                <div class="absolute -inset-2 bg-gradient-to-r from-red-500 via-rose-500 from-rose-400 rounded-full animate-spin-slow opacity-50"></div>
                 
                 <!-- Avatar Image -->
                 <div class="relative w-28 h-28 rounded-full overflow-hidden border-4 border-white/20 shadow-xl">

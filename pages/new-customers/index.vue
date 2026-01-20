@@ -82,7 +82,7 @@
             <CalendarIcon class="h-6 w-6 text-rose-600 dark:text-rose-400" />
           </div>
         </div>
-        <div class="h-1 w-full bg-gradient-to-r from-rose-500 to-rose-400 rounded-full mt-4 opacity-60"></div>
+        <div class="h-1 w-full bg-gradient-to-r from-rose-500 from-rose-400 rounded-full mt-4 opacity-60"></div>
       </div>
 
       <div class="group bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">

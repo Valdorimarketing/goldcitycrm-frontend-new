@@ -96,7 +96,7 @@
             <ChartBarIcon class="h-6 w-6 text-rose-600 dark:text-rose-400" />
           </div>
         </div>
-        <div class="h-1 w-full bg-gradient-to-r from-rose-500 to-rose-400 rounded-full mt-4 opacity-60"></div>
+        <div class="h-1 w-full bg-gradient-to-r from-rose-500 from-rose-400 rounded-full mt-4 opacity-60"></div>
       </div>
     </div>
 

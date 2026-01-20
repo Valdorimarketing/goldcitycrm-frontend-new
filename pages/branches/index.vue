@@ -14,7 +14,7 @@
        
         <button
           @click="initializeData()"
-          class="inline-flex items-center justify-center rounded-lg bg-gradient-to-r to-rose-400 to-rose-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-rose-500/25 hover:from-rose-700 hover:to-rose-700 transition-all"
+          class="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-rose-400 to-rose-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-rose-500/25 hover:from-rose-700 hover:to-rose-700 transition-all"
         >
           <ArrowPathIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
           {{ t('dashboard.refresh', 'Yenile') }}
@@ -22,7 +22,7 @@
 
         <button
           @click="showCreateModal = true"
-          class="inline-flex items-center justify-center rounded-lg bg-gradient-to-r to-rose-400 to-rose-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-rose-500/25 hover:from-rose-700 hover:to-rose-700 transition-all"
+          class="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-rose-400 to-rose-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-rose-500/25 hover:from-rose-700 hover:to-rose-700 transition-all"
         >
           <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
           {{ t('branches.new_branch', 'Yeni Branş') }}
@@ -183,7 +183,7 @@
                 <div class="mt-6">
                   <button
                     @click="showCreateModal = true"
-                    class="inline-flex items-center rounded-lg bg-gradient-to-r to-rose-400 to-rose-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-rose-500/25 hover:from-rose-700 hover:to-rose-700 transition-all"
+                    class="inline-flex items-center rounded-lg bg-gradient-to-r from-rose-400 to-rose-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-rose-500/25 hover:from-rose-700 hover:to-rose-700 transition-all"
                   >
                     <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" />
                     {{ t('branches.add_first', 'İlk branşı ekle') }}

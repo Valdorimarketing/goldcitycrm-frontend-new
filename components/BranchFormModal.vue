@@ -26,7 +26,7 @@
           >
             <DialogPanel class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-2xl">
               <!-- Header -->
-              <div class="bg-gradient-to-r to-rose-400 to-rose-500 px-6 py-5">
+              <div class="bg-gradient-to-r from-rose-400 to-rose-500 px-6 py-5">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-3">
                     <div class="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
@@ -209,7 +209,7 @@
                   <button
                     type="submit"
                     :disabled="saving"
-                    class="flex-1 px-4 py-3 bg-gradient-to-r to-rose-400 to-rose-500 text-white rounded-xl font-semibold hover:from-rose-700 hover:to-rose-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm shadow-lg shadow-rose-500/25"
+                    class="flex-1 px-4 py-3 bg-gradient-to-r from-rose-400 to-rose-500 text-white rounded-xl font-semibold hover:from-rose-700 hover:to-rose-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm shadow-lg shadow-rose-500/25"
                   >
                     <span v-if="saving" class="flex items-center justify-center gap-2">
                       <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

@@ -46,7 +46,7 @@
           </button>
           <button 
             @click="showCreateModal = true"
-            class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r to-rose-400 to-rose-500 text-white rounded-xl hover:from-rose-700 hover:to-rose-700 transition-all text-sm font-medium shadow-lg shadow-rose-500/25"
+            class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-rose-400 to-rose-500 text-white rounded-xl hover:from-rose-700 hover:to-rose-700 transition-all text-sm font-medium shadow-lg shadow-rose-500/25"
           >
             <PlusIcon class="h-5 w-5" />
             {{ t('pool.new_customer', 'Yeni Müşteri') }}

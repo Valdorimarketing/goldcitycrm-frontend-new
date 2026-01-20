@@ -315,7 +315,7 @@
               <div v-if="showUserDetailModal && selectedUser"
                 class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-2xl transition-all w-full max-w-5xl max-h-[90vh] flex flex-col">
                 <!-- Header -->
-                <div class="bg-gradient-to-r to-rose-400 to-rose-500 px-6 py-4 flex-shrink-0">
+                <div class="bg-gradient-to-r from-rose-400 to-rose-500 px-6 py-4 flex-shrink-0">
                   <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-4">
                       <div
