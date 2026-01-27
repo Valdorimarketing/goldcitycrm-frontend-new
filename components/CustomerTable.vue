@@ -106,7 +106,7 @@
           <!-- Assigned User (Admin) -->
           <td v-if="isAdmin" class="px-4 py-4">
             <NuxtLink v-if="customer.relevantUserData" :to="`/profile/${customer.relevantUserData?.id}`"
-              class="flex items-center gap-2 group/user">
+              class="flex min-w-[200px] items-center gap-2 group/user">
               <div v-if="customer.relevantUserData.avatar"
                 class="h-7 w-7 rounded-full overflow-hidden ring-2 ring-white dark:ring-gray-800 shadow">
                 <img :src="path + customer.relevantUserData.avatar" alt="Avatar" class="h-full w-full object-cover" />

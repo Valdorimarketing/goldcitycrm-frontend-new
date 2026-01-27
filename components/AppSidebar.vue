@@ -371,7 +371,8 @@ import {
   Cog6ToothIcon,
   ArrowRightOnRectangleIcon,
   Bars3Icon,
-  LanguageIcon
+  LanguageIcon,
+  ArrowUpTrayIcon
 } from '@heroicons/vue/24/outline'
 
 const authStore = useAuthStore()
