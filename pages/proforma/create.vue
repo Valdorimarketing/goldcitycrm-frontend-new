@@ -50,6 +50,7 @@
               <option value="USD">USD ($)</option>
               <option value="EUR">EUR (€)</option>
               <option value="TRY">TRY (₺)</option>
+              <option value="GBP">GBP (£)</option>
             </select>
           </div>
 
@@ -637,7 +638,8 @@ const formatCurrency = (amount: number, currency: string): string => {
   const symbols: Record<string, string> = {
     USD: '$',
     EUR: '€',
-    TRY: '₺'
+    TRY: '₺',
+    GBP: '£'
   }
 
   return `${symbols[currency] || currency} ${amount.toLocaleString('en-US', {

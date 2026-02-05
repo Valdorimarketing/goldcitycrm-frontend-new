@@ -46,6 +46,7 @@
               <option value="USD">USD ($)</option>
               <option value="EUR">EUR (€)</option>
               <option value="TRY">TRY (₺)</option>
+              <option value="GBP">GBP (£)</option>
             </select>
           </div>
 
@@ -494,14 +495,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useProformaStore } from '~/stores/proforma';
 
 import {
-  EyeIcon,
-  CheckIcon
-} from '@heroicons/vue/24/outline'
+    CheckIcon
+} from '@heroicons/vue/24/outline';
 
 const route = useRoute();
 const router = useRouter();
