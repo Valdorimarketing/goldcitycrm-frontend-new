@@ -40,23 +40,23 @@
               <div class="border-b border-gray-200 dark:border-gray-700/50 bg-gray-50 dark:bg-gray-800/50 p-5">
                 <!-- Drag & Drop Zone -->
                 <div
-                  ref="dropZone"
                   @dragenter.prevent="handleDragEnter"
                   @dragover.prevent="handleDragOver"
                   @dragleave.prevent="handleDragLeave"
                   @drop.prevent="handleDrop"
                   :class="[
                     'relative rounded-2xl border-2 border-dashed transition-all duration-300 cursor-pointer',
-                    isDragging 
-                      ? 'border-rose-500 bg-rose-50 dark:bg-rose-900/20 scale-[1.02]' 
+                    isDragging
+                      ? 'border-rose-500 bg-rose-50 dark:bg-rose-900/20 scale-[1.02]'
                       : 'border-gray-300 dark:border-gray-600 hover:border-rose-400 dark:hover:border-rose-500 hover:bg-rose-50/50 dark:hover:bg-rose-900/10',
-                    selectedFile ? 'bg-green-50 dark:bg-green-900/20 border-green-400' : ''
+                    selectedFiles.length > 0 ? 'bg-green-50 dark:bg-green-900/20 border-green-400' : ''
                   ]"
                   @click="triggerFileInput"
                 >
-                  <input 
-                    ref="fileInput" 
-                    type="file" 
+                  <input
+                    ref="fileInput"
+                    type="file"
+                    multiple
                     accept=".pdf,.png,.jpg,.jpeg,.zip,.rar,.mp4,.mov,.avi,.mkv,.doc,.docx,.xls,.xlsx"
                     @change="handleFileSelect"
                     class="hidden"
@@ -76,31 +76,58 @@
                         <div class="text-center">
                           <ArrowDownTrayIcon class="mx-auto h-16 w-16 text-rose-500 animate-bounce" />
                           <p class="mt-2 text-lg font-semibold text-rose-600 dark:text-rose-400">
-                            {{ t('files_modal.drop_here', 'Dosyayı buraya bırakın') }}
+                            {{ t('files_modal.drop_here', 'Dosyaları buraya bırakın') }}
                           </p>
                         </div>
                       </div>
                     </Transition>
 
-                    <!-- Selected File Preview -->
-                    <div v-if="selectedFile && !isDragging" class="space-y-3">
+                    <!-- Selected Files Preview -->
+                    <div v-if="selectedFiles.length > 0 && !isDragging" class="space-y-3">
                       <div class="mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-lg shadow-green-500/30">
                         <CheckIcon class="h-8 w-8 text-white" />
                       </div>
                       <div>
-                        <p class="text-sm font-semibold text-gray-900 dark:text-white truncate max-w-md mx-auto">
-                          {{ selectedFile.name }}
+                        <p class="text-sm font-semibold text-gray-900 dark:text-white">
+                          {{ selectedFiles.length }} {{ t('files_modal.files_selected', 'dosya seçildi') }}
                         </p>
                         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                          {{ formatFileSize(selectedFile.size) }}
+                          {{ t('files_modal.total_size', 'Toplam boyut:') }} {{ formatFileSize(selectedFiles.reduce((acc, f) => acc + f.size, 0)) }}
                         </p>
                       </div>
-                      <button 
-                        @click.stop="clearSelectedFile"
-                        class="text-xs text-red-500 hover:text-red-600 font-medium"
-                      >
-                        {{ t('files_modal.remove_file', 'Dosyayı Kaldır') }}
-                      </button>
+                      <!-- Selected files grid -->
+                      <div class="px-2">
+                        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
+                          <div v-for="(file, index) in selectedFiles" :key="index" class="relative group bg-white dark:bg-gray-800 rounded-xl p-3 text-center ring-1 ring-gray-200 dark:ring-gray-700">
+                            <button
+                              @click.stop="removeSelectedFile(index)"
+                              class="absolute -top-1.5 -right-1.5 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-sm hover:bg-red-600"
+                            >
+                              <XMarkIcon class="h-3 w-3" />
+                            </button>
+                            <div :class="['mx-auto w-10 h-10 rounded-lg flex items-center justify-center mb-2', getFileIconClass(file.name)]">
+                              <component :is="getFileIcon(file.name)" class="h-5 w-5 text-white" />
+                            </div>
+                            <p class="text-xs font-medium text-gray-700 dark:text-gray-300 truncate">{{ file.name }}</p>
+                            <p class="text-[10px] text-gray-400">{{ formatFileSize(file.size) }}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="flex items-center justify-center gap-3">
+                        <button
+                          @click.stop="clearSelectedFiles"
+                          class="text-xs text-red-500 hover:text-red-600 font-medium"
+                        >
+                          {{ t('files_modal.remove_all', 'Tümünü Kaldır') }}
+                        </button>
+                        <span class="text-gray-300">|</span>
+                        <button
+                          @click.stop="triggerFileInput"
+                          class="text-xs text-rose-500 hover:text-rose-600 font-medium"
+                        >
+                          {{ t('files_modal.add_more', 'Daha Fazla Ekle') }}
+                        </button>
+                      </div>
                     </div>
 
                     <!-- Default Upload UI -->
@@ -110,13 +137,13 @@
                       </div>
                       <div>
                         <p class="text-base font-semibold text-gray-900 dark:text-white">
-                          {{ t('files_modal.drag_drop', 'Dosya yüklemek için sürükleyin veya tıklayın') }}
+                          {{ t('files_modal.drag_drop', 'Dosyaları yüklemek için sürükleyin veya tıklayın') }}
                         </p>
                         <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
                           {{ t('files_modal.supported_formats', 'PDF, PNG, JPG, ZIP, RAR, Video, Word, Excel') }}
                         </p>
                         <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
-                          {{ t('files_modal.max_file_size', 'Maksimum dosya boyutu:') }} <span class="font-semibold">3 GB</span>
+                          {{ t('files_modal.max_file_size', 'Maksimum dosya boyutu:') }} <span class="font-semibold">3 GB</span> {{ t('files_modal.per_file', '(dosya başına)') }}
                         </p>
                       </div>
                     </div>
@@ -124,10 +151,10 @@
                 </div>
 
                 <!-- Description Input & Upload Button -->
-                <div v-if="selectedFile" class="mt-4 space-y-3">
-                  <div class="relative">
-                    <textarea 
-                      v-model="newFile.description" 
+                <div v-if="selectedFiles.length > 0" class="mt-4 space-y-3">
+                  <div v-if="selectedFiles.length === 1" class="relative">
+                    <textarea
+                      v-model="newFile.description"
                       rows="2"
                       class="block w-full rounded-xl border-0 px-4 py-3 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rose-500 dark:bg-gray-800 text-sm resize-none"
                       :placeholder="t('files_modal.description_placeholder', 'Dosya açıklaması ekleyin (opsiyonel)...')"
@@ -137,28 +164,30 @@
                   <!-- Upload Progress -->
                   <div v-if="isUploading" class="space-y-2">
                     <div class="flex items-center justify-between text-sm">
-                      <span class="text-gray-600 dark:text-gray-400">{{ t('files_modal.uploading', 'Yükleniyor...') }}</span>
+                      <span class="text-gray-600 dark:text-gray-400">
+                        {{ t('files_modal.uploading_file', 'Dosya yükleniyor') }} {{ currentFileIndex }}/{{ totalFilesToUpload }}
+                      </span>
                       <span class="font-semibold text-rose-600 dark:text-rose-400">{{ uploadProgress }}%</span>
                     </div>
                     <div class="h-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                      <div 
+                      <div
                         class="h-full bg-gradient-to-r from-rose-500 to-rose-500 rounded-full transition-all duration-300 ease-out"
                         :style="{ width: uploadProgress + '%' }"
                       ></div>
                     </div>
                     <p class="text-xs text-gray-500 dark:text-gray-400 text-center">
-                      {{ formatFileSize(uploadedBytes) }} / {{ formatFileSize(selectedFile?.size || 0) }}
+                      {{ formatFileSize(uploadedBytes) }} / {{ formatFileSize(selectedFiles[currentFileIndex - 1]?.size || 0) }}
                     </p>
                   </div>
 
                   <!-- Upload Button -->
-                  <button 
-                    @click="uploadFile" 
+                  <button
+                    @click="uploadFiles"
                     :disabled="isUploading"
                     :class="[
                       'w-full py-3 px-4 rounded-xl font-semibold text-white transition-all duration-200 flex items-center justify-center gap-2',
-                      isUploading 
-                        ? 'bg-gray-400 cursor-not-allowed' 
+                      isUploading
+                        ? 'bg-gray-400 cursor-not-allowed'
                         : 'bg-gradient-to-r from-rose-600 to-rose-600 hover:from-rose-700 hover:to-rose-700 shadow-lg shadow-rose-500/30 hover:shadow-rose-500/40 hover:scale-[1.02]'
                     ]"
                   >
@@ -167,13 +196,26 @@
                       <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                       <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    {{ isUploading ? t('files_modal.uploading', 'Yükleniyor...') : t('files_modal.upload_file', 'Dosyayı Yükle') }}
+                    {{ isUploading ? t('files_modal.uploading', 'Yükleniyor...') : (selectedFiles.length > 1 ? t('files_modal.upload_files', 'Dosyaları Yükle') + ` (${selectedFiles.length})` : t('files_modal.upload_file', 'Dosyayı Yükle')) }}
                   </button>
                 </div>
               </div>
 
-              <!-- Files List -->
-              <div class="max-h-[40vh] overflow-y-auto">
+              <!-- Files List Section -->
+              <div v-if="files.length > 0 || loading" class="border-t border-gray-200 dark:border-gray-700/50">
+                <!-- Section Header -->
+                <div class="sticky top-0 z-10 bg-gradient-to-r from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-800/80 px-5 py-3 flex items-center justify-between border-b border-gray-200 dark:border-gray-700/50">
+                  <div class="flex items-center gap-2">
+                    <FolderIcon class="h-5 w-5 text-rose-500" />
+                    <h4 class="font-semibold text-gray-900 dark:text-white">
+                      {{ t('files_modal.uploaded_files', 'Yüklenen Dosyalar') }}
+                    </h4>
+                    <span class="px-2 py-0.5 text-xs font-medium bg-rose-100 dark:bg-rose-900/50 text-rose-600 dark:text-rose-400 rounded-full">
+                      {{ files.length }}
+                    </span>
+                  </div>
+                </div>
+
                 <!-- Loading State -->
                 <div v-if="loading" class="flex flex-col items-center justify-center py-12">
                   <div class="w-12 h-12 rounded-full border-4 border-rose-200 border-t-rose-600 animate-spin"></div>
@@ -181,90 +223,73 @@
                 </div>
 
                 <!-- Files Grid -->
-                <div v-else-if="files.length > 0" class="p-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div 
-                    v-for="file in files" 
-                    :key="file.id"
-                    class="group relative bg-white dark:bg-gray-800 rounded-xl p-4 ring-1 ring-gray-200 dark:ring-gray-700 hover:ring-rose-300 dark:hover:ring-rose-600 hover:shadow-lg transition-all duration-200"
-                  >
-                    <div class="flex items-start gap-3">
-                      <!-- File Icon -->
-                      <div :class="[
-                        'flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center',
-                        getFileIconClass(file.file)
-                      ]">
-                        <component :is="getFileIcon(file.file)" class="h-7 w-7 text-white" />
-                      </div>
-                      
-                      <!-- File Info -->
-                      <div class="flex-1 min-w-0">
-                        <button 
-                          @click="openFile(file)"
-                          class="text-sm font-medium text-gray-900 dark:text-white hover:text-rose-600 dark:hover:text-rose-400 transition-colors truncate block w-full text-left"
-                        >
-                          {{ getFileName(file.file) }}
-                        </button>
-                        <p v-if="file.description" class="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-1">
-                          {{ file.description }}
-                        </p>
-                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
-                          {{ formatDate(file.createdAt) }}
-                        </p>
-                      </div>
-
-                      <!-- Actions -->
-                      <div class="flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button 
+                <div v-else class="p-4">
+                  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                    <div
+                      v-for="file in files"
+                      :key="file.id"
+                      class="group relative bg-white dark:bg-gray-800 rounded-xl p-4 ring-1 ring-gray-200 dark:ring-gray-700 hover:ring-rose-300 dark:hover:ring-rose-600 hover:shadow-lg transition-all duration-200 text-center"
+                    >
+                      <!-- Actions (top right) -->
+                      <div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
                           @click="downloadFile(file)"
                           class="p-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-rose-100 dark:hover:bg-rose-900/50 text-gray-500 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
                           :title="t('files_modal.download_tooltip', 'İndir')"
                         >
-                          <ArrowDownTrayIcon class="h-4 w-4" />
+                          <ArrowDownTrayIcon class="h-3.5 w-3.5" />
                         </button>
-                        <button 
+                        <button
                           @click="deleteFile(file)"
                           class="p-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-red-100 dark:hover:bg-red-900/50 text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                           :title="t('files_modal.delete_tooltip', 'Sil')"
                         >
-                          <TrashIcon class="h-4 w-4" />
+                          <TrashIcon class="h-3.5 w-3.5" />
                         </button>
                       </div>
+
+                      <!-- File Icon -->
+                      <button @click="openFile(file)" class="block mx-auto">
+                        <div :class="['w-10 h-10 rounded-lg flex items-center justify-center mx-auto', getFileIconClass(file.file)]">
+                          <component :is="getFileIcon(file.file)" class="h-5 w-5 text-white" />
+                        </div>
+                      </button>
+
+                      <!-- File Name -->
+                      <button
+                        @click="openFile(file)"
+                        class="mt-2 text-xs font-medium text-gray-700 dark:text-gray-300 hover:text-rose-600 dark:hover:text-rose-400 truncate block w-full"
+                        :title="getFileName(file.file)"
+                      >
+                        {{ getFileName(file.file) }}
+                      </button>
+                      <p class="text-[10px] text-gray-400 mt-0.5">{{ formatDate(file.createdAt) }}</p>
                     </div>
                   </div>
-                </div>
-
-                <!-- Empty State -->
-                <div v-else class="text-center py-12 px-6">
-                  <div class="mx-auto w-20 h-20 rounded-2xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-                    <FolderIcon class="h-10 w-10 text-gray-400" />
-                  </div>
-                  <h3 class="mt-4 text-base font-semibold text-gray-900 dark:text-white">
-                    {{ t('files_modal.empty.title', 'Henüz dosya yok') }}
-                  </h3>
-                  <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                    {{ t('files_modal.empty.description', 'Bu müşteri için henüz dosya yüklenmemiş.') }}
-                  </p>
                 </div>
               </div>
 
-              <!-- Footer -->
-              <div class="border-t border-gray-200 dark:border-gray-700/50 bg-gray-50 dark:bg-gray-800/50 px-6 py-4">
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center gap-2">
-                    <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-rose-100 dark:bg-rose-900/50">
-                      <DocumentIcon class="h-4 w-4 text-rose-600 dark:text-rose-400" />
-                    </div>
-                    <span class="text-sm text-gray-600 dark:text-gray-400">
-                      {{ tp('files_modal.total_files', { count: files.length }, 'Toplam {count} dosya') }}
-                    </span>
-                  </div>
-                  <button 
-                    @click="$emit('close')"
-                    class="px-5 py-2.5 rounded-xl bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 ring-1 ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
-                  >
-                    {{ t('files_modal.close', 'Kapat') }}
-                  </button>
+              <!-- Empty State (when no files) -->
+              <div v-if="!loading && files.length === 0" class="text-center py-12 px-6 border-t border-gray-200 dark:border-gray-700/50">
+                <div class="mx-auto w-16 h-16 rounded-2xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                  <FolderIcon class="h-8 w-8 text-gray-400" />
                 </div>
+                <h3 class="mt-3 text-sm font-semibold text-gray-900 dark:text-white">
+                  {{ t('files_modal.empty.title', 'Henüz dosya yok') }}
+                </h3>
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  {{ t('files_modal.empty.description', 'Bu müşteri için henüz dosya yüklenmemiş.') }}
+                </p>
+              </div>
+
+              <!-- Footer -->
+              <div class="border-t border-gray-200 dark:border-gray-700/50 bg-gray-50 dark:bg-gray-800/50 px-6 py-3 flex justify-end">
+                <button
+                  @click="$emit('close')"
+                  class="px-5 py-2 rounded-xl bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 ring-1 ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                >
+                  {{ t('files_modal.close', 'Kapat') }}
+                </button>
               </div>
             </div>
           </Transition>
@@ -292,7 +317,7 @@ import {
 import axios from 'axios'
 import { useLanguage } from '~/composables/useLanguage'
 
-const { t, tp } = useLanguage()
+const { t } = useLanguage()
 
 const props = defineProps({
   show: Boolean,
@@ -304,9 +329,8 @@ const emit = defineEmits(['close'])
 // State
 const loading = ref(false)
 const files = ref([])
-const selectedFile = ref(null)
+const selectedFiles = ref([])
 const fileInput = ref(null)
-const dropZone = ref(null)
 const isDragging = ref(false)
 const dragCounter = ref(0)
 
@@ -320,7 +344,7 @@ const newFile = reactive({
 })
 
 // Drag & Drop handlers
-const handleDragEnter = (e) => {
+const handleDragEnter = () => {
   dragCounter.value++
   isDragging.value = true
 }
@@ -329,7 +353,7 @@ const handleDragOver = (e) => {
   e.dataTransfer.dropEffect = 'copy'
 }
 
-const handleDragLeave = (e) => {
+const handleDragLeave = () => {
   dragCounter.value--
   if (dragCounter.value === 0) {
     isDragging.value = false
@@ -339,52 +363,66 @@ const handleDragLeave = (e) => {
 const handleDrop = (e) => {
   isDragging.value = false
   dragCounter.value = 0
-  
-  const droppedFiles = e.dataTransfer.files
+
+  const droppedFiles = Array.from(e.dataTransfer.files)
   if (droppedFiles.length > 0) {
-    processFile(droppedFiles[0])
+    processFiles(droppedFiles)
   }
 }
 
 const triggerFileInput = () => {
-  if (!selectedFile.value) {
-    fileInput.value?.click()
-  }
+  fileInput.value?.click()
 }
 
 // File processing
-const processFile = (file) => {
+const processFiles = (filesToProcess) => {
   const allowedExtensions = ['.pdf', '.png', '.jpg', '.jpeg', '.zip', '.rar', '.mp4', '.mov', '.avi', '.mkv', '.doc', '.docx', '.xls', '.xlsx']
-  const fileExtension = '.' + file.name.split('.').pop().toLowerCase()
-
-  if (!allowedExtensions.includes(fileExtension)) {
-    alert(t('files_modal.errors.unsupported_type', 'Bu dosya türü desteklenmiyor. Desteklenen türler: PDF, PNG, JPG, ZIP, RAR, Video, Word, Excel'))
-    return
-  }
-
-  // 3GB limit kontrolü
   const maxSize = 3 * 1024 * 1024 * 1024 // 3GB
-  if (file.size > maxSize) {
-    alert(t('files_modal.errors.file_too_large', 'Dosya boyutu 3GB\'dan büyük olamaz.'))
-    return
+  const validFiles = []
+  const errors = []
+
+  for (const file of filesToProcess) {
+    const fileExtension = '.' + file.name.split('.').pop().toLowerCase()
+
+    if (!allowedExtensions.includes(fileExtension)) {
+      errors.push(`${file.name}: ${t('files_modal.errors.unsupported_type_short', 'Desteklenmeyen dosya türü')}`)
+      continue
+    }
+
+    if (file.size > maxSize) {
+      errors.push(`${file.name}: ${t('files_modal.errors.file_too_large_short', 'Dosya boyutu 3GB\'dan büyük')}`)
+      continue
+    }
+
+    validFiles.push(file)
   }
 
-  selectedFile.value = file
+  if (errors.length > 0) {
+    alert(errors.join('\n'))
+  }
+
+  if (validFiles.length > 0) {
+    selectedFiles.value = [...selectedFiles.value, ...validFiles]
+  }
 }
 
 const handleFileSelect = (event) => {
-  const file = event.target.files[0]
-  if (file) {
-    processFile(file)
+  const files = Array.from(event.target.files)
+  if (files.length > 0) {
+    processFiles(files)
   }
 }
 
-const clearSelectedFile = () => {
-  selectedFile.value = null
+const clearSelectedFiles = () => {
+  selectedFiles.value = []
   newFile.description = ''
   if (fileInput.value) {
     fileInput.value.value = ''
   }
+}
+
+const removeSelectedFile = (index) => {
+  selectedFiles.value = selectedFiles.value.filter((_, i) => i !== index)
 }
 
 // Fetch customer files
@@ -404,9 +442,13 @@ const fetchFiles = async () => {
   }
 }
 
-// Upload file
-const uploadFile = async () => {
-  if (!selectedFile.value || !props.customer?.id) {
+// Upload progress tracking for multiple files
+const currentFileIndex = ref(0)
+const totalFilesToUpload = ref(0)
+
+// Upload files
+const uploadFiles = async () => {
+  if (selectedFiles.value.length === 0 || !props.customer?.id) {
     alert(t('files_modal.errors.select_file', 'Lütfen bir dosya seçin.'))
     return
   }
@@ -414,52 +456,66 @@ const uploadFile = async () => {
   isUploading.value = true
   uploadProgress.value = 0
   uploadedBytes.value = 0
+  currentFileIndex.value = 0
+  totalFilesToUpload.value = selectedFiles.value.length
 
-  try {
-    const config = useRuntimeConfig()
-    const authStore = useAuthStore()
+  const config = useRuntimeConfig()
+  const authStore = useAuthStore()
+  const errors = []
 
-    const formData = new FormData()
-    formData.append('file', selectedFile.value)
-    formData.append('customer', String(props.customer.id))
+  for (let i = 0; i < selectedFiles.value.length; i++) {
+    currentFileIndex.value = i + 1
+    const file = selectedFiles.value[i]
 
-    if (newFile.description) {
-      formData.append('description', newFile.description)
-    }
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('customer', String(props.customer.id))
 
-    await axios.post(
-      `${config.public.apiBase}/customer-files`,
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${authStore.token}`,
-          'Content-Type': 'multipart/form-data',
-        },
-        maxContentLength: Infinity,
-        maxBodyLength: Infinity,
-        onUploadProgress: (progressEvent) => {
-          if (progressEvent.total) {
-            uploadProgress.value = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-            uploadedBytes.value = progressEvent.loaded
-          }
-        },
+      if (newFile.description && selectedFiles.value.length === 1) {
+        formData.append('description', newFile.description)
       }
-    )
 
-    // Reset form
-    clearSelectedFile()
-    
-    // Refresh list
-    await fetchFiles()
-  } catch (error) {
-    console.error('Dosya yükleme hatası:', error)
-    const message = error.response?.data?.message || error.message || t('files_modal.errors.upload_error', 'Dosya yüklenirken bir hata oluştu.')
-    alert(message)
-  } finally {
-    isUploading.value = false
-    uploadProgress.value = 0
-    uploadedBytes.value = 0
+      await axios.post(
+        `${config.public.apiBase}/customer-files`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${authStore.token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+          maxContentLength: Infinity,
+          maxBodyLength: Infinity,
+          onUploadProgress: (progressEvent) => {
+            if (progressEvent.total) {
+              uploadProgress.value = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+              uploadedBytes.value = progressEvent.loaded
+            }
+          },
+        }
+      )
+    } catch (error) {
+      console.error('Dosya yükleme hatası:', error)
+      const message = error.response?.data?.message || error.message || t('files_modal.errors.upload_error', 'Dosya yüklenirken bir hata oluştu.')
+      errors.push(`${file.name}: ${message}`)
+    }
   }
+
+  // Reset form
+  clearSelectedFiles()
+
+  // Refresh list
+  await fetchFiles()
+
+  if (errors.length > 0) {
+    alert(t('files_modal.errors.some_files_failed', 'Bazı dosyalar yüklenemedi:') + '\n' + errors.join('\n'))
+  }
+
+  isUploading.value = false
+  uploadProgress.value = 0
+  uploadedBytes.value = 0
+  currentFileIndex.value = 0
+  totalFilesToUpload.value = 0
 }
 
 // File helpers
@@ -549,7 +605,7 @@ watch(() => props.show, (newValue) => {
     fetchFiles()
   } else {
     files.value = []
-    clearSelectedFile()
+    clearSelectedFiles()
   }
 })
 </script>
